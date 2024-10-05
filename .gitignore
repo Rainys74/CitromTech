@@ -1,0 +1,21 @@
+# Visual Studio files
+**/*.sln
+**/*.vcxproj
+**/*.user
+**/*.filters
+*.sln
+*.vcxproj
+*.user
+*.filters
+
+# gmake2 files
+Makefile
+**/Makefile
+
+# IDE Data
+.vs/
+.vscode/
+
+# Binaries
+bin/
+bin-intermediate/
