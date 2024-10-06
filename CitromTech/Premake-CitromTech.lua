@@ -61,7 +61,7 @@ project "CitromTech"   -- Engine Library
 
     filter "system:macosx"
         staticruntime "On"
-        systemversion "latest"
+        systemversion "15.0"
 
         defines
         {
