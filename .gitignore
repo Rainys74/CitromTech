@@ -13,11 +13,14 @@ Makefile
 **/Makefile
 
 # XCode files
+xcuserdata/
 **/*.xcodeproj
 **/*.xcworkspace
+**/*.xcworkspacedata
 **/*.xcuserstate
 **/*.xcuserdata
-**/*.xcworkspace/
+**/*.xcworkspace/**
+**/*.xcodeproj/
 **/DerivedData/
 **/Products/
 **/Build/
