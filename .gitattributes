@@ -1,0 +1,4 @@
+# Ensure shell scripts have LF line endings
+# to avoid the ./GenerateProject-Linux.sh i get -bash: ./GenerateProject-Linux.sh: /bin/bash^M: bad interpreter: No such file or directory
+# error on Linux.
+*.sh text eol=lf
