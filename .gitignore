@@ -12,6 +12,15 @@
 Makefile
 **/Makefile
 
+# XCode files
+**/*.xcodeproj
+**/*.xcworkspace
+**/*.xcuserstate
+**/*.xcuserdata
+**/DerivedData/
+**/Products/
+**/Build/
+
 # IDE Data
 .vs/
 .vscode/
