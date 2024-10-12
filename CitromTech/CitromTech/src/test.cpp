@@ -2,7 +2,30 @@
 
 #include <iostream>
 
+#include <GLFW/glfw3.h>
+
 void Test::PrintSomeShit(char* shit)
 {
 	std::cout << shit << "\n";
+}
+
+void Test::TestOutGLFW()
+{
+	glfwInit();
+
+	GLFWwindow* window = glfwCreateWindow(640, 480, "Test", NULL, NULL);
+
+	while (!glfwWindowShouldClose(window))
+	{
+		glfwPollEvents();
+
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			std::cout << "W key is being pressed/held!" << "\n";
+		}
+	}
+
+	glfwDestroyWindow(window);
+
+	glfwTerminate();
 }

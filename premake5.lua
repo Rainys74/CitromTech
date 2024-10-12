@@ -26,3 +26,4 @@ include "CitromTech/Premake-CitromTech.lua"
 include "CitromForge/Premake-CitromForge.lua"
 
 -- Third Party Dependencies
+include "vendor/GLFW/Premake-GLFW.lua"

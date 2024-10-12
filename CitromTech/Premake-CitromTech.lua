@@ -7,6 +7,9 @@ project "CitromTech"   -- Engine Library
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
     
+        IncludeDir = {}
+        IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
+
         files 
         {
             "%{prj.name}/src/**.h",
@@ -16,6 +19,8 @@ project "CitromTech"   -- Engine Library
         includedirs
         {
             "%{prj.name}/src/",
+
+            "%{IncludeDir.GLFW}",
         }
 
         libdirs
@@ -25,6 +30,7 @@ project "CitromTech"   -- Engine Library
 
         links
         {
+            "GLFW",
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"
         }
