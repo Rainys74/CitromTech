@@ -35,6 +35,8 @@ xcuserdata/
 # IDE Data
 .vs/
 .vscode/
+**/.vscode
+*.code-workspace
 
 # MacOS Files
 .DS_Store
