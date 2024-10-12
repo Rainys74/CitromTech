@@ -17,6 +17,7 @@ Makefile
 **/*.xcworkspace
 **/*.xcuserstate
 **/*.xcuserdata
+**/*.xcworkspace/
 **/DerivedData/
 **/Products/
 **/Build/
