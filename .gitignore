@@ -14,16 +14,13 @@ Makefile
 
 # XCode files
 xcuserdata/
-**/*.xcodeproj
-**/*.xcworkspace
-**/*.xcworkspacedata
-**/*.xcuserstate
-**/*.xcuserdata
-**/*.xcworkspace/**
-**/*.xcodeproj/
-**/DerivedData/
-**/Products/
-**/Build/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
 
 # IDE Data
 .vs/
