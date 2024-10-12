@@ -6,7 +6,9 @@ echo "[1] gmake2"
 echo "[2] Exit"
 echo
 
-read -p "Enter your choice (default is 1): " CHOICE
+echo -n "Press [1] or [2] to choose (default is 1): "
+read -n 1 CHOICE
+echo  # to move to the next line
 
 # Default to 1 if nothing is entered
 if [ -z "$CHOICE" ]; then
@@ -15,7 +17,10 @@ fi
 
 if [ "$CHOICE" == "1" ]; then
     tools/premake/Linux/premake5 --cc=clang --file=premake5.lua gmake2
-else
+elif [ "$CHOICE" == "2" ]; then
     echo "Exiting..."
     exit 0
+else
+    echo "Invalid choice. Exiting..."
+    exit 1
 fi
