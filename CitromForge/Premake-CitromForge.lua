@@ -20,7 +20,9 @@ project "CitromForge" -- EXE
 
         links
         {
-            "CitromTech"
+            "CitromTech",
+            
+            "GLFW",
         }
 
     filter "system:windows"
@@ -44,6 +46,14 @@ project "CitromForge" -- EXE
     filter "system:macosx"
         staticruntime "On"
         systemversion "15.0"
+
+        links
+        {
+            "Cocoa.framework",
+            "IOKit.framework",
+            "CoreFoundation.framework",
+            "QuartzCore.framework",
+        }
 
         defines
         {

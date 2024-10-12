@@ -142,6 +142,14 @@ project "GLFW"   -- Engine Library
             staticruntime "On"
             systemversion "15.0"
 
+            links
+            {
+                "Cocoa.framework",
+                "IOKit.framework",
+                "CoreFoundation.framework",
+                "QuartzCore.framework",
+            }
+
             files
             {
                 -- APPLE
