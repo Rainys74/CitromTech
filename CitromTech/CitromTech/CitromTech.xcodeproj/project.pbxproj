@@ -1,0 +1,332 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		92D78E7345CD982596EFF4B3 /* libGLFW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB7D9EDBEF7CE84D7467FD1B /* libGLFW.a */; };
+		AD4334A203D09F14DC49B2E2 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5BCF8AAA5F405CDCE0AD00EA /* test.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7AC179D2A0E7A98407EEA012 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA04DE926251C4449098C4D2 /* ../../vendor/GLFW/GLFW.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FB2B399FFE9C0BD18008AFDF;
+			remoteInfo = libGLFW.a;
+		};
+		CCFBEC6BF3221C1D5A2912AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CA04DE926251C4449098C4D2 /* ../../vendor/GLFW/GLFW.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E92D9A59D392D97F67A87E5;
+			remoteInfo = libGLFW.a;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5BCF8AAA5F405CDCE0AD00EA /* test.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = src/test.cpp; sourceTree = "<group>"; };
+		8C37C1E1B25DF1931964E821 /* libCitromTech.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libCitromTech.a; path = libCitromTech.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABEF15744F3A9EA66A0B6BB4 /* test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = test.h; path = src/test.h; sourceTree = "<group>"; };
+		CA04DE926251C4449098C4D2 /* libGLFW.a */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "GLFW.xcodeproj"; path = ../../vendor/GLFW/GLFW.xcodeproj; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C39EED1EF2815837E4DF511 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				92D78E7345CD982596EFF4B3 /* libGLFW.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		183C377D2F4ED2AF1F6ACDBD /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXGroup section */
+		014014D2FAA61644EE417312 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FB7D9EDBEF7CE84D7467FD1B /* libGLFW.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		313542B21D264E646F5DE8F2 /* CitromTech */ = {
+			isa = PBXGroup;
+			children = (
+				5BCF8AAA5F405CDCE0AD00EA /* test.cpp */,
+				ABEF15744F3A9EA66A0B6BB4 /* test.h */,
+				A6C936B49B3FADE6EA134CF4 /* Products */,
+				9D968EAA920D05DCE0E0A4EA /* Projects */,
+			);
+			name = CitromTech;
+			sourceTree = "<group>";
+		};
+		9D968EAA920D05DCE0E0A4EA /* Projects */ = {
+			isa = PBXGroup;
+			children = (
+				CA04DE926251C4449098C4D2 /* GLFW.xcodeproj */,
+			);
+			name = Projects;
+			sourceTree = "<group>";
+		};
+		A6C936B49B3FADE6EA134CF4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8C37C1E1B25DF1931964E821 /* libCitromTech.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4C2E61A745946319392FBFE7 /* CitromTech */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3A753730DD635DE26C893D70 /* Build configuration list for PBXNativeTarget "CitromTech" */;
+			buildPhases = (
+				BC216F715F0F9623EE3575B1 /* Resources */,
+				25CE88C8C8BCAF7A57E28F08 /* Sources */,
+				4C39EED1EF2815837E4DF511 /* Frameworks */,
+				183C377D2F4ED2AF1F6ACDBD /* Embed Libraries */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EEF851DBE85E534DDBF9B01B /* PBXTargetDependency */,
+			);
+			name = CitromTech;
+			productName = CitromTech;
+			productReference = 8C37C1E1B25DF1931964E821 /* libCitromTech.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "CitromTech" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = 313542B21D264E646F5DE8F2 /* CitromTech */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 014014D2FAA61644EE417312 /* Products */;
+					ProjectRef = CA04DE926251C4449098C4D2 /* GLFW.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				4C2E61A745946319392FBFE7 /* libCitromTech.a */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		FB7D9EDBEF7CE84D7467FD1B /* libGLFW.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGLFW.a;
+			remoteRef = 7AC179D2A0E7A98407EEA012 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BC216F715F0F9623EE3575B1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		25CE88C8C8BCAF7A57E28F08 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD4334A203D09F14DC49B2E2 /* test.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EEF851DBE85E534DDBF9B01B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = libGLFW.a;
+			targetProxy = CCFBEC6BF3221C1D5A2912AB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		23CB7A0149F1A9B3B0F8A041 /* Optimization */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				CONFIGURATION_TEMP_DIR = "$(OBJROOT)";
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CT_PLATFORM_MACOS,
+					CT_BUILD_STATIC_LIB,
+					CT_OPTIMIZATION,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = "../../bin-intermediate/Optimization-macosx-ARM/CitromTech";
+				ONLY_ACTIVE_ARCH = NO;
+				SYMROOT = "../../bin/Optimization-macosx-ARM/CitromTech";
+				USER_HEADER_SEARCH_PATHS = (
+					src,
+					../../vendor/GLFW/glfw/include,
+				);
+			};
+			name = Optimization;
+		};
+		269593F6EA0155A828A4FA36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = "../../bin/Debug-macosx-ARM/CitromTech";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_DYNAMIC_NO_PIC = NO;
+				INSTALL_PATH = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = CitromTech;
+			};
+			name = Debug;
+		};
+		690D8470B6707AA22C8F7AB0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = "../../bin/Release-macosx-ARM/CitromTech";
+				GCC_DYNAMIC_NO_PIC = NO;
+				INSTALL_PATH = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = CitromTech;
+			};
+			name = Release;
+		};
+		960299FB078DB26DB68ED83B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				CONFIGURATION_TEMP_DIR = "$(OBJROOT)";
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CT_PLATFORM_MACOS,
+					CT_BUILD_STATIC_LIB,
+					CT_RELEASE,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = "../../bin-intermediate/Release-macosx-ARM/CitromTech";
+				ONLY_ACTIVE_ARCH = NO;
+				SYMROOT = "../../bin/Release-macosx-ARM/CitromTech";
+				USER_HEADER_SEARCH_PATHS = (
+					src,
+					../../vendor/GLFW/glfw/include,
+				);
+			};
+			name = Release;
+		};
+		9CB5DB81CB5C2F73249D89C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++1z";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				CONFIGURATION_TEMP_DIR = "$(OBJROOT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					CT_PLATFORM_MACOS,
+					CT_BUILD_STATIC_LIB,
+					CT_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = "../../bin-intermediate/Debug-macosx-ARM/CitromTech";
+				ONLY_ACTIVE_ARCH = YES;
+				SYMROOT = "../../bin/Debug-macosx-ARM/CitromTech";
+				USER_HEADER_SEARCH_PATHS = (
+					src,
+					../../vendor/GLFW/glfw/include,
+				);
+			};
+			name = Debug;
+		};
+		C670D3B60ABF79284CE6B1F6 /* Optimization */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = "../../bin/Optimization-macosx-ARM/CitromTech";
+				GCC_DYNAMIC_NO_PIC = NO;
+				INSTALL_PATH = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_NAME = CitromTech;
+			};
+			name = Optimization;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "CitromTech" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CB5DB81CB5C2F73249D89C1 /* Debug */,
+				9CB5DB81CB5C2F73249D89C1 /* Debug */,
+				960299FB078DB26DB68ED83B /* Release */,
+				960299FB078DB26DB68ED83B /* Release */,
+				23CB7A0149F1A9B3B0F8A041 /* Optimization */,
+				23CB7A0149F1A9B3B0F8A041 /* Optimization */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3A753730DD635DE26C893D70 /* Build configuration list for PBXNativeTarget "libCitromTech.a" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				269593F6EA0155A828A4FA36 /* Debug */,
+				269593F6EA0155A828A4FA36 /* Debug */,
+				690D8470B6707AA22C8F7AB0 /* Release */,
+				690D8470B6707AA22C8F7AB0 /* Release */,
+				C670D3B60ABF79284CE6B1F6 /* Optimization */,
+				C670D3B60ABF79284CE6B1F6 /* Optimization */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+};
+rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
