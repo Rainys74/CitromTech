@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 void Test::PrintSomeShit(char* shit)
 {
