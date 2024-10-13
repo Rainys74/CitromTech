@@ -22,6 +22,10 @@ workspace "CitromTech" -- Solution
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows-x64
 
+-- Configuration Settings
+LIBRARY_BUILD_AS_DLL = false
+RUNNER_BUILD_AS_CONSOLE_APP = true
+
 include "CitromTech/Premake-CitromTech.lua"
 include "CitromForge/Premake-CitromForge.lua"
 

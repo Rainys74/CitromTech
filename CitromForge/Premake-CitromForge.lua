@@ -1,6 +1,7 @@
 project "CitromForge" -- EXE
         location "CitromForge"
-        kind "ConsoleApp" -- ConsoleApp or WindowedApp
+        --kind "ConsoleApp" -- ConsoleApp or WindowedApp
+        kind (RUNNER_BUILD_AS_CONSOLE_APP and "ConsoleApp" or "WindowedApp")
         language "C++"
         cppdialect "C++17"
 
