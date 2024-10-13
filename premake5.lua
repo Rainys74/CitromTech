@@ -25,6 +25,22 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows
 -- Configuration Settings
 LIBRARY_BUILD_AS_DLL = false
 RUNNER_BUILD_AS_CONSOLE_APP = true
+RUNNER_APP_NAME = "CitromForge"
+
+-- Configuration Implementation Functions
+function DefineCitromLibraryTypeMacros()
+    if LIBRARY_BUILD_AS_DLL then
+        defines
+        {
+            "CT_BUILD_LIB_AS_DLL" -- We are building Citrom Tech as a Dynamically Linked Library
+        }
+    else
+        defines
+        {
+            "CT_BUILD_LIB_AS_STATIC" -- We are building Citrom Tech as a Static Library
+        }
+    end
+end
 
 include "CitromTech/Premake-CitromTech.lua"
 include "CitromForge/Premake-CitromForge.lua"

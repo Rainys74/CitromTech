@@ -25,6 +25,7 @@ project "CitromForge" -- EXE
             
             "GLFW",
         }
+        DefineCitromLibraryTypeMacros()
 
     filter "system:windows"
         staticruntime "On"

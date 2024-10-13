@@ -1,6 +1,7 @@
 project "CitromTech"   -- Engine Library
         location "CitromTech"
-        kind "StaticLib" -- choose between StaticLib (lib) and SharedLib (dll)
+        --kind "StaticLib" -- choose between StaticLib (lib) and SharedLib (dll)
+        kind (LIBRARY_BUILD_AS_DLL and "SharedLib" or "StaticLib")
         language "C++"
         cppdialect "C++17"
     
@@ -46,11 +47,8 @@ project "CitromTech"   -- Engine Library
         defines
         {
             "CT_BUILD_LIB", -- We are building the Citrom Tech Library
-            "CT_BUILD_LIB_AS_STATIC", -- We are building Citrom Tech as a Static Library
-            -- (NOTE!): This must be defined in both the application,
-            -- and the engine library!
-            --"CT_BUILD_LIB_AS_DLL", -- We are building Citrom Tech as a Dynamically Linked Library
         }
+        DefineCitromLibraryTypeMacros()
 
     filter "system:windows"
         staticruntime "On"
