@@ -3,7 +3,7 @@ project "CitromForge" -- EXE
         --kind "ConsoleApp" -- ConsoleApp or WindowedApp
         kind (RUNNER_BUILD_AS_CONSOLE_APP and "ConsoleApp" or "WindowedApp")
         language "C++"
-        cppdialect "C++17"
+        cppdialect (CPP_VERSION)
 
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")

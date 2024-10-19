@@ -27,6 +27,8 @@ LIBRARY_BUILD_AS_DLL = false
 RUNNER_BUILD_AS_CONSOLE_APP = true
 RUNNER_APP_NAME = "CitromForge"
 
+CPP_VERSION = "C++20" -- also known as CXX for CMake
+
 -- Configuration Implementation Functions
 function DefineCitromLibraryTypeMacros()
     if LIBRARY_BUILD_AS_DLL then

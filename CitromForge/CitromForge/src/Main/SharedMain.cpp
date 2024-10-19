@@ -2,6 +2,7 @@
 
 #include "test.h"
 #include "CTL/String.h"
+#include <string>
 
 int SharedMain(int argc, char* argv[])
 {
@@ -23,6 +24,14 @@ int SharedMain(int argc, char* argv[])
 	string2.Append("rld!");
 
 	Test::PrintSomeShit(string2.CStr());
+
+	std::string string3("This ");
+
+	string3.append("is an 👋 ");
+	string3.append("🌍");
+	string3.append(" test!");
+
+	Test::PrintSomeShit(const_cast<char*>(string3.c_str()));
 
 	Test::TestOutGLFW();
 

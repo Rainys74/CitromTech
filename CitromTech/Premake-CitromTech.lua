@@ -3,7 +3,7 @@ project "CitromTech"   -- Engine Library
         --kind "StaticLib" -- choose between StaticLib (lib) and SharedLib (dll)
         kind (LIBRARY_BUILD_AS_DLL and "SharedLib" or "StaticLib")
         language "C++"
-        cppdialect "C++17"
+        cppdialect (CPP_VERSION)
     
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
