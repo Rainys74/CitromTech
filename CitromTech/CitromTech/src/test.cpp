@@ -1,4 +1,4 @@
-#include "test.h"
+﻿#include "test.h"
 
 #include <iostream>
 
@@ -12,7 +12,13 @@ void Test::PrintSomeShit(char* shit)
 void Test::PrintComplexEmoji(const char* utf8Probably)
 {
 	//std::locale::global(std::locale("en_US.UTF-8")); // Set the locale to UTF-8
+	std::setlocale(LC_ALL, ".UTF8");
 	std::cout << utf8Probably << "\n";
+}
+
+void Test::PrintWideString(const wchar_t* utf16WideUnicode)
+{
+	std::wcout << utf16WideUnicode << std::endl;
 }
 
 void Test::TestOutGLFW()

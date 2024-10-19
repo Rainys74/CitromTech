@@ -1,6 +1,7 @@
 ﻿#include "SharedMain.h"
 
 #include "test.h"
+#include "CTL/String.h"
 
 int SharedMain(int argc, char* argv[])
 {
@@ -8,6 +9,20 @@ int SharedMain(int argc, char* argv[])
 
 	Test::PrintComplexEmoji("👋, 🌍!");
 	Test::PrintComplexEmoji("Ką jūs, pasaulį!");
+
+	CTL::String string1;
+
+	string1.PushBack('T');
+	string1.Append("his is string 1!");
+
+	Test::PrintSomeShit(string1.CStr());
+
+	CTL::String string2("Hello, ");
+	string2.Append("W");
+	string2.PushBack('o');
+	string2.Append("rld!");
+
+	Test::PrintSomeShit(string2.CStr());
 
 	Test::TestOutGLFW();
 

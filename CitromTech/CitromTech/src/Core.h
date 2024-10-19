@@ -55,7 +55,7 @@
 	using uint32fast = std::uint_fast32_t;
 	using uint64fast = std::uint_fast64_t;
 
-	#include <cstddef> // size_t
+	#include <cstddef> // size_t, wchar_t etc.
 #endif
 
 // ------------MACROS-----------------------
