@@ -9,6 +9,12 @@ void Test::PrintSomeShit(char* shit)
 	std::cout << shit << "\n";
 }
 
+void Test::PrintComplexEmoji(const char* utf8Probably)
+{
+	//std::locale::global(std::locale("en_US.UTF-8")); // Set the locale to UTF-8
+	std::cout << utf8Probably << "\n";
+}
+
 void Test::TestOutGLFW()
 {
 	glfwInit();

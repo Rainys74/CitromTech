@@ -54,6 +54,8 @@
 	using uint16fast = std::uint_fast16_t;
 	using uint32fast = std::uint_fast32_t;
 	using uint64fast = std::uint_fast64_t;
+
+	#include <cstddef> // size_t
 #endif
 
 // ------------MACROS-----------------------
@@ -65,4 +67,6 @@
 #else
 #define DEBUG_BREAK()
 #endif
+
+#define BIT(x) (1 << x)
 // -----------------------------------------
