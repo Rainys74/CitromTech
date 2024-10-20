@@ -36,13 +36,15 @@ project "CitromTech"   -- Engine Library
             --"opengl32.lib"
         }
         
-        --[[postbuildcommands
-        {
-            --('echo Copying %{cfg.buildtarget.relpath} to ../bin/' .. outputdir .. '/CitromEditor'),
-            ("{COPY} %{cfg.buildtarget.relpath} ../../bin/" .. outputdir .. "/CitromEditor"),
-            --('echo Copying %{cfg.buildtarget.relpath} to ../bin/' .. outputdir .. '/CitromRuntime'),
-            ("{COPY} %{cfg.buildtarget.relpath} ../../bin/" .. outputdir .. "/CitromRuntime")
-        }--]]   
+        if LIBRARY_BUILD_AS_DLL then
+            postbuildcommands
+            {
+                --('echo Copying %{cfg.buildtarget.relpath} to ../bin/' .. outputdir .. '/CitromEditor'),
+                ("{COPY} %{cfg.buildtarget.relpath} ../../bin/" .. outputdir .. "/CitromForge"),
+                --('echo Copying %{cfg.buildtarget.relpath} to ../bin/' .. outputdir .. '/CitromRuntime'),
+                --("{COPY} %{cfg.buildtarget.relpath} ../../bin/" .. outputdir .. "/CitromRuntime")
+            }
+        end
 
         defines
         {
