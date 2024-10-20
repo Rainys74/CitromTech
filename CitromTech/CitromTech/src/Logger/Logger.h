@@ -27,14 +27,16 @@
 	Error = something that shouldn't happen but the application can still run - Purple
 	Fatal/Severe/Critical = something that shouldn't happen and the application must close or already has - Red
 */
-#define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, x, __VA_ARGS__)
+// typeid(*this).name()
+#define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " ## x, __func__, __VA_ARGS__)
 #define CT_CORE_DEBUG(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
 #define CT_CORE_INFO(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
 #define CT_CORE_WARN(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)
 #define CT_CORE_ERROR(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Error, x, __VA_ARGS__)
 #define CT_CORE_FATAL(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Critical, x, __VA_ARGS__)
 
-#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, x, __VA_ARGS__)
+//#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, "{}({}): " ## x, __func__, __LINE__, __VA_ARGS__)
+#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, "{}(): " ## x, __func__, __VA_ARGS__)
 #define CT_DEBUG(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
 #define CT_INFO(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
 #define CT_WARN(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)

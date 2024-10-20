@@ -5,6 +5,7 @@
 #include <string>
 #include "Logger/Logger.h"
 #include "Platform/PlatformConsole.h"
+#include "CitromAssert.h"
 
 using namespace Citrom;
 
@@ -15,6 +16,10 @@ int SharedMain(int argc, char* argv[])
 	{
 		CT_DEBUG("\t{}: {}", i+1, argv[i]);
 	}
+
+	CT_TRACE("Test {}", (int)5);
+
+	CT_ASSERT(1 == 1, "1 != 0");
 
 	Test::PrintSomeShit(const_cast<char*>("insert some random shit!"));
 
