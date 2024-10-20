@@ -7,10 +7,4 @@ namespace Citrom
         static Logger instance;
 		return &instance;
 	}
-
-    template <typename... Args>
-    void Logger::Log(const LogCategory category, const Args &&...args)
-    {
-
-    }
 }
