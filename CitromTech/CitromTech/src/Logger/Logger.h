@@ -1,18 +1,15 @@
 #pragma once
 
 #include "Core.h"
+#include "Platform/PlatformConsole.h"
 
 #include <string>
 #include <string_view>
 #include <format>
-#include <iostream>
 
 #include <chrono>
 #include <ctime>
 #include <iomanip>
-
-// Config
-#define C_STYLE_TIME
 
 /*
 * Old Logger:
@@ -24,13 +21,25 @@
 
 * New Logger:
 	Trace = track the program execution - Blue (most likely dark)
+	Debug = similar to Trace, except for information instead of execution, Example: current cmd line arguments - Green
 	Info = important information that is supposed to happen under normal conditions - Gray
-	Debug = something - maybe green?
 	Warn = something that shouldn't happen but the process can still run - Yellow
 	Error = something that shouldn't happen but the application can still run - Purple
 	Fatal/Severe/Critical = something that shouldn't happen and the application must close or already has - Red
 */
-#define CT_TRACE(x, ...)	Logger::GetLogger()->Log(Logger::LogCategory::App, Logger::LogLevel::Trace, x, __VA_ARGS__);
+#define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, x, __VA_ARGS__)
+#define CT_CORE_DEBUG(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
+#define CT_CORE_INFO(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
+#define CT_CORE_WARN(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)
+#define CT_CORE_ERROR(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Error, x, __VA_ARGS__)
+#define CT_CORE_FATAL(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Critical, x, __VA_ARGS__)
+
+#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, x, __VA_ARGS__)
+#define CT_DEBUG(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
+#define CT_INFO(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
+#define CT_WARN(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)
+#define CT_ERROR(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Error, x, __VA_ARGS__)
+#define CT_FATAL(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Critical, x, __VA_ARGS__)
 
 namespace Citrom
 {
@@ -55,8 +64,8 @@ namespace Citrom
 		enum class LogLevel 
 		{
 			Trace,
-			Info,
 			Debug,
+			Info,
 			Warn,
 			Error,
 			Critical // also known as Severe/Fatal
@@ -109,9 +118,21 @@ namespace Citrom
 			SET_STRING_BY_ENUM(preMessage, LogCategory, App);
 		}*/
 
-		std::ostringstream result;
-		result << formattedTime << formattedLog;
+		switch (level)
+		{
+			default:					Platform::Console::SetTextColor(Platform::Console::TextColor::Reset); break;
+			case LogLevel::Trace:		Platform::Console::SetTextColor(Platform::Console::TextColor::Blue); break;
+			case LogLevel::Debug:		Platform::Console::SetTextColor(Platform::Console::TextColor::Green); break;
+			case LogLevel::Info:		Platform::Console::SetTextColor(Platform::Console::TextColor::Reset); break;
+			case LogLevel::Warn:		Platform::Console::SetTextColor(Platform::Console::TextColor::Yellow); break;
+			case LogLevel::Error:		Platform::Console::SetTextColor(Platform::Console::TextColor::Purple); break;
+			case LogLevel::Critical:	Platform::Console::SetTextColor(Platform::Console::TextColor::Red); break;
+		}
 
-		std::cout << result.str().c_str() << '\n';
+		std::ostringstream result;
+		result << formattedTime << formattedLog << '\n';
+
+		Platform::Console::PrintText(result.str().c_str(), (level >= LogLevel::Error) ? Platform::Console::Stream::Error : Platform::Console::Stream::In);
+		Platform::Console::SetTextColor(Platform::Console::TextColor::Reset);
 	}
 }

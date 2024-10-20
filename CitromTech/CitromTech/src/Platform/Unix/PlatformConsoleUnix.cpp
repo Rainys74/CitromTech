@@ -1,4 +1,3 @@
-#define CT_PLATFORM_MACOS
 #if defined(CT_PLATFORM_MACOS) || defined(CT_PLATFORM_LINUX) //CT_PLATFORM_UNIX
 #include "Platform/PlatformConsole.h"
 

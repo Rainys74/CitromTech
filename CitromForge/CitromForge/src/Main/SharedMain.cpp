@@ -10,6 +10,12 @@ using namespace Citrom;
 
 int SharedMain(int argc, char* argv[])
 {
+	CT_DEBUG("Command Line Arguments:");
+	for (int i = 0; i < argc; i++)
+	{
+		CT_DEBUG("\t{}: {}", i+1, argv[i]);
+	}
+
 	Test::PrintSomeShit(const_cast<char*>("insert some random shit!"));
 
 	Test::PrintComplexEmoji("👋, 🌍!");
