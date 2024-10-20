@@ -27,9 +27,17 @@ namespace Citrom
 	class Logger
 	{
 	public:
-		// member functions for the logger
-	private:
-		//static const char* ParseFormat(const char* log, va_list args, const char* preMessage);
+		enum class LogCategory 
+		{
+			Core,
+			App
+		};
+
+		static Logger* GetLogger();
+
+		// Variadic Templates are better and faster than C-style va_lists
+		template<typename... Args>
+		void Log(const LogCategory category, const Args&&... args);
 	private:
 		// static logger instances
 	};
