@@ -45,7 +45,8 @@ namespace Citrom::Memory
 	void* StackAllocate(size_t size)
 	{
 		//return _malloca(size); // generally safer but requires the use of _freea, because it allocates memory on the heap. It is meant for allocating memory that is automatically freed when it goes out of scope.
-		return _alloca(size);
+		//return _alloca(size);
+		return alloca(size);
 	}
 }
 
