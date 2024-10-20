@@ -58,6 +58,11 @@
 	#include <cstddef> // size_t, wchar_t etc.
 #endif
 
+// TODO: figure out if this is how you wanna do things
+#ifdef __unix__
+#define CT_PLATFORM_UNIX
+#endif
+
 // ------------MACROS-----------------------
 
 #if defined(CT_PLATFORM_WINDOWS) && defined(_MSC_VER)

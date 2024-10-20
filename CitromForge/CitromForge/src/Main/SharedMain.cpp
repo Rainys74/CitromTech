@@ -4,6 +4,7 @@
 #include "CTL/String.h"
 #include <string>
 #include "Logger/Logger.h"
+#include "Platform/PlatformConsole.h"
 
 using namespace Citrom;
 
@@ -27,6 +28,12 @@ int SharedMain(int argc, char* argv[])
 	string2.Append("rld!");
 
 	Test::PrintSomeShit(string2.CStr());
+
+	Platform::Console::SetTextColor(Platform::Console::TextColor::Blue);
+	Platform::Console::PrintText("this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// ansi/utf-8
+	Platform::Console::PrintText(L"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// wide
+	Platform::Console::PrintText(u8"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);	// utf-8
+	Platform::Console::PrintText(u"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// utf-16
 
 	int a = 5;
 	float b = 2.5334f;

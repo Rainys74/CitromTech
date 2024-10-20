@@ -34,6 +34,16 @@
 
 namespace Citrom
 {
+	enum class LogColor
+	{
+		Reset,
+		Red,
+		Green,
+		Yellow,
+		Blue,
+		Purple
+	};
+
 	class Logger
 	{
 	public:
@@ -66,7 +76,7 @@ namespace Citrom
 	{
 		// Format log and arguments
 		std::string_view strV(fmt);
-		std::string result = std::vformat(strV, std::make_format_args(std::forward<Args>(args)...));
+		std::string formattedLog = std::vformat(strV, std::make_format_args(std::forward<Args>(args)...));
 
 		// Format TimeStamp
 		std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); // or use time(NULL)
@@ -99,6 +109,9 @@ namespace Citrom
 			SET_STRING_BY_ENUM(preMessage, LogCategory, App);
 		}*/
 
-		std::cout << formattedTime << result << '\n';
+		std::ostringstream result;
+		result << formattedTime << formattedLog;
+
+		std::cout << result.str().c_str() << '\n';
 	}
 }
