@@ -1,8 +1,7 @@
 #include "String.h"
 #include "CStringHandling.h"
 
-#include "CitromMemory.h"
-using namespace Citrom;
+#include "CTL.h"
 
 namespace CTL
 {
@@ -19,7 +18,7 @@ namespace CTL
     {
         m_Length = CString::GetLength(initialString);
         m_Data = new char[CString::GetLength(initialString)];
-        Memory::Copy(m_Data, initialString, m_Length);
+        CTL_MEMORY_COPY(m_Data, initialString, m_Length);
 
         //str->length = cstring_get_length(initialString);
         //str->data = memory_allocate(cstring_get_length(initialString), MEMORY_USAGE_TYPE_CONTAINER_STRINGV);
@@ -39,9 +38,9 @@ namespace CTL
     {
         size_t appendLength = CString::GetLength(data);
 
-        m_Data = (char*)Memory::AllocateAddMemory(m_Data, m_Length, appendLength);
+        m_Data = (char*)CTL_MEMORY_ALLOCATE_ADD_MEMORY(m_Data, m_Length, appendLength);
 
-        Memory::Copy(m_Data + m_Length, data, appendLength);
+        CTL_MEMORY_COPY(m_Data + m_Length, data, appendLength);
 
         m_Length += appendLength;
 
@@ -64,7 +63,7 @@ namespace CTL
         }
         else
         {
-            m_Data = (char*)Memory::AllocateAddMemory(m_Data, m_Length, 1);
+            m_Data = (char*)CTL_MEMORY_ALLOCATE_ADD_MEMORY(m_Data, m_Length, 1);
             m_Data[m_Length] = character;
             m_Length++;
         }
@@ -94,7 +93,7 @@ namespace CTL
         char* cStr = new char[m_Length + 1];
         if (cStr)
         {
-            Memory::Copy(cStr, m_Data, m_Length);
+            CTL_MEMORY_COPY(cStr, m_Data, m_Length);
             cStr[m_Length] = '\0';
 
             return cStr;

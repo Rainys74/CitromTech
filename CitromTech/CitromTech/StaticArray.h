@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "CTL.h"
 
 // CTL - (C)itrom Tech Standard (T)emplate (L)ibrary
 namespace CTL

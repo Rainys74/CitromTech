@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core.h"
+#include "CTL.h"
 
 namespace CTL::CString
 {
