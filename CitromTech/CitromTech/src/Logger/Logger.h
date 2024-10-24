@@ -21,27 +21,28 @@
 
 * New Logger:
 	Trace = track the program execution - Blue (most likely dark)
-	Debug = similar to Trace, except for information instead of execution, Example: current cmd line arguments - Green
-	Info = important information that is supposed to happen under normal conditions - Gray
+	//Debug/Verbose = similar to Trace, except for information instead of execution, Example: current cmd line arguments - Green
+	Verbose/Debug = similar to Trace, except happens less often and is only used for more important things - Green
+	Info/Diag(nostic) = important information that is supposed to happen under normal conditions - Gray
 	Warn = something that shouldn't happen but the process can still run - Yellow
 	Error = something that shouldn't happen but the application can still run - Purple
 	Fatal/Severe/Critical = something that shouldn't happen and the application must close or already has - Red
 */
 // typeid(*this).name()
-#define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " ## x, __func__, __VA_ARGS__)
-#define CT_CORE_DEBUG(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
-#define CT_CORE_INFO(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
-#define CT_CORE_WARN(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)
-#define CT_CORE_ERROR(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Error, x, __VA_ARGS__)
-#define CT_CORE_FATAL(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Critical, x, __VA_ARGS__)
+#define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " x, __func__ __VA_OPT__(,) __VA_ARGS__)
+#define CT_CORE_VERBOSE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Debug, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_CORE_INFO(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Info, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_CORE_WARN(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Warn, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_CORE_ERROR(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Error, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_CORE_FATAL(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Critical, x __VA_OPT__(,) __VA_ARGS__)
 
 //#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, "{}({}): " ## x, __func__, __LINE__, __VA_ARGS__)
-#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, "{}(): " ## x, __func__, __VA_ARGS__)
-#define CT_DEBUG(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Debug, x, __VA_ARGS__)
-#define CT_INFO(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Info, x, __VA_ARGS__)
-#define CT_WARN(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Warn, x, __VA_ARGS__)
-#define CT_ERROR(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Error, x, __VA_ARGS__)
-#define CT_FATAL(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Critical, x, __VA_ARGS__)
+#define CT_TRACE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Trace, "{}(): " x, __func__ __VA_OPT__(,) __VA_ARGS__)
+#define CT_VERBOSE(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Debug, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_INFO(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Info, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_WARN(x, ...)				Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Warn, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_ERROR(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Error, x __VA_OPT__(,) __VA_ARGS__)
+#define CT_FATAL(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Critical, x __VA_OPT__(,) __VA_ARGS__)
 
 namespace Citrom
 {
@@ -66,8 +67,8 @@ namespace Citrom
 		enum class LogLevel 
 		{
 			Trace,
-			Debug,
-			Info,
+			Debug, // also known as Verbose
+			Info, // might be used for Diagnostics
 			Warn,
 			Error,
 			Critical // also known as Severe/Fatal
@@ -87,7 +88,10 @@ namespace Citrom
 	{
 		// Format log and arguments
 		std::string_view strV(fmt);
-		std::string formattedLog = std::vformat(strV, std::make_format_args(std::forward<Args>(args)...));
+		//std::string formattedLog = std::vformat(strV, std::make_format_args(std::forward<Args>(args)...)); // works on windows
+		// Create an lvalue tuple of arguments
+    	auto formatArgs = std::make_format_args(args...);
+		std::string formattedLog = std::vformat(strV, formatArgs);
 
 		// Format TimeStamp
 		std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); // or use time(NULL)

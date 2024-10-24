@@ -11,10 +11,10 @@ using namespace Citrom;
 
 int SharedMain(int argc, char* argv[])
 {
-	CT_DEBUG("Command Line Arguments:");
+	CT_INFO("Command Line Arguments:");
 	for (int i = 0; i < argc; i++)
 	{
-		CT_DEBUG("\t{}: {}", i+1, argv[i]);
+		CT_INFO("\t{}: {}", i+1, argv[i]);
 	}
 
 	CT_TRACE("Test {}", (int)5);

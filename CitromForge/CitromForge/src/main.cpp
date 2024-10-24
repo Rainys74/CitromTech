@@ -1,6 +1,6 @@
 #include "Main/SharedMain.h"
 
-#ifdef CT_PLATFORM_UNIX
+#if defined(CT_PLATFORM_MACOS) || defined(CT_PLATFORM_LINUX) || defined(CT_PLATFORM_UNIX)
 int main(int argc, char* argv[])
 {
 	return SharedMain(argc, argv);
