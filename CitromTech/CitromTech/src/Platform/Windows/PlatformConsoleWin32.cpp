@@ -22,15 +22,19 @@ namespace Citrom::Platform::Console
 {
 	void CreateConsole()
 	{
+	#if defined(CT_DEBUG) && !defined(CT_BUILD_APP_AS_CONSOLE)
 		::AllocConsole();
 
 		(void)freopen("CONIN$", "r", stdin);
 		(void)freopen("CONOUT$", "w", stdout);
 		(void)freopen("CONOUT$", "w", stderr);
+	#endif
 	}
 	void FreeConsole()
 	{
+	#if defined(CT_DEBUG) && !defined(CT_BUILD_APP_AS_CONSOLE)
 		::FreeConsole();
+	#endif
 	}
 
 	static HANDLE GetStdStreamHandle(Stream stream)

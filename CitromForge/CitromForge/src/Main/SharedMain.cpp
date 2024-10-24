@@ -2,6 +2,7 @@
 
 #include "test.h"
 #include "CTL/String.h"
+#include "CTL/StaticArray.h"
 #include <string>
 #include "Logger/Logger.h"
 #include "Platform/PlatformConsole.h"
@@ -27,6 +28,30 @@ int SharedMain(int argc, char* argv[])
 
 	Test::PrintComplexEmoji("👋, 🌍!");
 	Test::PrintComplexEmoji("Ką jūs, pasaulį!");
+
+	CTL::Array<char, 8> testSArray;
+	testSArray[0] = 't';
+	testSArray[1] = 'e';
+	testSArray[2] = 's';
+	testSArray[3] = 't';
+	testSArray[4] = 'i';
+	testSArray[5] = 'n';
+	testSArray[6] = 'g';
+	testSArray[7] = '!';
+
+	for (auto letter : testSArray)
+	{
+		CT_VERBOSE("{}", letter);
+	}
+
+	CT_TRACE("Modifying letter..");
+	testSArray[7] = '1';
+	CT_TRACE("Successfully modified letter.");
+
+	for (auto letter : testSArray)
+	{
+		CT_VERBOSE("{}", letter);
+	}
 
 	CTL::String string1;
 

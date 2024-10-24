@@ -11,7 +11,7 @@ namespace Citrom::Memory
 	void* AllocateAddMemory(void* ptr, size_t currentSize, size_t sizeToAdd);
 	void* Reallocate(void* ptr, size_t newSize);
 
-	void Free(void* ptr);
+	void Free(void* ptr, size_t size = 0);
 
 	void* Copy(void* destination, const void* source, size_t bytesToCopy);
 	void* Set(void* ptr, const int valueForEachByte, size_t bytesToSet);

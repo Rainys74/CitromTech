@@ -26,7 +26,7 @@ namespace Citrom::Memory
 	{
 		return realloc(ptr, newSize);
 	}
-	void Free(void* ptr)
+	void Free(void* ptr, size_t size)
 	{
 		free(ptr);
 	}
