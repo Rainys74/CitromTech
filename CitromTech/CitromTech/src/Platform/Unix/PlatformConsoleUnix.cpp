@@ -13,14 +13,8 @@
 
 namespace Citrom::Platform::Console
 {
-	void CreateConsole()
-	{
-
-	}
-	void FreeConsole()
-	{
-
-	}
+	void CreateConsole() {}
+	void FreeConsole() {}
 
     static std::FILE* GetStdStreamHandle(Stream stream)
 	{

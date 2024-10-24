@@ -1,4 +1,5 @@
 #include "CStringHandling.h"
+#include "CTL.h"
 
 #include <cstring>
 
@@ -29,7 +30,7 @@ namespace CTL::CString
 
     char* Copy(char* destination, const char* source)
     {
-        //memory_copy(destination, source, cstring_get_length(source) + 1);
+        CTL_MEMORY_COPY(destination, source, GetLength(source) + 1);
         return destination;
     }
 

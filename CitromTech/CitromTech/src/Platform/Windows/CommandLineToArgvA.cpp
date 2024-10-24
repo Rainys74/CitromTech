@@ -1,8 +1,9 @@
+#ifdef CT_PLATFORM_WINDOWS
 #include "WindowsIncludes.h"
 
 // designed by Alter aka Alexander A. Telyatnikov
 // powered by Apache+PHP under FBSD
-// © 2002-2024
+// ï¿½ 2002-2024
 
 PCHAR*
 CommandLineToArgvA(
@@ -89,3 +90,4 @@ CommandLineToArgvA(
     (*_argc) = argc;
     return argv;
 }
+#endif

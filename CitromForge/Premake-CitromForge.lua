@@ -68,6 +68,12 @@ project "CitromForge" -- EXE
         {
             "CT_PLATFORM_MACOS",
         }
+        
+        xcodebuildsettings 
+        {
+            ["GENERATE_INFOPLIST_FILE"] = "YES", -- Enable automatic generation of Info.plist
+            ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.citromstudio.citromforge"
+        }
 
     filter "configurations:Debug"
         defines "CT_DEBUG"
