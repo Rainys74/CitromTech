@@ -24,7 +24,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows
 
 -- Configuration Settings
 LIBRARY_BUILD_AS_DLL = false
-RUNNER_BUILD_AS_CONSOLE_APP = true
+RUNNER_BUILD_AS_CONSOLE_APP = false
 RUNNER_APP_NAME = "CitromForge"
 
 CPP_VERSION = "C++20" -- also known as CXX for CMake

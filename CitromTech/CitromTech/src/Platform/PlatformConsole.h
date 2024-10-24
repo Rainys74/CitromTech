@@ -18,6 +18,9 @@ namespace Citrom::Platform::Console
 		In		// stdin
 	};
 
+	void CreateConsole();
+	void FreeConsole();
+
 	void SetTextColor(TextColor textColor);
 	void PrintText(const char* text, Stream stdStream);		// ANSI/UTF-8
 	void PrintText(const char8_t* text, Stream stdStream);	// UTF-8

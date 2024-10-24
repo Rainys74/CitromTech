@@ -7,4 +7,8 @@ namespace Citrom
         static Logger instance;
 		return &instance;
 	}
+    Logger::Logger()
+    {
+        Platform::Console::CreateConsole();
+    }
 }

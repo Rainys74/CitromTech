@@ -63,6 +63,15 @@
 #define CT_PLATFORM_UNIX
 #endif
 
+// Detect Compiler
+#ifdef _MSC_VER
+#define CT_COMPILER_MSVC
+#elif defined(__GNUC__)
+#define CT_COMPILER_GCC
+#elif defined(__clang__)
+#define CT_COMPILER_CLANG
+#endif
+
 // ------------MACROS-----------------------
 
 #if defined(CT_PLATFORM_WINDOWS) && defined(_MSC_VER)

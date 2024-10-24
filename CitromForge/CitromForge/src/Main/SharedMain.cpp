@@ -7,11 +7,13 @@
 #include "Platform/PlatformConsole.h"
 #include "CitromAssert.h"
 
+#include <iostream>
+
 using namespace Citrom;
 
 int SharedMain(int argc, char* argv[])
 {
-	CT_INFO("Command Line Arguments:");
+	CT_INFO("Command Line Arguments ({}):", argc);
 	for (int i = 0; i < argc; i++)
 	{
 		CT_INFO("\t{}: {}", i+1, argv[i]);
@@ -66,6 +68,8 @@ int SharedMain(int argc, char* argv[])
 	Test::PrintSomeShit(const_cast<char*>("this is an error test"));
 	//DEBUG_BREAK();
 	Test::PrintSomeShit(const_cast<char*>("this is an error test after the debug break"));
+
+	std::cin.get();
 
 	return 0;
 }

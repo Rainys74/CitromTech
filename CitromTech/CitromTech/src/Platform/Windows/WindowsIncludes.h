@@ -5,4 +5,6 @@
 //#define NOMINMAX
 
 #include <Windows.h>
+
+PCHAR* CommandLineToArgvA(PCHAR CmdLine, int* _argc); // implemented in CommandLineToArgvA.cpp
 #endif

@@ -20,6 +20,19 @@
 
 namespace Citrom::Platform::Console
 {
+	void CreateConsole()
+	{
+		::AllocConsole();
+
+		(void)freopen("CONIN$", "r", stdin);
+		(void)freopen("CONOUT$", "w", stdout);
+		(void)freopen("CONOUT$", "w", stderr);
+	}
+	void FreeConsole()
+	{
+		::FreeConsole();
+	}
+
 	static HANDLE GetStdStreamHandle(Stream stream)
 	{
 		switch (stream)
@@ -83,14 +96,14 @@ namespace Citrom::Platform::Console
 		HANDLE hConsole = GetStdStreamHandle(stdStream);
 
 		DWORD dwCharsWritten;
-		WriteConsoleA(hConsole, text, CTL::CString::GetLength(text), &dwCharsWritten, NULL);
+		WriteConsoleA(hConsole, text, (DWORD)CTL::CString::GetLength(text), &dwCharsWritten, NULL);
 	}
 	void PrintText(const char8_t* text, Stream stdStream)
 	{
 		HANDLE hConsole = GetStdStreamHandle(stdStream);
 
 		DWORD dwCharsWritten;
-		WriteConsoleA(hConsole, text, std::char_traits<char8_t>::length(text), &dwCharsWritten, NULL);
+		WriteConsoleA(hConsole, text, (DWORD)std::char_traits<char8_t>::length(text), &dwCharsWritten, NULL);
 	}
 	void PrintText(const char16_t* text, Stream stdStream)
 	{
@@ -103,7 +116,7 @@ namespace Citrom::Platform::Console
 		}*/
 
 		DWORD dwCharsWritten;
-		WriteConsoleW(hConsole, text, std::char_traits<char16_t>::length(text), &dwCharsWritten, NULL);
+		WriteConsoleW(hConsole, text, (DWORD)std::char_traits<char16_t>::length(text), &dwCharsWritten, NULL);
 	}
 	void PrintText(const char32_t* text, Stream stdStream)
 	{
@@ -113,7 +126,7 @@ namespace Citrom::Platform::Console
 		HANDLE hConsole = GetStdStreamHandle(stdStream);
 
 		DWORD dwCharsWritten;
-		WriteConsoleW(hConsole, text, wcslen(text), &dwCharsWritten, NULL);
+		WriteConsoleW(hConsole, text, (DWORD)wcslen(text), &dwCharsWritten, NULL);
 	}
 }
 

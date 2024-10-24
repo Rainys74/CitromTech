@@ -19,6 +19,13 @@ project "CitromForge" -- EXE
             "../CitromTech/CitromTech/src"
         }
 
+        if RUNNER_BUILD_AS_CONSOLE_APP then
+            defines
+            {
+                "CT_BUILD_APP_AS_CONSOLE" -- Check to see if CitromForge is being built as a console application
+            }
+        end
+
         links
         {
             "CitromTech",
