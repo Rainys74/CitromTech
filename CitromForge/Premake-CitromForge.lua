@@ -43,6 +43,13 @@ project "CitromForge" -- EXE
             "CT_PLATFORM_WINDOWS",
         }
 
+        files
+        {
+            "../Resources/resources.rc",
+            "../Resources/**.ico"
+        }
+        --vpaths { ["Resources/*"] = { "*.rc", "**.ico" } }
+
     filter "system:linux"
         staticruntime "On"
         systemversion "latest"

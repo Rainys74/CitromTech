@@ -1,0 +1,1 @@
+The icon temporarily used in this project is from [Icon Archive](https://iconarchive.com) and is licensed for free use with attribution.
