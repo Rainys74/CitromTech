@@ -41,16 +41,16 @@ namespace Citrom
     class EventListener
     {
     public:
-        void (*OnEvent)(const T eventType);
+        void (*OnEvent)(const Event<T>& event);
     };
 
     template<typename T>
     class EventDispatcher
     {
     public:
-        void Dispatch(T eventType)
+        void Dispatch(Event<T>& event)
         {
-            m_EventListener->OnEvent(eventType);
+            m_EventListener->OnEvent(event);
         }
 
         void AddListener(EventListener<T>* eventListener)

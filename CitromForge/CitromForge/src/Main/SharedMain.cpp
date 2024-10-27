@@ -75,22 +75,25 @@ int SharedMain(int argc, char* argv[])
 	Platform::Console::PrintText(u8"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);	// utf-8
 	Platform::Console::PrintText(u"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// utf-16
 
-	KeyDownEvent event;
+	KeyDownEvent keyDownEvent;
 
-	CT_TRACE("Event Type: {}", (int)event.GetEventType());
+	CT_TRACE("Event Type: {}", (int)keyDownEvent.GetEventType());
 
-	CT_TRACE("Event Category Name: {}", event.GetEventCategoryName());
-	CT_TRACE("Event Type Name: {}", event.GetEventTypeName());
+	CT_TRACE("Event Category Name: {}", keyDownEvent.GetEventCategoryName());
+	CT_TRACE("Event Type Name: {}", keyDownEvent.GetEventTypeName());
 	//CT_TRACE("Event To String: {}", event.ToString().CStr());
 
 	EventListener<KeyEvents> keyEventListener;
-	keyEventListener.OnEvent = [](const KeyEvents eventType) {
-		CT_ERROR("TEST!: {}", (int)eventType);
+	keyEventListener.OnEvent = [](const Event<KeyEvents>& event) {
+		CT_ERROR("TEST!: {}", (int)event.GetEventType());
+
+		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
+		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
 	};
 
 	EventDispatcher<KeyEvents> keyEventDispatcher;
 	keyEventDispatcher.AddListener(&keyEventListener);
-	keyEventDispatcher.Dispatch(KeyEvents::KeyRepeat);
+	keyEventDispatcher.Dispatch(keyDownEvent);
 
 	int a = 5;
 	float b = 2.5334f;
