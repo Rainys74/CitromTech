@@ -18,7 +18,7 @@ namespace Citrom
         virtual const char* GetEventCategoryName() const = 0;
         virtual const char* GetEventTypeName() const = 0;
 
-        virtual CTL::String ToString() const {return GetEventTypeName();} // returns a nicely formatted string with values (by default returns the name)
+        //virtual CTL::String ToString() const {return GetEventTypeName();} // returns a nicely formatted string with values (by default returns the name)
     protected:
         T m_Type;
         bool m_Handled = false;
@@ -35,5 +35,29 @@ namespace Citrom
     {
     public:
         EVENT_CLASS_TYPE(KeyEvents, KeyDown);
+    };
+
+    template<typename T>
+    class EventListener
+    {
+    public:
+        void (*OnEvent)(const T eventType);
+    };
+
+    template<typename T>
+    class EventDispatcher
+    {
+    public:
+        void Dispatch(T eventType)
+        {
+            m_EventListener->OnEvent(eventType);
+        }
+
+        void AddListener(EventListener<T>* eventListener)
+        {
+            m_EventListener = eventListener;
+        }
+    private:
+        EventListener<T>* m_EventListener = nullptr;
     };
 }

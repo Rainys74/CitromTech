@@ -83,6 +83,15 @@ int SharedMain(int argc, char* argv[])
 	CT_TRACE("Event Type Name: {}", event.GetEventTypeName());
 	//CT_TRACE("Event To String: {}", event.ToString().CStr());
 
+	EventListener<KeyEvents> keyEventListener;
+	keyEventListener.OnEvent = [](const KeyEvents eventType) {
+		CT_ERROR("TEST!: {}", (int)eventType);
+	};
+
+	EventDispatcher<KeyEvents> keyEventDispatcher;
+	keyEventDispatcher.AddListener(&keyEventListener);
+	keyEventDispatcher.Dispatch(KeyEvents::KeyRepeat);
+
 	int a = 5;
 	float b = 2.5334f;
 	const char* c = "this is a test";
