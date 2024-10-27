@@ -19,7 +19,7 @@ namespace Citrom
         virtual const char* GetEventTypeName() const = 0;
 
         virtual CTL::String ToString() const {return GetEventTypeName();} // returns a nicely formatted string with values (by default returns the name)
-    private:
+    protected:
         T m_Type;
         bool m_Handled = false;
     };
@@ -35,8 +35,5 @@ namespace Citrom
     {
     public:
         EVENT_CLASS_TYPE(KeyEvents, KeyDown);
-
-    private:
-        
     };
 }
