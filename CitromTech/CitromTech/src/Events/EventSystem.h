@@ -5,7 +5,7 @@
 
 namespace Citrom
 {
-    #define EVENT_CLASS_TYPE(CATEGORY, TYPE) virtual CATEGORY GetEventType() const override {return CATEGORY ## :: ## TYPE;}           \
+    #define EVENT_CLASS_TYPE(CATEGORY, TYPE) virtual CATEGORY GetEventType() const override {return CATEGORY::TYPE;}           \
                                              virtual const char* GetEventCategoryName() const override {return #CATEGORY;}             \
                                              virtual const char* GetEventTypeName() const override {return #TYPE;}                     
 

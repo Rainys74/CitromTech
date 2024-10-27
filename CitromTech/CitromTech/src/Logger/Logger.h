@@ -29,11 +29,11 @@
 	Fatal/Severe/Critical = something that shouldn't happen and the application must close or already has - Red
 */
 
-#ifdef CT_COMPILER_MSVC
+/*#ifdef CT_COMPILER_MSVC
 #define INTERNAL__VA_OPT__(x) x
 #else
 #define INTERNAL__VA_OPT__(x) __VA_OPT__(x)
-#endif
+#endif*/
 
 // typeid(*this).name()
 #define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " x, __func__, ## __VA_ARGS__)
