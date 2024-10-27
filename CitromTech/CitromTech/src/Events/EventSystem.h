@@ -50,11 +50,14 @@ namespace Citrom
     public:
         void Dispatch(Event<T>& event)
         {
-            m_EventListener->OnEvent(event);
+            CT_CORE_ASSERT_WARN(m_EventListener && m_EventListener->OnEvent, "Dispatching events to a null event listener or null event listener callback!");
+            if (m_EventListener && m_EventListener->OnEvent)
+                m_EventListener->OnEvent(event);
         }
 
         void AddListener(EventListener<T>* eventListener)
         {
+            CT_CORE_ASSERT_WARN(eventListener, "Assigning null event listener!");
             m_EventListener = eventListener;
         }
     private:

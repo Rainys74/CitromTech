@@ -10,11 +10,13 @@
 #endif
 
 #if defined(CT_DEBUG) || defined(CT_RELEASE)
-#define CT_CORE_ASSERT(x, y) if (!(x)) {CT_FATAL("CT: ASSERT: ""{}({}): error: {} line: {} in function: {}()", __FILE__, __LINE__, #y, #x, __func__); CT_ASSERT_THROW_APP_ERROR();}
+#define CT_CORE_ASSERT(x, y) if (!(x)) {CT_CORE_FATAL("ASSERT: ""{}({}): error: {} line: {} in function: {}()", __FILE__, __LINE__, #y, #x, __func__); CT_ASSERT_THROW_APP_ERROR();}
 #define CT_ASSERT(x, y) if (!(x)) {CT_FATAL("ASSERT: ""{}({}): error: {} line: {} in function: {}()", __FILE__, __LINE__, #y, #x, __func__); CT_ASSERT_THROW_APP_ERROR();}
+#define CT_CORE_ASSERT_WARN(x, y) if (!(x)) {CT_CORE_WARN("WARNING ASSERT: ""{}({}): error: {} line: {} in function: {}()", __FILE__, __LINE__, #y, #x, __func__); }
 #else // CT_OPTIMIZATION
 #define CT_CORE_ASSERT(x, y) x
 #define CT_ASSERT(x, y) x
+#define CT_CORE_ASSERT_WARN(x, y)
 #endif
 
 #ifndef CT_OPTIMIZATION
