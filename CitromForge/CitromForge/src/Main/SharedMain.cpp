@@ -8,6 +8,8 @@
 #include "Platform/PlatformConsole.h"
 #include "CitromAssert.h"
 
+#include "Events/EventSystem.h"
+
 #include <iostream>
 
 using namespace Citrom;
@@ -72,6 +74,14 @@ int SharedMain(int argc, char* argv[])
 	Platform::Console::PrintText(L"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// wide
 	Platform::Console::PrintText(u8"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);	// utf-8
 	Platform::Console::PrintText(u"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// utf-16
+
+	KeyDownEvent event;
+
+	CT_TRACE("Event Type: {}", (int)event.GetEventType());
+
+	CT_TRACE("Event Category Name: {}", event.GetEventCategoryName());
+	CT_TRACE("Event Type Name: {}", event.GetEventTypeName());
+	//CT_TRACE("Event To String: {}", event.ToString().CStr());
 
 	int a = 5;
 	float b = 2.5334f;

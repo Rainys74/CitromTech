@@ -6,13 +6,14 @@
 namespace Citrom
 {
     #define EVENT_CLASS_TYPE(CATEGORY, TYPE) virtual CATEGORY GetEventType() const override {return CATEGORY ## :: ## TYPE;}           \
-                                             virtual const char* GetEventCategoryName() const override {return #CATEGORY;}             \    
-                                             virtual const char* GetEventTypeName() const override {return #TYPE;}                     \    
+                                             virtual const char* GetEventCategoryName() const override {return #CATEGORY;}             \
+                                             virtual const char* GetEventTypeName() const override {return #TYPE;}                     
 
     template<typename T> // T = Event Category
     class /*CITROM_API*/ Event
     {
-    public: 
+    public:
+        // EVENT_CLASS_TYPE
         virtual T GetEventType() const = 0;
         virtual const char* GetEventCategoryName() const = 0;
         virtual const char* GetEventTypeName() const = 0;
