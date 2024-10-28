@@ -75,13 +75,13 @@ int SharedMain(int argc, char* argv[])
 	Platform::Console::PrintText(u8"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);	// utf-8
 	Platform::Console::PrintText(u"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// utf-16
 
-	KeyDownEvent keyDownEvent;
+	KeyDownEvent keyDownEvent(1254);
 
 	CT_TRACE("Event Type: {}", (int)keyDownEvent.GetEventType());
 
 	CT_TRACE("Event Category Name: {}", keyDownEvent.GetEventCategoryName());
 	CT_TRACE("Event Type Name: {}", keyDownEvent.GetEventTypeName());
-	//CT_TRACE("Event To String: {}", event.ToString().CStr());
+	CT_TRACE("Event To String: {}", keyDownEvent.ToString().CStr());
 
 	EventListener<KeyEvents> keyEventListener;
 	keyEventListener.OnEvent = [](const Event<KeyEvents>& event) {
@@ -89,6 +89,7 @@ int SharedMain(int argc, char* argv[])
 
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
 		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
+		CT_TRACE("Event To String: {}", event.ToString().CStr());
 	};
 
 	EventDispatcher<KeyEvents> keyEventDispatcher;
@@ -116,7 +117,9 @@ int SharedMain(int argc, char* argv[])
 	//DEBUG_BREAK();
 	Test::PrintSomeShit(const_cast<char*>("this is an error test after the debug break"));
 
+#ifdef CT_PLATFORM_WINDOWS
 	std::cin.get();
+#endif
 
 	return 0;
 }
