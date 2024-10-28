@@ -87,7 +87,7 @@ namespace CTL
         // TODO: implement
     }
 
-    char* String::CStr()
+    char* String::CStr() const
     {
         // TODO: this memory never gets freed
         char* cStr = new char[m_Length + 1];

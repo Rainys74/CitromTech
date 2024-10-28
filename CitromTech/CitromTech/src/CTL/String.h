@@ -19,7 +19,7 @@ namespace CTL
 		void PushBack(const char character);
 		void Join(const String& secondString);
 
-		char* CStr(); // ANSI/UTF-8
+		char* CStr() const; // ANSI/UTF-8
 		wchar_t* WStr(); // Compiler dependent, most likely UTF-16 on Windows, UTF-32 on Linux.
 
 		//char16_t* UTF16Str(); // UTF-16

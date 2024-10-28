@@ -12,6 +12,8 @@
 #include "Events/EventSystem.h"
 #include "Events/KeyEvents.h"
 
+#include "Platform/Platform.h"
+
 #include <iostream>
 
 using namespace Citrom;
@@ -137,7 +139,17 @@ int SharedMain(int argc, char* argv[])
 
 	Test::PrintSomeShit(const_cast<char*>(string3.c_str()));
 
-	Test::TestOutGLFW();
+	using namespace Platform;
+	Window* window = Window::GenerateWindow();
+
+	window->Create(1280, 720, CTL::String("test"));
+
+	while (!window->WindowShouldClose())
+	{
+		window->PollEvents();
+	}
+
+	//Test::TestOutGLFW();
 
 	Test::PrintSomeShit(const_cast<char*>("this is an error test"));
 	//DEBUG_BREAK();
