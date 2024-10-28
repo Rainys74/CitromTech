@@ -10,6 +10,7 @@
 #include "CitromAssert.h"
 
 #include "Events/EventSystem.h"
+#include "Events/KeyEvents.h"
 
 #include <iostream>
 
@@ -96,6 +97,12 @@ int SharedMain(int argc, char* argv[])
 	EventDispatcher<KeyEvents> keyEventDispatcher;
 	keyEventDispatcher.AddListener(&keyEventListener);
 	keyEventDispatcher.Dispatch(keyDownEvent);
+
+	/*
+	EventBus eventBus;
+	eventBus.AddListener(&keyEventListener);
+	eventBus.Dispatch(keyDownEvent);
+	*/
 
 	int a = 5;
 	float b = 2.5334f;

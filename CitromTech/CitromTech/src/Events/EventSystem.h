@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "CTL/String.h"
+#include "CTL/DArray.h"
 
 namespace Citrom
 {
@@ -24,35 +25,16 @@ namespace Citrom
         bool m_Handled = false;
     };
 
-    enum class KeyEvents
-    {
-        KeyDown,
-        KeyUp,
-        KeyRepeat
-    };
-
-    class KeyDownEvent : public Event<KeyEvents>
-    {
-    public:
-        EVENT_CLASS_TYPE(KeyEvents, KeyDown);
-        
-        KeyDownEvent(int keyCode) : m_KeyCode(keyCode) {}
-
-        CTL::String ToString() const override 
-        {
-            CTL::String string("KeyDownEvent: ");
-            string.Append(std::to_string(m_KeyCode).c_str());
-            return string;
-        }
-    private:
-        int m_KeyCode;
-    };
-
     template<typename T>
     class EventListener
     {
     public:
         void (*OnEvent)(const Event<T>& event);
+        
+        void operator()(const Event<T>& event) const
+        {
+            OnEvent(event);
+        }
     };
 
     template<typename T>
@@ -61,18 +43,21 @@ namespace Citrom
     public:
         void Dispatch(Event<T>& event)
         {
-            CT_CORE_ASSERT_WARN(m_EventListener && m_EventListener->OnEvent, "Dispatching events to a null event listener or null event listener callback!");
-            if (m_EventListener && m_EventListener->OnEvent)
-                m_EventListener->OnEvent(event);
+            for (EventListener<T>* eventListener : m_EventListeners)
+            {
+                CT_CORE_ASSERT_WARN(eventListener && eventListener->OnEvent, "Dispatching events to a null event listener or null event listener callback!");
+                if (eventListener && eventListener->OnEvent)
+                    eventListener->OnEvent(event);
+            }
         }
 
         void AddListener(EventListener<T>* eventListener)
         {
-            CT_CORE_ASSERT_WARN(eventListener, "Assigning null event listener!");
-            m_EventListener = eventListener;
+            CT_CORE_ASSERT_WARN(eventListener, "Adding null event listener!");
+            m_EventListeners.PushBack(eventListener);
         }
     private:
-        EventListener<T>* m_EventListener = nullptr;
+        CTL::DArray<EventListener<T>*> m_EventListeners;
     };
 
     /* TODO: implement based on this example: 
@@ -98,9 +83,25 @@ namespace Citrom
         std::unordered_map<const char*, std::vector<EventCallbackFn>> m_Listeners;
     };
     */
-    class EventBus
+    /*class EventBus
     {
     public:
+        template<typename T>
+        void AddListener(EventListener<T>* eventListener)
+        {
+            m_Listeners[typeid(T).name()].PushBack(eventListener);
+        }
 
-    };
+        template<typename T>
+        void Dispatch(Event<T>& event)
+        {
+            for (EventListener<T>* eventListener : m_Listeners[typeid(T).name()])
+            {
+                eventListener->OnEvent(event);
+            }
+        }
+
+    private:
+        std::unordered_map<const char*, CTL::DArray<EventListener<void>*>> m_Listeners;
+    };*/
 }
