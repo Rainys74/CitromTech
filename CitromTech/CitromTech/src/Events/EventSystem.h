@@ -74,4 +74,33 @@ namespace Citrom
     private:
         EventListener<T>* m_EventListener = nullptr;
     };
+
+    /* TODO: implement based on this example: 
+    class EventBus {
+    public:
+        using EventCallbackFn = std::function<void(const Event&)>;
+
+        template<typename EventType>
+        void AddListener(EventCallbackFn listener) {
+            auto& listeners = m_Listeners[typeid(EventType).name()];
+            listeners.push_back(listener);
+        }
+
+        template<typename EventType>
+        void Dispatch(const EventType& event) {
+            auto& listeners = m_Listeners[typeid(EventType).name()];
+            for (auto& listener : listeners) {
+                listener(event);
+            }
+        }
+
+    private:
+        std::unordered_map<const char*, std::vector<EventCallbackFn>> m_Listeners;
+    };
+    */
+    class EventBus
+    {
+    public:
+
+    };
 }

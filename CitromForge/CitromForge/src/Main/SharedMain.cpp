@@ -3,6 +3,7 @@
 #include "test.h"
 #include "CTL/String.h"
 #include "CTL/StaticArray.h"
+#include "CTL/DArray.h"
 #include <string>
 #include "Logger/Logger.h"
 #include "Platform/PlatformConsole.h"
@@ -99,6 +100,24 @@ int SharedMain(int argc, char* argv[])
 	int a = 5;
 	float b = 2.5334f;
 	const char* c = "this is a test";
+
+	CTL::DArray<int> arrayTest(2);
+	arrayTest.PushBack(4);
+	arrayTest.PushBack(2);
+	arrayTest.PushBack(7);
+	arrayTest.PushBack(8);
+
+	for (auto item : arrayTest)
+	{
+		CT_VERBOSE("{}", item);
+	}
+
+	arrayTest[2] = 90;
+
+	for (auto item : arrayTest)
+	{
+		CT_VERBOSE("{}", item);
+	}
 
 	//Logger::GetLogger()->Log(Logger::LogCategory::App, Logger::LogLevel::Info, "A = {}, B = {}, C = {}", a, b, c);
 	CT_TRACE("A = {}, B = {}, C = {}", a, b, c);
