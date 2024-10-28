@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Platform/Platform.h"
+#include "Platform/PlatformWindow.h"
 
 namespace Citrom::Platform
 {
@@ -8,13 +8,13 @@ namespace Citrom::Platform
     {
     public:
         WindowBackendGLFW();
-		virtual ~WindowBackendGLFW();
+		    virtual ~WindowBackendGLFW();
 
         virtual void Create(const int width, const int height, const CTL::String& title) override;
-		virtual bool WindowShouldClose() const override;
-		virtual void PollEvents() override;
+        virtual bool WindowShouldClose() const override;
+        virtual void PollEvents() override;
     private:
-		bool m_WindowShouldClose;
-		int m_Width, m_Height;
+        bool m_WindowShouldClose;
+        int m_Width, m_Height;
     };
 }

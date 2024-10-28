@@ -12,7 +12,7 @@
 #include "Events/EventSystem.h"
 #include "Events/KeyEvents.h"
 
-#include "Platform/Platform.h"
+#include "Platform/PlatformWindow.h"
 
 #include <iostream>
 

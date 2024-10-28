@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Platform/Platform.h"
+#include "Platform/PlatformWindow.h"
 
 namespace Citrom::Platform
 {
