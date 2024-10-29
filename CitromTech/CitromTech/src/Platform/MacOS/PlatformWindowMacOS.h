@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef CT_PLATFORM_MACOS
 #include "Platform/PlatformWindow.h"
 
 namespace Citrom::Platform
@@ -17,3 +18,4 @@ namespace Citrom::Platform
 		WindowBackend* m_Backend;
 	};
 }
+#endif

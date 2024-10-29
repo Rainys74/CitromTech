@@ -1,3 +1,4 @@
+#ifdef CT_PLATFORM_MACOS
 #include "PlatformWindowMacOS.h"
 
 #include "Platform/Shared/PlatformWindowBackendGLFW.h"
@@ -27,3 +28,4 @@ namespace Citrom::Platform
             m_Backend->PollEvents();
         }
 }
+#endif
