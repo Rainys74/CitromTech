@@ -2,6 +2,8 @@
 
 #include "Platform/PlatformWindow.h"
 
+#include "GLFW/glfw3.h"
+
 namespace Citrom::Platform
 {
     class WindowBackendGLFW : public WindowBackend
@@ -16,5 +18,7 @@ namespace Citrom::Platform
     private:
         bool m_WindowShouldClose;
         int m_Width, m_Height;
+
+        GLFWwindow* m_Window;
     };
 }
