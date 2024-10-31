@@ -1,4 +1,4 @@
-#if defined(CT_PLATFORM_MACOS) || defined(CT_PLATFORM_LINUX) //CT_PLATFORM_UNIX
+#ifdef CT_PLATFORM_UNIX
 #include "Platform/PlatformConsole.h"
 
 #include <cstdio>

@@ -59,7 +59,8 @@
 #endif
 
 // TODO: figure out if this is how you wanna do things
-#ifdef __unix__
+//#if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)) || defined(unix)
+#if defined(__unix__) || defined(__APPLE__) || defined(__linux__) || defined(BSD)
 #define CT_PLATFORM_UNIX
 #endif
 
