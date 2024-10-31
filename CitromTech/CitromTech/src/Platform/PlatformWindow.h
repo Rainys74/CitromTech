@@ -26,15 +26,12 @@ namespace Citrom::Platform
 	class Window
 	{
 	public:
-		Window()
-			: m_Backend(nullptr) {}
-		virtual ~Window() {}
+		Window();
+		~Window();
 
-		static Window* GenerateWindow();
-
-		virtual void Create(const int width, const int height, const CTL::String& title) = 0;
-		virtual bool WindowShouldClose() const = 0;
-		virtual void PollEvents() = 0;
+		void Create(const int width, const int height, const CTL::String& title);
+		bool WindowShouldClose() const;
+		void PollEvents();
     private:
         WindowBackend* m_Backend;
 	};

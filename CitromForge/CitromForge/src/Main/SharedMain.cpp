@@ -140,13 +140,13 @@ int SharedMain(int argc, char* argv[])
 	Test::PrintSomeShit(const_cast<char*>(string3.c_str()));
 
 	using namespace Platform;
-	Window* window = Window::GenerateWindow();
+	Window window;
 
-	window->Create(1280, 720, CTL::String("test"));
+	window.Create(1280, 720, CTL::String("test"));
 
-	while (!window->WindowShouldClose())
+	while (!window.WindowShouldClose())
 	{
-		window->PollEvents();
+		window.PollEvents();
 	}
 
 	//Test::TestOutGLFW();
