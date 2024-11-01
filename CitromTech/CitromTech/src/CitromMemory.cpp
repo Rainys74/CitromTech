@@ -50,6 +50,7 @@ namespace Citrom::Memory
 	}
 }
 
+// TODO: fix this
 #ifdef CT_DEBUG
 struct AllocationMetrics
 {
@@ -61,9 +62,11 @@ struct AllocationMetrics
 
 static AllocationMetrics sg_AllocationMetrics;
 
+#include "Logger/Logger.h"
 void* operator new(size_t size)
 {
 	sg_AllocationMetrics.totalAllocated += size;
+	//CT_TRACE("[new]: Allocating {} bytes; Current Usage: {}", (unsigned int)size, (unsigned int)sg_AllocationMetrics.GetCurrentUsage());
 
 	return malloc(size);
 }
@@ -71,6 +74,7 @@ void* operator new(size_t size)
 void operator delete(void* memory, size_t size)
 {
 	sg_AllocationMetrics.totalFreed += size;
+	//CT_TRACE("[delete]: Freeing {} bytes; Current Usage: {}", (unsigned int)size, (unsigned int)sg_AllocationMetrics.GetCurrentUsage());
 
 	free(memory);
 }

@@ -21,7 +21,6 @@ namespace Citrom
 
         virtual CTL::String ToString() const {return CTL::String(GetEventTypeName());} // returns a nicely formatted string with values (by default returns the name)
     protected:
-        T m_Type;
         bool m_Handled = false;
     };
 
