@@ -100,11 +100,10 @@ int SharedMain(int argc, char* argv[])
 	keyEventDispatcher.AddListener(&keyEventListener);
 	keyEventDispatcher.Dispatch(keyDownEvent);
 
-	/*
+	
 	EventBus eventBus;
-	eventBus.AddListener(&keyEventListener);
-	eventBus.Dispatch(keyDownEvent);
-	*/
+	eventBus.AddListener<KeyEvents>(&keyEventListener);
+	eventBus.Dispatch<KeyEvents>(keyDownEvent);
 
 	int a = 5;
 	float b = 2.5334f;
@@ -136,6 +135,19 @@ int SharedMain(int argc, char* argv[])
 	string3.append("is an 👋 ");
 	string3.append("🌍");
 	string3.append(" test!");
+
+	// Create an UnorderedMap using xxHash for int keys
+	CTL::HashMap<int, std::string> intMap;
+	intMap[1] = "one";
+	intMap[2] = "two";
+	intMap[3] = "Three";
+	intMap[4] = "four";
+	intMap[5] = "FIve";
+
+	for (const auto& pair : intMap) 
+	{
+		CT_TRACE("IntMap: pair.first: {}, pair.second: {}", pair.first, pair.second);
+	}
 
 	Test::PrintSomeShit(const_cast<char*>(string3.c_str()));
 

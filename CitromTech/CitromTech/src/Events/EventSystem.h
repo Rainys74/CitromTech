@@ -3,6 +3,7 @@
 #include "Core.h"
 #include "CTL/String.h"
 #include "CTL/DArray.h"
+#include "CTL/HashMap.h"
 
 namespace Citrom
 {
@@ -46,7 +47,9 @@ namespace Citrom
             {
                 CT_CORE_ASSERT_WARN(eventListener && eventListener->OnEvent, "Dispatching events to a null event listener or null event listener callback!");
                 if (eventListener && eventListener->OnEvent)
+                {
                     eventListener->OnEvent(event);
+                }
             }
         }
 
@@ -82,25 +85,28 @@ namespace Citrom
         std::unordered_map<const char*, std::vector<EventCallbackFn>> m_Listeners;
     };
     */
-    /*class EventBus
+    // TODO: improve this someday
+    class EventBus
     {
     public:
+        using EventListenerFunctionPtr = void(*)(const Event<void>&);
+
         template<typename T>
         void AddListener(EventListener<T>* eventListener)
         {
-            m_Listeners[typeid(T).name()].PushBack(eventListener);
+            m_Listeners[typeid(T).name()].PushBack((EventListenerFunctionPtr)eventListener->OnEvent);
         }
 
         template<typename T>
         void Dispatch(Event<T>& event)
         {
-            for (EventListener<T>* eventListener : m_Listeners[typeid(T).name()])
+            for (EventListenerFunctionPtr eventListenerCallback : m_Listeners[typeid(T).name()])
             {
-                eventListener->OnEvent(event);
+                eventListenerCallback((const Event<void>&)event);
             }
         }
 
     private:
-        std::unordered_map<const char*, CTL::DArray<EventListener<void>*>> m_Listeners;
-    };*/
+        CTL::HashMap<const char*, CTL::DArray<EventListenerFunctionPtr>> m_Listeners;
+    };
 }
