@@ -53,6 +53,12 @@ project "CitromTech"   -- Engine Library
         }
         DefineCitromLibraryTypeMacros()
 
+    filter { "system:linux or macosx or bsd" }
+        defines 
+        { 
+            "CT_PLATFORM_UNIX" 
+        }
+
     filter "system:windows"
         staticruntime "On"
         systemversion "latest" -- 10.0 (latest installed version) or 10.0.22621.0

@@ -34,6 +34,12 @@ project "CitromForge" -- EXE
         }
         DefineCitromLibraryTypeMacros()
 
+    filter { "system:linux or macosx or bsd" }
+        defines 
+        { 
+            "CT_PLATFORM_UNIX"
+        }
+
     filter "system:windows"
         staticruntime "On"
         systemversion "latest"
