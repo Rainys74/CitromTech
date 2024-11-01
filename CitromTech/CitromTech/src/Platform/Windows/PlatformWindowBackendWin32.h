@@ -5,6 +5,8 @@
 
 #include "WindowsIncludes.h"
 
+#include "Events/EventSystem.h"
+
 namespace Citrom::Platform
 {
     class WindowBackendWin32 : public WindowBackend
@@ -19,7 +21,9 @@ namespace Citrom::Platform
     private:
         bool m_WindowShouldClose;
         int m_Width, m_Height;
+        EventBus m_EventBus;
 
+        // Win32
         TCHAR* m_ClassName; // LPCWSTR
         HINSTANCE m_HInstance;
         HWND m_HWnd;

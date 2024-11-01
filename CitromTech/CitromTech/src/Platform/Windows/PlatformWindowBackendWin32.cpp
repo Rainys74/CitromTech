@@ -5,6 +5,9 @@
 #include "CitromAssert.h"
 #include "../../../Resources/Resource.h"
 
+#include "Events/KeyEvents.h"
+#include "Events/WindowEvents.h"
+
 namespace Citrom::Platform
 {
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -12,16 +15,28 @@ namespace Citrom::Platform
 		switch (msg)
 		{
 		case WM_CLOSE:
+		{
+			WindowCloseEvent windowCloseEvent;
+			windowCloseEvent.exitCode = 69;
+
+			EventBus::GetInstance()->Dispatch<WindowEvents>(windowCloseEvent);
+
 			PostQuitMessage(69);
-			break;
+		}
+		break;
 		case WM_SIZE:
 		{
 			RECT rect;
 			GetWindowRect(hWnd, &rect);
-			int width, height;
+			uint32 width, height;
 			width = rect.right - rect.left;
 			height = rect.bottom - rect.top;
-			//renderer_hint_resize(width, height);
+
+			WindowResizeEvent windowResizeEvent;
+			windowResizeEvent.width = width;
+			windowResizeEvent.height = height;
+
+			EventBus::GetInstance()->Dispatch<WindowEvents>(windowResizeEvent);
 		}
 		break;
 		case WM_ACTIVATE:
@@ -97,6 +112,12 @@ namespace Citrom::Platform
 				}
 
 				//input_system_register_key_press(win_key_to_input_system(wParam));
+
+				if ((HIWORD(lParam) & KF_REPEAT) != KF_REPEAT) // 0x4000 = 0b0100000000000000 = 16384
+				{
+					//KeyDownEvent keyDownEvent(wParam);
+					//EventBus::GetInstance()->Dispatch<KeyEvents>(keyDownEvent);
+				}
 			}
 			else
 			{

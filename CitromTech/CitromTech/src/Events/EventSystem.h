@@ -20,6 +20,7 @@ namespace Citrom
         virtual const char* GetEventCategoryName() const = 0;
         virtual const char* GetEventTypeName() const = 0;
 
+        // This function should only really be called for debugging
         virtual CTL::String ToString() const {return CTL::String(GetEventTypeName());} // returns a nicely formatted string with values (by default returns the name)
     protected:
         bool m_Handled = false;
@@ -41,6 +42,7 @@ namespace Citrom
     class EventDispatcher
     {
     public:
+        // Register/Send events
         void Dispatch(Event<T>& event)
         {
             for (EventListener<T>* eventListener : m_EventListeners)
@@ -53,6 +55,7 @@ namespace Citrom
             }
         }
 
+        // Subscribe
         void AddListener(EventListener<T>* eventListener)
         {
             CT_CORE_ASSERT_WARN(eventListener, "Adding null event listener!");
@@ -91,6 +94,12 @@ namespace Citrom
     public:
         using EventListenerFunctionPtr = void(*)(const Event<void>&);
 
+        static EventBus* GetInstance()
+        {
+            static EventBus instance;
+            return &instance;
+        }
+
         template<typename T>
         void AddListener(EventListener<T>* eventListener)
         {
@@ -102,7 +111,8 @@ namespace Citrom
         {
             for (EventListenerFunctionPtr eventListenerCallback : m_Listeners[typeid(T).name()])
             {
-                eventListenerCallback((const Event<void>&)event);
+                if (eventListenerCallback)
+                    eventListenerCallback((const Event<void>&)event);
             }
         }
 

@@ -11,6 +11,7 @@
 
 #include "Events/EventSystem.h"
 #include "Events/KeyEvents.h"
+#include "Events/WindowEvents.h"
 
 #include "Platform/PlatformWindow.h"
 
@@ -104,6 +105,17 @@ int SharedMain(int argc, char* argv[])
 	EventBus eventBus;
 	eventBus.AddListener<KeyEvents>(&keyEventListener);
 	eventBus.Dispatch<KeyEvents>(keyDownEvent);
+
+	EventListener<WindowEvents> windowEventListener;
+	keyEventListener.OnEvent = [](const Event<KeyEvents>& event) {
+		CT_ERROR("Window Event!: {}", (int)event.GetEventType());
+
+		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
+		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
+		CT_TRACE("Event To String: {}", event.ToString().CStr());
+	};
+
+	EventBus::GetInstance()->AddListener<WindowEvents>(&windowEventListener);
 
 	int a = 5;
 	float b = 2.5334f;

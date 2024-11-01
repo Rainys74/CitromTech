@@ -13,12 +13,13 @@ namespace Citrom
         KeyRepeat
     };
 
+    using EventKeyCode = uint32;
     class KeyDownEvent : public Event<KeyEvents>
     {
     public:
         EVENT_CLASS_TYPE(KeyEvents, KeyDown);
         
-        KeyDownEvent(int keyCode) : m_KeyCode(keyCode) {}
+        KeyDownEvent(EventKeyCode keyCode) : m_KeyCode(keyCode) {}
 
         CTL::String ToString() const override 
         {
@@ -27,6 +28,6 @@ namespace Citrom
             return string;
         }
     private:
-        int m_KeyCode;
+        EventKeyCode m_KeyCode;
     };
 }
