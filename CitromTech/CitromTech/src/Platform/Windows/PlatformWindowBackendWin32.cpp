@@ -19,7 +19,7 @@ namespace Citrom::Platform
 			WindowCloseEvent windowCloseEvent;
 			windowCloseEvent.exitCode = 69;
 
-			EventBus::GetInstance()->Dispatch<WindowEvents>(windowCloseEvent);
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowCloseEvent);
 
 			PostQuitMessage(69);
 		}
@@ -36,7 +36,7 @@ namespace Citrom::Platform
 			windowResizeEvent.width = width;
 			windowResizeEvent.height = height;
 
-			EventBus::GetInstance()->Dispatch<WindowEvents>(windowResizeEvent);
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
 		}
 		break;
 		case WM_ACTIVATE:

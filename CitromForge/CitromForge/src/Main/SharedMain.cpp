@@ -102,20 +102,28 @@ int SharedMain(int argc, char* argv[])
 	keyEventDispatcher.Dispatch(keyDownEvent);
 
 	
-	EventBus eventBus;
+	EventBusOld eventBus;
 	eventBus.AddListener<KeyEvents>(&keyEventListener);
 	eventBus.Dispatch<KeyEvents>(keyDownEvent);
 
 	EventListener<WindowEvents> windowEventListener;
-	keyEventListener.OnEvent = [](const Event<KeyEvents>& event) {
+	windowEventListener.OnEvent = [](const Event<WindowEvents>& event) {
 		CT_ERROR("Window Event!: {}", (int)event.GetEventType());
 
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
 		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
 		CT_TRACE("Event To String: {}", event.ToString().CStr());
+
+		if (event.GetEventType() == WindowEvents::WindowResize)
+		{
+			const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+			CT_TRACE("Event Width: {}", transformedEvent.width);
+			CT_TRACE("Event Height: {}", transformedEvent.height);
+		}
 	};
 
-	EventBus::GetInstance()->AddListener<WindowEvents>(&windowEventListener);
+	//EventBus::GetInstance()->AddListener<WindowEvents>(&windowEventListener);
+	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);
 
 	int a = 5;
 	float b = 2.5334f;

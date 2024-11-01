@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core.h"
+#include "CitromAssert.h"
+
 #include "CTL/String.h"
 #include "CTL/DArray.h"
 #include "CTL/HashMap.h"
@@ -89,14 +91,14 @@ namespace Citrom
     };
     */
     // TODO: improve this someday
-    class EventBus
+    class [[deprecated]] EventBusOld
     {
     public:
         using EventListenerFunctionPtr = void(*)(const Event<void>&);
 
-        static EventBus* GetInstance()
+        static EventBusOld* GetInstance()
         {
-            static EventBus instance;
+            static EventBusOld instance;
             return &instance;
         }
 
@@ -118,5 +120,16 @@ namespace Citrom
 
     private:
         CTL::HashMap<const char*, CTL::DArray<EventListenerFunctionPtr>> m_Listeners;
+    };
+
+    class EventBus
+    {
+    public:
+        template<typename T>
+        static EventDispatcher<T>* GetDispatcher()
+        {
+            static EventDispatcher<T> instance;
+            return &instance;
+        }
     };
 }
