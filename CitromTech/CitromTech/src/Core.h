@@ -61,16 +61,16 @@
 // TODO: figure out if this is how you wanna do things
 //#if defined(__unix__) || defined(__unix) || (defined(__APPLE__) && defined(__MACH__)) || defined(unix)
 #if defined(__unix__) || defined(__APPLE__) || defined(__linux__) || defined(BSD)
-#define CT_PLATFORM_UNIX
+//#define CT_PLATFORM_UNIX
 #endif
 
 // Detect Compiler
 #ifdef _MSC_VER
 #define CT_COMPILER_MSVC
-#elif defined(__GNUC__)
-#define CT_COMPILER_GCC
 #elif defined(__clang__)
 #define CT_COMPILER_CLANG
+#elif defined(__GNUC__)
+#define CT_COMPILER_GCC
 #endif
 
 // ------------MACROS-----------------------
