@@ -31,6 +31,7 @@ project "CitromForge" -- EXE
             "CitromTech",
             
             "GLFW",
+            "PortAudio",
         }
         DefineCitromLibraryTypeMacros()
 

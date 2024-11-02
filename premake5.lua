@@ -49,6 +49,7 @@ include "CitromForge/Premake-CitromForge.lua"
 
 -- Third Party Dependencies
 include "vendor/GLFW/Premake-GLFW.lua"
+include "vendor/PortAudio/Premake-PortAudio.lua"
 
 -- Third Party Scripts
 require("tools/premake/scripts/premake-vscode/vscode") --premake-vscode

@@ -10,6 +10,7 @@ project "CitromTech"   -- Engine Library
     
         IncludeDir = {}
         IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
+        IncludeDir["PortAudio"] = "../vendor/PortAudio/portaudio/include"
 
         files 
         {
@@ -23,6 +24,7 @@ project "CitromTech"   -- Engine Library
             "%{prj.name}/src/",
 
             "%{IncludeDir.GLFW}",
+            "%{IncludeDir.PortAudio}",
         }
 
         libdirs
@@ -33,6 +35,7 @@ project "CitromTech"   -- Engine Library
         links
         {
             "GLFW",
+            "PortAudio",
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"
         }
