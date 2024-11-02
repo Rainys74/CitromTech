@@ -29,6 +29,12 @@
 	#define FORCE_INLINE inline
 	#endif
 
+	#ifdef _MSC_VER
+	#define NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
+	#else
+	#define NO_UNIQUE_ADDRESS [[no_unique_address]]
+	#endif
+
 	using int8 = signed char;
 	using int16 = short;
 	using int32 = int;
