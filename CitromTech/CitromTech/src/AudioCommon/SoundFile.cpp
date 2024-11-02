@@ -13,8 +13,54 @@
 
 #include <string.h>
 
-namespace Citrom::SoundFile
+namespace Citrom
 {
+#define dr_lib_sound_file_open(LIBTYPE, FILETYPE, PCMFRAMETOTALNAME)                                \
+    file->fileType = FILETYPE;                                                                      \
+    file->internal = new dr ## LIBTYPE;                                                     \
+    dr ## LIBTYPE* LIBTYPE = (dr ## LIBTYPE*)file->internal;                                        \
+                                                                                                    \
+    CT_CORE_ASSERT(dr ## LIBTYPE ## _init_file(LIBTYPE, path, NULL), "drwav_init_file() failed!");   \
+    CT_CORE_ASSERT(LIBTYPE, "Could not open " #LIBTYPE " file: " "!");                  \
+                                                                                                    \
+    info->channels = LIBTYPE->channels;                                                             \
+    info->sampleCount = LIBTYPE->PCMFRAMETOTALNAME;                                                 \
+    info->sampleRate = LIBTYPE->sampleRate                                                             
+
+    SoundFileWAV::SoundFileWAV(const char* path, const Mode mode, SoundFileInfo& info) 
+        : SoundFile(path, mode, info), m_Internal(nullptr), m_FileType(Type::WAV)
+    {
+        m_Internal = new drwav;
+        drwav* wav = (drwav*)m_Internal;
+
+        CT_CORE_ASSERT(drwav_init_file(wav, path, NULL), "drwav_init_file() failed!");
+        CT_CORE_ASSERT(wav, "Could not open wav file!");
+
+        info.channels = wav->channels;
+        info.sampleCount = wav->totalPCMFrameCount;
+        info.sampleRate = wav->sampleRate;
+    }
+    SoundFileWAV::~SoundFileWAV()
+    {
+        drwav_uninit((drwav*)m_Internal);
+
+        delete (drwav*)m_Internal;
+    }
+    uint64 SoundFileWAV::ReadPCMFramesFloat32(SoundFileInfo& soundInfo, uint64 framesToRead, uint32 channelCount, float32* bufferOut)
+    {
+        return drwav_read_pcm_frames_f32((drwav*)m_Internal, framesToRead, bufferOut);
+    }
+    void SoundFileWAV::SeekStart()
+    {
+        drwav_seek_to_pcm_frame((drwav*)m_Internal, 0);
+    }
+    void SoundFileWAV::SeekFrame(uint64 frame)
+    {
+        // to be implemented
+    }
+
+
+
     static port_audio_file_type get_file_type(const char* fileName)
     {
         const char* extension = CTL::CString::ReverseSearchForCharacter(fileName, '.');
@@ -41,18 +87,6 @@ namespace Citrom::SoundFile
         }
         return FILE_TYPE_UNKNOWN;
     }
-
-#define dr_lib_sound_file_open(LIBTYPE, FILETYPE, PCMFRAMETOTALNAME)                                \
-    file->fileType = FILETYPE;                                                                      \
-    file->internal = new dr ## LIBTYPE;                                                     \
-    dr ## LIBTYPE* LIBTYPE = (dr ## LIBTYPE*)file->internal;                                        \
-                                                                                                    \
-    CT_CORE_ASSERT(dr ## LIBTYPE ## _init_file(LIBTYPE, path, NULL), "drwav_init_file() failed!");   \
-    CT_CORE_ASSERT(LIBTYPE, "Could not open " #LIBTYPE " file: " "!");                  \
-                                                                                                    \
-    info->channels = LIBTYPE->channels;                                                             \
-    info->sampleCount = LIBTYPE->PCMFRAMETOTALNAME;                                                 \
-    info->sampleRate = LIBTYPE->sampleRate                                                             
 
     port_audio_sound_file* port_audio_sound_file_open(const char* path, const port_audio_sound_file_mode mode, port_audio_sound_file_info* info)
     {
