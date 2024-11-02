@@ -1,3 +1,4 @@
+#if 0
 /*
  * xxHash - Extremely Fast Hash algorithm
  * Copyright (C) 2020-2021 Yann Collet
@@ -847,3 +848,4 @@ XXH3_128bits_update_dispatch(XXH_NOESCAPE XXH3_state_t* state, XXH_NOESCAPE cons
 }
 #endif
 /*! @} */
+#endif

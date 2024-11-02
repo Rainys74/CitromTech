@@ -48,7 +48,7 @@ namespace Citrom::SoundFile
     dr ## LIBTYPE* LIBTYPE = (dr ## LIBTYPE*)file->internal;                                        \
                                                                                                     \
     CT_CORE_ASSERT(dr ## LIBTYPE ## _init_file(LIBTYPE, path, NULL), "drwav_init_file() failed!");   \
-    CT_CORE_ASSERT(LIBTYPE, "Could not open {cstr} file: {cstr}!", #LIBTYPE, path);                  \
+    CT_CORE_ASSERT(LIBTYPE, "Could not open " #LIBTYPE " file: " "!");                  \
                                                                                                     \
     info->channels = LIBTYPE->channels;                                                             \
     info->sampleCount = LIBTYPE->PCMFRAMETOTALNAME;                                                 \
@@ -61,7 +61,7 @@ namespace Citrom::SoundFile
         {
         default:
         case FILE_TYPE_UNKNOWN:
-            CT_CORE_ERROR("port_audio_sound_file_open(): Cannot open sound file: {cstr}!", path);
+            CT_CORE_ERROR("port_audio_sound_file_open(): Cannot open sound file: {cstr}!");
             break;
         case FILE_TYPE_WAV:
         {
@@ -79,7 +79,7 @@ namespace Citrom::SoundFile
             file->internal = drflac_open_file(path, NULL);
             drflac* flac = (drflac*)file->internal;
 
-            CT_CORE_ASSERT(flac, "Could not open {cstr} file: {cstr}!", "flac", path);
+            CT_CORE_ASSERT(flac, "Could not open flac file: {cstr}!");
 
             info->channels = flac->channels;
             info->sampleCount = flac->totalPCMFrameCount;
@@ -92,13 +92,13 @@ namespace Citrom::SoundFile
             file->internal = stb_vorbis_open_filename(path, NULL, NULL);
             stb_vorbis* vorbis = (stb_vorbis*)file->internal;
 
-            CT_CORE_ASSERT(vorbis, "Could not open {cstr} file: {cstr}!", "ogg", path);
+            CT_CORE_ASSERT(vorbis, "Could not open ogg file: {cstr}!");
 
             int channels, sampleRate;
             short* samples;
             info->samples = (float32*)stb_vorbis_decode_filename(path, &channels, &sampleRate, &samples);
 
-            CT_CORE_ASSERT(info->samples, "Could not decode {cstr} file: {cstr}!", "ogg", path);
+            CT_CORE_ASSERT(info->samples, "Could not decode ogg file: {cstr}!");
 
             info->channels = channels;
             info->sampleCount = stb_vorbis_stream_length_in_samples(vorbis);

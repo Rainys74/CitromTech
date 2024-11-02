@@ -1,3 +1,4 @@
+#if 0
 /*
  * xxHash - XXH3 Dispatcher for x86-based targets
  * Copyright (C) 2020-2021 Yann Collet
@@ -83,3 +84,4 @@ XXH_PUBLIC_API XXH_errorcode XXH3_128bits_update_dispatch(XXH_NOESCAPE XXH3_stat
 #endif /* XXH_DISPATCH_DISABLE_REPLACE */
 
 #endif /* XXH_X86DISPATCH_H_13563687684 */
+#endif
