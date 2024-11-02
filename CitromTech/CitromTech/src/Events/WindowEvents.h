@@ -10,6 +10,7 @@ namespace Citrom
     {
         WindowClose,
         WindowResize,
+        WindowMove
     };
 
     class WindowCloseEvent : public Event<WindowEvents>
@@ -43,5 +44,23 @@ namespace Citrom
     public:
         uint32 width = 0;
         uint32 height = 0;
+    };
+
+    class WindowMoveEvent : public Event<WindowEvents>
+    {
+    public:
+        EVENT_CLASS_TYPE(WindowEvents, WindowMove);
+
+        CTL::String ToString() const override
+        {
+            CTL::String string("WindowMoveEvent: ");
+            string.Append(std::to_string(x).c_str());
+            string.Append(", ");
+            string.Append(std::to_string(y).c_str());
+            return string;
+        }
+    public:
+        int32 x = 0;
+        int32 y = 0;
     };
 }

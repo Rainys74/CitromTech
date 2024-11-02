@@ -39,6 +39,18 @@ namespace Citrom::Platform
 			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
 		}
 		break;
+		case WM_MOVE:
+		{
+			auto xPos = (int)(short)LOWORD(lParam);   // horizontal position 
+			auto yPos = (int)(short)HIWORD(lParam);   // vertical position 
+
+			WindowMoveEvent windowMoveEvent;
+			windowMoveEvent.x = xPos;
+			windowMoveEvent.y = yPos;
+
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowMoveEvent);
+		}
+		break;
 		case WM_ACTIVATE:
 		{
 			if (LOWORD(wParam) != WA_INACTIVE)

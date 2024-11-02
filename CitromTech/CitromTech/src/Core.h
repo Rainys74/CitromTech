@@ -64,6 +64,10 @@
 //#define CT_PLATFORM_UNIX
 #endif
 
+#if defined(__posix__) || defined(__unix__) || defined(__APPLE__) || defined(__linux__)
+#define CT_PLATFORM_POSIX
+#endif
+
 // Detect Compiler
 #ifdef _MSC_VER
 #define CT_COMPILER_MSVC

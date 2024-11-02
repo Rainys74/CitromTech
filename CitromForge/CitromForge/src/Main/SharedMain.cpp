@@ -100,7 +100,6 @@ int SharedMain(int argc, char* argv[])
 	EventDispatcher<KeyEvents> keyEventDispatcher;
 	keyEventDispatcher.AddListener(&keyEventListener);
 	keyEventDispatcher.Dispatch(keyDownEvent);
-
 	
 	EventBusOld eventBus;
 	eventBus.AddListener<KeyEvents>(&keyEventListener);
