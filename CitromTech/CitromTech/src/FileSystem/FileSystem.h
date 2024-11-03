@@ -4,12 +4,12 @@
 
 namespace Citrom::FileSystem
 {
-	/*struct FilePath
+	struct FilePath
 	{
 		const char* path;
 	};
 
-	class FileBase
+	/*class FileBase
 	{
 	public:
 		enum class Mode

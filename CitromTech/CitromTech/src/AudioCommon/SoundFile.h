@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "FileSystem/FileSystem.h"
 
 #include "CTL/SmartPointers.h"
 
@@ -27,39 +28,18 @@ namespace Citrom
 			FLAC,
 			OGG
 		};
-		enum class Mode
-		{
-			Read
-		};
 	public:
-		SoundFile(const char* path, const Mode mode, SoundFileInfo& info)
-			: m_Internal(nullptr), m_FileType(Type::Unknown) {} // Open
-		virtual ~SoundFile() {} // Close
+		static SoundFile* Open(const FileSystem::FilePath& path, SoundFileInfo& outInfo);
+		//static CTL::ScopedPtr<SoundFile> Open(const FileSystem::FilePath& path, SoundFileInfo& outInfo);
 
-		virtual uint64 ReadPCMFramesFloat32(SoundFileInfo& soundInfo, uint64 framesToRead, uint32 channelCount, float32* bufferOut) = 0;
-		virtual void SeekStart() = 0;
-		virtual void SeekFrame(uint64 frame) = 0;
+		static void Close(SoundFile* soundFile);
 
-		virtual void* Data() {return m_Internal;}
+		static uint64 ReadPCMFramesFloat32(SoundFile* soundFile, const SoundFileInfo& info, uint64 framesToRead, uint32 channelCount, float32* bufferOut);
+		static void SeekStart(SoundFile* soundFile);
+		static void SeekFrame(SoundFile* soundFile, uint64 frame);
 	private:
 		void* m_Internal = nullptr;
 		Type m_FileType = Type::Unknown;
-	};
-
-	class SoundFileWAV : public SoundFile
-	{
-	public:
-		SoundFileWAV(const char* path, const Mode mode, SoundFileInfo& info);
-		virtual ~SoundFileWAV();
-
-		virtual uint64 ReadPCMFramesFloat32(SoundFileInfo& soundInfo, uint64 framesToRead, uint32 channelCount, float32* bufferOut) override;
-		virtual void SeekStart() override;
-		virtual void SeekFrame(uint64 frame) override;
-
-		virtual void* Data() override { return m_Internal; }
-	private:
-		void* m_Internal = nullptr;
-		Type m_FileType = Type::WAV;
 	};
 }
 typedef enum port_audio_file_type
