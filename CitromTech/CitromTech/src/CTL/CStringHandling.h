@@ -12,5 +12,5 @@ namespace CTL::CString
 	char* Copy(char* destination, const char* source);
 	char* Concatenate(char* destination, const char* source);
 
-	char* ReverseSearchForCharacter(const char* string, const char character);
+	const char* ReverseSearchForCharacter(const char* string, const char character);
 }

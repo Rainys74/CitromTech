@@ -8,7 +8,7 @@
 
 namespace Citrom::Audio
 {
-    constexpr unsigned long FRAMES_PER_BUFFER = 512;
+    constexpr unsigned long FRAMES_PER_BUFFER = 512; // = paFramesPerBufferUnspecified
 
     struct CallbackData
     {
@@ -18,7 +18,7 @@ namespace Citrom::Audio
         Clip* userClip;
     };
 
-    static void PortAudioCallback(const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void* userData);
+    static int PortAudioCallback(const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void* userData);
 
     int GetDeviceCount()
     {
@@ -56,33 +56,40 @@ namespace Citrom::Audio
         return hostApiInfo->name;
     }
 
+    void FillAudioData(const FileSystem::FilePath& filePath, Clip* clipOut)
+    {
+
+    }
+
     void PlayAudioClip(Clip* clip)
     {
-        /*clip->shouldPlay = true;
+        clip->shouldPlay = true;
 
         CallbackData data = { 0 };
         //data.file = port_audio_sound_file_open(clip->path, PORT_AUDIO_SOUND_FILE_MODE_READ, &data.info);
-        data.file = new SoundFile(clip->path, SoundFile::Mode::Read, data.info);
+        SoundFile soundFile(clip->path, data.info);
+        data.file = &soundFile;
         data.userClip = clip;
 
-        CT_CORE_INFO("File Type: {int}", data.file->fileType);
-        CT_CORE_INFO("Channels: {uint}", data.info.channels);
-        CT_CORE_INFO("Sample Rate: {uint}", data.info.sampleRate);
-        CT_CORE_INFO("Sample Count: {uint}", data.info.sampleCount);
+        //CT_CORE_INFO("File Type: {int}", data.file->fileType);
+        CT_CORE_INFO("Channels: {}", data.info.channels);
+        CT_CORE_INFO("Sample Rate: {}", data.info.sampleRate);
+        CT_CORE_INFO("Sample Count: {}", data.info.sampleCount);
 
-        for (size_t i = 0; i < GetDeviceCount(); i++)
+        for (int i = 0; i < GetDeviceCount(); i++)
         {
             Device device;
 
-            FillDeviceAtIndex(&device, i);
+            FillDeviceAtIndex(device, i);
 
-            CT_CORE_INFO("Device {int}:", device.index);
-            CT_CORE_INFO("\tName: {cstr}", device.name);
+            CT_CORE_INFO("Device {}:", device.index);
+            CT_CORE_INFO("\tName: {}", device.name);
         }
 
         PaStream* stream;
 
-        CT_CORE_ASSERT(Pa_OpenDefaultStream(&stream, 0, data.info.channels, paFloat32, data.info.sampleRate, FRAMES_PER_BUFFER, PortAudioCallback, &data) == paNoError, "Problem opening PortAudio Default Stream.");
+        CT_CORE_ERROR(Pa_GetErrorText(Pa_OpenDefaultStream(&stream, 0, data.info.channels, paFloat32, data.info.sampleRate, FRAMES_PER_BUFFER, PortAudioCallback, &data)));
+        //CT_CORE_ASSERT(Pa_OpenDefaultStream(&stream, 0, data.info.channels, paFloat32, data.info.sampleRate, FRAMES_PER_BUFFER, PortAudioCallback, &data) == paNoError, "Problem opening PortAudio Default Stream.");
         CT_CORE_ASSERT(Pa_StartStream(stream) == paNoError, "Problem opening PortAudio starting Stream.");
 
         // Run until EOF is reached
@@ -91,13 +98,13 @@ namespace Citrom::Audio
             Pa_Sleep(100);
         }
 
-        port_audio_sound_file_close(data.file, &data.info);
+        //port_audio_sound_file_close(data.file, &data.info);
 
         CT_CORE_ASSERT(Pa_CloseStream(stream) == paNoError, "Problem closing PortAudio stream");
 
-        clip->shouldPlay = false;*/
+        clip->shouldPlay = false;
     }
-    /*static void PortAudioCallback(const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void* userData)
+    static int PortAudioCallback(const void* input, void* output, unsigned long frameCount, const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void* userData)
     {
         float* fOutput = (float*)output;
         CallbackData* data = (CallbackData*)userData;
@@ -105,7 +112,8 @@ namespace Citrom::Audio
         Memory::Set(fOutput, 0, sizeof(float32) * frameCount * data->info.channels);
 
         // read directly into output buffer
-        uint64 framesRead = port_audio_read_pcm_frames_float32(data->file, &data->info, frameCount, data->info.channels, fOutput);
+        //uint64 framesRead = port_audio_read_pcm_frames_float32(data->file, &data->info, frameCount, data->info.channels, fOutput);
+        uint64 framesRead = data->file->ReadPCMFramesFloat32(data->info, frameCount, data->info.channels, fOutput);
         //CT_MOD_ERROR("audio callback");
 
         // If we couldn't read a full frameCount of samples, we've reached EOF
@@ -113,7 +121,8 @@ namespace Citrom::Audio
         {
             if (data->userClip->looping)
             {
-                port_audio_seek_start(data->file);
+                //port_audio_seek_start(data->file);
+                data->file->SeekStart();
                 return paContinue;
             }
             else
@@ -129,7 +138,7 @@ namespace Citrom::Audio
         }
 
         // return paContinue;
-        if (!data->userClip->isPlaying)
+        if (!data->userClip->shouldPlay)
         {
             return paComplete;
         }
@@ -137,5 +146,5 @@ namespace Citrom::Audio
         {
             return paContinue;
         }
-    }*/
+    }
 }

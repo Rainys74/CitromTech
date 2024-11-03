@@ -28,10 +28,10 @@ project "PortAudio"
             --PA_USE_SKELETON,
             --PA_USE_JACK,
             --PA_USE_ASIO,
-            PA_USE_DS,
-            PA_USE_WMME,
-            PA_USE_WASAPI,
-            PA_USE_WDMKS
+            -- PA_USE_DS,
+            -- PA_USE_WMME,
+            -- PA_USE_WASAPI,
+            -- PA_USE_WDMKS
         }
 
         defines { "_CRT_SECURE_NO_WARNINGS" }
@@ -40,7 +40,10 @@ project "PortAudio"
             "portaudio/src/os/win/**.c",
             "portaudio/src/os/win/**.h",
         }
-        includedirs { "src/os/win" }
+        includedirs { "portaudio/src/os/win" }
+
+        files { "portaudio/src/hostapi/wmme/**.c", "portaudio/src/hostapi/wmme/**.h" }
+        defines { "PA_USE_WMME=1" }
         links { "winmm" }
 
         filter { "options:PA_USE_DS" }
@@ -86,15 +89,27 @@ project "PortAudio"
         defines { "DEBUG" }
         runtime "Debug"
         symbols "on"
+
+        -- For Windows, set to Multi-threaded Debug DLL (/MDd)
+        filter "system:windows"
+            buildoptions { "/MDd" }
     filter "configurations:Release"
         defines { "NDEBUG" }
         runtime "Release"
         optimize "on"
+
+        -- For Windows, set to Multi-threaded DLL (/MD)
+        filter "system:windows"
+            buildoptions { "/MD" }
     filter "configurations:Optimization"
         defines { "NDEBUG" }
         runtime "Release"
         optimize "Full"
         symbols "Off"
+
+        -- For Windows, set to Multi-threaded DLL (/MD)
+        filter "system:windows"
+            buildoptions { "/MD" }
 
 -- Build options
 newoption 

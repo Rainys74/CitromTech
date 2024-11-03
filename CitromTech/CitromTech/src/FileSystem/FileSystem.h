@@ -6,6 +6,9 @@ namespace Citrom::FileSystem
 {
 	struct FilePath
 	{
+		FilePath() {}
+		FilePath(const char* path) : path(path) {}
+
 		const char* path;
 	};
 

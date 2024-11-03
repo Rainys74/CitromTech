@@ -15,12 +15,16 @@
 
 #include "Platform/PlatformWindow.h"
 
+#include "Audio/AudioSystem.h"
+
 #include <iostream>
 
 using namespace Citrom;
 
 int SharedMain(int argc, char* argv[])
 {
+	Audio::Initialize();
+
 	CT_INFO("Command Line Arguments ({}):", argc);
 	for (int i = 0; i < argc; i++)
 	{
@@ -120,6 +124,12 @@ int SharedMain(int argc, char* argv[])
 			CT_TRACE("Event Height: {}", transformedEvent.height);
 		}
 	};
+
+	Audio::Clip clip;
+	clip.path = FileSystem::FilePath("E:/Citrom Tech/bin/Debug-windows-x86_64/CitromForge/anothersound.wav");
+	clip.volume = 1.0f;
+	clip.looping = true;
+	Audio::PlayAudioClip(&clip);
 
 	//EventBus::GetInstance()->AddListener<WindowEvents>(&windowEventListener);
 	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);

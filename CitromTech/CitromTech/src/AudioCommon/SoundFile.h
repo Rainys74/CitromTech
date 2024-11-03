@@ -11,13 +11,13 @@ namespace Citrom
 {
 	struct SoundFileInfo
 	{
-		CTL::ScopedPtr<float32> samples;
+		float32* samples;
 		uint64 sampleCount;
 		uint32 channels;
 		uint32 sampleRate;
 	};
 
-	class SoundFile
+	/*class SoundFile
 	{
 	public:
 		enum class Type
@@ -37,6 +37,28 @@ namespace Citrom
 		static uint64 ReadPCMFramesFloat32(SoundFile* soundFile, const SoundFileInfo& info, uint64 framesToRead, uint32 channelCount, float32* bufferOut);
 		static void SeekStart(SoundFile* soundFile);
 		static void SeekFrame(SoundFile* soundFile, uint64 frame);
+	private:
+		void* m_Internal = nullptr;
+		Type m_FileType = Type::Unknown;
+	};*/
+	class SoundFile
+	{
+	public:
+		enum class Type
+		{
+			Unknown,
+			WAV,
+			MP3,
+			FLAC,
+			OGG
+		};
+	public:
+		SoundFile(const FileSystem::FilePath& path, SoundFileInfo& outInfo);
+		~SoundFile();
+
+		uint64 ReadPCMFramesFloat32(const SoundFileInfo& info, uint64 framesToRead, uint32 channelCount, float32* bufferOut);
+		void SeekStart();
+		void SeekFrame(uint64 frame);
 	private:
 		void* m_Internal = nullptr;
 		Type m_FileType = Type::Unknown;

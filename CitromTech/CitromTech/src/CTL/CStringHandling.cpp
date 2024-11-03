@@ -39,9 +39,8 @@ namespace CTL::CString
         return std::strcat(destination, source);
     }
 
-    char* ReverseSearchForCharacter(const char* string, const char character)
+    const char* ReverseSearchForCharacter(const char* string, const char character)
     {
-        // TODO: fix this
-        return nullptr; //std::strrchr(string, character);
+        return std::strrchr(string, character);
     }
 }

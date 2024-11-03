@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "FileSystem/FileSystem.h"
 
 // There's no reason to support Audio API's because
 // PortAudio should be the only one that needs to be used
@@ -13,8 +14,9 @@ namespace Citrom::Audio
 	};
 	struct Clip
 	{
-		uint8* data; // bytes
-		uint32 dataLength;
+		//uint8* data; // bytes
+		//uint32 dataLength;
+		FileSystem::FilePath path;
 		
 		bool looping;
 		float32 volume;
@@ -31,6 +33,7 @@ namespace Citrom::Audio
 
 	const char* GetBackendName();
 
+	void FillAudioData(const FileSystem::FilePath& filePath, Clip* clipOut);
 	void PlayAudioClip(Clip* clip);
 	//void PlayAudioClipAsync(Clip* clip); // ThreadPool* customThreadPool
 }

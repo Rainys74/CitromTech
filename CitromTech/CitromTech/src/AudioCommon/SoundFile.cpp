@@ -15,6 +15,34 @@
 
 namespace Citrom
 {
+    static SoundFile::Type GetFileType(const char* fileName)
+    {
+        const char* extension = CTL::CString::ReverseSearchForCharacter(fileName, '.');
+        if (extension != NULL)
+        {
+            // Move to the next character after the dot
+            extension++;
+            if (strcmp(extension, "wav") == 0)
+            {
+                return SoundFile::Type::WAV;
+            }
+            else if (strcmp(extension, "ogg") == 0)
+            {
+                return SoundFile::Type::OGG;
+            }
+            else if (strcmp(extension, "mp3") == 0)
+            {
+                return SoundFile::Type::MP3;
+            }
+            else if (strcmp(extension, "flac") == 0)
+            {
+                return SoundFile::Type::FLAC;
+            }
+        }
+        return SoundFile::Type::Unknown;
+    }
+
+
 #define dr_lib_sound_file_open(LIBTYPE, FILETYPE, PCMFRAMETOTALNAME)                                \
     file->fileType = FILETYPE;                                                                      \
     file->internal = new dr ## LIBTYPE;                                                     \
@@ -27,39 +55,83 @@ namespace Citrom
     info->sampleCount = LIBTYPE->PCMFRAMETOTALNAME;                                                 \
     info->sampleRate = LIBTYPE->sampleRate                                                             
 
-    SoundFileWAV::SoundFileWAV(const char* path, const Mode mode, SoundFileInfo& info) 
-        : SoundFile(path, mode, info), m_Internal(nullptr), m_FileType(Type::WAV)
+    SoundFile::SoundFile(const FileSystem::FilePath& path, SoundFileInfo& outInfo)
     {
-        m_Internal = new drwav;
-        drwav* wav = (drwav*)m_Internal;
+        switch (GetFileType(path.path))
+        {
+        default:
+        case Type::Unknown:
+            CT_CORE_ERROR("port_audio_sound_file_open(): Cannot open sound file: {}!", path.path);
+            break;
+        case Type::WAV:
+        {
+            //dr_lib_sound_file_open(wav, FILE_TYPE_WAV, totalPCMFrameCount);
+            m_FileType = Type::WAV;
+            m_Internal = new drwav;
+            drwav* wav = (drwav*)m_Internal;
 
-        CT_CORE_ASSERT(drwav_init_file(wav, path, NULL), "drwav_init_file() failed!");
-        CT_CORE_ASSERT(wav, "Could not open wav file!");
+            CT_CORE_ASSERT(drwav_init_file(wav, path.path, NULL), "drwav_init_file() failed!");
+            CT_CORE_ASSERT(wav, "Could not open wav file!");
 
-        info.channels = wav->channels;
-        info.sampleCount = wav->totalPCMFrameCount;
-        info.sampleRate = wav->sampleRate;
+            outInfo.channels = wav->channels;
+            outInfo.sampleCount = wav->totalPCMFrameCount;
+            outInfo.sampleRate = wav->sampleRate;
+        }
+        break;
+        }
     }
-    SoundFileWAV::~SoundFileWAV()
+    SoundFile::~SoundFile()
     {
-        drwav_uninit((drwav*)m_Internal);
+        switch (m_FileType)
+        {
+        default:
+        case Type::Unknown:
+            CT_CORE_ERROR("port_audio_sound_file_close(): Cannot close sound file!");
+            break;
+        case Type::WAV:
+        {
+            drwav_uninit((drwav*)m_Internal);
 
-        delete (drwav*)m_Internal;
+            delete (drwav*)m_Internal;
+        }
+        break;
+        }
     }
-    uint64 SoundFileWAV::ReadPCMFramesFloat32(SoundFileInfo& soundInfo, uint64 framesToRead, uint32 channelCount, float32* bufferOut)
+    uint64 SoundFile::ReadPCMFramesFloat32(const SoundFileInfo& info, uint64 framesToRead, uint32 channelCount, float32* bufferOut)
     {
-        return drwav_read_pcm_frames_f32((drwav*)m_Internal, framesToRead, bufferOut);
+        switch (m_FileType)
+        {
+        default:
+        case Type::Unknown:
+            CT_CORE_ERROR("port_audio_read_pcm_frames_float32(): Cannot read pcm frames!");
+            return 0;
+            break;
+        case Type::WAV:
+        {
+            return drwav_read_pcm_frames_f32((drwav*)m_Internal, framesToRead, bufferOut);
+        }
+        break;
+        }
     }
-    void SoundFileWAV::SeekStart()
+    void SoundFile::SeekStart()
     {
-        drwav_seek_to_pcm_frame((drwav*)m_Internal, 0);
+        switch (m_FileType)
+        {
+        default:
+        case Type::Unknown:
+            CT_CORE_ERROR("port_audio_seek_start(): Cannot seek start!");
+            break;
+        case Type::WAV:
+        {
+            drwav_seek_to_pcm_frame((drwav*)m_Internal, 0);
+        }
+        break;
+        }
     }
-    void SoundFileWAV::SeekFrame(uint64 frame)
+    void SoundFile::SeekFrame(uint64 frame)
     {
         // to be implemented
     }
-
-
 
     static port_audio_file_type get_file_type(const char* fileName)
     {
