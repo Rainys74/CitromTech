@@ -133,7 +133,7 @@ namespace Citrom
         // to be implemented
     }
 
-    static port_audio_file_type get_file_type(const char* fileName)
+    /*static port_audio_file_type get_file_type(const char* fileName)
     {
         const char* extension = CTL::CString::ReverseSearchForCharacter(fileName, '.');
         if (extension != NULL)
@@ -319,5 +319,5 @@ namespace Citrom
         }
 
         delete soundFile;
-    }
+    }*/
 }

@@ -17,30 +17,6 @@ namespace Citrom
 		uint32 sampleRate;
 	};
 
-	/*class SoundFile
-	{
-	public:
-		enum class Type
-		{
-			Unknown,
-			WAV,
-			MP3,
-			FLAC,
-			OGG
-		};
-	public:
-		static SoundFile* Open(const FileSystem::FilePath& path, SoundFileInfo& outInfo);
-		//static CTL::ScopedPtr<SoundFile> Open(const FileSystem::FilePath& path, SoundFileInfo& outInfo);
-
-		static void Close(SoundFile* soundFile);
-
-		static uint64 ReadPCMFramesFloat32(SoundFile* soundFile, const SoundFileInfo& info, uint64 framesToRead, uint32 channelCount, float32* bufferOut);
-		static void SeekStart(SoundFile* soundFile);
-		static void SeekFrame(SoundFile* soundFile, uint64 frame);
-	private:
-		void* m_Internal = nullptr;
-		Type m_FileType = Type::Unknown;
-	};*/
 	class SoundFile
 	{
 	public:
@@ -64,7 +40,7 @@ namespace Citrom
 		Type m_FileType = Type::Unknown;
 	};
 }
-typedef enum port_audio_file_type
+/*typedef enum port_audio_file_type
 {
 	FILE_TYPE_UNKNOWN,
 	FILE_TYPE_WAV,
@@ -98,4 +74,4 @@ port_audio_sound_file* port_audio_sound_file_open(const char* path, const port_a
 uint64 port_audio_read_pcm_frames_float32(port_audio_sound_file* soundFile, port_audio_sound_file_info* soundInfo, uint64 framesToRead, uint32 channelCount, float32* bufferOut);
 void port_audio_seek_start(port_audio_sound_file* soundFile);
 void port_audio_seek_frame(port_audio_sound_file* soundFile, uint64 frame);
-void port_audio_sound_file_close(port_audio_sound_file* soundFile, port_audio_sound_file_info* soundInfo);
+void port_audio_sound_file_close(port_audio_sound_file* soundFile, port_audio_sound_file_info* soundInfo);*/
