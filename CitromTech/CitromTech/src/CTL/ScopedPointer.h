@@ -2,6 +2,9 @@
 
 #include "CTL.h"
 
+#include <memory>
+#include <utility>
+
 // CTL - (C)itrom Tech Standard (T)emplate (L)ibrary
 namespace CTL
 {
