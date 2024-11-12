@@ -49,6 +49,9 @@ namespace CTL
         T* operator->() const noexcept { return m_Data; }
         T& operator*() const noexcept { return *m_Data; }
 
+        //operator T*() const { return m_Data; }
+        //operator const T*() const { return m_Data; }
+
         D& GetDeleter() noexcept { return m_Deleter; }
         const D& GetDeleter() const noexcept { return m_Deleter; }
 
@@ -75,4 +78,11 @@ namespace CTL
         NO_UNIQUE_ADDRESS D m_Deleter;
         T* m_Data;
     };
+
+    template<typename T, typename ... Args>
+    constexpr ScopedPtr<T> CreateScopedPtr(Args&& ... args)
+    {
+        //return std::make_shared<T>(std::forward<Args>(args)...);
+        return ScopedPtr<T>(std::forward<Args>(args)...);
+    }
 }

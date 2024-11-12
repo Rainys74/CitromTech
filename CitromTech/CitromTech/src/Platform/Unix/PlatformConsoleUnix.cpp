@@ -59,6 +59,22 @@ namespace Citrom::Platform::Console
 				break;
 		}
     }
+	void PrintText(const CTL::String& text, Stream stdStream)
+	{
+		int fd = 0;
+		switch (stdStream)
+		{
+		default:
+		case Stream::Out:
+			fd = STDOUT_FILENO;
+			break;
+		case Stream::Error:
+			fd = STDERR_FILENO;
+			break;
+		}
+		
+		(void)write(fd, text.Data(), text.Length());
+	}
 	void PrintText(const char* text, Stream stdStream)
     {
         std::fprintf(GetStdStreamHandle(stdStream), text);

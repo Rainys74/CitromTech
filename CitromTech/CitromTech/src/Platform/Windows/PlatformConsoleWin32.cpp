@@ -81,6 +81,13 @@ namespace Citrom::Platform::Console
 				break;
 		}
 	}
+	void PrintText(const CTL::String& text, Stream stdStream)
+	{
+		HANDLE hConsole = GetStdStreamHandle(stdStream);
+
+		DWORD dwCharsWritten;
+		WriteConsoleA(hConsole, text.Data(), (DWORD)text.Length(), &dwCharsWritten, NULL);
+	}
 	void PrintText(const char* text, Stream stdStream)
 	{
 		/*HANDLE hConsole;

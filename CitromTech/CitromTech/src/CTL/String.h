@@ -8,7 +8,7 @@ namespace CTL
 	// TODO: Perhaps implement a template system that allows to implement
 	// different types of encoding for strings easily, without duplicating code: 
 	// ANSI, UTF-8, UTF-16, UTF-32, Wide etc.
-	class String 
+	class String
 	{
 	public:
 		String();
@@ -24,6 +24,9 @@ namespace CTL
 
 		//char16_t* UTF16Str(); // UTF-16
 		//char32_t* UTF32Str(); // UTF-32
+
+		FORCE_INLINE char* Data() const { return m_Data; } // returns the underlying data
+		FORCE_INLINE size_t Length() const { return m_Length; } // returns the character count
 	private:
 		char* m_Data = nullptr;
 		size_t m_Length = 0;
