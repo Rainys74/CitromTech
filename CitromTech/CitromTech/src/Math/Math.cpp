@@ -46,20 +46,20 @@ namespace Citrom::Math
 
 	float32 InverseSquareRoot(const float32 number)
 	{
-		// TODO: remake this so there's no licensing troubles
-		long i;
-		float x2, y;
-		const float threehalfs = 1.5F;
+		const float32 halfInput = number * 0.5f; // (x2)
+		float32 inverseSquareRoot = number; // (y)
+		int32 inputBits = *reinterpret_cast<int32*>(&inverseSquareRoot); // Bit-level representation of the input number, those weird pointers are to avoid explicit casting (i)
 
-		x2 = number * 0.5F;
-		y = number;
-		i = *(long*)&y;						// evil floating point bit level hacking
-		i = 0x5f3759df - (i >> 1);               // what the fuck?
-		y = *(float*)&i;
-		y = y * (threehalfs - (x2 * y * y));   // 1st iteration
-		y = y * (threehalfs - (x2 * y * y));   // 2nd iteration, technically improves the accuracy by a lot, without increasing the performance cost too much.
+		constexpr float32 factor = 1.5f; // (threehalfs)
 
-		return y;
+		// Algorithm
+		inputBits = 0x5f3759df - (inputBits >> 1); // dark magic
+		inverseSquareRoot = *reinterpret_cast<float32*>(&inputBits); // apply the dark magic
+
+		inverseSquareRoot = inverseSquareRoot * (factor - (halfInput * inverseSquareRoot * inverseSquareRoot)); // first iteration
+		inverseSquareRoot = inverseSquareRoot * (factor - (halfInput * inverseSquareRoot * inverseSquareRoot)); // second iteration, technically improves the accuracy by a lot, without increasing the performance cost too much.
+
+		return inverseSquareRoot;
 	}
 
 	float64 InverseSquareRoot(const float64 number)

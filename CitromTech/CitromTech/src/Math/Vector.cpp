@@ -1,7 +1,5 @@
 #include "Vector.h"
 
-#define IS_NAN(x) ((x) != (x))
-
 namespace Citrom::Math
 {
 	// Vector2

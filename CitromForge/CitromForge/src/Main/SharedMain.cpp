@@ -15,6 +15,8 @@
 
 #include "Platform/PlatformWindow.h"
 
+#include "Math/MathCommon.h"
+
 #include <iostream>
 
 using namespace Citrom;
@@ -175,6 +177,9 @@ int SharedMain(int argc, char* argv[])
 	}
 
 	Test::PrintSomeShit(const_cast<char*>(string3.c_str()));
+
+	CT_WARN("Real Inverse Square Root: {}", (float32)(1/Math::SquareRoot(5.0f)));
+	CT_WARN("Q3Ap Inverse Square Root: {}", (float32)Math::InverseSquareRoot(5.0f));
 
 	using namespace Platform;
 	Window window;
