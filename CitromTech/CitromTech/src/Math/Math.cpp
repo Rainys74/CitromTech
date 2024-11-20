@@ -66,38 +66,4 @@ namespace Citrom::Math
 	{
 		return 1 / SquareRoot(number);
 	}
-
-	// Vector3
-	#define IS_NAN(x) ((x) != (x))
-
-	// TODO: this is Vector 2!
-	float32 Vector3::Magnitude()
-	{
-		return SquareRoot(this->x * this->x + this->y * this->y);
-	}
-	float32 Vector3::SquaredMagnitude()
-	{
-		return (this->x * this->x + this->y * this->y);
-	}
-	Vector3 Vector3::Normalized()
-	{
-		Vector3 normalized = { 0 };
-		//normalized.x = this->x / vector2_magnitude(this);
-		//normalized.y = this->y / vector2_magnitude(this);
-		float32 magnitude = Magnitude();
-
-		normalized.x = this->x / magnitude;
-		normalized.y = this->y / magnitude;
-
-		if (IS_NAN(normalized.x))
-		{
-			normalized.x = 0.0f;
-		}
-		if (IS_NAN(normalized.y))
-		{
-			normalized.y = 0.0f;
-		}
-
-		return normalized;
-	}
 }

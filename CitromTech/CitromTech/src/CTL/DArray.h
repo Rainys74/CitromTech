@@ -47,6 +47,7 @@ namespace CTL
         {
             if (m_Count >= m_Capacity)
             {
+                // the 2.0f might be templated to allow for configuration
                 Resize(m_Capacity * 2.0f);
             }
             m_Data[m_Count++] = value;
