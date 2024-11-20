@@ -19,6 +19,27 @@ namespace Citrom::Math
 
 	#define IS_INFINITE(x) (IS_POSITIVELY_INFINITE(x) || IS_NEGATIVELY_INFINITE(x)) // ((x) == POS_INFINITY_MACRO(f) || (x) == NEG_INFINITY_MACRO(f))
 
+	// TODO: MaxUInt8 vs UInt16Max
+	constexpr uint8	 UInt8Max () { return 0xFF; }
+	constexpr uint16 UInt16Max() { return 0xFFFF; }
+	constexpr uint32 UInt32Max() { return 0xFFFFFFFF; }
+	constexpr uint64 UInt64Max() { return 0xFFFFFFFFFFFFFFFF; }
+
+	constexpr int8	 Int8Max  () { return 0x7F; }
+	constexpr int16  Int16Max () { return 0x7FFF; }
+	constexpr int32  Int32Max () { return 0x7FFFFFFF; }
+	constexpr int64  Int64Max () { return 0x7FFFFFFFFFFFFFFF; }
+
+	constexpr uint8	 UInt8Min () { return 0x00; }
+	constexpr uint16 UInt16Min() { return 0x0000; }
+	constexpr uint32 UInt32Min() { return 0x00000000; }
+	constexpr uint64 UInt64Min() { return 0x0000000000000000; }
+
+	constexpr int8   Int8Min  () { return static_cast<int8>(0x80); }
+	constexpr int16  Int16Min () { return static_cast<int16>(0x8000); }
+	constexpr int32  Int32Min () { return 0x80000000; }
+	constexpr int64  Int64Min () { return 0x8000000000000000; }
+
 	float32 SquareRoot(const float32 number);
 	float64 SquareRoot(const float64 number);
 

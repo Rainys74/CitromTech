@@ -36,7 +36,7 @@ namespace Citrom::Platform
 	}
 	void Thread::Wait(uint64 ms)
 	{
-		DWORD exitCode = WaitForSingleObject(m_Internal, ms);
+		DWORD exitCode = WaitForSingleObject(m_Internal, static_cast<DWORD>(ms));
 		if (exitCode == WAIT_TIMEOUT)
 		{
 			return;

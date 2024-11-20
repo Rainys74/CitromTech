@@ -102,7 +102,15 @@ namespace Citrom
 
 		// Format TimeStamp
 		std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()); // or use time(NULL)
+		#if 0
+		std::tm timeInfo; 
+		localtime_s(&timeInfo, &currentTime);
+		#elif 0
+		std::tm timeInfo;
+		localtime_r(&currentTime, &timeInfo);
+		#else
 		std::tm* timeInfo = std::localtime(&currentTime);
+		#endif
 
 		// Format the time with leading zeros
 		//std::stringstream formattedTimeSStream;

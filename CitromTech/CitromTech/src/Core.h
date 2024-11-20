@@ -77,9 +77,11 @@
 // Detect Compiler
 #ifdef _MSC_VER
 #define CT_COMPILER_MSVC
-#elif defined(__clang__)
+#endif
+#if defined(__clang__)
 #define CT_COMPILER_CLANG
-#elif defined(__GNUC__)
+#endif
+#if defined(__GNUC__)
 #define CT_COMPILER_GCC
 #endif
 
