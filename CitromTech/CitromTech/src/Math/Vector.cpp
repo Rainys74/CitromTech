@@ -14,8 +14,6 @@ namespace Citrom::Math
 	Vector2 Vector2::Normalized() const
 	{
 		Vector2 normalized = {0};
-		//normalized.x = vec2->x / vector2_magnitude(vec2);
-		//normalized.y = vec2->y / vector2_magnitude(vec2);
 		float32 magnitude = Magnitude();
 
 		normalized.x = this->x / magnitude;
