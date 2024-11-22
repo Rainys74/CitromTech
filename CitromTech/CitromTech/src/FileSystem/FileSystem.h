@@ -6,7 +6,7 @@ namespace Citrom::FileSystem
 {
 	struct FilePath
 	{
-		FilePath() {}
+		FilePath() : path(nullptr) {}
 		FilePath(const char* path) : path(path) {}
 
 		const char* path;
@@ -33,7 +33,7 @@ namespace Citrom::FileSystem
 		virtual size_t Read() = 0;
 
 		virtual void* Data() { return m_Internal; }
-	private:
+	protected:
 		void* m_Internal = nullptr;
 	};*/
 }

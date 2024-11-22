@@ -2,6 +2,8 @@
 
 #include "MathCommon.h"
 
+#include "CTL/StaticArray.h"
+
 namespace Citrom::Math
 {
     class Vector2
@@ -37,16 +39,20 @@ namespace Citrom::Math
     class Vector3
     {
     public:
-        float32 Magnitude();
-        float32 SquaredMagnitude();
-        Vector3 Normalized();
+        float32 Magnitude() const;
+        float32 SquaredMagnitude() const;
+        Vector3 Normalized() const;
+
+        // Products
+        float32 Dot(const Vector3& vec3B) const;
+        Vector3 Cross(const Vector3& vec3B) const;
 
         // Math equations
-        Vector3 Add(const Vector3& vec3B) {}
-        Vector3 Subtract(const Vector3& vec3B){}
+        Vector3 operator+(const Vector3& vec3B) const { return Vector3{ this->x + vec3B.x, this->y + vec3B.y, this->z + vec3B.z }; } // Add
+        Vector3 operator-(const Vector3& vec3B) const { return Vector3{ this->x - vec3B.x, this->y - vec3B.y, this->z - vec3B.z }; } // Subtract
 
-        Vector3 Multiply(const Vector3& vec3B){}
-        Vector3 Divide(const Vector3& vec3B){}
+        Vector3 operator*(const Vector3& vec3B) const { return Vector3{ this->x * vec3B.x, this->y * vec3B.y, this->z * vec3B.z }; } // Multiply
+        Vector3 operator/(const Vector3& vec3B) const { return Vector3{ this->x / vec3B.x, this->y / vec3B.y, this->z / vec3B.z }; } // Divide
     public:
         union
         {
@@ -64,4 +70,25 @@ namespace Citrom::Math
             };
         };
 	};
+
+    /*// C = Count, VT = Variable Type
+    template<typename C, typename VT>
+    class VectorBase
+    {
+    public:
+        float32 Magnitude() const;
+        float32 SquaredMagnitude() const;
+        // can't really pull this off if inheritance will be used, unless hardcoding every specific function here and
+        // doing static asserts is a possibility
+        VectorBase<C, VT> Normalized() const;
+
+        // Math equations
+        VectorBase<C, VT> operator+(const VectorBase<C, VT>& vecB) const; // Add
+        VectorBase<C, VT> operator-(const VectorBase<C, VT>& vecB) const; // Subtract
+
+        VectorBase<C, VT> operator*(const VectorBase<C, VT>& vecB) const; // Multiply
+        VectorBase<C, VT> operator/(const VectorBase<C, VT>& vecB) const; // Divide
+    public:
+        CTL::Array<VT, C> data;
+    };*/
 }
