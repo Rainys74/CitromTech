@@ -10,7 +10,7 @@ namespace CTL
     class Array
     {
     public:
-        constexpr size_t Size() const { return S; }
+        constexpr size_t Length() const { return S; }
 
         // Operator overloading
         FORCE_INLINE T& operator[](size_t index) { return m_Data[index]; }

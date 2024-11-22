@@ -16,6 +16,7 @@
 #include "Platform/PlatformWindow.h"
 
 #include "Math/MathCommon.h"
+#include "Math/Vector.h"
 
 #include <iostream>
 
@@ -180,6 +181,22 @@ int SharedMain(int argc, char* argv[])
 
 	CT_WARN("Real Inverse Square Root: {}", (float32)(1/Math::SquareRoot(5.0f)));
 	CT_WARN("Q3Ap Inverse Square Root: {}", (float32)Math::InverseSquareRoot(5.0f));
+
+	//Math::Vector<3> vector;
+	Math::Vector3 vector;
+
+	vector[0] = 4.0f;
+	vector[1] = 5.7f;
+	vector[2] = 7.482f;
+
+	CT_VERBOSE("Vector3: ({}, {}, {})", vector[0], vector[1], vector[2]);
+
+	CT_VERBOSE("Magnitude: {}", vector.Magnitude());
+	CT_VERBOSE("Squared Magnitude: {}", vector.SquaredMagnitude());
+	CT_VERBOSE("Normalized: ({}, {}, {})", vector.Normalized()[0], vector.Normalized()[1], vector.Normalized()[2]);
+
+	//CT_VERBOSE("Dot: {}", vector.Magnitude());
+	//CT_VERBOSE("Cross: ({}, {}, {})", vector.Magnitude());
 
 	using namespace Platform;
 	Window window;
