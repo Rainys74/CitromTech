@@ -74,6 +74,24 @@
 #define CT_PLATFORM_POSIX
 #endif
 
+#ifdef CT_PLATFORM_WINDOWS // choose between IF_WINDOWS, CHECK_WINDOWS, WINDOWS_ONLY, WINDOWS_SPECIFIC, PLATFORM_WINDOWS
+#define IF_WINDOWS(x)	x
+#define IF_LINUX(x)
+#define IF_MACOS(x)
+#elif defined(CT_PLATFORM_LINUX)
+#define IF_WINDOWS(x)
+#define IF_LINUX(x)		x
+#define IF_MACOS(x)
+#elif defined(CT_PLATFORM_MACOS)
+#define IF_WINDOWS(x)
+#define IF_LINUX(x)
+#define IF_MACOS(x)		x
+#else
+#define IF_WINDOWS(x)
+#define IF_LINUX(x)
+#define IF_MACOS(x)
+#endif
+
 // Detect Compiler
 #ifdef _MSC_VER
 #define CT_COMPILER_MSVC

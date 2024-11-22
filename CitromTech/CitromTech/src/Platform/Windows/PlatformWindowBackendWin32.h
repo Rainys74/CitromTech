@@ -18,6 +18,8 @@ namespace Citrom::Platform
         virtual void Create(const int width, const int height, const CTL::String& title) override;
         virtual bool WindowShouldClose() const override;
         virtual void PollEvents() override;
+
+        virtual void* Win32TryGetHWnd() override;
     private:
         bool m_WindowShouldClose;
         int m_Width, m_Height;
@@ -27,11 +29,6 @@ namespace Citrom::Platform
         TCHAR* m_ClassName; // LPCWSTR
         HINSTANCE m_HInstance;
         HWND m_HWnd;
-
-        // OpenGL
-        //HDC m_DC;
-        //HGLRC m_RC;
-        //int m_PF;
     };
 }
 #endif

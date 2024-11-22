@@ -232,5 +232,9 @@ namespace Citrom::Platform
 			}
 		}
     }
+	void* WindowBackendWin32::Win32TryGetHWnd()
+	{
+		return static_cast<void*>(m_HWnd);
+	}
 }
 #endif

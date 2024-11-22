@@ -3,6 +3,12 @@
 #include "Logger/Logger.h"
 #include "CitromAssert.h"
 
+#ifdef CT_PLATFORM_WINDOWS
+#define GLFW_EXPOSE_NATIVE_WIN32
+//#define GLFW_NATIVE_INCLUDE_NONE
+#include <GLFW/glfw3native.h>
+#endif
+
 namespace Citrom::Platform
 {
     WindowBackendGLFW::WindowBackendGLFW()
@@ -45,4 +51,10 @@ namespace Citrom::Platform
     
         glfwPollEvents();
     }
+    #ifdef CT_PLATFORM_WINDOWS
+    void* WindowBackendGLFW::Win32TryGetHWnd()
+    {
+        return static_cast<void*>(glfwGetWin32Window(m_Window));
+    }
+    #endif
 }
