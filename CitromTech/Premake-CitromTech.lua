@@ -4,12 +4,16 @@ project "CitromTech"   -- Engine Library
         kind (LIBRARY_BUILD_AS_DLL and "SharedLib" or "StaticLib")
         language "C++"
         cppdialect (CPP_VERSION)
+        staticruntime "on"
     
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
     
         IncludeDir = {}
         IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
+
+        -- CMake Dependencies
+        IncludeDir["glslcc"] = "../Dependencies/glslcc/src"
 
         files 
         {
@@ -23,16 +27,19 @@ project "CitromTech"   -- Engine Library
             "%{prj.name}/src/",
 
             "%{IncludeDir.GLFW}",
+            
+            "%{IncludeDir.glslcc}",
         }
 
         libdirs
         {
-            --"Dependencies/**"
+            --"Dependencies/**" -- ../Dependencies/glslcc_lib/Release/
         }
 
         links
         {
             "GLFW",
+
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"
         }
@@ -53,15 +60,19 @@ project "CitromTech"   -- Engine Library
         }
         DefineCitromLibraryTypeMacros()
 
+        local glslccLibName = "libglslcc.a"
+
     filter { "system:linux or macosx or bsd" }
         defines 
         { 
             "CT_PLATFORM_UNIX" 
         }
+        glslccLibName = "libglslcc.a"
 
     filter "system:windows"
         staticruntime "On"
         systemversion "latest" -- 10.0 (latest installed version) or 10.0.22621.0
+        glslccLibName = "glslcc.lib"
 
         -- DirectX11
         links
@@ -102,18 +113,24 @@ project "CitromTech"   -- Engine Library
         defines "CT_DEBUG"
         runtime "Debug"
         symbols "On"
+        libdirs { "../Dependencies/glslcc_lib/Debug" }
+        links {glslccLibName}
 
     filter "configurations:Release"
         defines "CT_RELEASE"
         runtime "Release"
         optimize "On"
         symbols "Off"
+        libdirs { "../Dependencies/glslcc_lib/Release" }
+        links {glslccLibName}
 
     filter "configurations:Optimization"
         defines "CT_OPTIMIZATION"
         runtime "Release"
         optimize "Full"
         symbols "Off"
+        libdirs { "../Dependencies/glslcc_lib/Release" }
+        links {glslccLibName}
 
     --[[
     filter {"system:windows", "configurations:Release"}

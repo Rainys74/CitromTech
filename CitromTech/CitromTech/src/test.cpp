@@ -4,6 +4,8 @@
 
 #include "GLFW/glfw3.h"
 
+#include "glslcc.h"
+
 void Test::PrintSomeShit(char* shit)
 {
 	std::cout << shit << "\n";
@@ -40,4 +42,13 @@ void Test::TestOutGLFW()
 	glfwDestroyWindow(window);
 
 	glfwTerminate();
+}
+
+void Test::TestOutGLSLCC(const char* filePath)
+{
+	const char* arguments[] = {
+		filePath,
+		"--help"
+	};
+	glslcc_exec(1, const_cast<char**>(arguments));
 }

@@ -34,6 +34,8 @@ int SharedMain(int argc, char* argv[])
 
 	CT_ASSERT(1 == 1, "1 != 0");
 
+	//Test::TestOutGLSLCC(argv[0]);
+
 	Test::PrintSomeShit(const_cast<char*>("insert some random shit!"));
 
 	Test::PrintComplexEmoji("👋, 🌍!");

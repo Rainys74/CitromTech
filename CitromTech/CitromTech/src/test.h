@@ -7,4 +7,5 @@ namespace Test
 	void PrintComplexEmoji(const char* utf8Probably);
 	void PrintWideString(const wchar_t* utf16WideUnicode);
 	void TestOutGLFW();
+	void TestOutGLSLCC(const char* filePath);
 }

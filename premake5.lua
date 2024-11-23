@@ -1,3 +1,6 @@
+-- CMake Dependencies
+include "Dependencies/Premake-CMake.lua"
+
 workspace "CitromTech" -- Solution
     --architecture "x64"
     startproject "CitromGame"

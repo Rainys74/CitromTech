@@ -1,0 +1,5 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeASMInformation.cmake
+C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeASM_MASMInformation.cmake
+E:/Citrom Tech/Dependencies/glslcc/3rdparty/sx/CMakeLists.txt
+E:/Citrom Tech/Dependencies/glslcc_bin/CMakeFiles/3.30.4/CMakeASM_MASMCompiler.cmake

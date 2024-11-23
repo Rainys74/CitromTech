@@ -1,0 +1,10 @@
+^E:\CITROM TECH\DEPENDENCIES\GLSLCC_BIN\CMAKEFILES\5334401E73E8E961FCB30D79FC671215\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SE:/Citrom Tech/Dependencies/glslcc" "-BE:/Citrom Tech/Dependencies/glslcc_bin" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "E:/Citrom Tech/Dependencies/glslcc_bin/glslcc.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
