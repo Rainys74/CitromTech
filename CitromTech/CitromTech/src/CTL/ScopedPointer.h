@@ -31,13 +31,13 @@ namespace CTL
         ScopedPtr& operator=(const ScopedPtr&) = delete;
 
         ScopedPtr(ScopedPtr&& other) noexcept
-            : m_Data{ other.release() }, m_Deleter{ std::move(other.m_Deleter) } {}
+            : m_Data{ other.Release() }, m_Deleter{ std::move(other.m_Deleter) } {}
 
         ScopedPtr& operator=(ScopedPtr&& other) noexcept 
         {
             if (this != &other) 
             {
-                reset(other.release());
+                Reset(other.Release());
                 m_Deleter = std::move(other.m_Deleter);
             }
             return *this;

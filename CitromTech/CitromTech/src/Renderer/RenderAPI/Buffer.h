@@ -7,6 +7,7 @@
 
 namespace Citrom::RenderAPI
 {
+	// Vertex Buffer
 	struct VertexBufferLayoutObject
 	{
 
@@ -15,7 +16,7 @@ namespace Citrom::RenderAPI
 	struct VertexBufferDesc
 	{
 		const void* data;
-		uint32 size;
+		size_t size;
 		Usage usage;
 	};
 
@@ -29,5 +30,21 @@ namespace Citrom::RenderAPI
 		{
 			
 		}
+	};
+
+	// Index Buffer
+	struct IndexBufferDesc
+	{
+		const uint32* data;
+		uint32 count;
+		Usage usage;
+	};
+
+	struct IndexBuffer
+	{
+		IndexBufferDesc descriptor;
+		CTL::Ref<void> internal;
+
+		FORCE_INLINE uint32 GetCount() const { return descriptor.count; }
 	};
 }

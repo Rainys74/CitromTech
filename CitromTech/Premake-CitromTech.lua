@@ -63,6 +63,13 @@ project "CitromTech"   -- Engine Library
         staticruntime "On"
         systemversion "latest" -- 10.0 (latest installed version) or 10.0.22621.0
 
+        -- DirectX11
+        links
+        {
+            "d3d11.lib",
+            "D3DCompiler.lib"
+        }
+
         defines
         {
             "CT_PLATFORM_WINDOWS",

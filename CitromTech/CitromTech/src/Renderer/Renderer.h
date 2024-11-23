@@ -5,6 +5,8 @@
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
 
+#include "CTL/ScopedPointer.h"
+
 namespace Citrom
 {
 	struct Vertex
@@ -15,6 +17,8 @@ namespace Citrom
 	class Renderer
 	{
 	public:
+		static void Initialize();
+
 		// Submit
 
 		// TODO: temporary
@@ -22,6 +26,6 @@ namespace Citrom
 	private:
 		// RenderMesh
 	private:
-		static RenderAPI::Device m_Device;
+		static CTL::ScopedPtr<RenderAPI::Device> m_Device;
 	};
 }

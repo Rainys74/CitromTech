@@ -1,5 +1,6 @@
 #include "DX11DebugHandler.h"
 
+#ifdef CT_PLATFORM_WINDOWS
 #include <string>
 #include <sstream>
 #include <bitset>
@@ -48,3 +49,4 @@ void DXMessageBoxError(const char* errorMsg, const HRESULT hr, const char* file,
 
 	MessageBoxA(nullptr, ss.str().c_str(), "DXCallHR Failed", MB_ICONERROR);
 }
+#endif
