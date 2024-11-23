@@ -104,7 +104,7 @@ function BuildCMakeSharedProject(cmakeDir, buildDir, installDir, libName)
 end
 
 if shouldBuild == "true" then
-    BuildCMakeSharedProject("glslcc", "glslcc_bin", "glslcc_dll", "glslcc")
+    BuildCMakeSharedProject("glslcc", "bin/glslcc", "glslcc_dll", "glslcc")
     os.exit(0)
 elseif shouldBuild == "false" then
 end
