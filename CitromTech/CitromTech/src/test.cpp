@@ -4,7 +4,9 @@
 
 #include "GLFW/glfw3.h"
 
-#include "glslcc.h"
+//#include "glslcc.h"
+#include "Platform/Platform.h"
+using namespace Citrom;
 
 void Test::PrintSomeShit(char* shit)
 {
@@ -50,5 +52,11 @@ void Test::TestOutGLSLCC(const char* filePath)
 		filePath,
 		"--help"
 	};
-	glslcc_exec(1, const_cast<char**>(arguments));
+	int (*glslcc_exec)(int argc, char* argv[]);
+
+	Platform::DynamicLibrary glslcc("glslcc");
+	//glslcc.Load("glslcc");
+	glslcc_exec = (int(*)(int argc, char** argv))glslcc.GetProcedureAddress("glslcc_exec");
+
+	int result = glslcc_exec(1, const_cast<char**>(arguments));
 }
