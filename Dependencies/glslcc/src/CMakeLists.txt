@@ -6,7 +6,7 @@ set(SOURCE_FILES "glslcc.cpp"
                  "sgs-file.h" 
                  "sgs-file.cpp")
 				 
-add_library(glslcc STATIC ${SOURCE_FILES})
+add_library(glslcc SHARED ${SOURCE_FILES})
 
 target_link_libraries(glslcc PRIVATE 
         sx

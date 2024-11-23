@@ -60,19 +60,15 @@ project "CitromTech"   -- Engine Library
         }
         DefineCitromLibraryTypeMacros()
 
-        local glslccLibName = "libglslcc.a"
-
     filter { "system:linux or macosx or bsd" }
         defines 
         { 
             "CT_PLATFORM_UNIX" 
         }
-        glslccLibName = "libglslcc.a"
 
     filter "system:windows"
         staticruntime "On"
         systemversion "latest" -- 10.0 (latest installed version) or 10.0.22621.0
-        glslccLibName = "glslcc.lib"
 
         -- DirectX11
         links
@@ -113,24 +109,18 @@ project "CitromTech"   -- Engine Library
         defines "CT_DEBUG"
         runtime "Debug"
         symbols "On"
-        libdirs { "../Dependencies/glslcc_lib/Debug" }
-        links {glslccLibName}
 
     filter "configurations:Release"
         defines "CT_RELEASE"
         runtime "Release"
         optimize "On"
         symbols "Off"
-        libdirs { "../Dependencies/glslcc_lib/Release" }
-        links {glslccLibName}
 
     filter "configurations:Optimization"
         defines "CT_OPTIMIZATION"
         runtime "Release"
         optimize "Full"
         symbols "Off"
-        libdirs { "../Dependencies/glslcc_lib/Release" }
-        links {glslccLibName}
 
     --[[
     filter {"system:windows", "configurations:Release"}

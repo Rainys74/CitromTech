@@ -358,7 +358,7 @@ SPIRV_LIB_DEPENDS:STATIC=general;glslang;
 
 //Statically link with system standard libraries. Affects release
 // build only
-STATIC_LINK:BOOL=ON
+STATIC_LINK:BOOL=OFF
 
 //Build test executables
 SX_BUILD_TESTS:BOOL=OFF
