@@ -9,8 +9,11 @@ namespace Citrom::Platform
 	public:
 		using StartRoutinePFN = uint32(*)(void*);
 
+		Thread();
 		Thread(StartRoutinePFN startRoutine, void* args);
 		~Thread();
+
+		void Initialize(const StartRoutinePFN startRoutine, void* args); // Start
 
 		void Join(); // waits for the thread to catch up
 		void Wait(uint64 ms); // waits for a specific time amount

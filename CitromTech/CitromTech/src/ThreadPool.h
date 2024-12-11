@@ -20,11 +20,15 @@ namespace Citrom
 		~ThreadPool();
 
 		void Submit(void* job, void* args);
+
+		FORCE_INLINE uint32 GetJobCount() { return m_QueueJobs.Count(); }
+
+		Platform::Mutex& GetMutex() { return m_Mutex; }
+		CTL::DArray<ThreadPoolJob>* GetJobQueue() { return m_QueueJobs; }
 	private:
 		uint32 m_MaxThreads;
 
-		//CTL::DArray<Platform::Thread> m_WorkerThreads; // replaced because this is a strongly typed array and requires default constructors..
-		Platform::Thread* m_WorkerThreads;
+		CTL::DArray<Platform::Thread> m_WorkerThreads;
 		Platform::Mutex m_Mutex;
 
 		CTL::DArray<ThreadPoolJob> m_QueueJobs;
