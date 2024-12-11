@@ -18,6 +18,8 @@
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
 
+#include "ThreadPool.h"
+
 #include <iostream>
 
 using namespace Citrom;
@@ -199,6 +201,9 @@ int SharedMain(int argc, char* argv[])
 
 	//CT_VERBOSE("Dot: {}", vector.Magnitude());
 	//CT_VERBOSE("Cross: ({}, {}, {})", vector.Magnitude());
+
+	// Thread pool
+	ThreadPool threadPool(6);
 
 	using namespace Platform;
 	Window window;
