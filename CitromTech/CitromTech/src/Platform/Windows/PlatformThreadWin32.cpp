@@ -1,4 +1,5 @@
 #include "Platform/PlatformThread.h"
+#include "Platform/Platform.h" // Utils::Sleep
 
 #ifdef CT_PLATFORM_WINDOWS
 #include "WindowsIncludes.h"
@@ -80,6 +81,7 @@ namespace Citrom::Platform
 	void Thread::Sleep(uint64 ms)
 	{
 		//Platform::Sleep(ms);
+		Platform::Utils::Sleep(ms);
 	}
 	uint64 Thread::GetCurrentID()
 	{

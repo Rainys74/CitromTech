@@ -24,7 +24,7 @@ namespace Citrom
 		FORCE_INLINE uint32 GetJobCount() { return m_QueueJobs.Count(); }
 
 		Platform::Mutex& GetMutex() { return m_Mutex; }
-		CTL::DArray<ThreadPoolJob>* GetJobQueue() { return m_QueueJobs; }
+		CTL::DArray<ThreadPoolJob>* GetJobQueue() { return &m_QueueJobs; }
 	private:
 		uint32 m_MaxThreads;
 

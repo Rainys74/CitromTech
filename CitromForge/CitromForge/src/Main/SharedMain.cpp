@@ -24,6 +24,15 @@
 
 using namespace Citrom;
 
+uint32 tpvar = 0;
+void ThreadPoolTestJob()
+{
+	for (uint32 i = 0; i < 1000; i++)
+	{
+		tpvar++;
+	}
+}
+
 int SharedMain(int argc, char* argv[])
 {
 	CT_INFO("Command Line Arguments ({}):", argc);
@@ -205,6 +214,28 @@ int SharedMain(int argc, char* argv[])
 	// Thread pool
 	ThreadPool threadPool(6);
 
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	CT_INFO("tpvar: {}", tpvar);
+
 	using namespace Platform;
 	Window window;
 
@@ -212,6 +243,7 @@ int SharedMain(int argc, char* argv[])
 
 	while (!window.WindowShouldClose())
 	{
+		//CT_INFO("tpvar: {}", tpvar);
 		window.PollEvents();
 	}
 

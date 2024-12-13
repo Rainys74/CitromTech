@@ -1,7 +1,26 @@
 #pragma once
 
+#include "Core.h"
+
 namespace Citrom::Platform
 {
+	namespace Utils
+	{
+		void Sleep(uint64 ms);
+		int32 GetProcessID();
+		//float64 GetTime();
+
+		void MessageBoxError(const char* title, const char* text);
+	}
+	namespace Info
+	{
+		uint32 GetNumberOfProcessors(); // Cores
+		uint32 GetNumberOfLogicalProcessors(); // Threads
+
+		const char* GetPlatformName();
+		char* GetOSInfo();
+	}
+
 	class DynamicLibrary
 	{
 		/*

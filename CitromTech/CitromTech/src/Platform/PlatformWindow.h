@@ -19,6 +19,8 @@ namespace Citrom::Platform
 		virtual bool WindowShouldClose() const = 0;
 		virtual void PollEvents() = 0;
 
+		//virtual void ChangeTitle(const char* title) = 0;
+
 		virtual void* Win32TryGetHWnd() { return nullptr; }
     private:
 		bool m_WindowShouldClose;

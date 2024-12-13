@@ -1,6 +1,8 @@
 #include "ThreadPool.h"
 #include "Logger/Logger.h"
 
+#include "Platform/Platform.h"
+
 namespace Citrom
 {
 	using namespace Platform;
@@ -11,7 +13,8 @@ namespace Citrom
 		{
 			while (threadPool->GetJobCount() == 0)
 			{
-				//thread_sleep(&callbackData->threads->data[callbackData->threadID], 1000); // Sleep for 1 ms to reduce CPU usage
+				// TODO: probably look into replacing with Thread's sleep function
+				Platform::Utils::Sleep(1); // Sleep for 1 up to 10 ms to reduce CPU usage
 			}
 
 			//thread_mutex_lock(callbackData->mutex);
@@ -27,8 +30,10 @@ namespace Citrom
 			{
 				//callbackData->jobs->count--;
 				//thread_pool_job currentJob = callbackData->jobs->data[callbackData->jobs->count];
+
+				ThreadPoolJob currentJob = (*threadPool->GetJobQueue())[threadPool->GetJobCount() - 1];
 				threadPool->GetJobQueue()->PopBack();
-				ThreadPoolJob currentJob = threadPool->GetJobQueue()[threadPool->GetJobCount()];
+
 				threadPool->GetMutex().Unlock();
 
 				currentJob.job(currentJob.args);
@@ -45,7 +50,7 @@ namespace Citrom
 	{
 		for (uint32 i = 0; i < maxThreads; i++)
 		{
-			m_WorkerThreads.PushBack(*new Thread(reinterpret_cast<Thread::StartRoutinePFN>(ThreadPoolWork), this));
+			m_WorkerThreads.PushBack(Thread(reinterpret_cast<Thread::StartRoutinePFN>(ThreadPoolWork), this));
 		}
 	}
 
@@ -53,14 +58,16 @@ namespace Citrom
 	{
 		for (Thread& worker : m_WorkerThreads) 
 		{
-			worker.Join();
+			// TODO: figure this out lol
+			//worker.Join();
+			worker.TryCancel();
 		}
 	}
 
 	void ThreadPool::Submit(void* job, void* args)
 	{
 		ThreadPoolJob poolJob;
-		poolJob.job = (Thread::StartRoutinePFN)job;
+		poolJob.job = reinterpret_cast<Thread::StartRoutinePFN>(job);
 		poolJob.args = args;
 		poolJob.executed = false;
 
