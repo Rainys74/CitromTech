@@ -9,6 +9,10 @@ namespace Citrom::RenderAPI
 	class Device
 	{
 	public:
+		// Swap Chain
+		//virtual SwapChain CreateSwapChain(SwapChainDesc* descriptor) = 0;
+		//virtual void SwapBuffers(SwapChain* sc) = 0; // implemented in device for better error checking on DX11
+
 		// Vertex Buffer
 		// TODO: figure out whether to return or set using pointers
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
