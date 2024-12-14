@@ -42,6 +42,7 @@ project "CitromForge" -- EXE
             -- Uses the path from the project file (.vcxproj, Makefile, .xcodeproj) maybe %{wks.location} can be used?
             ("{MKDIR} ../../WorkingDirectory"),
             ("{COPY} %{cfg.buildtarget.abspath} ../../WorkingDirectory"),
+            -- TODO: On debug or release/optimization builds copy over Debug or Release CMake generated dlls to the working dir
         }
 
     filter { "system:linux or macosx or bsd" }
