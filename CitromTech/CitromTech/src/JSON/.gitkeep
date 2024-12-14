@@ -1,0 +1,3 @@
+Parsing: simdjson
+
+Writing: RapidJSON or taocpp/json if performance isn't a concern for writing or if performance doesn't matter at all then nlohmann/json

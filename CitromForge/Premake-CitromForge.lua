@@ -8,6 +8,8 @@ project "CitromForge" -- EXE
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
 
+        debugdir "../WorkingDirectory"
+
         files 
         {
             "%{prj.name}/src/**.h",
@@ -33,6 +35,14 @@ project "CitromForge" -- EXE
             "GLFW",
         }
         DefineCitromLibraryTypeMacros()
+
+        postbuildcommands
+        {
+            --('echo Copying %{cfg.buildtarget.relpath} to ../bin/' .. outputdir .. '/CitromEditor'),
+            -- Uses the path from the project file (.vcxproj, Makefile, .xcodeproj) maybe %{wks.location} can be used?
+            ("{MKDIR} ../../WorkingDirectory"),
+            ("{COPY} %{cfg.buildtarget.abspath} ../../WorkingDirectory"),
+        }
 
     filter { "system:linux or macosx or bsd" }
         defines 
