@@ -140,7 +140,7 @@ int SharedMain(int argc, char* argv[])
 
 	EventListener<MouseEvents> mouseEventListener;
 	mouseEventListener.OnEvent = [](const Event<MouseEvents>& event) {
-		CT_ERROR("Window Event!: {}", (int)event.GetEventType());
+		CT_ERROR("Mouse Event!: {}", (int)event.GetEventType());
 
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
 		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
@@ -149,9 +149,14 @@ int SharedMain(int argc, char* argv[])
 		if (event.GetEventType() == MouseEvents::MouseDown)
 		{
 			const MouseDownEvent& transformedEvent = (const MouseDownEvent&)event;
-			CT_TRACE("Mouse Button: {}", transformedEvent.);
+			CT_TRACE("Mouse Button: {}", (int)transformedEvent.mouseButton);
 		}
-		};
+		else if (event.GetEventType() == MouseEvents::MouseUp)
+		{
+			const MouseUpEvent& transformedEvent = (const MouseUpEvent&)event;
+			CT_TRACE("Mouse Button: {}", (int)transformedEvent.mouseButton);
+		}
+	};
 
 	//Audio::Clip clip;
 	//clip.path = FileSystem::FilePath("E:/Citrom Tech/bin/Debug-windows-x86_64/CitromForge/anothersound.wav");
@@ -161,6 +166,7 @@ int SharedMain(int argc, char* argv[])
 
 	//EventBus::GetInstance()->AddListener<WindowEvents>(&windowEventListener);
 	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);
+	EventBus::GetDispatcher<MouseEvents>()->AddListener(&mouseEventListener);
 
 	int a = 5;
 	float b = 2.5334f;

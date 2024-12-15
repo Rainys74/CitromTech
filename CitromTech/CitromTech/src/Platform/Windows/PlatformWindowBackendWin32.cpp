@@ -6,6 +6,7 @@
 #include "../../../Resources/Resource.h"
 
 #include "Events/KeyEvents.h"
+#include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
 namespace Citrom::Platform
@@ -14,6 +15,7 @@ namespace Citrom::Platform
 	{
 		switch (msg)
 		{
+		// Window Events Begin
 		case WM_CLOSE:
 		{
 			WindowCloseEvent windowCloseEvent;
@@ -51,6 +53,145 @@ namespace Citrom::Platform
 			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowMoveEvent);
 		}
 		break;
+		// Window Events End
+		// Mouse Events Begin
+		// Left button
+		case WM_LBUTTONDOWN:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseDownEvent mouseDownEvent;
+			mouseDownEvent.mouseButton = Input::MouseButton::LeftButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseDownEvent);
+		}
+		break;
+		case WM_LBUTTONUP:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseUpEvent mouseUpEvent;
+			mouseUpEvent.mouseButton = Input::MouseButton::LeftButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+		}
+		break;
+		// Right button
+		case WM_RBUTTONDOWN:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseDownEvent mouseDownEvent;
+			mouseDownEvent.mouseButton = Input::MouseButton::RightButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseDownEvent);
+		}
+		break;
+		case WM_RBUTTONUP:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseUpEvent mouseUpEvent;
+			mouseUpEvent.mouseButton = Input::MouseButton::RightButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+		}
+		break;
+		// Middle button
+		case WM_MBUTTONDOWN:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseDownEvent mouseDownEvent;
+			mouseDownEvent.mouseButton = Input::MouseButton::MiddleButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseDownEvent);
+		}
+		break;
+		case WM_MBUTTONUP:
+		{
+			//POINTS pt = MAKEPOINTS(lParam);
+
+			MouseUpEvent mouseUpEvent;
+			mouseUpEvent.mouseButton = Input::MouseButton::MiddleButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+		}
+		break;
+		/* case WM_LBUTTONDBLCLK:	// add CS_DBLCLKS
+				CT_LOGGER_LOG(Input::MouseButton::LeftButton);
+				break;*/
+		case WM_XBUTTONDOWN:
+		{
+			int button = GET_XBUTTON_WPARAM(wParam);  // Get the button (XBUTTON1 or XBUTTON2 etc.)
+			EventMouseButton eventButton;
+			switch (button) 
+			{
+				case XBUTTON1:
+					eventButton = Input::MouseButton::Mouse4;
+					break;
+				case XBUTTON2:
+					eventButton = Input::MouseButton::Mouse5;
+					break;
+
+				// TODO: untested
+				default:
+				{
+					// Handle extra buttons (6 to 20)
+					int extraButtonIndex = button - XBUTTON2;
+					if (extraButtonIndex >= 1 && extraButtonIndex <= 12) // buttons 6-20
+					{
+						eventButton = static_cast<Input::MouseButton>(static_cast<int>(Input::MouseButton::Mouse6) + (extraButtonIndex - 1));
+					}
+					else
+					{
+						eventButton = Input::MouseButton::Null;
+					}
+				}
+				break;
+			}
+			MouseDownEvent mouseDownEvent;
+			mouseDownEvent.mouseButton = eventButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseDownEvent);
+		}
+		break;
+		case WM_XBUTTONUP:
+		{
+			int button = GET_XBUTTON_WPARAM(wParam);  // Get the button (XBUTTON1 or XBUTTON2 etc.)
+			EventMouseButton eventButton;
+			switch (button)
+			{
+			case XBUTTON1:
+				eventButton = Input::MouseButton::Mouse4;
+				break;
+			case XBUTTON2:
+				eventButton = Input::MouseButton::Mouse5;
+				break;
+
+				// TODO: untested
+			default:
+			{
+				// Handle extra buttons (6 to 20)
+				int extraButtonIndex = button - XBUTTON2;
+				if (extraButtonIndex >= 1 && extraButtonIndex <= 12) // buttons 6-20
+				{
+					eventButton = static_cast<Input::MouseButton>(static_cast<int>(Input::MouseButton::Mouse6) + (extraButtonIndex - 1));
+				}
+				else
+				{
+					eventButton = Input::MouseButton::Null;
+				}
+			}
+			break;
+			}
+			MouseUpEvent mouseUpEvent;
+			mouseUpEvent.mouseButton = eventButton;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+		}
+		break;
+		// Mouse Events End
 		case WM_ACTIVATE:
 		{
 			if (LOWORD(wParam) != WA_INACTIVE)
