@@ -12,6 +12,7 @@
 #include "Events/EventSystem.h"
 #include "Events/KeyEvents.h"
 #include "Events/WindowEvents.h"
+#include "Events/MouseEvents.h"
 
 #include "Platform/PlatformWindow.h"
 
@@ -136,6 +137,21 @@ int SharedMain(int argc, char* argv[])
 			CT_TRACE("Event Height: {}", transformedEvent.height);
 		}
 	};
+
+	EventListener<MouseEvents> mouseEventListener;
+	mouseEventListener.OnEvent = [](const Event<MouseEvents>& event) {
+		CT_ERROR("Window Event!: {}", (int)event.GetEventType());
+
+		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
+		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
+		CT_TRACE("Event To String: {}", event.ToString().CStr());
+
+		if (event.GetEventType() == MouseEvents::MouseDown)
+		{
+			const MouseDownEvent& transformedEvent = (const MouseDownEvent&)event;
+			CT_TRACE("Mouse Button: {}", transformedEvent.);
+		}
+		};
 
 	//Audio::Clip clip;
 	//clip.path = FileSystem::FilePath("E:/Citrom Tech/bin/Debug-windows-x86_64/CitromForge/anothersound.wav");
