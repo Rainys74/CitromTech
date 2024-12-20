@@ -64,11 +64,11 @@ namespace Citrom::Profiler
 	};
 }
 
-#define PROFILE_GLOBAL_FUNCTION() Citrom::Profiler::ScopedTimer(__func__, Citrom::Profiler::ProfileDefaultCallback)
-#define PROFILE_STATIC_FUNCTION(CLASS) Citrom::Profiler::ScopedTimer(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
+#define CT_PROFILE_GLOBAL_FUNCTION() Citrom::Profiler::ScopedTimer(__func__, Citrom::Profiler::ProfileDefaultCallback)
+#define CT_PROFILE_STATIC_FUNCTION(CLASS) Citrom::Profiler::ScopedTimer(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
 //#define PROFILE_STATIC_FUNCTION(CLASS) std::string profileString = std::format("{}::{}()", typeid(CLASS).name(), __func__); Citrom::Profiler::ScopedTimer(profileString.c_str(), Citrom::Profiler::ProfileDefaultCallback)
 //#define PROFILE_STATIC_FUNCTION(CLASS) std::string profileString ## __LINE__(typeid(CLASS).name()); profileString ## __LINE__.append("::").append(__func__).append("()"); Citrom::Profiler::ScopedTimer(profileString ## __LINE__.c_str(), Citrom::Profiler::ProfileDefaultCallback)
 //#define PROFILE_MEMBER_FUNCTION() Citrom::Profiler::ScopedTimer(std::string(typeid(*this).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
-#define PROFILE_MEMBER_FUNCTION() PROFILE_STATIC_FUNCTION(*this)
+#define CT_PROFILE_MEMBER_FUNCTION() CT_PROFILE_STATIC_FUNCTION(*this)
 
-#define PROFILE_SCOPE(NAME) Citrom::Profiler::ScopedTimer(NAME, Citrom::Profiler::ProfileDefaultCallback)
+#define CT_PROFILE_SCOPE(NAME) Citrom::Profiler::ScopedTimer(NAME, Citrom::Profiler::ProfileDefaultCallback)

@@ -20,7 +20,7 @@ namespace Citrom::Platform
 
     void Window::Create(const int width, const int height, const CTL::String& title)
     {
-        PROFILE_MEMBER_FUNCTION();
+        CT_PROFILE_MEMBER_FUNCTION();
         //PROFILE_STATIC_FUNCTION(Window);
         //PROFILE_GLOBAL_FUNCTION();
         m_Backend->Create(width, height, title);
@@ -31,6 +31,7 @@ namespace Citrom::Platform
     }
     void Window::PollEvents()
     {
+        CT_PROFILE_MEMBER_FUNCTION();
         m_Backend->PollEvents();
     }
     void* Window::Win32TryGetHWnd()

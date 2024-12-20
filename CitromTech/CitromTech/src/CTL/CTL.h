@@ -4,6 +4,10 @@
 
 #include "CTLConfig.h" // Custom Config for defines
 
+#ifndef CTL_PROFILE_MEMBER_FUNC
+#define CTL_PROFILE_MEMBER_FUNC()
+#endif
+
 //CTL_MEMORY_NEW
 //CTL_MEMORY_NEWARR
 //CTL_MEMORY_DELETE

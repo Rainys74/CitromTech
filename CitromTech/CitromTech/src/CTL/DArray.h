@@ -24,6 +24,8 @@ namespace CTL
 
         void Resize(const uint32 newCapacity)
         {
+            CTL_PROFILE_MEMBER_FUNC();
+
             T* newData = new T[newCapacity];
 
             if (newCapacity < m_Count)

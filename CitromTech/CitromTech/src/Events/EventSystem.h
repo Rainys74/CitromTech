@@ -7,6 +7,8 @@
 #include "CTL/DArray.h"
 #include "CTL/HashMap.h"
 
+#include "Profiling/Profiler.h"
+
 namespace Citrom
 {
     #define EVENT_CLASS_TYPE(CATEGORY, TYPE) virtual CATEGORY GetEventType() const override {return CATEGORY::TYPE;}           \
@@ -47,6 +49,7 @@ namespace Citrom
         // Register/Send events
         void Dispatch(Event<T>& event)
         {
+            CT_PROFILE_MEMBER_FUNCTION();
             for (EventListener<T>* eventListener : m_EventListeners)
             {
                 CT_CORE_ASSERT_WARN(eventListener && eventListener->OnEvent, "Dispatching events to a null event listener or null event listener callback!");

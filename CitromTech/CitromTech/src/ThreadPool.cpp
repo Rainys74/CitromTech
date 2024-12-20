@@ -1,5 +1,6 @@
 #include "ThreadPool.h"
 #include "Logger/Logger.h"
+#include "Profiling/Profiler.h"
 
 #include "Platform/Platform.h"
 
@@ -66,6 +67,8 @@ namespace Citrom
 
 	void ThreadPool::Submit(void* job, void* args)
 	{
+		CT_PROFILE_MEMBER_FUNCTION();
+
 		ThreadPoolJob poolJob;
 		poolJob.job = reinterpret_cast<Thread::StartRoutinePFN>(job);
 		poolJob.args = args;
