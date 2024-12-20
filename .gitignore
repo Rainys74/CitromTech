@@ -45,3 +45,6 @@ xcuserdata/
 # Binaries
 bin/
 bin-intermediate/
+
+# Rename this for your projects
+**/CitromForge.exe
