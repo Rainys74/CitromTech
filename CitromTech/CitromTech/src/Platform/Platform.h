@@ -8,7 +8,7 @@ namespace Citrom::Platform
 	{
 		void Sleep(uint64 ms);
 		int32 GetProcessID();
-		//float64 GetTime();
+		float64 GetTime();
 
 		void MessageBoxError(const char* title, const char* text);
 	}

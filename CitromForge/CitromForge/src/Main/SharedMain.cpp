@@ -15,6 +15,7 @@
 #include "Events/MouseEvents.h"
 
 #include "Platform/PlatformWindow.h"
+#include "Platform/Platform.h"
 
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
@@ -234,7 +235,7 @@ int SharedMain(int argc, char* argv[])
 	//CT_VERBOSE("Cross: ({}, {}, {})", vector.Magnitude());
 
 	// Thread pool
-	ThreadPool threadPool(6);
+	ThreadPool threadPool(Platform::Info::GetNumberOfLogicalProcessors() - 1);
 
 	CT_INFO("tpvar: {}", tpvar);
 	threadPool.Submit(ThreadPoolTestJob, nullptr);
@@ -266,6 +267,8 @@ int SharedMain(int argc, char* argv[])
 	while (!window.WindowShouldClose())
 	{
 		//CT_INFO("tpvar: {}", tpvar);
+		//CT_INFO("time: {}", Platform::Utils::GetTime());
+		//CT_INFO("pid: {}", Platform::Utils::GetProcessID());
 		window.PollEvents();
 	}
 

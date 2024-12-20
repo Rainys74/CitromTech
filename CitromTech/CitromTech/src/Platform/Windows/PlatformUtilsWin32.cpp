@@ -11,6 +11,10 @@ namespace Citrom::Platform
 {
 	namespace Utils
 	{
+		// Timing
+		static float64 sg_ClockFrequency = 0;
+		static LARGE_INTEGER sg_StartTime;
+
 		void Sleep(uint64 ms)
 		{
 			::Sleep(ms);
@@ -19,7 +23,22 @@ namespace Citrom::Platform
 		{
 			return _getpid();
 		}
-		//float64 GetTime();
+		float64 GetTime()
+		{
+			if (sg_ClockFrequency == 0)
+			{
+				// platform_get_time() initialization
+				LARGE_INTEGER frequency;
+				QueryPerformanceFrequency(&frequency);
+				sg_ClockFrequency = 1.0 / (float64)frequency.QuadPart;
+				QueryPerformanceCounter(&sg_StartTime);
+				// -------------------------------
+			}
+
+			LARGE_INTEGER nowTime;
+			QueryPerformanceCounter(&nowTime);
+			return (float64)nowTime.QuadPart * sg_ClockFrequency;
+		}
 
 		void MessageBoxError(const char* title, const char* text)
 		{
