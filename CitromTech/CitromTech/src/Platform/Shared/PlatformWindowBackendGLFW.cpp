@@ -11,10 +11,20 @@
 
 namespace Citrom::Platform
 {
+    static void WindowCallbackProcedure(const WindowBackendGLFW* pWindow)
+    {
+        //glfwSetWindowCloseCallback(pWindow, [](GLFWwindow* window)
+        //{
+        //    //WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+        //
+        //});
+    }
+
     WindowBackendGLFW::WindowBackendGLFW()
         : m_WindowShouldClose(false), m_Width(0), m_Height(0), m_Window(nullptr)
     {
-        CT_CORE_ASSERT(glfwInit(), "Failed to initialize GLFW!");
+        // TODO: this should only be initialized once in the entire program
+        CT_CORE_VERIFY(glfwInit(), "Failed to initialize GLFW!");
     }
     WindowBackendGLFW::~WindowBackendGLFW()
     {
@@ -36,9 +46,13 @@ namespace Citrom::Platform
     
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwMakeContextCurrent(m_Window);
+        //glfwSetWindowUserPointer(m_Window, &m_Data);
         glfwSwapInterval(1);
     
         // init glew/glad (assert glewInit() == GLEW_OK)
+
+        // Handle window event callbacks
+        WindowCallbackProcedure(this);
     }
     bool WindowBackendGLFW::WindowShouldClose() const
     {
@@ -46,10 +60,10 @@ namespace Citrom::Platform
     }
     void WindowBackendGLFW::PollEvents()
     {
+        glfwPollEvents();
+
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwSwapBuffers(m_Window);
-    
-        glfwPollEvents();
     }
     #ifdef CT_PLATFORM_WINDOWS
     void* WindowBackendGLFW::Win32TryGetHWnd()

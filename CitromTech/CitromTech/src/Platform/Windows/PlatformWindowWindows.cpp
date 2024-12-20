@@ -1,7 +1,7 @@
 #ifdef CT_PLATFORM_WINDOWS
 #include "Platform/PlatformWindow.h"
 
-//#include "Platform/Shared/PlatformWindowBackendGLFW.h"
+#include "Platform/Shared/PlatformWindowBackendGLFW.h"
 #include "Platform/Windows/PlatformWindowBackendWin32.h"
 
 namespace Citrom::Platform
@@ -9,7 +9,7 @@ namespace Citrom::Platform
     Window::Window()
         : m_Backend(nullptr)
     {
-        m_Backend = new WindowBackendWin32(); // WindowBackendGLFW, WindowBackendWin32
+        m_Backend = new WindowBackendGLFW(); // WindowBackendGLFW, WindowBackendWin32
     }
     Window::~Window()
     {
