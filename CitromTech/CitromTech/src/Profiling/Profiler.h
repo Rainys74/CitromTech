@@ -7,6 +7,9 @@
 #include "Platform/Platform.h"
 
 #include "CTL/HashMap.h"
+#include "CTL/CStringHandling.h"
+
+#include <format>
 
 namespace Citrom::Profiler
 {
@@ -33,9 +36,9 @@ namespace Citrom::Profiler
 		ScopedTimer(const char* name, CallbackFN callback)
 			: m_Name(name), m_Callback(callback)
 		{
-			//auto nameSize = CTL::CString::GetLength(name) + 1;
-			//m_Name = new char[nameSize];
-			//Memory::Copy((void*)m_Name, name, nameSize);
+			auto nameSize = CTL::CString::GetLength(name) + 1;
+			m_Name = new char[nameSize];
+			Memory::Copy((void*)m_Name, name, nameSize);
 
 			start = Platform::Utils::GetTime();
 		}
@@ -49,6 +52,7 @@ namespace Citrom::Profiler
 
 			//CT_CORE_TRACE("Timer took {} ms", duration * 1000);
 
+			// TODO: this leads to a memory leak, but otherwise a reference system would be better
 			//delete m_Name;
 		}
 	public:
@@ -61,8 +65,9 @@ namespace Citrom::Profiler
 }
 
 #define PROFILE_GLOBAL_FUNCTION() Citrom::Profiler::ScopedTimer(__func__, Citrom::Profiler::ProfileDefaultCallback)
-//#define PROFILE_STATIC_FUNCTION(CLASS) Citrom::Profiler::ScopedTimer(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
 #define PROFILE_STATIC_FUNCTION(CLASS) Citrom::Profiler::ScopedTimer(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
+//#define PROFILE_STATIC_FUNCTION(CLASS) std::string profileString = std::format("{}::{}()", typeid(CLASS).name(), __func__); Citrom::Profiler::ScopedTimer(profileString.c_str(), Citrom::Profiler::ProfileDefaultCallback)
+//#define PROFILE_STATIC_FUNCTION(CLASS) std::string profileString ## __LINE__(typeid(CLASS).name()); profileString ## __LINE__.append("::").append(__func__).append("()"); Citrom::Profiler::ScopedTimer(profileString ## __LINE__.c_str(), Citrom::Profiler::ProfileDefaultCallback)
 //#define PROFILE_MEMBER_FUNCTION() Citrom::Profiler::ScopedTimer(std::string(typeid(*this).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
 #define PROFILE_MEMBER_FUNCTION() PROFILE_STATIC_FUNCTION(*this)
 
