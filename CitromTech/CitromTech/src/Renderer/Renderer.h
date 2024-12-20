@@ -19,7 +19,7 @@ namespace Citrom
 	public:
 		static void Initialize();
 
-		// Submit
+		// Submit, BeginScene, EndScene
 
 		// TODO: temporary
 		static void DrawTest();

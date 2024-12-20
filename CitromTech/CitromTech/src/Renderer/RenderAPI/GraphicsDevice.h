@@ -2,6 +2,7 @@
 
 #include "Graphics.h"
 
+#include "Framebuffer.h"
 #include "Buffer.h"
 
 namespace Citrom::RenderAPI
@@ -9,6 +10,14 @@ namespace Citrom::RenderAPI
 	class Device
 	{
 	public:
+		Device() {}
+		virtual ~Device() {}
+		
+		// Frame Buffer (Render Target View)
+		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
+		virtual void BindFramebuffer(Framebuffer* fb) = 0;
+		// GetColorAttachmentRendererID? to return texture id
+
 		// Swap Chain
 		//virtual SwapChain CreateSwapChain(SwapChainDesc* descriptor) = 0;
 		//virtual void SwapBuffers(SwapChain* sc) = 0; // implemented in device for better error checking on DX11
@@ -24,6 +33,6 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
-	private:
+	protected:
 	};
 }

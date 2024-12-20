@@ -1,7 +1,11 @@
 #include "Renderer.h"
 
+#include "Renderer/RenderAPI/Buffer.h"
+
 namespace Citrom
 {
+	using namespace RenderAPI;
+
 	CTL::ScopedPtr<RenderAPI::Device> Renderer::m_Device;
 
 	void Renderer::Initialize()
