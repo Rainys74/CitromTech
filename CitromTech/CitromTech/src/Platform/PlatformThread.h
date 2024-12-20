@@ -43,4 +43,36 @@ namespace Citrom::Platform
 	private:
 		void* m_Internal = nullptr;
 	};
+
+	/*class ScopedMutex
+	{
+	public:
+		ScopedMutex()
+		{
+			m_Mutex.Lock();
+		}
+		~ScopedMutex()
+		{
+			m_Mutex.Unlock();
+		}
+	private:
+		Mutex m_Mutex;
+	};*/
+
+	// Scoped Mutex Wrapper
+	class ScopedLock
+	{
+	public:
+		ScopedLock(Mutex& mutex)
+			: m_Mutex(mutex)
+		{
+			m_Mutex.Lock();
+		}
+		~ScopedLock()
+		{
+			m_Mutex.Unlock();
+		}
+	private:
+		Mutex& m_Mutex;
+	};
 }

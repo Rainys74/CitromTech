@@ -4,7 +4,7 @@
 //#include "Platform/Shared/PlatformWindowBackendGLFW.h"
 #include "Platform/Windows/PlatformWindowBackendWin32.h"
 
-#include "Timing/ScopedTimer.h"
+#include "Profiling/Profiler.h"
 
 namespace Citrom::Platform
 {
@@ -20,7 +20,9 @@ namespace Citrom::Platform
 
     void Window::Create(const int width, const int height, const CTL::String& title)
     {
-        ScopedTimer timer;
+        PROFILE_MEMBER_FUNCTION();
+        //PROFILE_STATIC_FUNCTION(Window);
+        //PROFILE_GLOBAL_FUNCTION();
         m_Backend->Create(width, height, title);
     }
     bool Window::WindowShouldClose() const

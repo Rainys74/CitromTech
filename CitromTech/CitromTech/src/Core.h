@@ -35,6 +35,12 @@
 	#define NO_UNIQUE_ADDRESS [[no_unique_address]]
 	#endif
 
+	#ifdef _MSC_VER
+	#define PRETTY_FUNCTION __FUNCSIG__
+	#elif defined(__GNUC__) || defined(__clang__)
+	#define PRETTY_FUNCTION __PRETTY_FUNCTION__
+	#endif
+
 	using int8 = signed char;
 	using int16 = short;
 	using int32 = int;

@@ -20,6 +20,8 @@
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
 
+#include "Profiling/Profiler.h"
+
 #include "ThreadPool.h"
 
 #include <iostream>
@@ -270,6 +272,8 @@ int SharedMain(int argc, char* argv[])
 		//CT_INFO("time: {}", Platform::Utils::GetTime());
 		//CT_INFO("pid: {}", Platform::Utils::GetProcessID());
 		window.PollEvents();
+
+		Profiler::ProfileResults::PrintResults();
 	}
 
 	//Test::TestOutGLFW();
