@@ -3,6 +3,10 @@
 #include "Logger/Logger.h"
 #include "CitromAssert.h"
 
+#include "Events/KeyEvents.h"
+#include "Events/MouseEvents.h"
+#include "Events/WindowEvents.h"
+
 #ifdef CT_PLATFORM_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 //#define GLFW_NATIVE_INCLUDE_NONE
@@ -11,13 +15,72 @@
 
 namespace Citrom::Platform
 {
-    static void WindowCallbackProcedure(const WindowBackendGLFW* pWindow)
+    static void WindowCallbackProcedure(GLFWwindow* glfwWindow)
     {
-        //glfwSetWindowCloseCallback(pWindow, [](GLFWwindow* window)
-        //{
-        //    //WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-        //
-        //});
+        // WM_CLOSE
+        glfwSetWindowCloseCallback(glfwWindow, [](GLFWwindow* window)
+        {
+            //WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+            WindowCloseEvent windowCloseEvent;
+			windowCloseEvent.exitCode = 69;
+
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowCloseEvent);
+
+            // Should close the window
+        });
+        // WM_SIZE
+        glfwSetWindowSizeCallback(glfwWindow, [](GLFWwindow* window, int width, int height)
+        {
+            WindowResizeEvent windowResizeEvent;
+            windowResizeEvent.width = width;
+            windowResizeEvent.height = height;
+
+            EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
+        });
+        // WM_MOVE
+        glfwSetWindowPosCallback(glfwWindow, [](GLFWwindow* window, int xPos, int yPos) 
+        {
+            WindowMoveEvent windowMoveEvent;
+            windowMoveEvent.x = xPos;
+            windowMoveEvent.y = yPos;
+
+            EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowMoveEvent);
+        });
+        // WM_LBUTTONDOWN, WM_LBUTTONUP, WM_RBUTTONDOWN, WM_RBUTTONUP, WM_MBUTTONDOWN, WM_MBUTTONUP, WM_XBUTTONDOWN, WM_XBUTTONUP
+        glfwSetMouseButtonCallback(glfwWindow, [](GLFWwindow* window, int button, int action, int mods)
+        {
+            switch (action)
+            {
+                CT_CORE_TRACE("{}", button);
+                case GLFW_PRESS:
+                {
+                    MouseDownEvent mouseDownEvent;
+                    int transformedButton = button + 1;
+
+                    if (transformedButton >= 1 && transformedButton <= 20)
+                        mouseDownEvent.mouseButton = static_cast<EventMouseButton>(transformedButton);
+                    else
+                        mouseDownEvent.mouseButton = EventMouseButton::Null;
+
+                    EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseDownEvent);
+                }
+                break;
+                case GLFW_RELEASE:
+                {
+                    MouseUpEvent mouseUpEvent;
+                    int transformedButton = button + 1;
+
+                    if (transformedButton >= 1 && transformedButton <= 20)
+                        mouseUpEvent.mouseButton = static_cast<EventMouseButton>(transformedButton);
+                    else
+                        mouseUpEvent.mouseButton = EventMouseButton::Null;
+
+                    EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+                }
+                break;
+            }
+        });
     }
 
     WindowBackendGLFW::WindowBackendGLFW()
@@ -28,6 +91,8 @@ namespace Citrom::Platform
     }
     WindowBackendGLFW::~WindowBackendGLFW()
     {
+        glfwDestroyWindow(m_Window);
+
         glfwTerminate();
     }
     
@@ -52,7 +117,7 @@ namespace Citrom::Platform
         // init glew/glad (assert glewInit() == GLEW_OK)
 
         // Handle window event callbacks
-        WindowCallbackProcedure(this);
+        WindowCallbackProcedure(m_Window);
     }
     bool WindowBackendGLFW::WindowShouldClose() const
     {
