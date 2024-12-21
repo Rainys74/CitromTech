@@ -18,7 +18,9 @@ project "CitromForge" -- EXE
 
         includedirs
         {
-            "../CitromTech/CitromTech/src"
+            "../CitromTech/CitromTech/src",
+
+            "%{IncludeDir.ImGui}"
         }
 
         if RUNNER_BUILD_AS_CONSOLE_APP then

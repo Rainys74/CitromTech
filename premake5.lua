@@ -25,6 +25,15 @@ workspace "CitromTech" -- Solution
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows-x64
 
+
+IncludeDir = {}
+IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
+IncludeDir["ImGui"] = "../vendor/ImGui/imgui"
+
+-- CMake Dependencies
+IncludeDir["glslcc"] = "../Dependencies/glslcc/src"
+
+
 -- Configuration Settings
 LIBRARY_BUILD_AS_DLL = false
 RUNNER_BUILD_AS_CONSOLE_APP = true

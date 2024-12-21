@@ -8,13 +8,6 @@ project "CitromTech"   -- Engine Library
     
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
-    
-        IncludeDir = {}
-        IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
-        IncludeDir["ImGui"] = "../vendor/ImGui/imgui"
-
-        -- CMake Dependencies
-        IncludeDir["glslcc"] = "../Dependencies/glslcc/src"
 
         files 
         {
