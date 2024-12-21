@@ -32,6 +32,13 @@ namespace Citrom::Platform
     void Window::PollEvents()
     {
         CT_PROFILE_MEMBER_FUNCTION();
+
+        //Platform::Utils::Sleep(1240);
+        size_t j = 0;
+        for (size_t i = 0; i < 1000000000; i++)
+        {
+            j += i;
+        }
         m_Backend->PollEvents();
     }
     void* Window::Win32TryGetHWnd()

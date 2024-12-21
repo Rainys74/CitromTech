@@ -38,6 +38,7 @@ namespace Citrom::Platform
 			LARGE_INTEGER nowTime;
 			QueryPerformanceCounter(&nowTime);
 			return (float64)nowTime.QuadPart * sg_ClockFrequency;
+			//return std::chrono::duration<double>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 		}
 
 		void MessageBoxError(const char* title, const char* text)
