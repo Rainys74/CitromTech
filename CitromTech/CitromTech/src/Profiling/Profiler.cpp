@@ -30,7 +30,6 @@ namespace Citrom::Profiler
 	{
 		for (const auto& result : m_Results)
 		{
-			//Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " "Profiling {} took {} ms", __func__, result.first, result.second * 1000);
 			CT_CORE_TRACE("Profiling {} took {} ms", result.first, result.second * 1000);
 		}
 	}
