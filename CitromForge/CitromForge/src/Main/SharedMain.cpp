@@ -278,8 +278,8 @@ int SharedMain(int argc, char* argv[])
 			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " "Profiling {} took {} ms!!!!", __func__, key, time * 1000);
 		});*/
 
-		Profiler::ProfileResults::PrintResults();
-		CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
+		//Profiler::ProfileResults::PrintResults();
+		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
 
 	//Test::TestOutGLFW();
