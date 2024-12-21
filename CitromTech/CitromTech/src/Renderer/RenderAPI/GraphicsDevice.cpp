@@ -1,5 +1,7 @@
 #include "GraphicsDevice.h"
 
+#include "CitromAssert.h"
+
 #ifdef CT_PLATFORM_WINDOWS
 #include "DirectX11/DX11Device.h"
 #endif
