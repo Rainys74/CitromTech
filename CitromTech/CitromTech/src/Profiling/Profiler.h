@@ -9,8 +9,6 @@
 #include "CTL/HashMap.h"
 #include "CTL/CStringHandling.h"
 
-#include <format>
-
 namespace Citrom::Profiler
 {
 	void ProfileDefaultCallback(const char* name, const float64 time);
