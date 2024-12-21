@@ -266,12 +266,30 @@ int SharedMain(int argc, char* argv[])
 
 	window.Create(1280, 720, CTL::String("test"));
 
+	// TODO: Layer System
 	while (!window.WindowShouldClose())
 	{
-		//CT_INFO("tpvar: {}", tpvar);
-		//CT_INFO("time: {}", Platform::Utils::GetTime());
-		//CT_INFO("pid: {}", Platform::Utils::GetProcessID());
+		// TODO: Timing. Choose one. (Though constructing multiple doubles every frame might be idiotic)
+		// 1
+		//float64 newTime = platform_get_time();
+		//sg_FrameTime = newTime - currentTime;
+		//currentTime = newTime;
+		//float64 fps = 1.0 / sg_FrameTime;
+
+		/// VS
+
+		// 2
+		//float64 startTime = Platform::Utils::GetTime();
+		//// Loop
+		//float64 endTime = Platform::Utils::GetTime();
+		//float64 frameTime = endTime - startTime;
+		//float64 fps = 1.0 / frameTime;
+
 		window.PollEvents();
+
+		// Update & Tick (Fixed Update)
+
+		// Render
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
