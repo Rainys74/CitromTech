@@ -266,6 +266,16 @@ int SharedMain(int argc, char* argv[])
 
 	window.Create(1280, 720, CTL::String("test"));
 
+	// Dear ImGui
+#if 0
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	InitializeImGuiWindow();
+
+	ImGui::StyleColorsDark();
+#endif
+
 	// TODO: Layer System
 	while (!window.WindowShouldClose())
 	{

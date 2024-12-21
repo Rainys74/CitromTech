@@ -9,10 +9,21 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
+#ifdef CT_EDITOR_ENABLED
+#include "imgui.h"
+#include "backends/imgui_impl_win32.h"
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
+
 namespace Citrom::Platform
 {
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
+		#ifdef CT_EDITOR_ENABLED
+		if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+			return true;
+		#endif
 		switch (msg)
 		{
 		// Window Events Begin

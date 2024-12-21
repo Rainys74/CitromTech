@@ -7,11 +7,26 @@
 
 namespace Citrom::RenderAPI
 {
+	class GraphicsAPIManager
+	{
+	public:
+		static GraphicsAPI GetGraphicsAPI();
+		static bool IsGraphicsAPI(GraphicsAPI graphicsAPI);
+
+		static void ForceGraphicsAPI(GraphicsAPI graphicsAPI);
+		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel) {}
+	private:
+		static GraphicsAPI s_CurrentGraphicsAPI;
+	};
+
 	class Device
 	{
 	public:
 		Device() {}
 		virtual ~Device() {}
+
+		// Device Factory
+		static Device* CreateDevice();
 		
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
