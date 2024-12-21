@@ -11,6 +11,7 @@ project "CitromTech"   -- Engine Library
     
         IncludeDir = {}
         IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
+        IncludeDir["ImGui"] = "../vendor/ImGui/imgui"
 
         -- CMake Dependencies
         IncludeDir["glslcc"] = "../Dependencies/glslcc/src"
@@ -27,6 +28,7 @@ project "CitromTech"   -- Engine Library
             "%{prj.name}/src/",
 
             "%{IncludeDir.GLFW}",
+            "%{IncludeDir.ImGui}",
             
             "%{IncludeDir.glslcc}",
         }
@@ -39,6 +41,7 @@ project "CitromTech"   -- Engine Library
         links
         {
             "GLFW",
+            "ImGui",
 
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"

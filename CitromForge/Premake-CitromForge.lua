@@ -33,6 +33,7 @@ project "CitromForge" -- EXE
             "CitromTech",
             
             "GLFW",
+            "ImGui",
         }
         DefineCitromLibraryTypeMacros()
 
