@@ -3,7 +3,6 @@
 #ifdef CT_PLATFORM_WINDOWS
 
 #include "CitromAssert.h"
-#include "Renderer/RenderAPI/GraphicsDevice.h"
 #include "Renderer/Renderer.h"
 
 #include "imgui.h"

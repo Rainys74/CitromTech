@@ -28,12 +28,15 @@ project "ImGui"   -- Engine Library
             "imgui/imgui_draw.cpp",
             "imgui/imgui_internal.h",
             "imgui/imgui_widgets.cpp",
+            "imgui/imgui_tables.cpp",
 
             "imgui/imstb_rectpack.h",
             "imgui/imstb_textedit.h",
             "imgui/imstb_truetype.h",
 
             "imgui/imgui_demo.cpp",
+
+            --"imgui/misc/cpp/imgui_stdlib.cpp",
         }
 
         links
