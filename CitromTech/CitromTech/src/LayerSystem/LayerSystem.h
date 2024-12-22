@@ -19,6 +19,8 @@ namespace Citrom
 
 		virtual void OnTick() {}
 		virtual void OnRender() {}
+
+		virtual void OnImGuiRender() {}
 	};
 	
 	class LayerStack

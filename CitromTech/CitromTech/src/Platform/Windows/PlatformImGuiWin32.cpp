@@ -4,6 +4,7 @@
 
 #include "CitromAssert.h"
 #include "Renderer/RenderAPI/GraphicsDevice.h"
+#include "Renderer/Renderer.h"
 
 #include "imgui.h"
 
@@ -23,14 +24,15 @@ namespace Citrom::Platform
 		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
 		{
 			ImGui_ImplWin32_Init(window->Win32TryGetHWnd());
-			//ImGui_ImplDX11_Init(); // TODO: move this over to the renderer probably
 		}
 		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
 		{
 			// if win32 & opengl
 			CT_CORE_VERIFY(ImGui_ImplWin32_InitForOpenGL(window->Win32TryGetHWnd()), "Failed to Initialize ImGui Win32 implementation for OpenGL.");
-			CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
+			//CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
 		}
+
+		Renderer::ImGuiInit();
 	}
 	void ImGui::Terminate()
 	{

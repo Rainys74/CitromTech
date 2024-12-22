@@ -26,6 +26,9 @@
 
 #include <iostream>
 
+// ImguI temp
+#include "Platform/PlatformImGui.h"
+
 using namespace Citrom;
 
 uint32 tpvar = 0;
@@ -275,6 +278,9 @@ int SharedMain(int argc, char* argv[])
 
 	ImGui::StyleColorsDark();
 #endif
+
+	// TODO: why doesn't work??!
+	//Platform::ImGui::Initialize(&window);
 
 	// TODO: Layer System
 	while (!window.WindowShouldClose())

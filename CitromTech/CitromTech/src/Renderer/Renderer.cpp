@@ -6,17 +6,29 @@ namespace Citrom
 {
 	using namespace RenderAPI;
 
-	CTL::ScopedPtr<RenderAPI::Device> Renderer::m_Device;
+	RenderAPI::Device* Renderer::m_Device;
 
 	void Renderer::Initialize()
 	{
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 
-		m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
+		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
+		m_Device = Device::CreateDevice();
 	}
 
 	void Renderer::DrawTest()
 	{
+	}
+
+	
+	// ImGui
+	void Renderer::ImGuiInit()
+	{
+		m_Device->ImGuiInitGraphicsAPI();
+	}
+	void Renderer::ImGuiRenderDrawData()
+	{
+		m_Device->ImGuiRenderDrawData();
 	}
 }

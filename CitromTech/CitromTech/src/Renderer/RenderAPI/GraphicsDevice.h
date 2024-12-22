@@ -48,6 +48,10 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
+
+		// ImGui
+		virtual void ImGuiInitGraphicsAPI() = 0;
+		virtual void ImGuiRenderDrawData() = 0;
 	protected:
 	};
 }

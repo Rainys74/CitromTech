@@ -30,7 +30,7 @@ namespace Citrom::RenderAPI
         switch (GraphicsAPIManager::GetGraphicsAPI())
         {
             case GraphicsAPI::DirectX11:
-                //return new DX11Device();
+                return new DX11Device();
                 break;
             default:
                 CT_CORE_ASSERT(false, "Unknown Graphics API selected!");

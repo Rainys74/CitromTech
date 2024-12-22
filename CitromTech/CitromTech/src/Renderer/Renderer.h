@@ -23,9 +23,13 @@ namespace Citrom
 
 		// TODO: temporary
 		static void DrawTest();
+
+		// ImGui
+		static void ImGuiInit();
+		static void ImGuiRenderDrawData();
 	private:
 		// RenderMesh
 	private:
-		static CTL::ScopedPtr<RenderAPI::Device> m_Device;
+		static RenderAPI::Device* m_Device;
 	};
 }
