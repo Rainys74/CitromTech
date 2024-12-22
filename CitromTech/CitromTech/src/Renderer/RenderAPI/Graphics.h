@@ -7,7 +7,8 @@ namespace Citrom::RenderAPI
 	enum class GraphicsAPI
 	{
 		DirectX11,
-		//OpenGL,
+		OpenGL, // Someday
+		//Vulkan, // hopefully someday
 
 		Count
 	};
