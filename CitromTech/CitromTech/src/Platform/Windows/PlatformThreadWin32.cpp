@@ -30,16 +30,17 @@ namespace Citrom::Platform
 		if (m_Internal == nullptr)
 			return;
 
+		// TODO: maybe works? uncommenting TerminateThread is ok, though CloseHandle causes failure
 		if (m_Initialized)
 		{
 			DWORD exitCode;
 			GetExitCodeThread(m_Internal, &exitCode);
 			
 			// TerminateThread() is a great way to end up with dead locked mutexes, broken data, etc.
-			/*if (exitCode == STILL_ACTIVE)
-				TerminateThread(m_Internal, 0);*/
+			if (exitCode == STILL_ACTIVE)
+				TerminateThread(m_Internal, 0);
 			
-			CloseHandle((HANDLE)m_Internal);
+			//CloseHandle((HANDLE)m_Internal);
 		}
 	}
 	void Thread::Initialize(const StartRoutinePFN startRoutine, void* args)

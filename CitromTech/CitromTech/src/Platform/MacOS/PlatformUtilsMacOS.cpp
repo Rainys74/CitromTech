@@ -1,7 +1,6 @@
 #include "Platform/Platform.h"
 
-//#ifdef CT_PLATFORM_MACOS
-#if 1
+#ifdef CT_PLATFORM_MACOS
 #include <unistd.h>
 #include <sys/sysctl.h> // sysctlbyname
 

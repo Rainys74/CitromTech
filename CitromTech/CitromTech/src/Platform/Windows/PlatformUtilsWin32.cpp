@@ -2,7 +2,7 @@
 
 #ifdef CT_PLATFORM_WINDOWS
 #include "WindowsIncludes.h"
-#include <process.h>
+#include <process.h> // _getpid()
 
 #include "CitromAssert.h"
 #include "CitromMemory.h"
@@ -93,6 +93,43 @@ namespace Citrom::Platform
 		{
 			return "Win32";
 		}
+
+		//static BOOL PopulateOSVersionInfo(LPOSVERSIONINFOW lpVersionInfo)
+		static BOOL PopulateOSVersionInfo(OSVERSIONINFO* pOSVI)
+		{
+			// Ensure the passed OSVERSIONINFO structure is properly initialized
+			ZeroMemory(pOSVI, sizeof(OSVERSIONINFO));
+			pOSVI->dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
+			/*// Try using RtlGetVersion first (for Windows 8 and later)
+			RTL_OSVERSIONINFOEX versionInfo;
+			ZeroMemory(&versionInfo, sizeof(RTL_OSVERSIONINFOEX));
+			versionInfo.dwOSVersionInfoSize = sizeof(RTL_OSVERSIONINFOEX);
+
+			// Try to use RtlGetVersion to get OS version info
+			if (RtlGetVersion(&versionInfo) == 0)
+			{
+				// Populate the OSVERSIONINFO structure from RtlGetVersion
+				pOSVI->dwMajorVersion = versionInfo.dwMajorVersion;
+				pOSVI->dwMinorVersion = versionInfo.dwMinorVersion;
+				pOSVI->dwBuildNumber = versionInfo.dwBuildNumber;
+				pOSVI->dwPlatformId = versionInfo.dwPlatformId;
+				// Copy the CSDVersion string
+				wcsncpy(pOSVI->szCSDVersion, versionInfo.szCSDVersion, sizeof(pOSVI->szCSDVersion) / sizeof(wchar_t));
+
+				return TRUE;
+			}*/
+
+			// If RtlGetVersion failed, fallback to GetVersionEx (for older Windows versions)
+			if (GetVersionEx((OSVERSIONINFO*)pOSVI))
+			{
+				return TRUE;
+			}
+
+			// If both methods fail, return FALSE
+			return FALSE;
+		}
+
 		char* GetOSInfo()
 		{
 			OSVERSIONINFOEX osvi;
@@ -101,7 +138,8 @@ namespace Citrom::Platform
 			ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
 			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
-			bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
+			//bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
+			bOsVersionInfoEx = PopulateOSVersionInfo((OSVERSIONINFO*)&osvi);
 			CT_CORE_ASSERT(bOsVersionInfoEx, "Couldn't Get Version!");
 			
 			CTL::String osInfo("Windows ");
@@ -156,7 +194,7 @@ namespace Citrom::Platform
 
 			osInfo.Append(osNumbers);
 
-			return osInfo.Data();
+			return osInfo.CStr();
 		}
 	}
 }
