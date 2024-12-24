@@ -17,8 +17,8 @@
 #define CT_CORE_VERIFY(x, y) CT_CORE_ASSERT(x, y)
 #define CT_VERIFY(x, y) CT_ASSERT(x, y)
 #else // CT_OPTIMIZATION
-#define CT_CORE_ASSERT(x, y) x ## throwerror
-#define CT_ASSERT(x, y) x ## throwerror
+#define CT_CORE_ASSERT(x, y) x// ## throwerror
+#define CT_ASSERT(x, y) x// ## throwerror
 #define CT_CORE_ASSERT_WARN(x, y) x
 
 #define CT_CORE_VERIFY(x, y) x

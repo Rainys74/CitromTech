@@ -30,7 +30,8 @@ namespace Citrom::RenderAPI
         switch (GraphicsAPIManager::GetGraphicsAPI())
         {
             case GraphicsAPI::DirectX11:
-                return new DX11Device();
+                IF_WINDOWS(return new DX11Device());
+                CT_CORE_ASSERT(false, "DirectX11 is not supported on non-Windows desktops.");
                 break;
             default:
                 CT_CORE_ASSERT(false, "Unknown Graphics API selected!");

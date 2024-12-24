@@ -52,7 +52,7 @@ int SharedMain(int argc, char* argv[])
 
 	CT_ASSERT(1 == 1, "1 != 0");
 
-	Test::TestOutGLSLCC(argv[0]);
+	//Test::TestOutGLSLCC(argv[0]); //TODO: implement dll loading on unix
 
 	Test::PrintSomeShit(const_cast<char*>("insert some random shit!"));
 
@@ -243,26 +243,32 @@ int SharedMain(int argc, char* argv[])
 	ThreadPool threadPool(Platform::Info::GetNumberOfLogicalProcessors() - 1);
 
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
-	threadPool.Submit(ThreadPoolTestJob, nullptr);
+	threadPool.Submit((void*)ThreadPoolTestJob, nullptr);
 	CT_INFO("tpvar: {}", tpvar);
+
+
+	CT_WARN("Threads: {}", Platform::Info::GetNumberOfLogicalProcessors());
+	CT_WARN("Cores: {}", Platform::Info::GetNumberOfProcessors());
+	CT_WARN("Platform: {}", Platform::Info::GetPlatformName());
+	CT_WARN("OS Info: {}", Platform::Info::GetOSInfo());
 
 	using namespace Platform;
 	Window window;

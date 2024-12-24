@@ -30,6 +30,8 @@ namespace Citrom::Platform
 	private:
 		uint64 m_ID = 0;
 		void* m_Internal = nullptr;
+
+		bool m_Initialized = false; // wastes 32 bits (4 bytes) but oh well
 	};
 
 	class Mutex

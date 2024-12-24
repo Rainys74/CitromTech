@@ -10,11 +10,11 @@
 namespace Citrom::Platform
 {
 	Thread::Thread()
-		: m_ID(0), m_Internal(nullptr)
+		: m_ID(0), m_Internal(nullptr), m_Initialized(false)
 	{
 	}
 	Thread::Thread(StartRoutinePFN startRoutine, void* args)
-		: m_ID(0), m_Internal(nullptr)
+		: m_ID(0), m_Internal(nullptr), m_Initialized(false)
 	{
 		CT_CORE_ASSERT(startRoutine, "No function pointer passed into a thread!");
 
@@ -22,20 +22,25 @@ namespace Citrom::Platform
 
 		CT_CORE_TRACE("Starting process on thread ID: {}", m_ID);
 		CT_CORE_ASSERT(m_Internal, "Failed to create thread!");
+
+		m_Initialized = true;
 	}
 	Thread::~Thread()
 	{
 		if (m_Internal == nullptr)
 			return;
-		// TODO: fix this memory leak someday
-		//DWORD exitCode;
-		//GetExitCodeThread(m_Internal, &exitCode);
-		//
-		//// TerminateThread() is a great way to end up with dead locked mutexes, broken data, etc.
-		///*if (exitCode == STILL_ACTIVE)
-		//	TerminateThread(m_Internal, 0);*/
-		//
-		//CloseHandle((HANDLE)m_Internal);
+
+		if (m_Initialized)
+		{
+			DWORD exitCode;
+			GetExitCodeThread(m_Internal, &exitCode);
+			
+			// TerminateThread() is a great way to end up with dead locked mutexes, broken data, etc.
+			/*if (exitCode == STILL_ACTIVE)
+				TerminateThread(m_Internal, 0);*/
+			
+			CloseHandle((HANDLE)m_Internal);
+		}
 	}
 	void Thread::Initialize(const StartRoutinePFN startRoutine, void* args)
 	{
@@ -45,6 +50,8 @@ namespace Citrom::Platform
 
 		CT_CORE_TRACE("Starting process on thread ID: {}", m_ID);
 		CT_CORE_ASSERT(m_Internal, "Failed to create thread!");
+
+		m_Initialized = true;
 	}
 	void Thread::Join()
 	{
