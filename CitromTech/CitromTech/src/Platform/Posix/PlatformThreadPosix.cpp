@@ -16,7 +16,7 @@
 						  if (_Intern_result ## __LINE__ != 0) 											\
 						  {																				\
 							CT_CORE_FATAL("pthread error: {}", strerror(_Intern_result ## __LINE__));	\
-							CT_CORE_ASSERT(false, "Failed to " #x "!");									\
+							CT_CORE_ASSERT(false, "Failed to "#x"!");									\
 						  }
 #endif
 
@@ -49,18 +49,18 @@ namespace Citrom::Platform
 
 	void Thread::Join()
 	{
-		CT_CORE_VERIFY(pthread_join((pthread_t)m_Internal, nullptr), "Failed to pthread_join!");
+		PTHREAD_VERIFY(pthread_join((pthread_t)m_Internal, nullptr));
 	}
 	void Thread::Wait(uint64 ms)
 	{
 	}
 	void Thread::Detach()
 	{
-		CT_CORE_VERIFY(pthread_detach((pthread_t)m_Internal), "Failed to pthread_detach!");
+		PTHREAD_VERIFY(pthread_detach((pthread_t)m_Internal));
 	}
 	void Thread::TryCancel()
 	{
-		CT_CORE_VERIFY(pthread_cancel((pthread_t)m_Internal), "Failed to pthread_cancel!");
+		PTHREAD_VERIFY(pthread_cancel((pthread_t)m_Internal));
 	}
 	bool Thread::IsActive()
 	{
@@ -78,20 +78,21 @@ namespace Citrom::Platform
 	Mutex::Mutex()
 		: m_Internal(nullptr)
 	{
-		CT_CORE_VERIFY(pthread_mutex_init((pthread_mutex_t*)&m_Internal, nullptr), "Failed to pthread_mutex_init!");
+		//PTHREAD_VERIFY(EINVAL); // pthread error: Invalid argument
+		PTHREAD_VERIFY(pthread_mutex_init((pthread_mutex_t*)&m_Internal, nullptr));
 	}
 	Mutex::~Mutex()
 	{
-		CT_CORE_VERIFY(pthread_mutex_destroy((pthread_mutex_t*)&m_Internal), "Failed to pthread_mutex_destroy!");
+		PTHREAD_VERIFY(pthread_mutex_destroy((pthread_mutex_t*)&m_Internal));
 	}
 
 	void Mutex::Lock()
 	{
-		CT_CORE_VERIFY(pthread_mutex_lock((pthread_mutex_t*)&m_Internal), "Failed to pthread_mutex_lock!");
+		PTHREAD_VERIFY(pthread_mutex_lock((pthread_mutex_t*)&m_Internal));
 	}
 	void Mutex::Unlock()
 	{
-		CT_CORE_VERIFY(pthread_mutex_unlock((pthread_mutex_t*)&m_Internal), "Failed to pthread_mutex_unlock!");
+		PTHREAD_VERIFY(pthread_mutex_unlock((pthread_mutex_t*)&m_Internal));
 	}
 }
 #endif
