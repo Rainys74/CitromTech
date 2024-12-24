@@ -31,6 +31,10 @@ namespace Citrom::RenderAPI
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
 		void ImGuiRenderDrawData() override;
+	public:
+		// DirectX11 Special
+		//ID3D11Device* DX11GetDevice() { return m_Device; }
+		//ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
 	private:
 	};
 }

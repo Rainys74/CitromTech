@@ -138,8 +138,8 @@ namespace Citrom::Platform
 			ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
 			osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 
-			//bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
-			bOsVersionInfoEx = PopulateOSVersionInfo((OSVERSIONINFO*)&osvi);
+			//bOsVersionInfoEx = PopulateOSVersionInfo((OSVERSIONINFO*)&osvi);
+			bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO*)&osvi);
 			CT_CORE_ASSERT(bOsVersionInfoEx, "Couldn't Get Version!");
 			
 			CTL::String osInfo("Windows ");
