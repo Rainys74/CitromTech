@@ -29,10 +29,13 @@
 
 #include <iostream>
 
-// ImguI temp
-#include "Platform/PlatformImGui.h"
-
 using namespace Citrom;
+
+// Global variables
+Platform::Window g_Window;
+
+LayerStack g_LayerStack;
+ImGuiLayer g_ImLayer;
 
 int SharedMain(int argc, char* argv[])
 {
@@ -122,19 +125,18 @@ int SharedMain(int argc, char* argv[])
 	CT_WARN("OS Info: {}", Platform::Info::GetOSInfo());
 
 	using namespace Platform;
-	Window window;
 
-	window.Create(1280, 720, CTL::String("test"));
+	g_Window.Create(1280, 720, CTL::String("test"));
 
 	// TODO: temporary
 	Renderer::Initialize();
 
 	ImGuiLayer imLayer;
 	imLayer.OnAttach();
-	imLayer.Initialize(&window);
+	imLayer.Initialize(&g_Window);
 
 	// TODO: Layer System
-	while (!window.WindowShouldClose())
+	while (!g_Window.WindowShouldClose())
 	{
 		// TODO: Timing. Choose one. (Though constructing multiple doubles every frame might be idiotic)
 		// 1
@@ -152,7 +154,7 @@ int SharedMain(int argc, char* argv[])
 		//float64 frameTime = endTime - startTime;
 		//float64 fps = 1.0 / frameTime;
 
-		window.PollEvents();
+		g_Window.PollEvents();
 
 		// Update & Tick (Fixed Update)
 
