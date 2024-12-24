@@ -34,6 +34,10 @@ namespace Citrom::RenderAPI
 		// GetColorAttachmentRendererID? to return texture id
 
 		// Swap Chain
+		// Thoughts?: user technically should have access to/own the swap chain, but
+		// the device would be a better owner because every time you for example
+		// resize the window the user needs to resize the swapchain, and that's pretty annoying
+		// maybe Device should be responsible for that and to listen to the event?
 		//virtual SwapChain CreateSwapChain(SwapChainDesc* descriptor) = 0;
 		//virtual void SwapBuffers(SwapChain* sc) = 0; // implemented in device for better error checking on DX11
 

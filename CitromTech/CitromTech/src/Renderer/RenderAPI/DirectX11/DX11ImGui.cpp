@@ -6,12 +6,14 @@
 #include "backends/imgui_impl_win32.h"
 
 #include "backends/imgui_impl_dx11.h"
+#include "CitromAssert.h"
 
 namespace Citrom::RenderAPI
 {
 	void DX11Device::ImGuiInitGraphicsAPI()
 	{
-		//ImGui_ImplDX11_Init(m_Device, m_DeviceContext);
+		ImGui_ImplDX11_Init(m_Device.Get(), m_DeviceContext.Get());
+		CT_ASSERT(false, "Test");
 	}
 	void DX11Device::ImGuiRenderDrawData()
 	{

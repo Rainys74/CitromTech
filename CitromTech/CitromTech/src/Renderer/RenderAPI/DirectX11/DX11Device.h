@@ -33,9 +33,11 @@ namespace Citrom::RenderAPI
 		void ImGuiRenderDrawData() override;
 	public:
 		// DirectX11 Special
-		//ID3D11Device* DX11GetDevice() { return m_Device; }
-		//ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
+		ID3D11Device* DX11GetDevice() { return m_Device.Get(); }
+		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext.Get(); }
 	private:
+		WRL::ComPtr<ID3D11Device> m_Device;
+		WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
 	};
 }
 #endif

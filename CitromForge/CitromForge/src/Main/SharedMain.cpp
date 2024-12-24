@@ -17,12 +17,15 @@
 #include "Platform/PlatformWindow.h"
 #include "Platform/Platform.h"
 
+#include "Renderer/Renderer.h"
+
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
 
 #include "Profiling/Profiler.h"
 
 #include "ThreadPool.h"
+#include "LayerSystem/ImGuiLayer.h"
 
 #include <iostream>
 
@@ -288,6 +291,13 @@ int SharedMain(int argc, char* argv[])
 	// TODO: why doesn't work??!
 	//Platform::ImGui::Initialize(&window);
 
+	// TODO: temporary
+	Renderer::Initialize();
+
+	ImGuiLayer imLayer;
+	imLayer.OnAttach();
+	imLayer.Initialize(&window);
+
 	// TODO: Layer System
 	while (!window.WindowShouldClose())
 	{
@@ -312,6 +322,9 @@ int SharedMain(int argc, char* argv[])
 		// Update & Tick (Fixed Update)
 
 		// Render
+		imLayer.Begin();
+		// Layers->ImGuiRender()
+		imLayer.End();
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
@@ -321,6 +334,8 @@ int SharedMain(int argc, char* argv[])
 		//Profiler::ProfileResults::PrintResults();
 		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
+
+	imLayer.OnDetach();
 
 	//Test::TestOutGLFW();
 

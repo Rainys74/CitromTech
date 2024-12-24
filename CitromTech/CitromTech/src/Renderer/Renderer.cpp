@@ -10,8 +10,8 @@ namespace Citrom
 
 	void Renderer::Initialize()
 	{
-		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
-		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
+		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
+		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 
 		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
 		m_Device = Device::CreateDevice();
