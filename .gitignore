@@ -47,5 +47,6 @@ bin/
 bin-intermediate/
 
 # Rename this for your projects
-**/CitromForge
-**/CitromForge.exe
+WorkingDirectory/CitromForge
+WorkingDirectory/CitromForge.exe
+#WorkingDirectory/CitromForge.x86_64
