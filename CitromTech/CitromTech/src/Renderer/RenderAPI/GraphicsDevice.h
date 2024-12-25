@@ -38,6 +38,8 @@ namespace Citrom::RenderAPI
 		// the device would be a better owner because every time you for example
 		// resize the window the user needs to resize the swapchain, and that's pretty annoying
 		// maybe Device should be responsible for that and to listen to the event?
+		// e.g. Torque3D holds an internal swap-chain and RTV's inside D3D11's Gfx
+		// Wicked Engine holds an internal swap-chain and RTV's inside a SwapChain class and it's internal ref
 		//virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
 		//virtual void SwapBuffers(SwapChain* sc) = 0; // implemented in device for better error checking on DX11
 
