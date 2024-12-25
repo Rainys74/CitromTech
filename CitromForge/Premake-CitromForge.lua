@@ -10,6 +10,8 @@ project "CitromForge" -- EXE
 
         debugdir "../WorkingDirectory"
 
+        targetname (RUNNER_APP_NAME)
+
         files 
         {
             "%{prj.name}/src/**.h",
@@ -21,6 +23,11 @@ project "CitromForge" -- EXE
             "../CitromTech/CitromTech/src",
 
             "%{IncludeDir.ImGui}"
+        }
+
+        defines
+        {
+            "CT_APP_NAME="..(RUNNER_APP_NAME),
         }
 
         if RUNNER_BUILD_AS_CONSOLE_APP then
