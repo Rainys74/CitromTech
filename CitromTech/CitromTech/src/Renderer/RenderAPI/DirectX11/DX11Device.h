@@ -10,8 +10,8 @@ namespace Citrom::RenderAPI
 	class DX11Device : public Device
 	{
 	public:
-		DX11Device() {}
-		virtual ~DX11Device() {}
+		DX11Device();
+		virtual ~DX11Device();
 
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override { return Framebuffer(); }

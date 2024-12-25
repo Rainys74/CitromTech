@@ -135,4 +135,7 @@ namespace Citrom
             return &instance;
         }
     };
+
+//#define REGISTER_FOR_EVENT()
+//#define REGISTER_FOR_EVENT_LAMBDA()
 }

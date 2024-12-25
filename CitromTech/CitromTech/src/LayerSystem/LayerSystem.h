@@ -52,6 +52,11 @@ namespace Citrom
 			for (Layer* layer : m_Layers)
 				layer->OnRender();
 		}
+		void ImGuiRender()
+		{
+			for (Layer* layer : m_Layers)
+				layer->OnImGuiRender();
+		}
 	private:
 		CTL::DArray<Layer*> m_Layers;
 	};

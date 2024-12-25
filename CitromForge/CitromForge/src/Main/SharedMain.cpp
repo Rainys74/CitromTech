@@ -131,9 +131,10 @@ int SharedMain(int argc, char* argv[])
 	// TODO: temporary
 	Renderer::Initialize();
 
-	ImGuiLayer imLayer;
-	imLayer.OnAttach();
-	imLayer.Initialize(&g_Window);
+	g_ImLayer.OnAttach();
+	g_ImLayer.Initialize(&g_Window);
+
+	// Push Layers
 
 	// TODO: Layer System
 	while (!g_Window.WindowShouldClose())
@@ -157,22 +158,27 @@ int SharedMain(int argc, char* argv[])
 		g_Window.PollEvents();
 
 		// Update & Tick (Fixed Update)
+		g_LayerStack.Update();
+
+		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		imLayer.Begin();
-		// Layers->ImGuiRender()
-		imLayer.End();
+		g_LayerStack.Render();
+
+		g_ImLayer.Begin();
+		g_LayerStack.ImGuiRender();
+		g_ImLayer.End();
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
 			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " "Profiling {} took {} ms!!!!", __func__, key, time * 1000);
 		});*/
 
-		//Profiler::ProfileResults::PrintResults();
+		Profiler::ProfileResults::PrintResults();
 		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
 
-	imLayer.OnDetach();
+	g_ImLayer.OnDetach();
 
 #ifdef CT_PLATFORM_WINDOWS
 	std::cin.get();
