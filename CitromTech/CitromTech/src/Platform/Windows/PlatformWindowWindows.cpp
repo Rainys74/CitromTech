@@ -38,5 +38,9 @@ namespace Citrom::Platform
     {
         return m_Backend->Win32TryGetHWnd();
     }
+    void* Window::GLFWTryGetWnd()
+    {
+        return m_Backend->GLFWTryGetWnd();
+    }
 }
 #endif

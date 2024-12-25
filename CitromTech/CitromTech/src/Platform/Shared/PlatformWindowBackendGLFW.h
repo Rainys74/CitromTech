@@ -16,6 +16,8 @@ namespace Citrom::Platform
         virtual bool WindowShouldClose() const override;
         virtual void PollEvents() override;
 
+        virtual void* GLFWTryGetWnd() override;
+        
         IF_WINDOWS(virtual void* Win32TryGetHWnd() override);
     private:
         bool m_WindowShouldClose;

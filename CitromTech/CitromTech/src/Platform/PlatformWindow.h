@@ -22,6 +22,8 @@ namespace Citrom::Platform
 		//virtual void ChangeTitle(const char* title) = 0;
 
 		virtual void* Win32TryGetHWnd() { return nullptr; }
+		
+		virtual void* GLFWTryGetWnd() { return nullptr; }
     private:
 		bool m_WindowShouldClose;
 		int m_Width, m_Height;
@@ -38,6 +40,8 @@ namespace Citrom::Platform
 		void PollEvents();
 
 		void* Win32TryGetHWnd();
+
+		void* GLFWTryGetWnd();
     private:
         WindowBackend* m_Backend;
 	};

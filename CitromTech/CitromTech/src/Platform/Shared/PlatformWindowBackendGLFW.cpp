@@ -130,6 +130,10 @@ namespace Citrom::Platform
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwSwapBuffers(m_Window);
     }
+    void* WindowBackendGLFW::GLFWTryGetWnd()
+    {
+        return static_cast<void*>(m_Window);
+    }
     #ifdef CT_PLATFORM_WINDOWS
     void* WindowBackendGLFW::Win32TryGetHWnd()
     {
