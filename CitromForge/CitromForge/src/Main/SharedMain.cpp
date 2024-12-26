@@ -131,8 +131,8 @@ int SharedMain(int argc, char* argv[])
 	// TODO: temporary
 	Renderer::Initialize();
 
-	g_ImLayer.OnAttach();
-	g_ImLayer.Initialize(&g_Window);
+	//g_ImLayer.OnAttach();
+	//g_ImLayer.Initialize(&g_Window);
 
 	// Push Layers
 
@@ -165,9 +165,9 @@ int SharedMain(int argc, char* argv[])
 		// Render
 		g_LayerStack.Render();
 
-		g_ImLayer.Begin();
+		//g_ImLayer.Begin();
 		g_LayerStack.ImGuiRender();
-		g_ImLayer.End();
+		//g_ImLayer.End();
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
@@ -178,7 +178,7 @@ int SharedMain(int argc, char* argv[])
 		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
 
-	g_ImLayer.OnDetach();
+	//g_ImLayer.OnDetach();
 
 #ifdef CT_PLATFORM_WINDOWS
 	std::cin.get();
