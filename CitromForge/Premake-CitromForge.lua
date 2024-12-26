@@ -20,6 +20,8 @@ project "CitromForge" -- EXE
 
         includedirs
         {
+            "%{prj.name}/src/",
+
             "../CitromTech/CitromTech/src",
 
             "%{IncludeDir.ImGui}"

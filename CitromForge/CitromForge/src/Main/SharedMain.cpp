@@ -1,6 +1,6 @@
 ﻿#include "SharedMain.h"
 
-#include "../Tests/TestMain.h"
+#include "Tests/TestMain.h"
 #include "CTL/String.h"
 #include "CTL/StaticArray.h"
 #include "CTL/DArray.h"
@@ -26,6 +26,8 @@
 
 #include "ThreadPool.h"
 #include "LayerSystem/ImGuiLayer.h"
+
+#include "Application/EditorLayer.h"
 
 #include <iostream>
 
@@ -135,6 +137,9 @@ int SharedMain(int argc, char* argv[])
 	//g_ImLayer.Initialize(&g_Window);
 
 	// Push Layers
+	EditorLayer editorLayer;
+
+	//g_LayerStack.Push(&editorLayer);
 
 	float64 deltaTime; // Frame Time
 
