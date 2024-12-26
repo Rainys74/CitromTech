@@ -136,6 +136,11 @@ int SharedMain(int argc, char* argv[])
 
 	// Push Layers
 
+	float64 deltaTime; // Frame Time
+
+	float64 currentTime; // New Time
+	float64 previousTime = Platform::Utils::GetTime(); // Old Time
+
 	// TODO: Layer System
 	while (!g_Window.WindowShouldClose())
 	{
@@ -154,6 +159,12 @@ int SharedMain(int argc, char* argv[])
 		//float64 endTime = Platform::Utils::GetTime();
 		//float64 frameTime = endTime - startTime;
 		//float64 fps = 1.0 / frameTime;
+
+		currentTime = Platform::Utils::GetTime();
+		deltaTime = currentTime - previousTime;
+		previousTime = currentTime;
+		//float64 fps = 1.0 / frameTime;
+		//CT_WARN("FPS: {} (Frame/Delta Time: {} ({} ms))", fps, frameTime, frameTime * 1000);
 
 		g_Window.PollEvents();
 
@@ -174,7 +185,7 @@ int SharedMain(int argc, char* argv[])
 			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " "Profiling {} took {} ms!!!!", __func__, key, time * 1000);
 		});*/
 
-		Profiler::ProfileResults::PrintResults();
+		//Profiler::ProfileResults::PrintResults();
 		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
 
