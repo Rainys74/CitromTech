@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include "Main/SharedMain.h"
 
 #include "Profiling/Profiler.h"
 #include "Logger/Logger.h"
@@ -17,6 +18,8 @@ using namespace Citrom;
 #define DARKBLUE    ImVec4(0.0f, 0.0f, 0.5f, 1.0f)   // Dark Blue
 #define LIGHTBLUE   ImVec4(0.0f, 0.5f, 1.0f, 1.0f)   // Cyan / Light Blue
 #define GRAY        ImVec4(0.5f, 0.5f, 0.5f, 1.0f)   // Gray
+
+constexpr uint32 MAX_LOG_ENTRIES = 1000;
 
 struct LogEntry
 {
@@ -49,6 +52,12 @@ EditorLayer::EditorLayer()
             logEntry.color = imColor;
 
             g_ConsoleBuffer.PushBack(logEntry);
+
+            if (g_ConsoleBuffer.Count() >= MAX_LOG_ENTRIES)
+            {
+                delete[] g_ConsoleBuffer.begin()->log;
+                g_ConsoleBuffer.Erase(g_ConsoleBuffer.begin()); // Remove the oldest log
+            }
     });
 }
 
@@ -95,9 +104,9 @@ void EditorLayer::OnImGuiRender()
         {
             if (ImGui::CollapsingHeader("Graphics:", ImGuiTreeNodeFlags_DefaultOpen))
             {
-                ImGui::Text("%.1f FPS (%.2f ms)", 45.7f, 3.7254f);
+                ImGui::Text("%.1f FPS (%.2f ms)", MainFPS(), MainDeltaTime() * 1000);
                 ImGui::Spacing();
-                ImGui::Text("Main Thread: %.2f ms (%.1f FPS)", 3.7254f, 45.7f);
+                ImGui::Text("Main Thread: %.2f ms (%.1f FPS)", MainDeltaTime() * 1000, MainFPS());
                 ImGui::Text("Render Thread: %.2f ms (%.1f FPS)", 2.3457f, 69.420f);
             }
             ImGui::EndTabItem();

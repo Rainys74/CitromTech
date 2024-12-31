@@ -39,6 +39,18 @@ Platform::Window g_Window;
 LayerStack g_LayerStack;
 ImGuiLayer g_ImLayer;
 
+float64 g_DeltaTime; // Frame Time
+
+float64 MainDeltaTime()
+{
+	return g_DeltaTime;
+}
+
+float64 MainFPS()
+{
+	return 1.0 / g_DeltaTime;
+}
+
 int SharedMain(int argc, char* argv[])
 {
 	CT_INFO("Command Line Arguments ({}):", argc);
@@ -141,8 +153,6 @@ int SharedMain(int argc, char* argv[])
 
 	g_LayerStack.Push(&editorLayer);
 
-	float64 deltaTime; // Frame Time
-
 	float64 currentTime; // New Time
 	float64 previousTime = Platform::Utils::GetTime(); // Old Time
 
@@ -166,7 +176,7 @@ int SharedMain(int argc, char* argv[])
 		//float64 fps = 1.0 / frameTime;
 
 		currentTime = Platform::Utils::GetTime();
-		deltaTime = currentTime - previousTime;
+		g_DeltaTime = currentTime - previousTime;
 		previousTime = currentTime;
 		//float64 fps = 1.0 / frameTime;
 		//CT_WARN("FPS: {} (Frame/Delta Time: {} ({} ms))", fps, frameTime, frameTime * 1000);

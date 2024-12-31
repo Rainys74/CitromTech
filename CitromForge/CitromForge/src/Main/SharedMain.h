@@ -8,5 +8,5 @@ int SharedMain(int argc, char* argv[]);
 // Main Loop: ApplicationLoop, RuntimeLoop, ExecutionLoop, EngineLoop, GameLoop, CoreLoop, ForgeLoop (somewhat inspired by D_DoomLoop) best: ForgeLoop, GameLoop, RuntimeLoop, ApplicationLoop
 // RenderLoop (Render Thread Main Loop) (Initializes the renderer and Renders the submitted scene data whenever submitting has finished, as in Renderer::End was called)
 
-//float64 MainDeltaTime() { return 0.0; }
-//float64 MainFPS() { return 0.0; }
+float64 MainDeltaTime();
+float64 MainFPS();

@@ -68,6 +68,30 @@ namespace CTL
             m_Capacity = 0;
         }
 
+        void Erase(const T* iter)
+        {
+            if (iter < m_Data || iter >= m_Data + m_Count)
+            {
+                // Invalid iterator
+                return;
+            }
+
+            // Calculate the index of the element to erase
+            uint32 index = static_cast<uint32>(iter - m_Data);
+
+            // Shift elements after the index to fill the gap
+            for (uint32 i = index; i < m_Count - 1; ++i)
+            {
+                m_Data[i] = m_Data[i + 1];
+            }
+
+            // Call the destructor for the last element
+            m_Data[m_Count - 1].~T();
+
+            // Reduce the count
+            m_Count -= 1;
+        }
+
         FORCE_INLINE T* Data() { return m_Data; }
         FORCE_INLINE uint32 Count() { return m_Count; }
         FORCE_INLINE uint32 Capacity() { return m_Capacity; }
