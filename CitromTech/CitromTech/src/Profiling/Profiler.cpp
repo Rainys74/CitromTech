@@ -3,6 +3,7 @@
 namespace Citrom::Profiler
 {
 	CTL::HashMap<const char*, float64> ProfileResults::m_Results;
+	CTL::DArray<const char*> ProfileResults::m_Order;
 
 	void ProfileDefaultCallback(const char* name, const float64 time)
 	{
@@ -11,6 +12,12 @@ namespace Citrom::Profiler
 
 	void ProfileResults::Submit(const char* key, const float64 time)
 	{
+		// Check if the key is new
+		if (m_Results.find(key) == m_Results.end())
+		{
+			m_Order.PushBack(key);
+		}
+
 		m_Results[key] = time;
 	}
 
@@ -25,6 +32,14 @@ namespace Citrom::Profiler
 		{
 			callback(result.first, result.second);
 		}
+	}
+	CTL::HashMap<const char*, float64>& ProfileResults::GetResults()
+	{
+		return m_Results;
+	}
+	CTL::DArray<const char*>& ProfileResults::GetResultOrder()
+	{
+		return m_Order;
 	}
 	void ProfileResults::PrintResults()
 	{

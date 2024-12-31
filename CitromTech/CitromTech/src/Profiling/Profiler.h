@@ -7,6 +7,7 @@
 #include "Platform/Platform.h"
 
 #include "CTL/HashMap.h"
+#include "CTL/DArray.h"
 #include "CTL/CStringHandling.h"
 
 namespace Citrom::Profiler
@@ -25,9 +26,13 @@ namespace Citrom::Profiler
 		// Triggers a callback on every item
 		static void IterateResultsCallback(CallbackFN callback);
 
+		static CTL::HashMap<const char*, float64>& GetResults();
+		static CTL::DArray<const char*>& GetResultOrder();
+
 		[[deprecated("Manually retrieve the time instead.")]] static void PrintResults();
 	private:
 		static CTL::HashMap<const char*, float64> m_Results;
+		static CTL::DArray<const char*> m_Order;
 	};
 
 	class ScopedTimer
