@@ -139,7 +139,7 @@ int SharedMain(int argc, char* argv[])
 	// Push Layers
 	EditorLayer editorLayer;
 
-	//g_LayerStack.Push(&editorLayer);
+	g_LayerStack.Push(&editorLayer);
 
 	float64 deltaTime; // Frame Time
 

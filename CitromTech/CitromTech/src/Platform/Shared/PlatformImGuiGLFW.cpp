@@ -23,8 +23,6 @@ namespace Citrom::Platform
 			CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)window->GLFWTryGetWnd(), false), "Failed to Initialize ImGui GLFW implementation for OpenGL.");
 			CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 410"), "Failed to Initialize ImGui OpenGL 4.1 implementation.");
 		}
-
-		Renderer::ImGuiInit();
 	}
 	void ImGui::Terminate()
 	{

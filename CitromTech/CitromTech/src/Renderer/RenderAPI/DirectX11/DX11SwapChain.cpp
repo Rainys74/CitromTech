@@ -92,6 +92,16 @@ namespace Citrom::RenderAPI
 		m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
 
 		CreateRenderTarget();
+
+		// Configure viewport
+		D3D11_VIEWPORT vp;
+		vp.Width = width;
+		vp.Height = height;
+		vp.MinDepth = 0;
+		vp.MaxDepth = 1;
+		vp.TopLeftX = 0; // xPos
+		vp.TopLeftY = 0; // yPos
+		m_DeviceContext->RSSetViewports(1, &vp);
 	}
 }
 #endif

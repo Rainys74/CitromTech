@@ -22,7 +22,7 @@ namespace Citrom::Platform
 
 		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
 		{
-			ImGui_ImplWin32_Init(window->Win32TryGetHWnd());
+			CT_CORE_VERIFY(ImGui_ImplWin32_Init(window->Win32TryGetHWnd()), "Failed to initialize ImGui Win32 implementation.");
 		}
 		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
 		{
@@ -30,8 +30,6 @@ namespace Citrom::Platform
 			CT_CORE_VERIFY(ImGui_ImplWin32_InitForOpenGL(window->Win32TryGetHWnd()), "Failed to Initialize ImGui Win32 implementation for OpenGL.");
 			//CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
 		}
-
-		Renderer::ImGuiInit(); // TODO: move over to ImGuiLayer?
 	}
 	void ImGui::Terminate()
 	{

@@ -39,17 +39,26 @@ namespace Citrom::Platform
 		break;
 		case WM_SIZE:
 		{
-			RECT rect;
-			GetWindowRect(hWnd, &rect);
-			uint32 width, height;
-			width = rect.right - rect.left;
-			height = rect.bottom - rect.top;
+			//RECT rect;
+			//GetWindowRect(hWnd, &rect);
+			//uint32 width, height;
+			//width = rect.right - rect.left;
+			//height = rect.bottom - rect.top;
+
+			const uint32 width = (UINT)LOWORD(lParam);
+			const uint32 height = (UINT)HIWORD(lParam);
 
 			WindowResizeEvent windowResizeEvent;
 			windowResizeEvent.width = width;
 			windowResizeEvent.height = height;
 
 			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
+
+			// TODO: figure out whether do i really need to do this, because
+			// ideally it should not need to be called
+			#ifdef CT_EDITOR_ENABLED
+			ImGui::GetIO().DisplaySize = ImVec2(width, height);
+			#endif
 		}
 		break;
 		case WM_MOVE:

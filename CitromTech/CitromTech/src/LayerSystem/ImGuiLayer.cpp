@@ -20,8 +20,6 @@ namespace Citrom
 	{
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGui::StyleColorsDark();
-		//ImGui::StyleColorsClassic();
 
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		io.BackendFlags |= ImGuiBackendFlags_HasMouseCursors;
@@ -30,6 +28,12 @@ namespace Citrom
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+
+		//io.DisplaySize = ImVec2(1280, 720); // Fixes errors, but ideally should not need to be called
+
+		ImGui::StyleColorsDark();
+		//ImGui::StyleColorsClassic();
+		//ImGui::StyleColorsLight();
 
 		//ImGuiLayer::Initialize();
 	}
@@ -44,6 +48,7 @@ namespace Citrom
 	void ImGuiLayer::Initialize(Platform::Window* window)
 	{
 		Platform::ImGui::Initialize(window);
+		Renderer::ImGuiInit();
 	}
 
 	void ImGuiLayer::Begin()

@@ -20,6 +20,7 @@ namespace Citrom
 		SwapChainDesc scd;
 		scd.windowPtr = window;
 
+		m_Device->SetVSync(VSyncMode::On);
 		m_Device->MakeSwapChain(&scd);
 
 		// On Resize Callback
