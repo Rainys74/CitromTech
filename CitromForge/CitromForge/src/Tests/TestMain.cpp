@@ -273,6 +273,10 @@ void TestOutMain(int argc, char** argv)
 	CT_WARN("Platform: {}", Platform::Info::GetPlatformName());
 	CT_WARN("OS Info: {}", Platform::Info::GetOSInfo());
 
+	CT_ERROR("CT_PRETTY_FUNCTION: {}", CT_PRETTY_FUNCTION);
+	//CT_ERROR("__FUNCSIG__: {}", __FUNCSIG__);
+	//CT_ERROR("__PRETTY_FUNCTION__: {}", __PRETTY_FUNCTION__);
+
 	using namespace Platform;
 	Window window;
 

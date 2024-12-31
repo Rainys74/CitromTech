@@ -37,9 +37,9 @@
 
 // TODO: check if this works, if not try a trick maybe something like __FUNCSIG_ ## _ ??
 #ifdef _MSC_VER
-#define PRETTY_FUNCTION __FUNCSIG__
+#define CT_PRETTY_FUNCTION __FUNCSIG__
 #elif defined(__GNUC__) || defined(__clang__)
-#define PRETTY_FUNCTION __PRETTY_FUNCTION__
+#define CT_PRETTY_FUNCTION __PRETTY_FUNCTION__
 #endif
 
 using int8 = signed char;
