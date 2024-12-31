@@ -2,8 +2,8 @@
 
 namespace Citrom::Profiler
 {
-	CTL::HashMap<const char*, float64> ProfileResults::m_Results;
-	CTL::DArray<const char*> ProfileResults::m_Order;
+	CTL::HashMap<std::string, float64> ProfileResults::m_Results;
+	CTL::DArray<std::string> ProfileResults::m_Order;
 
 	void ProfileDefaultCallback(const char* name, const float64 time)
 	{
@@ -12,13 +12,15 @@ namespace Citrom::Profiler
 
 	void ProfileResults::Submit(const char* key, const float64 time)
 	{
+		std::string keyStr(key);
+
 		// Check if the key is new
-		if (m_Results.find(key) == m_Results.end())
+		if (m_Results.find(keyStr) == m_Results.end())
 		{
-			m_Order.PushBack(key);
+			m_Order.PushBack(keyStr);
 		}
 
-		m_Results[key] = time;
+		m_Results[keyStr] = time;
 	}
 
 	float64 ProfileResults::RetrieveTime(const char* key)
@@ -30,14 +32,14 @@ namespace Citrom::Profiler
 		CT_CORE_ASSERT(callback, "Null callback was passed!");
 		for (const auto& result : m_Results)
 		{
-			callback(result.first, result.second);
+			callback(result.first.c_str(), result.second);
 		}
 	}
-	CTL::HashMap<const char*, float64>& ProfileResults::GetResults()
+	CTL::HashMap<std::string, float64>& ProfileResults::GetResults()
 	{
 		return m_Results;
 	}
-	CTL::DArray<const char*>& ProfileResults::GetResultOrder()
+	CTL::DArray<std::string>& ProfileResults::GetResultOrder()
 	{
 		return m_Order;
 	}
@@ -45,7 +47,7 @@ namespace Citrom::Profiler
 	{
 		for (const auto& result : m_Results)
 		{
-			CT_CORE_TRACE("Profiling {} took {} ms", result.first, result.second * 1000);
+			CT_CORE_TRACE("Profiling {} took {} ms", result.first.c_str(), result.second * 1000);
 		}
 	}
 }

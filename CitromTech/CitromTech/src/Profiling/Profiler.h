@@ -10,6 +10,8 @@
 #include "CTL/DArray.h"
 #include "CTL/CStringHandling.h"
 
+#include <string>
+
 namespace Citrom::Profiler
 {
 	void ProfileDefaultCallback(const char* name, const float64 time);
@@ -26,13 +28,13 @@ namespace Citrom::Profiler
 		// Triggers a callback on every item
 		static void IterateResultsCallback(CallbackFN callback);
 
-		static CTL::HashMap<const char*, float64>& GetResults();
-		static CTL::DArray<const char*>& GetResultOrder();
+		static CTL::HashMap<std::string, float64>& GetResults();
+		static CTL::DArray<std::string>& GetResultOrder();
 
 		[[deprecated("Manually retrieve the time instead.")]] static void PrintResults();
 	private:
-		static CTL::HashMap<const char*, float64> m_Results;
-		static CTL::DArray<const char*> m_Order;
+		static CTL::HashMap<std::string, float64> m_Results;
+		static CTL::DArray<std::string> m_Order;
 	};
 
 	class ScopedTimer
