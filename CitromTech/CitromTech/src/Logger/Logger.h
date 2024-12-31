@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Platform/PlatformConsole.h"
+#include "CTL/DArray.h"
 
 #include <string>
 #include <string_view>
@@ -80,14 +81,19 @@ namespace Citrom
 			Error,
 			Critical // also known as Severe/Fatal
 		};
+		using LoggerCallbackFN = void(*)(const char* log, LogColor logColor, LogLevel logLevel);
 
 		static Logger* GetLogger();
 
 		// Variadic Templates are better and faster than C-style va_lists
 		template<typename... Args>
 		void Log(const LogCategory category, const LogLevel level, const char* fmt, Args&&... args);
+
+		void PushCallback(LoggerCallbackFN callback);
 	private:
 		Logger();
+	private:
+		CTL::DArray<LoggerCallbackFN> m_Callbacks;
 	};
 
 	template<typename... Args>
@@ -139,7 +145,7 @@ namespace Citrom
 			SET_STRING_BY_ENUM(preMessage, LogCategory, App);
 		}*/
 
-		switch (level)
+		/*switch (level)
 		{
 			default:					Platform::Console::SetTextColor(Platform::Console::TextColor::Reset); break;
 			case LogLevel::Trace:		Platform::Console::SetTextColor(Platform::Console::TextColor::Blue); break;
@@ -154,6 +160,24 @@ namespace Citrom
 		result << formattedTime << formattedLog << '\n';
 
 		Platform::Console::PrintText(result.str().c_str(), (level >= LogLevel::Error) ? Platform::Console::Stream::Error : Platform::Console::Stream::In);
-		Platform::Console::SetTextColor(Platform::Console::TextColor::Reset);
+		Platform::Console::SetTextColor(Platform::Console::TextColor::Reset);*/
+
+		Platform::Console::TextColor logColor;
+		switch (level)
+		{
+			default:					logColor = Platform::Console::TextColor::Reset; break;
+			case LogLevel::Trace:		logColor = Platform::Console::TextColor::Blue; break;
+			case LogLevel::Debug:		logColor = Platform::Console::TextColor::Green; break;
+			case LogLevel::Info:		logColor = Platform::Console::TextColor::Reset; break;
+			case LogLevel::Warn:		logColor = Platform::Console::TextColor::Yellow; break;
+			case LogLevel::Error:		logColor = Platform::Console::TextColor::Purple; break;
+			case LogLevel::Critical:	logColor = Platform::Console::TextColor::Red; break;
+		}
+
+		std::ostringstream result;
+		result << formattedTime << formattedLog << '\n';
+
+		for (LoggerCallbackFN callback : m_Callbacks)
+			callback(result.str().c_str(), static_cast<LogColor>(logColor), level);
 	}
 }

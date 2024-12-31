@@ -7,8 +7,19 @@ namespace Citrom
         static Logger instance;
 		return &instance;
 	}
+    void Logger::PushCallback(LoggerCallbackFN callback)
+    {
+        m_Callbacks.PushBack(callback);
+    }
+
     Logger::Logger()
     {
         Platform::Console::CreateConsole();
+        m_Callbacks.PushBack([](const char* log, LogColor logColor, LogLevel level)
+        {
+            Platform::Console::SetTextColor(static_cast<Platform::Console::TextColor>(logColor));
+            Platform::Console::PrintText(log, (level >= LogLevel::Error) ? Platform::Console::Stream::Error : Platform::Console::Stream::In);
+            Platform::Console::SetTextColor(Platform::Console::TextColor::Reset);
+        });
     }
 }
