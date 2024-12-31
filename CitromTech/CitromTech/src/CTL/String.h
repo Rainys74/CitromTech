@@ -25,10 +25,40 @@ namespace CTL
 		//char16_t* UTF16Str(); // UTF-16
 		//char32_t* UTF32Str(); // UTF-32
 
+		void CStrFree(char* cStr){}
+
+		// TODO: Find, RFind (Reverse Find), SubStr
+
 		FORCE_INLINE char* Data() const { return m_Data; } // returns the underlying data
 		FORCE_INLINE size_t Length() const { return m_Length; } // returns the character count
 	private:
 		char* m_Data = nullptr;
 		size_t m_Length = 0;
 	};
+
+	/*template<typename T, typename Liberator>
+	class TCStrGuard
+	{
+	public:
+		TCStrGuard(T cStr)
+			: m_CStr(cStr) {}
+		~TCStrGuard()
+		{
+			Liberator(m_CStr);
+		}
+
+	private:
+		T m_CStr;
+	};
+
+	class StringInternalCStrLiberator
+	{
+	public:
+		void operator()(const char* cStr)
+		{
+			string.CStrFree(string);
+		}
+	};
+
+	using CStrGuard = TCStrGuard<const String&, >*/
 }
