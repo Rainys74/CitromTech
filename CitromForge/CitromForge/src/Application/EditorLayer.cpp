@@ -37,9 +37,9 @@ void EditorLayer::OnImGuiRender()
 	//	ImGui::Text("%s = %f", key, time);
 	//});
 
-	for (const std::string& key : Profiler::ProfileResults::GetResultOrder())
+	for (const char* key : Profiler::ProfileResults::GetResultOrder())
 	{
-		ImGui::Text("%s = %f s", key.c_str(), Profiler::ProfileResults::GetResults()[key]);
+		ImGui::Text("%s = %f s", key, Profiler::ProfileResults::GetResults()[key]);
 	}
 
 	ImGui::End();
