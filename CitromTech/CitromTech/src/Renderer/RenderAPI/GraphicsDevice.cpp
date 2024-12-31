@@ -25,6 +25,8 @@ namespace Citrom::RenderAPI
         s_CurrentGraphicsAPI = graphicsAPI;
     }
 
+    Device* Device::s_Instance;
+
     Device* Device::CreateDevice()
     {
         switch (GraphicsAPIManager::GetGraphicsAPI())

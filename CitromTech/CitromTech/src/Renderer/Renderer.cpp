@@ -14,7 +14,7 @@ namespace Citrom
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 
 		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
-		m_Device = Device::CreateDevice();
+		m_Device = Device::Get();
 	}
 
 	void Renderer::DrawTest()

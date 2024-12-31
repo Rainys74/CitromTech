@@ -20,14 +20,22 @@ namespace Citrom::RenderAPI
 		static GraphicsAPI s_CurrentGraphicsAPI;
 	};
 
+	// Device is a singleton class to better support OpenGL's single device implementation
 	class Device
 	{
 	public:
 		Device() {}
 		virtual ~Device() {}
 
-		// Device Factory
-		static Device* CreateDevice();
+		// Device Singleton
+		static Device* Get()
+		{
+			if (!s_Instance)
+			{
+				s_Instance = CreateDevice();
+			}
+			return s_Instance;
+		}
 		
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
@@ -60,6 +68,10 @@ namespace Citrom::RenderAPI
 		// ImGui
 		virtual void ImGuiInitGraphicsAPI() = 0;
 		virtual void ImGuiRenderDrawData() = 0;
+	private:
+		// Device Factory
+		static Device* CreateDevice();
+		static Device* s_Instance;
 	protected:
 	};
 }
