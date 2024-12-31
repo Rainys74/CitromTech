@@ -7,14 +7,42 @@ namespace Citrom
 	using namespace RenderAPI;
 
 	RenderAPI::Device* Renderer::m_Device;
+	EventListener<WindowEvents> Renderer::s_WindowEventListener;
 
-	void Renderer::Initialize()
+	void Renderer::Initialize(Platform::Window* window)
 	{
 		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 
 		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
 		m_Device = Device::Get();
+
+		SwapChainDesc scd;
+		scd.windowPtr = window;
+
+		m_Device->MakeSwapChain(&scd);
+
+		// On Resize Callback
+		m_Device->Resize(1280, 720);
+		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
+		{
+			if (event.GetEventType() == WindowEvents::WindowResize)
+			{
+				const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+				Device::Get()->Resize(transformedEvent.width, transformedEvent.height);
+			}
+		};
+		EventBus::GetDispatcher<WindowEvents>()->AddListener(&s_WindowEventListener);
+	}
+
+	void Renderer::BeginFrame()
+	{
+		m_Device->RCClearColor(0.5f, 0.74f, 0.14f);
+	}
+
+	void Renderer::EndFrame()
+	{
+		m_Device->SwapBuffers();
 	}
 
 	void Renderer::DrawTest()

@@ -19,6 +19,8 @@ namespace Citrom::Math
 
 	#define IS_INFINITE(x) (IS_POSITIVELY_INFINITE(x) || IS_NEGATIVELY_INFINITE(x)) // ((x) == POS_INFINITY_MACRO(f) || (x) == NEG_INFINITY_MACRO(f))
 
+	#define IS_BETWEEN(value, min, max) ((value) >= (min) && (value) <= (max))
+
 	// TODO: MaxUInt8 vs UInt16Max
 	constexpr uint8	 UInt8Max () { return 0xFF; }
 	constexpr uint16 UInt16Max() { return 0xFFFF; }

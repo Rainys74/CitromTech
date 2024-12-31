@@ -17,6 +17,12 @@ namespace Citrom::RenderAPI
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override { return Framebuffer(); }
 		void BindFramebuffer(Framebuffer* fb) override {}
 
+		void MakeSwapChain(SwapChainDesc* descriptor) override;
+		void SwapBuffers() override;
+		void SetVSync(VSyncMode vSync) override;
+
+		void Resize(uint32 width, uint32 height) override;
+
 		// Buffer
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override { return VertexBuffer(); }
 		void BindVertexBuffer(VertexBuffer* vb) override {}
@@ -26,7 +32,7 @@ namespace Citrom::RenderAPI
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount) override {}
-		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override {}
+		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
@@ -36,8 +42,19 @@ namespace Citrom::RenderAPI
 		ID3D11Device* DX11GetDevice() { return m_Device.Get(); }
 		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext.Get(); }
 	private:
+		// Helper Functions
+		void CreateRenderTarget();
+		void DestroyRenderTarget();
+	private:
+		// TODO: maybe get rid of the ComPtr Refs for these 2
 		WRL::ComPtr<ID3D11Device> m_Device;
 		WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+
+		WRL::ComPtr<IDXGIFactory> m_DXGIFactory;
+		WRL::ComPtr<IDXGISwapChain> m_SwapChain;
+		UINT m_VSyncInterval = 1;
+
+		ID3D11RenderTargetView* m_RenderTarget;
 	};
 }
 #endif

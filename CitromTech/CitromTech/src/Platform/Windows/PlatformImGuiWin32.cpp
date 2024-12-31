@@ -31,7 +31,7 @@ namespace Citrom::Platform
 			//CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
 		}
 
-		Renderer::ImGuiInit();
+		Renderer::ImGuiInit(); // TODO: move over to ImGuiLayer?
 	}
 	void ImGui::Terminate()
 	{

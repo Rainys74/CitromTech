@@ -4,6 +4,7 @@
 
 #include "Framebuffer.h"
 #include "Buffer.h"
+#include "SwapChain.h"
 
 // Also referred to as the Render Hardware Interface (RHI) in engines such as Unreal Engine and O3DE
 namespace Citrom::RenderAPI
@@ -49,9 +50,11 @@ namespace Citrom::RenderAPI
 		// maybe Device should be responsible for that and to listen to the event?
 		// e.g. Torque3D holds an internal swap-chain and RTV's inside D3D11's Gfx (This)
 		// Wicked Engine holds an internal swap-chain and RTV's inside a SwapChain class and it's internal ref
-		//virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
-		//virtual void SwapBuffers() = 0; // implemented in device for better error checking on DX11
-		//virtual void SetVSync(VSyncMode vSync) = 0; // implemented in device for better error checking on DX11
+		virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
+		virtual void SwapBuffers() = 0; // implemented in device for better error checking on DX11
+		virtual void SetVSync(VSyncMode vSync) = 0; // implemented in device for better error checking on DX11
+
+		virtual void Resize(uint32 width, uint32 height) = 0;
 
 		// Vertex Buffer
 		// TODO: figure out whether to return or set using pointers

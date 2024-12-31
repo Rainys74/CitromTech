@@ -296,7 +296,7 @@ void TestOutMain(int argc, char** argv)
 	//Platform::ImGui::Initialize(&window);
 
 	// TODO: temporary
-	Renderer::Initialize();
+	Renderer::Initialize(&window);
 
 	ImGuiLayer imLayer;
 	imLayer.OnAttach();

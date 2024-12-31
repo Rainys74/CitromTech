@@ -27,7 +27,7 @@ namespace Citrom::RenderAPI
 		On = 1, // Every V-Blank
 		Half = 2, // Every Second V-Blank
 
-		//Quarter = 3, // Every Third V-Blank
-		//Eighth = 4 // Every Fourth V-Blank
+		Quarter = 3, // Every Third V-Blank
+		Eighth = 4 // Every Fourth V-Blank
 	};
 }

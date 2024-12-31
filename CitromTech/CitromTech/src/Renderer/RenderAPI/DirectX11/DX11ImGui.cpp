@@ -13,11 +13,11 @@ namespace Citrom::RenderAPI
 	void DX11Device::ImGuiInitGraphicsAPI()
 	{
 		ImGui_ImplDX11_Init(m_Device.Get(), m_DeviceContext.Get());
-		CT_ASSERT(false, "Test");
 	}
 	void DX11Device::ImGuiRenderDrawData()
 	{
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+		CT_ASSERT(false, "test");
 	}
 }
 #endif

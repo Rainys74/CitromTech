@@ -4,6 +4,7 @@
 
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
+#include "Events/WindowEvents.h"
 
 #include "CTL/ScopedPointer.h"
 
@@ -17,9 +18,11 @@ namespace Citrom
 	class Renderer
 	{
 	public:
-		static void Initialize();
+		static void Initialize(Platform::Window* window);
 
 		// Submit, BeginScene, EndScene
+		static void BeginFrame();
+		static void EndFrame();
 
 		// TODO: temporary
 		static void DrawTest();
@@ -31,5 +34,6 @@ namespace Citrom
 		// RenderMesh
 	private:
 		static RenderAPI::Device* m_Device;
+		static EventListener<WindowEvents> s_WindowEventListener;
 	};
 }

@@ -70,6 +70,7 @@ project "CitromTech"   -- Engine Library
         links
         {
             "d3d11.lib",
+            "dxgi.lib",
             "D3DCompiler.lib"
         }
 
