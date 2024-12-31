@@ -43,4 +43,8 @@ namespace CTL::CString
     {
         return std::strrchr(string, character);
     }
+    int Compare(const char* strA, const char* strB)
+    {
+        return std::strcmp(strA, strB);
+    }
 }
