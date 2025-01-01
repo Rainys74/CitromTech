@@ -2,8 +2,11 @@
 
 #include "Core.h"
 
-class ProfilerWindow
+namespace EditorImGui
 {
-public:
-	static void ImGuiDraw();
-};
+	class ProfilerWindow
+	{
+	public:
+		static void ImGuiDraw();
+	};
+}
