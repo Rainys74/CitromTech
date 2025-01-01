@@ -1,16 +1,9 @@
 #include "Platform/PlatformImGui.h"
 
-#ifdef CT_PLATFORM_WINDOWS
-
 #include "CitromAssert.h"
 #include "Renderer/Renderer.h"
 
 #include "imgui.h"
-
-#include "backends/imgui_impl_win32.h"
-
-#include "backends/imgui_impl_dx11.h"
-#include "backends/imgui_impl_opengl3.h"
 
 namespace Citrom::Platform
 {
@@ -39,4 +32,3 @@ namespace Citrom::Platform
 		m_Window->GetBackend()->ImGuiNewFrame();
 	}
 }
-#endif

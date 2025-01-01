@@ -21,6 +21,9 @@ namespace Citrom::Platform
 
 		//virtual void ChangeTitle(const char* title) = 0;
 
+		virtual int GetWidth() = 0;
+		virtual int GetHeight() = 0;
+
 		virtual void* Win32TryGetHWnd() { return nullptr; }
 		
 		virtual void* GLFWTryGetWnd() { return nullptr; }

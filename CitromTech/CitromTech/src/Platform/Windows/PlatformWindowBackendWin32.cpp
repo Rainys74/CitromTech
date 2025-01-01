@@ -341,14 +341,14 @@ namespace Citrom::Platform
 		wc.lpszMenuName = nullptr;
 		wc.lpszClassName = m_ClassName; //L"title";
 		wc.hIconSm = nullptr;
-		CT_CORE_ASSERT(RegisterClassEx(&wc), "Failed to register window class.");
+		CT_CORE_VERIFY(RegisterClassEx(&wc), "Failed to register window class.");
 
 		// TODO: Get Wide String but instead implement a function to convert the string to UTF-16 in the string class!
 		int bufferSize = MultiByteToWideChar(CP_UTF8, 0, title.CStr(), -1, NULL, 0);
 		CT_CORE_ASSERT(bufferSize != 0, "Failed to calculate buffer size!");
 
 		wchar_t* wideString = new wchar_t[bufferSize];
-		CT_CORE_ASSERT(MultiByteToWideChar(CP_UTF8, 0, title.CStr(), -1, wideString, bufferSize), "Failed to convert string!");
+		CT_CORE_VERIFY(MultiByteToWideChar(CP_UTF8, 0, title.CStr(), -1, wideString, bufferSize), "Failed to convert string!");
 		// ------------------------------------------------------------------------------------------------------------
 
 		// create window instance
@@ -398,6 +398,15 @@ namespace Citrom::Platform
 			}
 		}
     }
+	int WindowBackendWin32::GetWidth()
+	{
+		return m_Width;
+	}
+	int WindowBackendWin32::GetHeight()
+	{
+		return m_Height;
+	}
+
 	void* WindowBackendWin32::Win32TryGetHWnd()
 	{
 		return static_cast<void*>(m_HWnd);

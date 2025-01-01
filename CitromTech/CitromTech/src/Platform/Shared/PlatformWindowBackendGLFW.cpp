@@ -46,7 +46,7 @@ namespace Citrom::Platform
 
 			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowCloseEvent);
 
-            // Should close the window
+            glfwSetWindowShouldClose(window, GLFW_TRUE);
         });
         // WM_SIZE
         glfwSetWindowSizeCallback(glfwWindow, [](GLFWwindow* window, int width, int height)
@@ -155,6 +155,18 @@ namespace Citrom::Platform
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwSwapBuffers(m_Window);
     }
+
+    int WindowBackendGLFW::GetWidth()
+    {
+        glfwGetWindowSize(m_Window, &m_Width, &m_Height);
+        return m_Width;
+    }
+    int WindowBackendGLFW::GetHeight()
+    {
+        glfwGetWindowSize(m_Window, &m_Width, &m_Height);
+        return m_Height;
+    }
+
     void* WindowBackendGLFW::GLFWTryGetWnd()
     {
         return static_cast<void*>(m_Window);
