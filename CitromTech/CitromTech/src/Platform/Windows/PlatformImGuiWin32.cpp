@@ -20,42 +20,23 @@ namespace Citrom::Platform
 	{
 		m_Window = window;
 
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
-		{
-			CT_CORE_VERIFY(ImGui_ImplWin32_Init(window->Win32TryGetHWnd()), "Failed to initialize ImGui Win32 implementation.");
-		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
-		{
-			// if win32 & opengl
-			CT_CORE_VERIFY(ImGui_ImplWin32_InitForOpenGL(window->Win32TryGetHWnd()), "Failed to Initialize ImGui Win32 implementation for OpenGL.");
-			//CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
-		}
+		// TODO: figure out whether do i really need to do this, because
+		// ideally it should not need to be called
+		#ifdef CT_EDITOR_ENABLED
+		CT_CORE_FATAL("{}, {}", window->GetBackend()->GetWidth(), window->GetBackend()->GetHeight());
+		::ImGui::GetIO().DisplaySize = ImVec2(window->GetBackend()->GetWidth(), window->GetBackend()->GetHeight());
+		#endif
+
+		m_Window->GetBackend()->ImGuiInitialize();
 	}
 	void ImGui::Terminate()
 	{
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
-		{
-			ImGui_ImplDX11_Shutdown();
-		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
-		{
-			ImGui_ImplOpenGL3_Shutdown();
-		}
-
-		ImGui_ImplWin32_Shutdown();
+		m_Window->GetBackend()->ImGuiTerminate();
 	}
 
 	void ImGui::NewFrame()
 	{
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
-		{
-			ImGui_ImplDX11_NewFrame();
-		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
-		{
-			ImGui_ImplOpenGL3_NewFrame();
-			//ImGui_ImplOpenGL3_RenderDrawData(::ImGui::GetDrawData());
-		}
+		m_Window->GetBackend()->ImGuiNewFrame();
 	}
 }
 #endif

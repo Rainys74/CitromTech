@@ -10,8 +10,13 @@
 #include "Events/WindowEvents.h"
 
 #ifdef CT_EDITOR_ENABLED
+#include "Renderer/Renderer.h"
+
 #include "imgui.h"
 #include "backends/imgui_impl_win32.h"
+
+#include "backends/imgui_impl_dx11.h"
+#include "backends/imgui_impl_opengl3.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 #endif
@@ -397,5 +402,51 @@ namespace Citrom::Platform
 	{
 		return static_cast<void*>(m_HWnd);
 	}
+
+	// ImGui
+#ifdef CT_EDITOR_ENABLED
+	void WindowBackendWin32::ImGuiInitialize()
+	{
+		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		{
+			CT_CORE_VERIFY(ImGui_ImplWin32_Init(this->Win32TryGetHWnd()), "Failed to initialize ImGui Win32 implementation.");
+		}
+		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		{
+			// if win32 & opengl
+			CT_CORE_VERIFY(ImGui_ImplWin32_InitForOpenGL(this->Win32TryGetHWnd()), "Failed to Initialize ImGui Win32 implementation for OpenGL.");
+			//CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 460"), "Failed to Initialize ImGui OpenGL 4.6 implementation.");
+		}
+	}
+	void WindowBackendWin32::ImGuiTerminate()
+	{
+		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		{
+			ImGui_ImplDX11_Shutdown();
+		}
+		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		{
+			ImGui_ImplOpenGL3_Shutdown();
+		}
+
+		ImGui_ImplWin32_Shutdown();
+	}
+	void WindowBackendWin32::ImGuiNewFrame()
+	{
+		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		{
+			ImGui_ImplDX11_NewFrame();
+		}
+		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		{
+			ImGui_ImplOpenGL3_NewFrame();
+			//ImGui_ImplOpenGL3_RenderDrawData(::ImGui::GetDrawData());
+		}
+	}
+#else
+	void WindowBackendWin32::ImGuiInitialize() {}
+	void WindowBackendWin32::ImGuiTerminate() {}
+	void WindowBackendWin32::ImGuiNewFrame() {}
+#endif
 }
 #endif

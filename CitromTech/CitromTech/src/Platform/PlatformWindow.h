@@ -24,6 +24,12 @@ namespace Citrom::Platform
 		virtual void* Win32TryGetHWnd() { return nullptr; }
 		
 		virtual void* GLFWTryGetWnd() { return nullptr; }
+
+		// ImGui
+		virtual void ImGuiInitialize() = 0;
+		virtual void ImGuiTerminate() = 0;
+
+		virtual void ImGuiNewFrame() = 0;
     private:
 		bool m_WindowShouldClose;
 		int m_Width, m_Height;
@@ -42,6 +48,8 @@ namespace Citrom::Platform
 		void* Win32TryGetHWnd();
 
 		void* GLFWTryGetWnd();
+
+		WindowBackend* GetBackend() { return m_Backend; }
     private:
         WindowBackend* m_Backend;
 	};

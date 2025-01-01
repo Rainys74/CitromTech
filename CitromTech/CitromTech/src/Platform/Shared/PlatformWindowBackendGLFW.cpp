@@ -13,6 +13,25 @@
 #include <GLFW/glfw3native.h>
 #endif
 
+// ImGui
+#ifdef CT_EDITOR_ENABLED
+#include "CitromAssert.h"
+#include "Renderer/Renderer.h"
+
+#include "imgui.h"
+
+#include "backends/imgui_impl_glfw.h"
+
+#include "backends/imgui_impl_opengl3.h"
+
+#ifdef CT_PLATFORM_WINDOWS
+#include "backends/imgui_impl_dx11.h"
+#elif defined(CT_PLATFORM_MACOS)
+//#include "backends/imgui_impl_metal.h"
+#endif
+
+#endif
+
 namespace Citrom::Platform
 {
     static void WindowCallbackProcedure(GLFWwindow* glfwWindow)
@@ -37,6 +56,12 @@ namespace Citrom::Platform
             windowResizeEvent.height = height;
 
             EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
+
+            // TODO: figure out whether do i really need to do this, because
+            // ideally it should not need to be called
+            #ifdef CT_EDITOR_ENABLED
+            ImGui::GetIO().DisplaySize = ImVec2(width, height);
+            #endif
         });
         // WM_MOVE
         glfwSetWindowPosCallback(glfwWindow, [](GLFWwindow* window, int xPos, int yPos) 
@@ -139,5 +164,55 @@ namespace Citrom::Platform
     {
         return static_cast<void*>(glfwGetWin32Window(m_Window));
     }
+    #endif
+
+    // ImGui
+    #ifdef CT_EDITOR_ENABLED
+    void WindowBackendGLFW::ImGuiInitialize()
+    {
+        if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+        {
+            CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)this->GLFWTryGetWnd(), false), "Failed to Initialize ImGui GLFW implementation for OpenGL.");
+            CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 410"), "Failed to Initialize ImGui OpenGL 4.1 implementation.");
+        }
+#ifdef CT_PLATFORM_WINDOWS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+        {
+            CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOther((GLFWwindow*)this->GLFWTryGetWnd(), false), "Failed to initialize ImGui GLFW implementation.");
+        }
+#endif
+    }
+    void WindowBackendGLFW::ImGuiTerminate()
+    {
+        if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+        {
+            ImGui_ImplOpenGL3_Shutdown();
+        }
+#ifdef CT_PLATFORM_WINDOWS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+        {
+            ImGui_ImplDX11_Shutdown();
+        }
+#endif
+
+        ImGui_ImplGlfw_Shutdown();
+    }
+    void WindowBackendGLFW::ImGuiNewFrame()
+    {
+        if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+        {
+            ImGui_ImplOpenGL3_NewFrame();
+        }
+#ifdef CT_PLATFORM_WINDOWS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+        {
+            ImGui_ImplDX11_NewFrame();
+        }
+#endif
+    }
+    #else
+    void WindowBackendGLFW::ImGuiInitialize() {}
+    void WindowBackendGLFW::ImGuiTerminate() {}
+    void WindowBackendGLFW::ImGuiNewFrame() {}
     #endif
 }

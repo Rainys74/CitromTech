@@ -19,6 +19,12 @@ namespace Citrom::Platform
         virtual void* GLFWTryGetWnd() override;
         
         IF_WINDOWS(virtual void* Win32TryGetHWnd() override);
+
+        // ImGui
+        virtual void ImGuiInitialize() override;
+        virtual void ImGuiTerminate() override;
+
+        virtual void ImGuiNewFrame() override;
     private:
         bool m_WindowShouldClose;
         int m_Width, m_Height;
