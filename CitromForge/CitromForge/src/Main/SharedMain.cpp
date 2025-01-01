@@ -192,9 +192,12 @@ int SharedMain(int argc, char* argv[])
 		Renderer::BeginFrame();
 		g_LayerStack.Render();
 
-		g_ImLayer.Begin();
-		g_LayerStack.ImGuiRender();
-		g_ImLayer.End();
+		{
+			CT_PROFILE_SCOPE("ImGui Render");
+			g_ImLayer.Begin();
+			g_LayerStack.ImGuiRender();
+			g_ImLayer.End();
+		}
 
 		Renderer::EndFrame();
 

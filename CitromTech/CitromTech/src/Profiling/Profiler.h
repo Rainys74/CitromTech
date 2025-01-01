@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include <string>
+
 /*namespace CTL
 {
 	// Forward Declarations for CTL
