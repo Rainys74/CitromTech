@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Core.h"
-#include "Logger/Logger.h"
-#include "CitromAssert.h"
 
 #include "Platform/Platform.h"
 
@@ -40,30 +38,8 @@ namespace Citrom::Profiler
 	public:
 		using CallbackFN = void (*)(const char* name, const float64 time);
 
-		ScopedTimer(const char* name, CallbackFN callback)
-			: m_Name(name), m_Callback(callback)
-		{
-			auto nameSize = CTL::CString::GetLength(name) + 1;
-			m_Name = new char[nameSize];
-			Memory::Copy((void*)m_Name, name, nameSize);
-
-			start = Platform::Utils::GetTime();
-		}
-		~ScopedTimer()
-		{
-			end = Platform::Utils::GetTime();
-			duration = end - start;
-
-			CT_CORE_ASSERT(m_Callback, "Callback function is null!");
-			m_Callback(m_Name, duration);
-
-			//CT_CORE_TRACE("Timer took {} ms", duration * 1000);
-			//CT_CORE_TRACE("Timer Start {} s", start);
-			//CT_CORE_TRACE("Timer End {} s", end);
-
-			// TODO: this leads to a memory leak, but otherwise a reference system would be better
-			//delete m_Name;
-		}
+		ScopedTimer(const char* name, CallbackFN callback);
+		~ScopedTimer();
 	public:
 		float64 start = 0, end = 0;
 		float64 duration = 0;

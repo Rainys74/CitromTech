@@ -2,6 +2,8 @@
 
 #include "Core.h"
 #include "Platform/PlatformConsole.h"
+#include "Profiling/Profiler.h"
+
 #include "CTL/DArray.h"
 
 #include <string>
@@ -99,6 +101,8 @@ namespace Citrom
 	template<typename... Args>
 	void Logger::Log(const Logger::LogCategory category, const Logger::LogLevel level, const char* fmt, Args&&... args)
 	{
+		CT_PROFILE_MEMBER_FUNCTION();
+
 		// Format log and arguments
 		std::string_view strV(fmt);
 		//std::string formattedLog = std::vformat(strV, std::make_format_args(std::forward<Args>(args)...)); // works on windows

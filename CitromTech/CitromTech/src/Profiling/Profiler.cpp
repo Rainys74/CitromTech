@@ -1,5 +1,8 @@
 #include "Profiler.h"
 
+#include "Logger/Logger.h"
+#include "CitromAssert.h"
+
 namespace Citrom::Profiler
 {
 	CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual> ProfileResults::m_Results;
@@ -49,5 +52,30 @@ namespace Citrom::Profiler
 		{
 			CT_CORE_TRACE("Profiling {} took {} ms", result.first, result.second * 1000);
 		}
+	}
+
+	ScopedTimer::ScopedTimer(const char* name, CallbackFN callback)
+		: m_Name(name), m_Callback(callback)
+	{
+		auto nameSize = CTL::CString::GetLength(name) + 1;
+		m_Name = new char[nameSize];
+		Memory::Copy((void*)m_Name, name, nameSize);
+
+		start = Platform::Utils::GetTime();
+	}
+	ScopedTimer::~ScopedTimer()
+	{
+		end = Platform::Utils::GetTime();
+		duration = end - start;
+
+		CT_CORE_ASSERT(m_Callback, "Callback function is null!");
+		m_Callback(m_Name, duration);
+
+		//CT_CORE_TRACE("Timer took {} ms", duration * 1000);
+		//CT_CORE_TRACE("Timer Start {} s", start);
+		//CT_CORE_TRACE("Timer End {} s", end);
+
+		// TODO: this leads to a memory leak, but otherwise a reference system would be better
+		//delete m_Name;
 	}
 }
