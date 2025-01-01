@@ -43,6 +43,8 @@ void EditorLayer::OnImGuiRender()
 	//static bool show = true;
 	//ImGui::ShowDemoWindow(&show);
 
+    ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
