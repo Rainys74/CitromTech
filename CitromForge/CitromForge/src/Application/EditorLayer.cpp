@@ -2,6 +2,7 @@
 #include "Main/SharedMain.h"
 
 #include "Profiling/Profiler.h"
+#include "Profiling/ProfileResults.h"
 #include "Logger/Logger.h"
 
 #include "imgui.h"

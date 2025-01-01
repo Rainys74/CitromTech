@@ -1,4 +1,7 @@
 #include "Profiler.h"
+#include "ProfileResults.h"
+
+#include "Platform/Platform.h"
 
 #include "Logger/Logger.h"
 #include "CitromAssert.h"

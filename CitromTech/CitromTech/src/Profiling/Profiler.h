@@ -2,36 +2,22 @@
 
 #include "Core.h"
 
-#include "Platform/Platform.h"
+/*namespace CTL
+{
+	// Forward Declarations for CTL
+	template<typename K, typename T, typename H, typename C>
+	class HashMap;
 
-#include "CTL/HashMap.h"
-#include "CTL/DArray.h"
-#include "CTL/CStringHandling.h"
+	template<typename T>
+	class DArray;
+
+	class CStringHash;
+	class CStringHashEqual;
+}*/
 
 namespace Citrom::Profiler
 {
 	void ProfileDefaultCallback(const char* name, const float64 time);
-
-	class ProfileResults
-	{
-	public:
-		using CallbackFN = void (*)(const char* name, const float64 time);
-
-		static void Submit(const char* key, const float64 time);
-
-		static float64 RetrieveTime(const char* key);
-		
-		// Triggers a callback on every item
-		static void IterateResultsCallback(CallbackFN callback);
-
-		static CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual>& GetResults();
-		static CTL::DArray<const char*>& GetResultOrder();
-
-		[[deprecated("Manually retrieve the time instead.")]] static void PrintResults();
-	private:
-		static CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual> m_Results;
-		static CTL::DArray<const char*> m_Order;
-	};
 
 	class ScopedTimer
 	{

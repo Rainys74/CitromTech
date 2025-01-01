@@ -4,6 +4,7 @@
 #include "CTL/String.h"
 #include "CTL/StaticArray.h"
 #include "CTL/DArray.h"
+#include "CTL/HashMap.h"
 #include <string>
 #include "Logger/Logger.h"
 #include "Platform/PlatformConsole.h"
