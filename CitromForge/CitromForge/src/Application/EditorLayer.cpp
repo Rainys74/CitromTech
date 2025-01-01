@@ -93,6 +93,25 @@ void EditorLayer::OnImGuiRender()
         ImGui::End();
     }
 
+    ImGui::Begin("Lighting"); ImGui::End();
+
+    ImGui::Begin("Project Settings"); 
+    if (ImGui::BeginTabBar("ProjectSettingTabs"))
+    {
+        if (ImGui::BeginTabItem("Graphics"))
+        {
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Input System"))
+        {
+            ImGui::EndTabItem();
+        } 
+        if (ImGui::BeginTabItem("Input System2")) ImGui::EndTabItem();
+
+        ImGui::EndTabBar();
+    }
+    ImGui::End();
+
     EditorConsole::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();
 }
