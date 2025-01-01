@@ -29,13 +29,21 @@ namespace Citrom
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
 
-		//io.DisplaySize = ImVec2(1280, 720); // Fixes errors, but ideally should not need to be called
+		constexpr float fontSize = 17.0f; //13.0f;
+
+		// Roboto
+		io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Bold.ttf", fontSize); // Black
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Regular.ttf", fontSize);
+		// Inter
+		//io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Inter/Inter_24pt-Bold.ttf", fontSize); // Black
+		//io.FontDefault = io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Inter/Inter_24pt-Regular.ttf", fontSize);
+		// Noto Sans CJK SC
+		//io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Inter/Inter_24pt-Bold.ttf", fontSize); // Black
+		//io.FontDefault = io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/NotoSansCJKSC/NotoSansCJKsc-Regular.ttf", fontSize * 1.3f);
 
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsClassic();
 		//ImGui::StyleColorsLight();
-
-		//ImGuiLayer::Initialize();
 	}
 	void ImGuiLayer::OnDetach()
 	{
