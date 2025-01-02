@@ -153,10 +153,24 @@ int SharedMain(int argc, char* argv[])
 
 	g_LayerStack.Push(&editorLayer);
 
+	::ForgeLoop();
+
+	g_ImLayer.OnDetach();
+
+	//g_Window.~Window(); // Somehow throws an assertion during "delete m_Backend;"
+
+#ifdef CT_PLATFORM_WINDOWS
+	std::cin.get();
+#endif
+
+	return 0;
+}
+
+void ForgeLoop()
+{
 	float64 currentTime; // New Time
 	float64 previousTime = Platform::Utils::GetTime(); // Old Time
 
-	// TODO: Layer System
 	while (!g_Window.WindowShouldClose())
 	{
 		// TODO: Timing. Choose one. (Though constructing multiple doubles every frame might be idiotic)
@@ -209,12 +223,4 @@ int SharedMain(int argc, char* argv[])
 		//Profiler::ProfileResults::PrintResults();
 		//CT_WARN("{}", Profiler::ProfileResults::RetrieveTime("class Citrom::Platform::Window::PollEvents()") * 1000);
 	}
-
-	g_ImLayer.OnDetach();
-
-#ifdef CT_PLATFORM_WINDOWS
-	std::cin.get();
-#endif
-
-	return 0;
 }
