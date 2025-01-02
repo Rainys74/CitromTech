@@ -2,13 +2,20 @@
 
 #include "CTL.h"
 
+// Prefer to use std::string instead of CTL::String. Reasons:
+// My string lacks a lot of functionality and the functionality it does have,
+// is underwhelming to say the least, instead of extending my string right now mid engine production
+// i'd rather switch to a string that has been worked on by better brains than me,
+// and which has better support, has been tested more thoroughly and has far better functionality
+#include <string>
+
 // CTL - (C)itrom Tech Standard (T)emplate (L)ibrary
 namespace CTL
 {
 	// TODO: Perhaps implement a template system that allows to implement
 	// different types of encoding for strings easily, without duplicating code: 
 	// ANSI, UTF-8, UTF-16, UTF-32, Wide etc.
-	class String
+	class /*[[deprecated("Use std::string instead.")]]*/ String
 	{
 	public:
 		String();
