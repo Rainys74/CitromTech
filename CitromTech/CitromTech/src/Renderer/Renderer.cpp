@@ -56,8 +56,8 @@ namespace Citrom
 	{
 		m_Device->ImGuiInitGraphicsAPI();
 	}
-	void Renderer::ImGuiRenderDrawData()
+	void Renderer::ImGuiRenderDrawData(void* imDrawData)
 	{
-		m_Device->ImGuiRenderDrawData();
+		m_Device->ImGuiRenderDrawData(imDrawData);
 	}
 }

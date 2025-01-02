@@ -29,7 +29,7 @@ namespace Citrom
 
 		// ImGui
 		static void ImGuiInit();
-		static void ImGuiRenderDrawData();
+		static void ImGuiRenderDrawData(void* imDrawData);
 	private:
 		// RenderMesh
 	private:

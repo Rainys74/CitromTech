@@ -69,6 +69,6 @@ namespace Citrom
 		CT_PROFILE_MEMBER_FUNCTION();
 
 		ImGui::Render();
-		Renderer::ImGuiRenderDrawData(); // TODO: maybe make it so you need to pass in ImGui draw data?
+		Renderer::ImGuiRenderDrawData(ImGui::GetDrawData());
 	}
 }
