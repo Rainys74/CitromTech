@@ -96,6 +96,8 @@ namespace CTL
         FORCE_INLINE uint32 Count() { return m_Count; }
         FORCE_INLINE uint32 Capacity() { return m_Capacity; }
 
+        inline size_t Size() const { return m_Count * sizeof(T); }
+
         // Operator Overloading
         FORCE_INLINE const T& operator[](size_t index) const {return m_Data[index];}
         FORCE_INLINE T& operator[](size_t index) {return m_Data[index];}

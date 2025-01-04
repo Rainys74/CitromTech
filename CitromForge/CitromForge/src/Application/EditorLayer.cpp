@@ -6,6 +6,8 @@
 #include "Editor/EditorConsole.h"
 #include "Editor/ProfilerWindow.h"
 
+#include "ImGui/ImGuiStyles.h"
+
 #include "CTL/CStringHandling.h"
 
 #include "imgui.h"
@@ -112,6 +114,20 @@ void EditorLayer::OnImGuiRender()
 
         ImGui::EndTabBar();
     }
+    ImGui::End();
+
+    ImGui::Begin("Preferences");
+    /*if (ImGui::BeginTabBar("PreferenceTabs"))
+    {
+        if (ImGui::BeginTabItem("Editor"))
+        {
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }*/
+
+    int currentEditorStyle = 0;
+    ImGui::Combo("Editor Style", &currentEditorStyle, , ImGuiStyles::GetStyles().Size());
     ImGui::End();
 
     EditorConsole::ImGuiDraw();
