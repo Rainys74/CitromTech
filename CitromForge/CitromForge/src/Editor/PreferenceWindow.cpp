@@ -6,21 +6,8 @@
 
 using namespace Citrom;
 
-void PreferenceWindow::ImGuiDraw(bool* showWindow)
+static void DrawEditorStyle()
 {
-    if (!showWindow || !(*showWindow))
-        return;
-
-    ImGui::Begin("Preferences", showWindow);
-    /*if (ImGui::BeginTabBar("PreferenceTabs"))
-    {
-        if (ImGui::BeginTabItem("Editor"))
-        {
-            ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }*/
-
     static int currentEditorStyle = 0;
 
     // Simple:
@@ -46,6 +33,48 @@ void PreferenceWindow::ImGuiDraw(bool* showWindow)
         }
         ImGui::EndCombo();
     }
+}
+
+static void DrawUIScaling()
+{
+    static float uiScale = 1.0f;
+
+    //ImGuiStyle& style = ImGui::GetStyle();
+    //style.ScaleAllSizes(uiScale); // continuously increases the size. leads to a memory leak.
+
+    //ImGui::GetIO().FontGlobalScale = uiScale; // too blurry
+    //ImGui::GetIO().DisplayFramebufferScale = ImVec2(uiScale, uiScale); // does seemingly nothing?
+
+    if (ImGui::InputFloat("UI Scaling", &uiScale))
+    {
+        if (uiScale > 3.0f)
+            uiScale = 3.0f;
+        if (uiScale < 0.5f)
+            uiScale = 0.5f;
+
+        // TODO: Best chance: when loading the font, change the font size: that scales the entire application perfectly.
+        // But for now: cope
+        ImGui::GetIO().FontGlobalScale = uiScale;
+    }
+}
+
+void PreferenceWindow::ImGuiDraw(bool* showWindow)
+{
+    if (!showWindow || !(*showWindow))
+        return;
+
+    ImGui::Begin("Preferences", showWindow);
+    /*if (ImGui::BeginTabBar("PreferenceTabs"))
+    {
+        if (ImGui::BeginTabItem("Editor"))
+        {
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
+    }*/
+
+    DrawEditorStyle();
+    DrawUIScaling();
 
     ImGui::End();
 }
