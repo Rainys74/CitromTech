@@ -15,7 +15,7 @@ namespace Citrom::RenderAPI
 
 		// Gain access to texture subresource in swap chain (back buffer)
 		WRL::ComPtr<ID3D11Resource> backBuffer;
-		m_SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer); // or IID_PPV_ARGS(&backBuffer)
+		DXCallHR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer)); // or IID_PPV_ARGS(&backBuffer)
 
 		DXCallHR(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTarget));
 
@@ -89,7 +89,8 @@ namespace Citrom::RenderAPI
 	{
 		DestroyRenderTarget();
 
-		m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+		HRESULT hr;
+		DXCallHR(m_SwapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0));
 
 		CreateRenderTarget();
 
