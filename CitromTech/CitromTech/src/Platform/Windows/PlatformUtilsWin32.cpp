@@ -63,7 +63,7 @@ namespace Citrom::Platform
 			CT_CORE_ASSERT(buffer, "Couldn't Allocate Buffer!");
 
 			// Retrieve the actual information
-			CT_CORE_ASSERT(GetLogicalProcessorInformation(buffer, &returnLength), "Couldn't Get Logical Processor Information!");
+			CT_CORE_VERIFY(GetLogicalProcessorInformation(buffer, &returnLength), "Couldn't Get Logical Processor Information!");
 
 			DWORD byteOffset = 0;
 			while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnLength)

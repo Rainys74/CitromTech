@@ -138,6 +138,10 @@ int SharedMain(int argc, char* argv[])
 	CT_WARN("Platform: {}", Platform::Info::GetPlatformName());
 	CT_WARN("OS Info: {}", Platform::Info::GetOSInfo());
 
+	CT_WARN("Build Type: [{}]", GetBuildType());
+
+	//CT_CORE_ASSERT(false, "Test assert!");
+
 	using namespace Platform;
 
 	g_Window.Create(1280, 720, CTL::String("test"));

@@ -38,7 +38,7 @@
 #define INTERNAL__VA_OPT__(x) __VA_OPT__(x)
 #endif*/
 
-// typeid(*this).name()
+// TODO: decide whether or not emit logging from Optimization builds (maybe emit from non-editor Optimization builds?)
 #define CT_CORE_TRACE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Trace, "{}(): " x, __func__, ## __VA_ARGS__)
 #define CT_CORE_VERBOSE(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Debug, x, ## __VA_ARGS__)
 #define CT_CORE_INFO(x, ...)		Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::Core, Citrom::Logger::LogLevel::Info, x, ## __VA_ARGS__)

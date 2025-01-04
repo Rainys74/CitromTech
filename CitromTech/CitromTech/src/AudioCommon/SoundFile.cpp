@@ -48,7 +48,7 @@ namespace Citrom
     file->internal = new dr ## LIBTYPE;                                                     \
     dr ## LIBTYPE* LIBTYPE = (dr ## LIBTYPE*)file->internal;                                        \
                                                                                                     \
-    CT_CORE_ASSERT(dr ## LIBTYPE ## _init_file(LIBTYPE, path, NULL), "drwav_init_file() failed!");   \
+    CT_CORE_VERIFY(dr ## LIBTYPE ## _init_file(LIBTYPE, path, NULL), "drwav_init_file() failed!");   \
     CT_CORE_ASSERT(LIBTYPE, "Could not open " #LIBTYPE " file: " "!");                  \
                                                                                                     \
     info->channels = LIBTYPE->channels;                                                             \
@@ -70,7 +70,7 @@ namespace Citrom
             m_Internal = new drwav;
             drwav* wav = (drwav*)m_Internal;
 
-            CT_CORE_ASSERT(drwav_init_file(wav, path.path, NULL), "drwav_init_file() failed!");
+            CT_CORE_VERIFY(drwav_init_file(wav, path.path, NULL), "drwav_init_file() failed!");
             CT_CORE_ASSERT(wav, "Could not open wav file!");
 
             outInfo.channels = wav->channels;

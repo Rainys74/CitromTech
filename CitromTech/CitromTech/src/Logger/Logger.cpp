@@ -14,6 +14,8 @@ namespace Citrom
 
     Logger::Logger()
     {
+        // Console logging should only happen on Debug builds.
+        #ifdef CT_DEBUG
         Platform::Console::CreateConsole();
         m_Callbacks.PushBack([](const char* log, LogColor logColor, LogLevel level)
         {
@@ -21,5 +23,6 @@ namespace Citrom
             Platform::Console::PrintText(log, (level >= LogLevel::Error) ? Platform::Console::Stream::Error : Platform::Console::Stream::In);
             Platform::Console::SetTextColor(Platform::Console::TextColor::Reset);
         });
+        #endif
     }
 }
