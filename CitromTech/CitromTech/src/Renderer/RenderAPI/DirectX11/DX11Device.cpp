@@ -82,6 +82,8 @@ namespace Citrom::RenderAPI
 	}
 	DX11Device::~DX11Device()
 	{
+		m_Device->Release();
+		m_DeviceContext->Release();
 	}
 
 	GPUInfo DX11Device::GetCurrentGPUInfo()

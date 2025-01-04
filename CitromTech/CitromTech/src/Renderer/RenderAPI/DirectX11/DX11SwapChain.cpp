@@ -53,7 +53,7 @@ namespace Citrom::RenderAPI
 
 		DXCallHR(CreateDXGIFactory(IID_PPV_ARGS(&m_DXGIFactory)));
 
-		DXCallHR(m_DXGIFactory->CreateSwapChain(m_Device.Get(), &scd, &m_SwapChain));
+		DXCallHR(m_DXGIFactory->CreateSwapChain(m_Device, &scd, &m_SwapChain));
 
 		CreateRenderTarget();
 	}

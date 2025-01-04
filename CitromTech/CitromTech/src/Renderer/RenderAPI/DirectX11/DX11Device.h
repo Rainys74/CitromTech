@@ -41,16 +41,15 @@ namespace Citrom::RenderAPI
 		void ImGuiRenderDrawData(void* imDrawData) override;
 	public:
 		// DirectX11 Special
-		ID3D11Device* DX11GetDevice() { return m_Device.Get(); }
-		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext.Get(); }
+		ID3D11Device* DX11GetDevice() { return m_Device; }
+		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
 	private:
 		// Helper Functions
 		void CreateRenderTarget();
 		void DestroyRenderTarget();
 	private:
-		// TODO: maybe get rid of the ComPtr Refs for these 2
-		WRL::ComPtr<ID3D11Device> m_Device;
-		WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+		ID3D11Device* m_Device;
+		ID3D11DeviceContext* m_DeviceContext;
 		D3D_FEATURE_LEVEL m_D3DFeatureLevel;
 
 		WRL::ComPtr<IDXGIFactory> m_DXGIFactory;
