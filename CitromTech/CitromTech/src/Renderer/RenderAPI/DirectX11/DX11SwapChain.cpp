@@ -71,6 +71,7 @@ namespace Citrom::RenderAPI
 				hr = hr;
 			}
 		}
+		DXCallHR(hr);
 	}
 	void DX11Device::SetVSync(VSyncMode vSync)
 	{
