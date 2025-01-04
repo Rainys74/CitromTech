@@ -5,8 +5,7 @@
 
 #include "Editor/EditorConsole.h"
 #include "Editor/ProfilerWindow.h"
-
-#include "ImGui/ImGuiStyles.h"
+#include "Editor/PreferenceWindow.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -116,19 +115,8 @@ void EditorLayer::OnImGuiRender()
     }
     ImGui::End();
 
-    ImGui::Begin("Preferences");
-    /*if (ImGui::BeginTabBar("PreferenceTabs"))
-    {
-        if (ImGui::BeginTabItem("Editor"))
-        {
-            ImGui::EndTabItem();
-        }
-        ImGui::EndTabBar();
-    }*/
-
-    int currentEditorStyle = 0;
-    ImGui::Combo("Editor Style", &currentEditorStyle, , ImGuiStyles::GetStyles().Size());
-    ImGui::End();
+    static bool preferenceWindowOpen = true; // preferenceWindowOn, Open, Show, Enabled, Status
+    PreferenceWindow::ImGuiDraw(&preferenceWindowOpen);
 
     EditorConsole::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();

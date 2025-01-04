@@ -1,4 +1,5 @@
 #include "ImGuiLayer.h"
+#include "ImGui/ImGuiStyles.h"
 
 #include "Platform/PlatformImGui.h"
 #include "Renderer/Renderer.h"
@@ -44,6 +45,10 @@ namespace Citrom
 		ImGui::StyleColorsDark();
 		//ImGui::StyleColorsClassic();
 		//ImGui::StyleColorsLight();
+
+		ImGuiStyles::Push(ImGuiStyleObj{"ImGui Dark",		[]() {ImGui::StyleColorsDark();}	});
+		ImGuiStyles::Push(ImGuiStyleObj{"ImGui Classic",	[]() {ImGui::StyleColorsClassic();} });
+		ImGuiStyles::Push(ImGuiStyleObj{"ImGui Light",		[]() {ImGui::StyleColorsLight();}	});
 	}
 	void ImGuiLayer::OnDetach()
 	{

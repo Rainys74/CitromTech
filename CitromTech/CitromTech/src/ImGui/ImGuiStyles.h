@@ -7,17 +7,17 @@
 
 namespace Citrom
 {
+	using ImGuiStyleCallbackFN = void(*)(void);
+
 	struct ImGuiStyleObj
 	{
 		std::string name;
-		ImGuiStyles::CallbackFN callback;
+		ImGuiStyleCallbackFN callback;
 	};
 
 	class ImGuiStyles
 	{
 	public:
-		using CallbackFN = void(*)(void);
-
 		static void Push(const ImGuiStyleObj& style);
 
 		static CTL::DArray<ImGuiStyleObj>& GetStyles();
