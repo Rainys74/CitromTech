@@ -44,6 +44,8 @@ void EditorLayer::OnImGuiRender()
 	//static bool show = true;
 	//ImGui::ShowDemoWindow(&show);
 
+    static bool preferenceWindowOpen = false; // preferenceWindowOn, Open, Show, Enabled, Status
+
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
     if (ImGui::BeginMainMenuBar())
@@ -53,6 +55,16 @@ void EditorLayer::OnImGuiRender()
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Options"))
+        {
+            if (ImGui::MenuItem("Test...")) {}
+            ImGui::Separator();
+            if (ImGui::MenuItem("Editor Preferences..."))
+            {
+                preferenceWindowOpen = true;
+            }
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Window"))
         {
             ImGui::EndMenu();
         }
@@ -115,7 +127,6 @@ void EditorLayer::OnImGuiRender()
     }
     ImGui::End();
 
-    static bool preferenceWindowOpen = true; // preferenceWindowOn, Open, Show, Enabled, Status
     PreferenceWindow::ImGuiDraw(&preferenceWindowOpen);
 
     EditorConsole::ImGuiDraw();
