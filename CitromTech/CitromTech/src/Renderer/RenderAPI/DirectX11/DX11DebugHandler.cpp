@@ -4,6 +4,9 @@
 #include <sstream>
 #include <bitset>
 
+#include "CTL/ScopedPointer.h"
+#include "CitromAssert.h"
+
 /*const char* HResultToCString(HRESULT hr)
 {
 	if (HRESULT_FACILITY(hr) == FACILITY_WIN32)
@@ -88,19 +91,68 @@ void DXMessageBoxError(const std::string& errorMsg, const HRESULT hr, const char
 	ss << "[Error Message]:\n";
 	ss << errorMsg.c_str();
 	ss << '\n';
+
+	ss << "[DXGI Debug Info]:\n";
+	for (auto& infoMessage : DXGIInfoManager::Get().GetMessages())
+	{
+		ss << infoMessage << '\n';
+	}
+	ss << '\n';
+
 	ss << "[In]:\n";
 	ss << file << "(" << line << "): " << function << "();";
 
 	MessageBoxA(nullptr, ss.str().c_str(), "DXCallHR Failed", MB_ICONERROR);
 }
-#endif
+
+#pragma comment(lib, "dxguid.lib")
+
+DXGIInfoManager::DXGIInfoManager()
+{
+	// define function signature of DXGIGetDebugInterface
+	typedef HRESULT(WINAPI* DXGIGetDebugInterface)(REFIID, void**);
+
+	// load the dll that contains the function DXGIGetDebugInterface
+	const auto hModDxgiDebug = LoadLibraryExA("dxgidebug.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	CT_CORE_ASSERT(hModDxgiDebug != nullptr, "Failed to load DXGIDebug.dll!");
+
+	// get address of DXGIGetDebugInterface in dll
+	const auto DxgiGetDebugInterface = reinterpret_cast<DXGIGetDebugInterface>(
+		reinterpret_cast<void*>(GetProcAddress(hModDxgiDebug, "DXGIGetDebugInterface"))
+		);
+	CT_CORE_ASSERT(DxgiGetDebugInterface != nullptr, "Failed to load function DxgiGetDebugInterface!");
+
+	HRESULT hr;
+	DXCallHRNoInfo(DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &m_DXGIInfoQueue));
+
+	//FreeLibrary(hModDxgiDebug);
+}
 
 void DXGIInfoManager::ClearErrors()
 {
-
+	m_Start = m_DXGIInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 }
 
-bool DXGIInfoManager::CheckError()
+CTL::DArray<std::string> DXGIInfoManager::GetMessages()
 {
-	return false;
+	CTL::DArray<std::string> messages;
+	const auto end = m_DXGIInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
+	for (auto i = m_Start; i < end; i++)
+	{
+		HRESULT hr;
+		SIZE_T messageLength;
+
+		// get the size of message i in bytes
+		DXCallHR(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength));
+
+		// allocate memory for message
+		auto bytes = std::make_unique<byte[]>(messageLength);
+		auto pMessage = reinterpret_cast<DXGI_INFO_QUEUE_MESSAGE*>(bytes.get());
+
+		// get the message and push its description into the vector
+		DXCallHR(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength));
+		messages.PushBack(pMessage->pDescription);
+	}
+	return messages;
 }
+#endif
