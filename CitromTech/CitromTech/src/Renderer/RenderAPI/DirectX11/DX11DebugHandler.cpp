@@ -143,14 +143,14 @@ CTL::DArray<std::string> DXGIInfoManager::GetMessages()
 		SIZE_T messageLength;
 
 		// get the size of message i in bytes
-		DXCallHR(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength));
+		DXCallHRNoInfo(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, nullptr, &messageLength));
 
 		// allocate memory for message
 		auto bytes = std::make_unique<byte[]>(messageLength);
 		auto pMessage = reinterpret_cast<DXGI_INFO_QUEUE_MESSAGE*>(bytes.get());
 
 		// get the message and push its description into the vector
-		DXCallHR(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength));
+		DXCallHRNoInfo(m_DXGIInfoQueue->GetMessage(DXGI_DEBUG_ALL, i, pMessage, &messageLength));
 		messages.PushBack(pMessage->pDescription);
 	}
 	return messages;

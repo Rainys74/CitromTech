@@ -20,6 +20,8 @@ void DXMessageBoxError(const std::string& errorMsg, const HRESULT hr, const char
 #define DXCallHRNoInfo(x) hr = (x); if (FAILED(hr)) {std::string errorMsg = HResultToString(hr); DXMessageBoxError(errorMsg, hr, __FILE__, __LINE__, __func__);}
 #define DXCallHR(x) DXGIInfoManager::Get().ClearErrors(); DXCallHRNoInfo(x)
 
+#define DXCall(x) DXGIInfoManager::Get().ClearErrors(); (x); if (DXGIInfoManager::Get().GetMessages().Count() > 0) {DXMessageBoxError("", 0, __FILE__, __LINE__, __func__);}
+
 // Most of the credits for this class go to ChiliTomatoNoodle
 class DXGIInfoManager
 {

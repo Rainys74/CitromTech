@@ -44,7 +44,7 @@ namespace Citrom::RenderAPI
 		scd.SampleDesc.Quality = 0;
 		scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		scd.BufferCount = 1;
-		scd.OutputWindow = (HWND)69420; //(HWND)descriptor->windowPtr->Win32TryGetHWnd();
+		scd.OutputWindow = (HWND)descriptor->windowPtr->Win32TryGetHWnd();
 		scd.Windowed = TRUE;
 		scd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 		scd.Flags = 0x00000000;
