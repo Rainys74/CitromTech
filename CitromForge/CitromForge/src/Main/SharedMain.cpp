@@ -140,6 +140,8 @@ int SharedMain(int argc, char* argv[])
 
 	CT_WARN("Build Type: [{}]", GetBuildType());
 
+	CT_WARN("Editor Build: {}", IsEditorBuild());
+
 	//CT_CORE_ASSERT(false, "Test assert!");
 
 	using namespace Platform;

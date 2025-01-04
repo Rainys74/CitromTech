@@ -14,3 +14,12 @@ public:
 	void OnUpdate() override;
 	void OnImGuiRender() override;
 };
+
+constexpr bool IsEditorBuild()
+{
+#ifdef CT_EDITOR_ENABLED
+	return true;
+#else
+	return false;
+#endif
+}
