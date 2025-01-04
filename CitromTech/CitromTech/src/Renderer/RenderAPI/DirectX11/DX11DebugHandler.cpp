@@ -83,7 +83,7 @@ std::string HResultToString(HRESULT hr)
 void DXMessageBoxError(const std::string& errorMsg, const HRESULT hr, const char* file, const unsigned int line, const char* function)
 {
 	std::stringstream ss;
-	ss << "Error Code: 0x" << std::hex << hr << " = " << std::dec << hr << " = 0o" << std::oct << hr << " = 0b" << std::bitset<32>(hr);
+	ss << "Error Code: 0x" << std::hex << hr << " = " << std::dec << (unsigned long)hr << " = 0o" << std::oct << hr << " = 0b" << std::bitset<32>(hr); //<< " = " << DXGetErrorString();
 	ss << '\n' << '\n';
 	ss << "[Error Message]:\n";
 	ss << errorMsg.c_str();
@@ -94,3 +94,13 @@ void DXMessageBoxError(const std::string& errorMsg, const HRESULT hr, const char
 	MessageBoxA(nullptr, ss.str().c_str(), "DXCallHR Failed", MB_ICONERROR);
 }
 #endif
+
+void DXGIInfoManager::ClearErrors()
+{
+
+}
+
+bool DXGIInfoManager::CheckError()
+{
+	return false;
+}
