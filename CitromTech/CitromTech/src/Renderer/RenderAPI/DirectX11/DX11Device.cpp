@@ -4,6 +4,8 @@
 #include "DX11Includes.h"
 #include "DX11DebugHandler.h"
 
+#include <codecvt>
+
 extern "C"
 {
 	__declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -76,10 +78,110 @@ namespace Citrom::RenderAPI
 
 		HRESULT hr;
 
-		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, D3D11_CREATE_DEVICE_DEBUG /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, nullptr, &m_DeviceContext));
+		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, D3D11_CREATE_DEVICE_DEBUG /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, &m_D3DFeatureLevel, &m_DeviceContext));
 	}
 	DX11Device::~DX11Device()
 	{
+	}
+
+	GPUInfo DX11Device::GetCurrentGPUInfo()
+	{
+		HRESULT hr;
+
+		WRL::ComPtr<IDXGIDevice> dxgiDevice;
+		DXCallHR(m_Device->QueryInterface(IID_PPV_ARGS(&dxgiDevice)));
+
+		WRL::ComPtr<IDXGIAdapter> adapter;
+		DXCallHR(dxgiDevice->GetAdapter(&adapter));
+
+		// Retrieve the data from the adapter
+		DXGI_ADAPTER_DESC adapterDesc;
+		DXCallHR(adapter->GetDesc(&adapterDesc));
+
+		// Fill up the struct
+		GPUInfo gpuInfo;
+
+		switch (adapterDesc.VendorId)
+		{
+		case 0x1002: // AMD
+			gpuInfo.vendor = "AMD";
+			break;
+		case 0x10DE: // NVIDIA
+			gpuInfo.vendor = "NVIDIA";
+			break;
+		case 0x8086: // Intel
+			gpuInfo.vendor = "Intel";
+			break;
+		default:
+			gpuInfo.vendor = "Unknown";
+			break;
+		}
+
+		gpuInfo.renderer = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes(adapterDesc.Description);
+
+		switch (m_D3DFeatureLevel)
+		{
+			case D3D_FEATURE_LEVEL_12_2: gpuInfo.version = "Direct3D Feature Level: 12.2"; break;
+			case D3D_FEATURE_LEVEL_12_1: gpuInfo.version = "Direct3D Feature Level: 12.1"; break;
+			case D3D_FEATURE_LEVEL_12_0: gpuInfo.version = "Direct3D Feature Level: 12.0"; break;
+			case D3D_FEATURE_LEVEL_11_1: gpuInfo.version = "Direct3D Feature Level: 11.1"; break;
+			case D3D_FEATURE_LEVEL_11_0: gpuInfo.version = "Direct3D Feature Level: 11.0"; break;
+			case D3D_FEATURE_LEVEL_10_1: gpuInfo.version = "Direct3D Feature Level: 10.1"; break;
+			case D3D_FEATURE_LEVEL_10_0: gpuInfo.version = "Direct3D Feature Level: 10.0"; break;
+			case D3D_FEATURE_LEVEL_9_3: gpuInfo.version =  "Direct3D Feature Level: 9.3"; break;
+			case D3D_FEATURE_LEVEL_9_2: gpuInfo.version =  "Direct3D Feature Level: 9.2"; break;
+			case D3D_FEATURE_LEVEL_9_1: gpuInfo.version =  "Direct3D Feature Level: 9.1"; break;
+			case D3D_FEATURE_LEVEL_1_0_CORE: gpuInfo.version = "Direct3D Feature Level: 1.0 Core"; break;
+
+			default: gpuInfo.version = "Unknown"; break;
+		}
+		/*
+		switch (m_D3DFeatureLevel)
+		{
+			case D3D_FEATURE_LEVEL_12_2:
+				gpuInfo.shadingLanguageVersion = "Shader Model 6.5";
+			case D3D_FEATURE_LEVEL_12_1:
+			case D3D_FEATURE_LEVEL_12_0:
+			case D3D_FEATURE_LEVEL_11_1:
+			case D3D_FEATURE_LEVEL_11_0:
+				gpuInfo.shadingLanguageVersion = "Shader Model 5.1"; // DirectX 11 and Shader Model 5.0
+				break;
+		}
+		*/
+		switch (m_D3DFeatureLevel)
+		{
+			case D3D_FEATURE_LEVEL_12_2:
+				gpuInfo.shadingLanguageVersion = "Shader Model 6.5";
+			case D3D_FEATURE_LEVEL_12_1:
+			case D3D_FEATURE_LEVEL_12_0:
+				gpuInfo.shadingLanguageVersion = "Shader Model 5.1"; // DirectX 12 and Shader Model 6.x
+				break;
+			case D3D_FEATURE_LEVEL_11_1:
+			case D3D_FEATURE_LEVEL_11_0:
+				gpuInfo.shadingLanguageVersion = "Shader Model 5.0"; // DirectX 11 and Shader Model 5.0
+				break;
+			case D3D_FEATURE_LEVEL_10_1:
+				gpuInfo.shadingLanguageVersion = "Shader Model 4.x"; // DirectX 10.1 and Shader Model 4.1
+				break;
+			case D3D_FEATURE_LEVEL_10_0:
+				gpuInfo.shadingLanguageVersion = "Shader Model 4.0"; // DirectX 10 and Shader Model 4.0
+				break;
+			case D3D_FEATURE_LEVEL_9_3:
+			case D3D_FEATURE_LEVEL_9_2:
+			case D3D_FEATURE_LEVEL_9_1:
+				gpuInfo.shadingLanguageVersion = "Shader Model 2.0"; // DirectX 9 and Shader Model 3.0
+				break;
+			case D3D_FEATURE_LEVEL_1_0_CORE:
+				gpuInfo.shadingLanguageVersion = "Shader Model 2.0"; // DirectX 1.0 Core and Shader Model 2.0
+				break;
+			default:
+				gpuInfo.shadingLanguageVersion = "Unknown Shader Model"; // In case of an unknown feature level
+				break;
+		}
+
+		gpuInfo.videoMemory = adapterDesc.DedicatedVideoMemory;
+
+		return gpuInfo;
 	}
 }
 #endif

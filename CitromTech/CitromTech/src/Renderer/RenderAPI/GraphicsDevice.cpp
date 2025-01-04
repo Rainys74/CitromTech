@@ -25,7 +25,7 @@ namespace Citrom::RenderAPI
         s_CurrentGraphicsAPI = graphicsAPI;
     }
 
-    Device* Device::s_Instance;
+    Device* Device::s_Instance = nullptr;
 
     Device* Device::CreateDevice()
     {

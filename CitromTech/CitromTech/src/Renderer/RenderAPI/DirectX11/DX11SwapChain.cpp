@@ -93,7 +93,7 @@ namespace Citrom::RenderAPI
 
 		CreateRenderTarget();
 
-		// Configure viewport
+		// Configure viewport TODO: maybe separate this into ResizeViewport?
 		D3D11_VIEWPORT vp;
 		vp.Width = width;
 		vp.Height = height;

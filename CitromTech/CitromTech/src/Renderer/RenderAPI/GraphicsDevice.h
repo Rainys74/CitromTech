@@ -38,6 +38,10 @@ namespace Citrom::RenderAPI
 			return s_Instance;
 		}
 		
+		// Because of OpenGL's lack of an Adapter system: i decided
+		// it's not my job to pick the GPU for the user, basically Gets the Current Adapter's information
+		virtual GPUInfo GetCurrentGPUInfo() = 0;
+
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
 		virtual void BindFramebuffer(Framebuffer* fb) = 0;

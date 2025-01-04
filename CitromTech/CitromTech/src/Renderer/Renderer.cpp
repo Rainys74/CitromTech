@@ -34,6 +34,14 @@ namespace Citrom
 			}
 		};
 		EventBus::GetDispatcher<WindowEvents>()->AddListener(&s_WindowEventListener);
+
+		GPUInfo gpuInfo = m_Device->GetCurrentGPUInfo();
+		CT_CORE_INFO("Graphics Adapter Info:");
+		CT_CORE_INFO("\tVendor: {}", gpuInfo.vendor);
+		CT_CORE_INFO("\tRenderer: {}", gpuInfo.renderer);
+		CT_CORE_INFO("\tVersion: {}", gpuInfo.version);
+		CT_CORE_INFO("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
+		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6
 	}
 
 	void Renderer::BeginFrame()

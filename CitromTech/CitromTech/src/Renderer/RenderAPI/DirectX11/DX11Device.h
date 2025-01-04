@@ -13,6 +13,8 @@ namespace Citrom::RenderAPI
 		DX11Device();
 		virtual ~DX11Device();
 
+		GPUInfo GetCurrentGPUInfo() override;
+
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override { return Framebuffer(); }
 		void BindFramebuffer(Framebuffer* fb) override {}
@@ -49,6 +51,7 @@ namespace Citrom::RenderAPI
 		// TODO: maybe get rid of the ComPtr Refs for these 2
 		WRL::ComPtr<ID3D11Device> m_Device;
 		WRL::ComPtr<ID3D11DeviceContext> m_DeviceContext;
+		D3D_FEATURE_LEVEL m_D3DFeatureLevel;
 
 		WRL::ComPtr<IDXGIFactory> m_DXGIFactory;
 		WRL::ComPtr<IDXGISwapChain> m_SwapChain;

@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include "CTL/String.h"
+
 namespace Citrom::RenderAPI
 {
 	enum class GraphicsAPI
@@ -29,5 +31,16 @@ namespace Citrom::RenderAPI
 
 		Quarter = 3, // Every Third V-Blank
 		Eighth = 4 // Every Fourth V-Blank
+	};
+
+	struct GPUInfo
+	{
+		std::string vendor;
+		std::string renderer;
+		std::string version;
+		std::string shadingLanguageVersion;
+		// Extensions?
+
+		size_t videoMemory; // VRAM in bytes
 	};
 }
