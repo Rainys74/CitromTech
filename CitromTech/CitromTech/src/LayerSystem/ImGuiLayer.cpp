@@ -10,12 +10,32 @@
 
 namespace Citrom
 {
+	static float g_ResizeFont = 0.0f;
+
 	ImGuiLayer::ImGuiLayer()
 	{
 	}
 	ImGuiLayer::~ImGuiLayer()
 	{
 	}
+
+	/*
+	void ImGuiLayer::RebuildFontsHint(float scale)
+	{
+		/*ImGuiIO& io = ImGui::GetIO();
+
+		io.Fonts->Clear();
+
+		constexpr float fontSize = 17.0f;
+
+		io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Bold.ttf", fontSize * scale); // Black
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Regular.ttf", fontSize * scale);* /
+
+		constexpr float fontSize = 17.0f;
+
+		g_ResizeFont = fontSize * scale;
+	}
+	*/
 
 	void ImGuiLayer::OnAttach()
 	{
@@ -75,5 +95,25 @@ namespace Citrom
 
 		ImGui::Render();
 		Renderer::ImGuiRenderDrawData(ImGui::GetDrawData());
+
+		/*
+		// Resize Fonts
+		if (g_ResizeFont != 0.0f)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+
+			io.Fonts->Clear();
+
+			io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Bold.ttf", g_ResizeFont); // Black
+			io.FontDefault = io.Fonts->AddFontFromFileTTF("Editor/Assets/Fonts/Roboto/Roboto-Regular.ttf", g_ResizeFont);
+			//CT_WARN("G_RESIZE_FONT! {}", g_ResizeFont);
+
+			// Required for dynamic font loading
+			//	io.Fonts->GetTexDataAsRGBA32();
+			io.Fonts->Build();
+
+			g_ResizeFont = 0.0f;
+		}
+		*/
 	}
 }
