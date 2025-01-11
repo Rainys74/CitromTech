@@ -42,11 +42,26 @@ namespace Citrom
 		CT_CORE_INFO("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
 		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6
 
-		std::string shaderPath("Shaders/");
-		std::string shaderCachePath("ShaderCache/");
+		/*constexpr const char* shaderPath = "Shaders/";
+		constexpr const char* shaderCachePath = "ShaderCache/";
 
-		ShaderCompiler::PrepareShaders(&shaderPath, 1, shaderCachePath);
-		ShaderCompiler::CompileShaders(&shaderCachePath, 1, shaderCachePath);
+		const std::string writtenShaderPaths[] =
+		{
+			shaderPath,
+			"Assets/Shaders/"
+		};*/
+
+		const std::string shaderPaths[] =
+		{
+			"Shaders/",
+			"Assets/Shaders/",
+
+			"ShaderCache/"
+		};
+		// TODO: 2 might need to be changed to 3, as well as shaders might need
+		// to be transpiled after compilation if i plan on implementing HLSLcc
+		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
+		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 	}
 
 	void Renderer::BeginFrame()
