@@ -38,9 +38,10 @@ namespace Citrom::Profiler
 }
 
 // TODO: profiling should be disabled on optimized builds
+#define _INTERN_CT_PROFILE_MACRO(NAMECSTR) auto _Intern_profileTimer ## __LINE__ = Citrom::Profiler::ScopedTimer(NAMECSTR, Citrom::Profiler::ProfileDefaultCallback)
 
-#define CT_PROFILE_GLOBAL_FUNCTION() auto _Intern_profileTimer ## __LINE__ = Citrom::Profiler::ScopedTimer(__func__, Citrom::Profiler::ProfileDefaultCallback)
-#define CT_PROFILE_STATIC_FUNCTION(CLASS) auto _Intern_profileTimer ## __LINE__ = Citrom::Profiler::ScopedTimer(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str(), Citrom::Profiler::ProfileDefaultCallback)
+#define CT_PROFILE_GLOBAL_FUNCTION() _INTERN_CT_PROFILE_MACRO(__func__)
+#define CT_PROFILE_STATIC_FUNCTION(CLASS) _INTERN_CT_PROFILE_MACRO(std::string(typeid(CLASS).name()).append("::").append(__func__).append("()").c_str())
 #define CT_PROFILE_MEMBER_FUNCTION() CT_PROFILE_STATIC_FUNCTION(*this)
 
-#define CT_PROFILE_SCOPE(NAME) auto _Intern_profileTimer ## __LINE__ = Citrom::Profiler::ScopedTimer(NAME, Citrom::Profiler::ProfileDefaultCallback)
+#define CT_PROFILE_SCOPE(NAME) _INTERN_CT_PROFILE_MACRO(NAME)
