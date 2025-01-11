@@ -41,6 +41,9 @@ ImGuiLayer g_ImLayer;
 
 float64 g_DeltaTime; // Frame Time
 
+// Layers
+EditorLayer g_EditorLayer;
+
 float64 MainDeltaTime()
 {
 	return g_DeltaTime;
@@ -155,15 +158,13 @@ int SharedMain(int argc, char* argv[])
 	g_ImLayer.Initialize(&g_Window);
 
 	// Push Layers
-	EditorLayer editorLayer;
-
-	g_LayerStack.Push(&editorLayer);
+	g_LayerStack.Push(&g_EditorLayer);
 
 	::ForgeLoop();
 
 	g_ImLayer.OnDetach();
 
-	//g_Window.~Window(); // Somehow throws an assertion during "delete m_Backend;"
+	//g_Window.~Window(); // Somehow throws an assertion during "delete m_Backend;" the assertion being because m_Backend gets deleted twice...
 
 #ifdef CT_PLATFORM_WINDOWS
 	std::cin.get();

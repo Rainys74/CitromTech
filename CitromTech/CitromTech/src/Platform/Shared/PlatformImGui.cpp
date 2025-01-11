@@ -16,7 +16,6 @@ namespace Citrom::Platform
 		// TODO: figure out whether do i really need to do this, because
 		// ideally it should not need to be called
 		#ifdef CT_EDITOR_ENABLED
-		CT_CORE_FATAL("{}, {}", window->GetBackend()->GetWidth(), window->GetBackend()->GetHeight());
 		::ImGui::GetIO().DisplaySize = ImVec2(window->GetBackend()->GetWidth(), window->GetBackend()->GetHeight());
 		#endif
 
