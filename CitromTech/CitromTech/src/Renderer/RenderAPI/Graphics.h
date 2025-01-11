@@ -33,6 +33,12 @@ namespace Citrom::RenderAPI
 		Eighth = 4 // Every Fourth V-Blank
 	};
 
+	enum class ShaderType
+	{
+		Vertex,
+		Fragment // Pixel
+	};
+
 	struct GPUInfo
 	{
 		std::string vendor;
