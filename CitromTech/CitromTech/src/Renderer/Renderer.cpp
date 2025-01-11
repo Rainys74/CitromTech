@@ -42,8 +42,11 @@ namespace Citrom
 		CT_CORE_INFO("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
 		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6
 
-		std::string path("Shaders/");
-		ShaderCompiler::PrepareShaders(&path, 1, "ShaderCache/");
+		std::string shaderPath("Shaders/");
+		std::string shaderCachePath("ShaderCache/");
+
+		ShaderCompiler::PrepareShaders(&shaderPath, 1, shaderCachePath);
+		ShaderCompiler::CompileShaders(&shaderCachePath, 1, shaderCachePath);
 	}
 
 	void Renderer::BeginFrame()

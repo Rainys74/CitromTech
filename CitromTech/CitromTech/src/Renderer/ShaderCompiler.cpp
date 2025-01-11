@@ -6,6 +6,12 @@
 
 #include <filesystem>
 
+#include "RenderAPI/GraphicsDevice.h"
+
+#ifdef CT_PLATFORM_WINDOWS
+#include "RenderAPI/DirectX11/DX11ShaderCompiler.h"
+#endif
+
 namespace Citrom
 {
 	namespace ShaderCompiler
@@ -169,6 +175,19 @@ namespace Citrom
 			CT_PROFILE_GLOBAL_FUNCTION();
 
 			TranspileGLSLCC(paths, pathCount, outPath);
+		}
+
+		void CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath)
+		{
+			CT_PROFILE_GLOBAL_FUNCTION();
+
+			switch (RenderAPI::GraphicsAPIManager::GetGraphicsAPI())
+			{
+				case RenderAPI::GraphicsAPI::DirectX11:
+					IF_WINDOWS(ShaderCompiler::DX11::CompileShaders(shaderPaths, pathCount, outPath));
+					break;
+				default: CT_CORE_ASSERT(false, "Current Graphics API is invalid!"); break;
+			}
 		}
 	}
 }

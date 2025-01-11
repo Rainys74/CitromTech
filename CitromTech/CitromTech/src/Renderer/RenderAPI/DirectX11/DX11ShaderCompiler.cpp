@@ -4,10 +4,24 @@
 #include "DX11DebugHandler.h"
 
 #include <filesystem>
+#include <fstream>
+
+#include "Renderer/RenderAPI/Graphics.h"
+#include "CitromAssert.h"
+
+#include "CTL/DArray.h"
 
 namespace Citrom::ShaderCompiler::DX11
 {
-	CTL::DArray<ShaderObj> CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath)
+	struct ShaderObj
+	{
+		std::string name;
+		RenderAPI::ShaderType type;
+		//void* shaderBlob;
+		ID3DBlob* shaderBlob;
+	};
+
+	static CTL::DArray<ShaderObj> CompileShadersToBlobs(const std::string shaderPaths[], const uint32 pathCount)
 	{
 		CT_PROFILE_GLOBAL_FUNCTION();
 
@@ -25,7 +39,7 @@ namespace Citrom::ShaderCompiler::DX11
 					ShaderObj vertexShaderObject;
 					ShaderObj pixelShaderObject;
 
-					vertexShaderObject.name = pixelShaderObject.name = entry.path().string();
+					vertexShaderObject.name = pixelShaderObject.name = entry.path().stem().string();
 
 					vertexShaderObject.type = RenderAPI::ShaderType::Vertex;
 					pixelShaderObject.type = RenderAPI::ShaderType::Fragment;
@@ -36,6 +50,11 @@ namespace Citrom::ShaderCompiler::DX11
 					DXCallHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "vsmain", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob));
 					DXCallHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "psmain", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob));
 
+					#ifndef CT_OPTIMIZATION
+					if (errorBlob)
+						MessageBoxA(nullptr, (char*)errorBlob->GetBufferPointer(), "D3DCompileFromFile Error Blob!", MB_ICONERROR);
+					#endif
+
 					shaderObjects.PushBack(vertexShaderObject);
 					shaderObjects.PushBack(pixelShaderObject);
 				}
@@ -43,6 +62,36 @@ namespace Citrom::ShaderCompiler::DX11
 		}
 
 		return shaderObjects;
+	}
+	void CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath)
+	{
+		//CT_PROFILE_GLOBAL_FUNCTION();
+
+		CTL::DArray<ShaderObj> shaderObjects = CompileShadersToBlobs(shaderPaths, pathCount);
+
+		for (const ShaderObj& shaderObj : shaderObjects)
+		{
+			std::string shaderTypePrefix("_xx");
+			switch (shaderObj.type)
+			{
+				case RenderAPI::ShaderType::Vertex:
+					shaderTypePrefix = "_vs";
+					break;
+				case RenderAPI::ShaderType::Fragment:
+					shaderTypePrefix = "_fs";
+					break;
+				default: CT_CORE_ASSERT(false, "Invalid Shader Type!"); break;
+			}
+
+			// DXBC - DirectX Byte-Code; CSO - Compiled Shader Object; DXIL - DirectX Intermediate Language;
+			std::ofstream file(outPath + shaderObj.name + shaderTypePrefix + ".dxbc", std::ios::binary);
+			CT_CORE_ASSERT(file.is_open(), "Could not open file stream!");
+
+			file.write(reinterpret_cast<char*>(shaderObj.shaderBlob->GetBufferPointer()), shaderObj.shaderBlob->GetBufferSize());
+			file.close();
+			
+			shaderObj.shaderBlob->Release();
+		}
 	}
 }
 #endif
