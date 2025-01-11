@@ -45,6 +45,7 @@ project "CitromForge" -- EXE
             
             "GLFW",
             "ImGui",
+            "HLSLcc",
         }
         DefineCitromLibraryTypeMacros()
 

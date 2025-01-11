@@ -22,6 +22,7 @@ project "CitromTech"   -- Engine Library
 
             "%{IncludeDir.GLFW}",
             "%{IncludeDir.ImGui}",
+            "%{IncludeDir.HLSLcc}",
             
             "%{IncludeDir.glslcc}",
         }
@@ -35,6 +36,7 @@ project "CitromTech"   -- Engine Library
         {
             "GLFW",
             "ImGui",
+            "HLSLcc"
 
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"

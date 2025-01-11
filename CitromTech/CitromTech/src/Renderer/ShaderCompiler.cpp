@@ -8,6 +8,8 @@
 
 #include "RenderAPI/GraphicsDevice.h"
 
+#include "hlslcc.h"
+
 #ifdef CT_PLATFORM_WINDOWS
 #include "RenderAPI/DirectX11/DX11ShaderCompiler.h"
 #endif
@@ -169,12 +171,17 @@ namespace Citrom
 				}
 			}
 		}
+		static void TranspileHLSLcc(const std::string paths[], const uint32 pathCount, const std::string& outPath)
+		{
+			//TranslateHLSLFromMem();
+		}
 
 		void PrepareShaders(const std::string paths[], const uint32 pathCount, const std::string& outPath)
 		{
 			CT_PROFILE_GLOBAL_FUNCTION();
 
 			TranspileGLSLCC(paths, pathCount, outPath);
+			TranspileHLSLcc(paths, pathCount, outPath);
 		}
 
 		void CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath)
