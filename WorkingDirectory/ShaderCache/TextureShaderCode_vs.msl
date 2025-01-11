@@ -1,0 +1,30 @@
+#include <metal_stdlib>
+#include <simd/simd.h>
+
+using namespace metal;
+
+struct matrices
+{
+    float4x4 u_MVP;
+};
+
+struct main0_out
+{
+    float2 v_TexCoord [[user(locn1)]];
+    float4 gl_Position [[position]];
+};
+
+struct main0_in
+{
+    float4 position [[attribute(0)]];
+    float2 texCoord [[attribute(1)]];
+};
+
+vertex main0_out main0(main0_in in [[stage_in]], constant matrices& _19 [[buffer(0)]])
+{
+    main0_out out = {};
+    out.gl_Position = _19.u_MVP * in.position;
+    out.v_TexCoord = in.texCoord;
+    return out;
+}
+
