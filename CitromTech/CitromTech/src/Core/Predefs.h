@@ -121,4 +121,7 @@ using uint64fast = std::uint_fast64_t;
 #endif
 
 #define BIT(x) (1 << x)
+
+#define CITROM_UNUSED(x) (void)(x)
+#define CT_ARRAY_LENGTH(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
 // -----------------------------------------
