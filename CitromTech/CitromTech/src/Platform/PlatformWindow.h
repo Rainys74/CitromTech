@@ -33,6 +33,8 @@ namespace Citrom::Platform
 		virtual void ImGuiTerminate() = 0;
 
 		virtual void ImGuiNewFrame() = 0;
+
+		virtual const char* GetName() = 0;
     private:
 		bool m_WindowShouldClose;
 		int m_Width, m_Height;

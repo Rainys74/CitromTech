@@ -24,7 +24,6 @@ namespace Citrom
 		m_Device->MakeSwapChain(&scd);
 
 		// On Resize Callback
-		m_Device->Resize(1280, 720);
 		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
 		{
 			if (event.GetEventType() == WindowEvents::WindowResize)
@@ -56,6 +55,7 @@ namespace Citrom
 
 	void Renderer::DrawTest()
 	{
+
 	}
 
 	

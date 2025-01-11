@@ -41,6 +41,13 @@ namespace Citrom::Profiler
 			callback(result.first, result.second);
 		}
 	}
+	void ProfileResults::IterateResultsOrderedCallback(CallbackFN callback)
+	{
+		for (const char* key : m_Order)
+		{
+			callback(key, m_Results[key]);
+		}
+	}
 	CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual>& ProfileResults::GetResults()
 	{
 		return m_Results;
