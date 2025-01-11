@@ -8,7 +8,7 @@
 namespace Citrom
 {
 	// Responsible for transpiling and caching shaders
-	namespace ShaderCompiler
+	/*namespace ShaderCompiler
 	{
 		struct ShaderObj
 		{
@@ -23,5 +23,10 @@ namespace Citrom
 		//void GFXCompileShaders()
 
 		void RecompileShaders(const std::string paths[], const std::string& outPath);
+	}*/
+
+	namespace ShaderCompiler
+	{
+		void PrepareShaders(const std::string paths[], const uint32 pathCount, const std::string& outPath);
 	}
 }

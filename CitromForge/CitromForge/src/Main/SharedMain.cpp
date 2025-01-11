@@ -8,6 +8,7 @@
 #include "Logger/Logger.h"
 #include "Platform/PlatformConsole.h"
 #include "CitromAssert.h"
+#include "ArgumentHandler.h"
 
 #include "Events/EventSystem.h"
 #include "Events/KeyEvents.h"
@@ -57,9 +58,11 @@ float64 MainFPS()
 int SharedMain(int argc, char* argv[])
 {
 	CT_INFO("Command Line Arguments ({}):", argc);
+	ArgumentHandler::PushFilePath(argv[0]);
 	for (int i = 0; i < argc; i++)
 	{
 		CT_INFO("\t{}: {}", i+1, argv[i]);
+		ArgumentHandler::PushArgument(argv[i]);
 	}
 
 #if 0

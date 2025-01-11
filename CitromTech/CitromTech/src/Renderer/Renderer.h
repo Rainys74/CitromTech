@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+#include "ShaderCompiler.h"
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
 #include "Events/WindowEvents.h"
