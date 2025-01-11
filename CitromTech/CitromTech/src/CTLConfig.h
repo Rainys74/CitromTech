@@ -7,5 +7,6 @@
 #define CTL_MEMORY_SET(PTR, VALUEFOREACHBYTE, BYTESTOSET) Citrom::Memory::Set(PTR, VALUEFOREACHBYTE, BYTESTOSET)
 #define CTL_MEMORY_ZERO(PTR, MEMORYBLOCKSIZE) Citrom::Memory::Zero(PTR, MEMORYBLOCKSIZE)
 
-//#include "Profiling/Profiler.h" // Citrom Tech Profiler
+#include "Profiling/Profiler.h" // Citrom Tech Profiler
+//#include <typeinfo>
 //#define CTL_PROFILE_MEMBER_FUNC() CT_PROFILE_MEMBER_FUNCTION()

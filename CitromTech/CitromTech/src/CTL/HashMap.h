@@ -18,6 +18,8 @@ namespace CTL
     public:
         size_t operator()(const T& key) const 
         {
+            CTL_PROFILE_MEMBER_FUNC();
+
             return XXH64(&key, sizeof(T), 0); // XXH64 or XXH3_64bits
         }
     };
