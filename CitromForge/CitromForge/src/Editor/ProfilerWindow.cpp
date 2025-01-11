@@ -33,8 +33,22 @@ namespace EditorImGui
                 for (const char* key : Profiler::ProfileResults::GetResultOrder())
                 {
                     // TODO: maybe make it so if time is < 1.0 it shows up as ms, but if >=1.0 shows up as seconds
-                    ImGui::Text("%s = %f ms", key, Profiler::ProfileResults::GetResults()[key] * 1000);
+                    //ImGui::Text("%s = %f ms", key, Profiler::ProfileResults::GetResults()[key] * 1000);
+                    ImGui::Text("%s = %f ms (%.2f%%)", key, Profiler::ProfileResults::GetResults()[key] * 1000, (Profiler::ProfileResults::GetResults()[key] / MainDeltaTime()) * 100);
                 }
+
+                /*static std::unordered_map<std::string, std::vector<float>> history;
+                for (const char* key : Profiler::ProfileResults::GetResultOrder())
+                {
+                    double timeInSeconds = Profiler::ProfileResults::GetResults()[key];
+                    history[key].push_back(timeInSeconds * 1000); // Store ms
+                    if (history[key].size() > 100) // Limit history size
+                        history[key].erase(history[key].begin());
+
+                    ImGui::Text("%s = %f ms (%.2f%%)", key, Profiler::ProfileResults::GetResults()[key] * 1000, (Profiler::ProfileResults::GetResults()[key] / MainDeltaTime()) * 100);
+                    ImGui::PlotLines(("##sparkline_" + std::string(key)).c_str(), history[key].data(), history[key].size(), 0, nullptr, 0.0f, 10.0f, ImVec2(0, 40));
+                }*/
+
                 ImGui::EndTabItem();
             }
             ImGui::EndTabBar();
