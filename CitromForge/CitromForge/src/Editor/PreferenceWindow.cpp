@@ -25,6 +25,7 @@ static void DrawEditorStyle()
             if (ImGui::Selectable(style.name.c_str(), is_selected))
             {
                 currentEditorStyle = i; // Update the selected index
+                ImGui::GetStyle() = ImGuiStyle(); // Reset the style
                 style.callback();      // Call the callback for the newly selected style
             }
 

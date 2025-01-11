@@ -23,4 +23,13 @@ namespace Citrom
 		//static void RebuildFontsHint(float scale = 1.0f);
 		//static void RebuildFonts(const char* regularFontPath, const char* boldFontPath, const float fontPixelSize){}
 	};
+
+	// Styles
+	namespace ImThemes
+	{
+		void DarkRuda();
+		void Comfy();
+		void Cherry();
+		void QuickMinimalLook();
+	}
 }

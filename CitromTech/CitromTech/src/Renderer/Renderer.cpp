@@ -46,7 +46,7 @@ namespace Citrom
 		std::string shaderCachePath("ShaderCache/");
 
 		ShaderCompiler::PrepareShaders(&shaderPath, 1, shaderCachePath);
-		ShaderCompiler::CompileShaders(&shaderCachePath, 1, shaderCachePath);
+		//ShaderCompiler::CompileShaders(&shaderCachePath, 1, shaderCachePath);
 	}
 
 	void Renderer::BeginFrame()
