@@ -199,28 +199,59 @@ namespace Citrom
 
 						// HLSL
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_GL_LAST, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &glResult);
+
 						// Metal
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_METAL, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &metalResult);
 
 						// GLSL
-						std::ofstream outFile(outPath + entry.path().stem().string() + ".glsl", std::ios::out);
-						CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing GLSL source code!");
+						{
+							std::ofstream outFile(outPath + entry.path().stem().string() + ".glsl", std::ios::out);
+							CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing GLSL source code!");
 
-						outFile << glResult.sourceCode;
+							outFile << glResult.sourceCode;
 
-						outFile.close();
+							outFile.close();
 
-						CT_CORE_TRACE("Successfully transpiled DXBC file: ({}) to {}", entry.path().string().c_str(), /*outPath +*/ entry.path().stem().string() + ".glsl");
+							CT_CORE_TRACE("Successfully transpiled DXBC file: ({}) to {}", entry.path().string().c_str(), /*outPath +*/ entry.path().stem().string() + ".glsl");
+						}
 
 						// Metal Shading Language
-						std::ofstream outFile(outPath + entry.path().stem().string() + ".msl", std::ios::out);
-						CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing MSL source code!");
+						{
+							std::ofstream outFile(outPath + entry.path().stem().string() + ".msl", std::ios::out);
+							CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing MSL source code!");
 
-						outFile << metalResult.sourceCode;
+							outFile << metalResult.sourceCode;
 
-						outFile.close();
+							outFile.close();
 
-						CT_CORE_TRACE("Successfully transpiled DXBC file: ({}) to {}", entry.path().string().c_str(), /*outPath +*/ entry.path().stem().string() + ".msl");
+							CT_CORE_TRACE("Successfully transpiled DXBC file: ({}) to {}", entry.path().string().c_str(), /*outPath +*/ entry.path().stem().string() + ".msl");
+						}
+					}
+				}
+			}
+		}
+
+		void ClearShaderCache(const std::string& cachePath)
+		{
+			static const std::string validExtensions[] =
+			{
+				".glsl",
+				".hlsl",
+				".msl",
+				".dxbc"
+			};
+
+			for (const auto& entry : std::filesystem::recursive_directory_iterator(cachePath))
+			{
+				if (!entry.is_regular_file())
+					continue; // Skip non-file entries like directories
+
+				for (const auto& extension : validExtensions)
+				{
+					if (extension == entry.path().extension().string())
+					{
+						CT_CORE_TRACE("Deleting Cached Shader in: {}", entry.path().string());
+						std::filesystem::remove(entry.path());
 					}
 				}
 			}

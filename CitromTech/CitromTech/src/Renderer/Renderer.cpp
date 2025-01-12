@@ -58,6 +58,9 @@ namespace Citrom
 
 			"ShaderCache/"
 		};
+
+		ShaderCompiler::ClearShaderCache("ShaderCache/");
+
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");

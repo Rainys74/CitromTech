@@ -27,6 +27,8 @@ namespace Citrom
 
 	namespace ShaderCompiler
 	{
+		void ClearShaderCache(const std::string& cachePath); //const std::string cachePaths[]
+
 		void PrepareShaders(const std::string paths[], const uint32 pathCount, const std::string& outPath);
 
 		void CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath);
