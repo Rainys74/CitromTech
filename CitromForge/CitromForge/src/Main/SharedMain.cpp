@@ -58,18 +58,68 @@ float64 MainFPS()
 int SharedMain(int argc, char* argv[])
 {
 	CT_INFO("Command Line Arguments ({}):", argc);
-	ArgumentHandler::PushFilePath(argv[0]);
 	for (int i = 0; i < argc; i++)
 	{
 		CT_INFO("\t{}: {}", i+1, argv[i]);
+	}
+
+	// Push Command line arguments
+	ArgumentHandler::PushFilePath(argv[0]);
+	for (int i = 0; i < argc; i++)
+	{
 		ArgumentHandler::PushArgument(argv[i]);
 	}
 
 	CTL::DArray<std::string> testArgs = ArgumentHandler::GetArgumentsFromFile("commandline.txt");
 	for (const auto& testArg : testArgs)
 	{
-		CT_WARN("{}", testArg);
+		ArgumentHandler::PushArgument(testArg.c_str());
 	}
+
+	// Initialize Thread Pool
+	uint32 threadCount;
+	if (ArgumentHandler::HasArgument("-threadCount"))
+	{
+		std::string argValue = ArgumentHandler::GetArgumentValue("-threadCount");
+
+		if (argValue.find("%Cores"))
+		{
+			threadCount = Platform::Info::GetNumberOfProcessors();
+		}
+		else if (argValue.find("%Threads"))
+		{
+			threadCount = Platform::Info::GetNumberOfLogicalProcessors();
+		}
+		else
+		{
+			threadCount = std::stoul(argValue);
+		}
+	}
+	else
+	{
+		threadCount = Platform::Info::GetNumberOfLogicalProcessors();
+	}
+
+	// Checks for Thread Count
+	if (threadCount < 3)
+	{
+		CT_WARN("Thread count was set to less than 3! Setting it to 3.");
+		threadCount = 3;
+	}
+	if (threadCount < 5)
+		CT_WARN("Thread count was set to ({}), Minimum Recommended value: {}", threadCount, 5);
+	if (threadCount > 0xFFFFFFFF)
+	{
+		CT_WARN("Thread count was set higher than the max uint32 value! Clamping it now!");
+		threadCount = 0xFFFFFFFF;
+	}
+	if (threadCount > 128)
+		CT_WARN("Thread count was set to ({}), Make sure it was intentional to set Thread Count higher than 128!");
+
+	CT_INFO("Initializing Thread Pool with {} threads. Thread count is ({})", threadCount - 1, threadCount);
+
+	// TODO: eventually change the -1
+	ThreadPool::Initialize(threadCount - 1);
 
 #if 0
 	TestOutMain(argc, argv);
