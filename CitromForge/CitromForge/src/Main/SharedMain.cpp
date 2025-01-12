@@ -100,6 +100,9 @@ int SharedMain(int argc, char* argv[])
 		threadCount = Platform::Info::GetNumberOfLogicalProcessors();
 	}
 
+	if (ArgumentHandler::HasArgument("-usepissandshittium"))
+		CT_CORE_ASSERT(false, "PISS AND SHITTIUM!!!!");
+
 	// Checks for Thread Count
 	if (threadCount < 3)
 	{

@@ -2,12 +2,14 @@
 #include "CitromAssert.h"
 
 #include "CTL/HashMap.h"
+#include "CTL/String.h"
 
 #include <fstream>
 
 namespace Citrom::ArgumentHandler
 {
-	static CTL::HashMap<std::string, std::string> g_Arguments;
+	// Argument - Value
+	static CTL::HashMap<std::string, std::string, CTL::StdStringHash> g_Arguments;
 
 	CTL::DArray<std::string> GetArgumentsFromFile(const std::string& filePath)
 	{
@@ -34,14 +36,31 @@ namespace Citrom::ArgumentHandler
 	void PushArgument(const char* argument)
 	{
 		// splits the string from delimiter "=" to two parts (key, value)
+		CTL::DArray<std::string> splitString = CTL::StdString::Split(argument, '=');
+
+		if (splitString.Count() == 2)
+		{
+			CT_CORE_VERBOSE("Argument ({}) found, pushing it as [{}, {}]", argument, splitString[0], splitString[1]);
+			g_Arguments[splitString[0]] = splitString[1];
+		}
+		else if (splitString.Count() == 1)
+		{
+			CT_CORE_VERBOSE("Argument ({}) found, pushing it as [{}, {}]", argument, splitString[0], "");
+			g_Arguments[splitString[0]] = "";
+		}
+		else
+		{
+			CT_CORE_ERROR("Invalid argument passed into ArgumentHandler::PushArgument()!");
+			//g_Arguments[splitString[0]] = splitString[1];
+		}
 	}
 	bool HasArgument(const std::string& arg)
 	{
-		return false;
+		return g_Arguments.contains(arg);
 	}
 	std::string GetArgumentValue(const std::string& arg)
 	{
-		return std::string();
+		return g_Arguments[arg];
 	}
 
 	static const char* g_ArgFilePath;

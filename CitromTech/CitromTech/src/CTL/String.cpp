@@ -3,6 +3,29 @@
 
 #include "CTL.h"
 
+namespace CTL::StdString
+{
+    CTL::DArray<std::string> Split(const std::string& string, const char delimiter)
+    {
+        CTL::DArray<std::string> strings;
+    
+        size_t startPos = 0;
+        size_t delimiterPos = string.find(delimiter);
+    
+        while (delimiterPos != std::string::npos)
+        {
+            strings.PushBack(string.substr(startPos, delimiterPos - startPos));
+            startPos = delimiterPos + 1; // Move start position after the delimiter
+            delimiterPos = string.find(delimiter, startPos); // Find next delimiter
+        }
+    
+        // Add the last part (after the last delimiter)
+        strings.PushBack(string.substr(startPos));
+    
+        return strings;
+    }
+}
+
 namespace CTL
 {
     String::String()

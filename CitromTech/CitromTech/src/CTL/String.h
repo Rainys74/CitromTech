@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CTL.h"
+#include "DArray.h"
 
 // Prefer to use std::string instead of CTL::String. Reasons:
 // My string lacks a lot of functionality and the functionality it does have,
@@ -8,6 +9,14 @@
 // i'd rather switch to a string that has been worked on by better brains than me,
 // and which has better support, has been tested more thoroughly and has far better functionality
 #include <string>
+
+namespace CTL
+{
+	namespace StdString
+	{
+		CTL::DArray<std::string> Split(const std::string& string, const char delimiter);
+	}
+}
 
 // CTL - (C)itrom Tech Standard (T)emplate (L)ibrary
 namespace CTL

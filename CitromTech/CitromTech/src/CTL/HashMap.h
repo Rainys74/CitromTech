@@ -59,6 +59,24 @@ namespace CTL
         }
     };
 
+    class StdStringHash
+    {
+    public:
+        size_t operator()(const std::string& str) const
+        {
+            return CStringHash()(str.c_str());
+        }
+    };
+
+    class StdStringHashEqual
+    {
+    public:
+        bool operator()(const std::string& strA, const std::string& strB) const
+        {
+            return strA == strB;
+        }
+    };
+
     // Custom Unordered_Map wrapper with xxHash as the default hash function
     template<typename K, typename T, typename Hash = XXHash<K>, typename Comparison = std::equal_to<K>>
     using HashMap = std::unordered_map<K, T, Hash, Comparison>;
