@@ -16,11 +16,14 @@ namespace Citrom::RenderAPI
 		static bool IsGraphicsAPI(GraphicsAPI graphicsAPI);
 
 		static void ForceGraphicsAPI(GraphicsAPI graphicsAPI);
-		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel) {}
+		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel);
+
+		static GraphicsAPI GetGraphicsAPIAtPriority(uint8 priorityLevel);
 	public:
 		static bool IsAPIValid(GraphicsAPI api);
 	private:
-		static GraphicsAPI s_CurrentGraphicsAPI;
+		static GraphicsAPI s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)];
+		static GraphicsAPI& s_CurrentGraphicsAPI;
 	};
 
 	// Device is a singleton class to better support OpenGL's single device implementation

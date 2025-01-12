@@ -13,6 +13,12 @@ namespace Citrom
 	{
 		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
+		
+		CT_TRACE("CURRENT API: {}", (size_t)GraphicsAPIManager::GetGraphicsAPI());
+		for (size_t i = 0; i < (size_t)GraphicsAPI::Count; i++)
+		{
+			CT_TRACE("{}. {}", i, (size_t)GraphicsAPIManager::GetGraphicsAPIAtPriority(i));
+		}
 
 		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
 		m_Device = Device::Get();

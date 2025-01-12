@@ -8,7 +8,12 @@
 
 namespace Citrom::RenderAPI
 {
-    GraphicsAPI GraphicsAPIManager::s_CurrentGraphicsAPI;
+    GraphicsAPI GraphicsAPIManager::s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)] =
+    {
+        GraphicsAPI::DirectX11,
+        GraphicsAPI::OpenGL
+    };
+    GraphicsAPI& GraphicsAPIManager::s_CurrentGraphicsAPI = GraphicsAPIManager::s_GraphicsAPIList[0];
 
     GraphicsAPI GraphicsAPIManager::GetGraphicsAPI()
     {
@@ -23,6 +28,16 @@ namespace Citrom::RenderAPI
     void GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI graphicsAPI)
     {
         s_CurrentGraphicsAPI = graphicsAPI;
+    }
+
+    void GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel)
+    {
+        s_GraphicsAPIList[priorityLevel] = graphicsAPI;
+    }
+
+    GraphicsAPI GraphicsAPIManager::GetGraphicsAPIAtPriority(uint8 priorityLevel)
+    {
+        return s_GraphicsAPIList[priorityLevel];
     }
 
     bool GraphicsAPIManager::IsAPIValid(GraphicsAPI api)
