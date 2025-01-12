@@ -13,12 +13,12 @@ precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
 UNITY_LOCATION(0) uniform  sampler2D u_Texture;
-layout(location = 0) in  vec2 vs_TEXCOORD1;
-layout(location = 0) out vec4 SV_Target0;
+layout(location = 0) in  vec2 in_NORMAL0;
+layout(location = 0) out vec4 vs_TEXCOORD0;
 void main()
 {
-    //SAMPLE
-    SV_Target0 = texture(u_Texture, vs_TEXCOORD1.xy);
+    //SAMPLE_L
+    vs_TEXCOORD0 = textureLod(u_Texture, in_NORMAL0.xy, 0.0);
     //RET
     return;
 }

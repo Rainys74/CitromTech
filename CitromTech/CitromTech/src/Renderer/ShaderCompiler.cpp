@@ -5,6 +5,7 @@
 #include "Platform/Platform.h"
 
 #include <filesystem>
+#include <fstream>
 
 #include "RenderAPI/GraphicsDevice.h"
 
@@ -29,6 +30,8 @@ namespace Citrom
 		}
 		static void TranspileGLSLCC(const std::string paths[], const uint32 pathCount, const std::string& outPath)
 		{
+			CT_PROFILE_GLOBAL_FUNCTION();
+
 			Platform::DynamicLibrary glslcc("glslcc");
 			//glslcc.Load("glslcc");
 
@@ -173,7 +176,38 @@ namespace Citrom
 		}
 		static void TranspileHLSLcc(const std::string paths[], const uint32 pathCount, const std::string& outPath)
 		{
+			CT_PROFILE_GLOBAL_FUNCTION();
+
 			//TranslateHLSLFromMem();
+
+			for (uint32 i = 0; i < pathCount; i++)
+			{
+				for (const auto& entry : std::filesystem::recursive_directory_iterator(paths[i]))
+				{
+					if (!entry.is_regular_file())
+						continue; // Skip non-file entries like directories
+
+					if (entry.path().extension() == ".dxbc")
+					{
+						GLSLShader result;
+
+						GlExtensions glExtensions = {};
+
+						HLSLccSamplerPrecisionInfo samplerPrecision = {};
+						HLSLccReflection reflectionCallback = {};
+						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_440, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &result);
+
+						std::ofstream outFile(outPath + entry.path().stem().string() + ".glsl", std::ios::out);
+						CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing GLSL source code!");
+
+						outFile << result.sourceCode;
+
+						outFile.close();
+
+						CT_CORE_TRACE("Successfully transpiled DXBC file: ({}) to {}", entry.path().string().c_str(), /*outPath +*/ entry.path().stem().string() + ".glsl");
+					}
+				}
+			}
 		}
 
 		void PrepareShaders(const std::string paths[], const uint32 pathCount, const std::string& outPath)
@@ -181,7 +215,6 @@ namespace Citrom
 			CT_PROFILE_GLOBAL_FUNCTION();
 
 			TranspileGLSLCC(paths, pathCount, outPath);
-			TranspileHLSLcc(paths, pathCount, outPath);
 		}
 
 		void CompileShaders(const std::string shaderPaths[], const uint32 pathCount, const std::string& outPath)
@@ -195,6 +228,8 @@ namespace Citrom
 					break;
 				default: CT_CORE_ASSERT(false, "Current Graphics API is invalid!"); break;
 			}
+
+			TranspileHLSLcc(shaderPaths, pathCount, outPath);
 		}
 	}
 }
