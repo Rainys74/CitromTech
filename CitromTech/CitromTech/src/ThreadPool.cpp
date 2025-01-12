@@ -6,6 +6,8 @@
 
 namespace Citrom
 {
+	ThreadPool* ThreadPool::s_Instance;
+
 	using namespace Platform;
 	static void ThreadPoolWork(ThreadPool* threadPool)
 	{

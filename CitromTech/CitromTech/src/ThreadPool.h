@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Platform/PlatformThread.h"
+#include "CitromAssert.h"
 #include "CTL/DArray.h"
 
 namespace Citrom
@@ -37,5 +38,18 @@ namespace Citrom
 		// mutex
 		// maxThreads
 		// job list
+	// Singleton Factory that is used by Citrom Tech and Citrom Forge
+	public:
+		static void Initialize(uint32 maxThreads)
+		{
+			s_Instance = new ThreadPool(maxThreads);
+		}
+		static ThreadPool* Get()
+		{
+			CT_CORE_ASSERT(s_Instance, "Trying to acquire an uninitialized Thread Pool!");
+			return s_Instance;
+		}
+	private:
+		static ThreadPool* s_Instance;
 	};
 }
