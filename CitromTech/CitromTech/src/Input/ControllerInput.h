@@ -9,11 +9,11 @@ namespace Citrom::Input
     {
         Null,
 
-        LeftStickHorizontal,
-        LeftStickVertical,
+        LeftStickX,
+        LeftStickY,
 
-        RightStickHorizontal,
-        RightStickVertical,
+        RightStickX,
+        RightStickY,
 
         LeftTrigger, // L2
         RightTrigger, // R2
