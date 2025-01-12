@@ -82,11 +82,11 @@ int SharedMain(int argc, char* argv[])
 	{
 		std::string argValue = ArgumentHandler::GetArgumentValue("-threadCount");
 
-		if (argValue.find("%Cores"))
+		if (argValue.find("%Cores") != std::string::npos)
 		{
 			threadCount = Platform::Info::GetNumberOfProcessors();
 		}
-		else if (argValue.find("%Threads"))
+		else if (argValue.find("%Threads") != std::string::npos)
 		{
 			threadCount = Platform::Info::GetNumberOfLogicalProcessors();
 		}
@@ -99,9 +99,6 @@ int SharedMain(int argc, char* argv[])
 	{
 		threadCount = Platform::Info::GetNumberOfLogicalProcessors();
 	}
-
-	if (ArgumentHandler::HasArgument("-usepissandshittium"))
-		CT_CORE_ASSERT(false, "PISS AND SHITTIUM!!!!");
 
 	// Checks for Thread Count
 	if (threadCount < 3)
