@@ -17,6 +17,8 @@ namespace Citrom::RenderAPI
 
 		static void ForceGraphicsAPI(GraphicsAPI graphicsAPI);
 		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel) {}
+	public:
+		static bool IsAPIValid(GraphicsAPI api);
 	private:
 		static GraphicsAPI s_CurrentGraphicsAPI;
 	};
@@ -80,5 +82,16 @@ namespace Citrom::RenderAPI
 		static Device* CreateDevice();
 		static Device* s_Instance;
 	protected:
+	};
+
+	// Device for checking the validity of the API
+	class DummyDevice
+	{
+	public:
+		virtual ~DummyDevice() = default;
+
+		virtual bool IsValid() const { return m_Valid; }
+	protected:
+		bool m_Valid = false;
 	};
 }

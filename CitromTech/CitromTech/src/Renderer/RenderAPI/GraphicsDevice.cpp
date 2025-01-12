@@ -25,6 +25,28 @@ namespace Citrom::RenderAPI
         s_CurrentGraphicsAPI = graphicsAPI;
     }
 
+    bool GraphicsAPIManager::IsAPIValid(GraphicsAPI api)
+    {
+        switch (api)
+        {
+            case GraphicsAPI::DirectX11:
+            {
+                #ifndef CT_PLATFORM_WINDOWS
+                return false;
+                #else
+                DX11DummyDevice dummy;
+                return dummy.IsValid();
+                #endif
+            }
+            break;
+            case GraphicsAPI::OpenGL:
+            {
+            }
+            break;
+        }
+        return false;
+    }
+
     Device* Device::s_Instance = nullptr;
 
     Device* Device::CreateDevice()
