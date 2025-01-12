@@ -8,4 +8,6 @@
 
 #include <wrl.h>
 using namespace Microsoft;
+
+#define SAFE_RELEASE(x) if (x != nullptr) { x->Release(); x = nullptr; }
 #endif

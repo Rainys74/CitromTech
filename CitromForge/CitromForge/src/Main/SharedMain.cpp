@@ -65,6 +65,12 @@ int SharedMain(int argc, char* argv[])
 		ArgumentHandler::PushArgument(argv[i]);
 	}
 
+	CTL::DArray<std::string> testArgs = ArgumentHandler::GetArgumentsFromFile("commandline.txt");
+	for (const auto& testArg : testArgs)
+	{
+		CT_WARN("{}", testArg);
+	}
+
 #if 0
 	TestOutMain(argc, argv);
 #endif
