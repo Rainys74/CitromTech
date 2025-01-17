@@ -272,6 +272,8 @@ void ForgeLoop()
 		Renderer::BeginFrame();
 		g_LayerStack.Render();
 
+		Renderer::DrawTest();
+
 		{
 			CT_PROFILE_SCOPE("ImGui Render");
 			g_ImLayer.Begin();

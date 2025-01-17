@@ -85,7 +85,27 @@ namespace Citrom
 
 	void Renderer::DrawTest()
 	{
+		float positions[] =
+		{
+			-0.5f, -0.5f, 0.0f,
+			 0.0f,  0.5f, 0.0f,
+			 0.5f, -0.5f, 0.0f
+		};
 
+		unsigned int indices[] =
+		{
+			0, 1, 2//,
+			//2, 3, 0
+		};
+
+		IndexBufferDesc ibd = {};
+		ibd.data = indices;
+		ibd.count = 3;
+
+		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
+		m_Device->BindIndexBuffer(&ibo);
+
+		//m_Device->RCDrawIndexed(ibo.GetCount());
 	}
 
 	

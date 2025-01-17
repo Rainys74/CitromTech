@@ -60,6 +60,7 @@ namespace Citrom::ArgumentHandler
 	}
 	std::string GetArgumentValue(const std::string& arg)
 	{
+		//if (!HasArgument(arg)) return "";
 		return g_Arguments[arg];
 	}
 

@@ -29,11 +29,11 @@ namespace Citrom::RenderAPI
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override { return VertexBuffer(); }
 		void BindVertexBuffer(VertexBuffer* vb) override {}
 
-		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override { return IndexBuffer(); }
-		void BindIndexBuffer(IndexBuffer* ib) override {}
+		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
+		void BindIndexBuffer(IndexBuffer* ib) override;
 
 		// Render Commands
-		void RCDrawIndexed(uint32 indexCount) override {}
+		void RCDrawIndexed(uint32 indexCount) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
 		// ImGui

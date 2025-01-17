@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EventSystem.h"
+#include "Input/KeyboardInput.h"
 
 #include <string>
 
@@ -13,7 +14,7 @@ namespace Citrom
         KeyRepeat
     };
 
-    using EventKeyCode = uint32;
+    using EventKeyCode = uint32; //Input::KeyCode;
     class KeyDownEvent : public Event<KeyEvents>
     {
     public:
@@ -24,7 +25,7 @@ namespace Citrom
         CTL::String ToString() const override 
         {
             CTL::String string("KeyDownEvent: ");
-            string.Append(std::to_string(m_KeyCode).c_str());
+            string.Append(std::to_string((uint32)m_KeyCode).c_str());
             return string;
         }
     private:

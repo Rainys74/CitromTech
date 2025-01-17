@@ -233,6 +233,8 @@ namespace Citrom
 
 		void ClearShaderCache(const std::string& cachePath)
 		{
+			CT_PROFILE_GLOBAL_FUNCTION();
+
 			static const std::string validExtensions[] =
 			{
 				".glsl",

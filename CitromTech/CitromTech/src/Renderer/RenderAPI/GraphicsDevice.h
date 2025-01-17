@@ -87,7 +87,7 @@ namespace Citrom::RenderAPI
 	protected:
 	};
 
-	// Device for checking the validity of the API
+	// Device for checking the validity of the API, do not use directly! only used for inheritance.
 	class DummyDevice
 	{
 	public:
