@@ -75,7 +75,8 @@ namespace Citrom
 
 	void Renderer::BeginFrame()
 	{
-		m_Device->RCClearColor(0.5f, 0.74f, 0.14f);
+		//m_Device->RCClearColor(1.0f, 0.5f, 0.24f, 1.0f); // Citrom Tech 2D
+		m_Device->RCClearColor(0.5f, 0.74f, 0.14f); // Citrom Tech
 	}
 
 	void Renderer::EndFrame()

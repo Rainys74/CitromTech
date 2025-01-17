@@ -32,6 +32,10 @@ namespace Citrom::RenderAPI
 		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
 		void BindIndexBuffer(IndexBuffer* ib) override;
 
+		// Shader
+		Shader CreateShader(ShaderDesc* descriptor) override { return Shader(); }
+		void BindShader(Shader* shader) override {}
+
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;

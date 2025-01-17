@@ -4,6 +4,7 @@
 
 #include "Framebuffer.h"
 #include "Buffer.h"
+#include "Shader.h"
 #include "SwapChain.h"
 
 // Also referred to as the Render Hardware Interface (RHI) in engines such as Unreal Engine and O3DE
@@ -72,6 +73,10 @@ namespace Citrom::RenderAPI
 
 		virtual IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) = 0;
 		virtual void BindIndexBuffer(IndexBuffer* ib) = 0;
+
+		// Shader
+		virtual Shader CreateShader(ShaderDesc* descriptor) = 0;
+		virtual void BindShader(Shader* shader) = 0;
 
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount) = 0;
