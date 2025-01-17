@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include "CTL/String.h"
+
 namespace Citrom::Input
 {
 	enum class KeyCode
@@ -145,4 +147,6 @@ namespace Citrom::Input
 
     KeyCode WinKeyToInputSystem(size_t key);
     KeyCode GLFWKeyToInputSystem(int key);
+
+    std::string KeyCodeToString(KeyCode keyCode);
 }

@@ -15,6 +15,8 @@
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
 
+#include "Input/KeyboardInput.h"
+
 #include "Platform/PlatformWindow.h"
 #include "Platform/Platform.h"
 
@@ -132,6 +134,9 @@ int SharedMain(int argc, char* argv[])
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
 		CT_VERBOSE("Event Type Name: {}", event.GetEventTypeName());
 		CT_TRACE("Event To String: {}", event.ToString().CStr());
+
+		const KeyEventBase& transformedEvent = (const KeyEventBase&)event;
+		CT_TRACE("KeyCode String: {} ({})", Input::KeyCodeToString(transformedEvent.keyCode), (uint32)transformedEvent.keyCode);
 	};
 
 	EventListener<WindowEvents> windowEventListener;
@@ -178,6 +183,7 @@ int SharedMain(int argc, char* argv[])
 
 	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);
 	EventBus::GetDispatcher<MouseEvents>()->AddListener(&mouseEventListener);
+	EventBus::GetDispatcher<KeyEvents>()->AddListener(&keyEventListener);
 
 	//Math::Vector<3> vector;
 	Math::Vector3 vector;

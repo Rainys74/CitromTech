@@ -107,7 +107,7 @@ void TestOutMain(int argc, char** argv)
 	Platform::Console::PrintText(u8"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);	// utf-8
 	Platform::Console::PrintText(u"this is a 👋, 🌍! test!\n", Platform::Console::Stream::Out);		// utf-16
 
-	KeyDownEvent keyDownEvent(1254);
+	KeyDownEvent keyDownEvent; //(1254);
 
 	CT_TRACE("Event Type: {}", (int)keyDownEvent.GetEventType());
 

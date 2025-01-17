@@ -14,21 +14,36 @@ namespace Citrom
         KeyRepeat
     };
 
-    using EventKeyCode = uint32; //Input::KeyCode;
-    class KeyDownEvent : public Event<KeyEvents>
+    using EventKeyCode = Input::KeyCode; //uint32;
+    class KeyEventBase : public Event<KeyEvents>
+    {
+    public:
+        CTL::String ToString() const override
+        {
+            CTL::String string(GetEventTypeName());
+            string.Append("Event: ");
+            string.Append(std::to_string((uint32)keyCode).c_str());
+            return string;
+        }
+    public:
+        EventKeyCode keyCode;
+    };
+
+    class KeyDownEvent : public KeyEventBase
     {
     public:
         EVENT_CLASS_TYPE(KeyEvents, KeyDown);
-        
-        KeyDownEvent(EventKeyCode keyCode) : m_KeyCode(keyCode) {}
+    };
 
-        CTL::String ToString() const override 
-        {
-            CTL::String string("KeyDownEvent: ");
-            string.Append(std::to_string((uint32)m_KeyCode).c_str());
-            return string;
-        }
-    private:
-        EventKeyCode m_KeyCode;
+    class KeyUpEvent : public KeyEventBase
+    {
+    public:
+        EVENT_CLASS_TYPE(KeyEvents, KeyUp);
+    };
+
+    class KeyRepeatEvent : public KeyEventBase
+    {
+    public:
+        EVENT_CLASS_TYPE(KeyEvents, KeyRepeat);
     };
 }

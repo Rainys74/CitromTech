@@ -148,6 +148,136 @@ namespace Citrom::Input
 		return KeyCode::Null;
 	}
 
+	std::string KeyCodeToString(KeyCode keyCode)
+	{
+	#define KEYCODE_TO_STRING(x) case x: return #x; break
+		switch (keyCode)
+		{
+			default: return "Unknown"; break;
+
+			KEYCODE_TO_STRING(KeyCode::Null);
+
+			KEYCODE_TO_STRING(KeyCode::A);
+			KEYCODE_TO_STRING(KeyCode::B);
+			KEYCODE_TO_STRING(KeyCode::C);
+			KEYCODE_TO_STRING(KeyCode::D);
+			KEYCODE_TO_STRING(KeyCode::E);
+			KEYCODE_TO_STRING(KeyCode::F);
+			KEYCODE_TO_STRING(KeyCode::G);
+			KEYCODE_TO_STRING(KeyCode::H);
+			KEYCODE_TO_STRING(KeyCode::I);
+			KEYCODE_TO_STRING(KeyCode::J);
+			KEYCODE_TO_STRING(KeyCode::K);
+			KEYCODE_TO_STRING(KeyCode::L);
+			KEYCODE_TO_STRING(KeyCode::M);
+			KEYCODE_TO_STRING(KeyCode::N);
+			KEYCODE_TO_STRING(KeyCode::O);
+			KEYCODE_TO_STRING(KeyCode::P);
+			KEYCODE_TO_STRING(KeyCode::Q);
+			KEYCODE_TO_STRING(KeyCode::R);
+			KEYCODE_TO_STRING(KeyCode::S);
+			KEYCODE_TO_STRING(KeyCode::T);
+			KEYCODE_TO_STRING(KeyCode::U);
+			KEYCODE_TO_STRING(KeyCode::V);
+			KEYCODE_TO_STRING(KeyCode::W);
+			KEYCODE_TO_STRING(KeyCode::X);
+			KEYCODE_TO_STRING(KeyCode::Y);
+			KEYCODE_TO_STRING(KeyCode::Z);
+			KEYCODE_TO_STRING(KeyCode::Backspace);
+			KEYCODE_TO_STRING(KeyCode::Tab);
+			KEYCODE_TO_STRING(KeyCode::Return);
+			KEYCODE_TO_STRING(KeyCode::Shift);
+			KEYCODE_TO_STRING(KeyCode::LShift);
+			KEYCODE_TO_STRING(KeyCode::RShift);
+			KEYCODE_TO_STRING(KeyCode::Ctrl);
+			KEYCODE_TO_STRING(KeyCode::LCtrl);
+			KEYCODE_TO_STRING(KeyCode::RCtrl);
+			KEYCODE_TO_STRING(KeyCode::Alt);
+			KEYCODE_TO_STRING(KeyCode::LAlt);
+			KEYCODE_TO_STRING(KeyCode::RAlt);
+			KEYCODE_TO_STRING(KeyCode::Pause);
+			KEYCODE_TO_STRING(KeyCode::CapsLock);
+			KEYCODE_TO_STRING(KeyCode::Escape);
+			KEYCODE_TO_STRING(KeyCode::Space);
+			KEYCODE_TO_STRING(KeyCode::PageUp);
+			KEYCODE_TO_STRING(KeyCode::PageDown);
+			KEYCODE_TO_STRING(KeyCode::End);
+			KEYCODE_TO_STRING(KeyCode::Home);
+			KEYCODE_TO_STRING(KeyCode::Up);
+			KEYCODE_TO_STRING(KeyCode::Left);
+			KEYCODE_TO_STRING(KeyCode::Down);
+			KEYCODE_TO_STRING(KeyCode::Right);
+			KEYCODE_TO_STRING(KeyCode::PrintScreen);
+			KEYCODE_TO_STRING(KeyCode::Insert);
+			KEYCODE_TO_STRING(KeyCode::Delete);
+			KEYCODE_TO_STRING(KeyCode::NumPad0);
+			KEYCODE_TO_STRING(KeyCode::NumPad1);
+			KEYCODE_TO_STRING(KeyCode::NumPad2);
+			KEYCODE_TO_STRING(KeyCode::NumPad3);
+			KEYCODE_TO_STRING(KeyCode::NumPad4);
+			KEYCODE_TO_STRING(KeyCode::NumPad5);
+			KEYCODE_TO_STRING(KeyCode::NumPad6);
+			KEYCODE_TO_STRING(KeyCode::NumPad7);
+			KEYCODE_TO_STRING(KeyCode::NumPad8);
+			KEYCODE_TO_STRING(KeyCode::NumPad9);
+			KEYCODE_TO_STRING(KeyCode::Multiply);
+			KEYCODE_TO_STRING(KeyCode::Add);
+			KEYCODE_TO_STRING(KeyCode::Subtract);
+			KEYCODE_TO_STRING(KeyCode::Decimal);
+			KEYCODE_TO_STRING(KeyCode::Divide);
+			KEYCODE_TO_STRING(KeyCode::NumLock);
+			KEYCODE_TO_STRING(KeyCode::F1);
+			KEYCODE_TO_STRING(KeyCode::F2);
+			KEYCODE_TO_STRING(KeyCode::F3);
+			KEYCODE_TO_STRING(KeyCode::F4);
+			KEYCODE_TO_STRING(KeyCode::F5);
+			KEYCODE_TO_STRING(KeyCode::F6);
+			KEYCODE_TO_STRING(KeyCode::F7);
+			KEYCODE_TO_STRING(KeyCode::F8);
+			KEYCODE_TO_STRING(KeyCode::F9);
+			KEYCODE_TO_STRING(KeyCode::F10);
+			KEYCODE_TO_STRING(KeyCode::F11);
+			KEYCODE_TO_STRING(KeyCode::F12);
+			KEYCODE_TO_STRING(KeyCode::F13);
+			KEYCODE_TO_STRING(KeyCode::F14);
+			KEYCODE_TO_STRING(KeyCode::F15);
+			KEYCODE_TO_STRING(KeyCode::F16);
+			KEYCODE_TO_STRING(KeyCode::F17);
+			KEYCODE_TO_STRING(KeyCode::F18);
+			KEYCODE_TO_STRING(KeyCode::F19);
+			KEYCODE_TO_STRING(KeyCode::F20);
+			KEYCODE_TO_STRING(KeyCode::F21);
+			KEYCODE_TO_STRING(KeyCode::F22);
+			KEYCODE_TO_STRING(KeyCode::F23);
+			KEYCODE_TO_STRING(KeyCode::F24);
+			KEYCODE_TO_STRING(KeyCode::ScrollLock);
+			KEYCODE_TO_STRING(KeyCode::Alpha1);
+			KEYCODE_TO_STRING(KeyCode::Alpha2);
+			KEYCODE_TO_STRING(KeyCode::Alpha3);
+			KEYCODE_TO_STRING(KeyCode::Alpha4);
+			KEYCODE_TO_STRING(KeyCode::Alpha5);
+			KEYCODE_TO_STRING(KeyCode::Alpha6);
+			KEYCODE_TO_STRING(KeyCode::Alpha7);
+			KEYCODE_TO_STRING(KeyCode::Alpha8);
+			KEYCODE_TO_STRING(KeyCode::Alpha9);
+			KEYCODE_TO_STRING(KeyCode::Alpha0);
+			KEYCODE_TO_STRING(KeyCode::BackQuote);
+			KEYCODE_TO_STRING(KeyCode::AlphaMinus);
+			KEYCODE_TO_STRING(KeyCode::AlphaEqual);
+			KEYCODE_TO_STRING(KeyCode::Slash);
+			KEYCODE_TO_STRING(KeyCode::BackSlash);
+			KEYCODE_TO_STRING(KeyCode::Apps);
+			KEYCODE_TO_STRING(KeyCode::LeftBracket);
+			KEYCODE_TO_STRING(KeyCode::RightBracket);
+			KEYCODE_TO_STRING(KeyCode::SemiColon);
+			KEYCODE_TO_STRING(KeyCode::Apostrophe);
+			KEYCODE_TO_STRING(KeyCode::Comma);
+			KEYCODE_TO_STRING(KeyCode::Period);
+			KEYCODE_TO_STRING(KeyCode::Start);
+		}
+		return "Unknown";
+	}
+
 #ifdef CT_PLATFORM_WINDOWS
     KeyCode WinKeyToInputSystem(size_t key)
     {

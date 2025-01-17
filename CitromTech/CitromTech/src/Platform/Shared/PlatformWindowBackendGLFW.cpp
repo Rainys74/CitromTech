@@ -7,6 +7,8 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
+#include "Input/KeyboardInput.h"
+
 #ifdef CT_PLATFORM_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 //#define GLFW_NATIVE_INCLUDE_NONE
@@ -102,6 +104,37 @@ namespace Citrom::Platform
                         mouseUpEvent.mouseButton = EventMouseButton::Null;
 
                     EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+                }
+                break;
+            }
+        });
+        // WM_KEYDOWN, WM_KEYUP
+        glfwSetKeyCallback(glfwWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
+            switch (action)
+            {
+                case GLFW_PRESS:
+                {
+                    KeyDownEvent keyDownEvent;
+                    keyDownEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+
+                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
+                }
+                break;
+                case GLFW_RELEASE:
+                {
+                    KeyUpEvent keyUpEvent;
+                    keyUpEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+
+                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyUpEvent);
+                }
+                break;
+                case GLFW_REPEAT:
+                {
+                    KeyRepeatEvent keyRepeatEvent;
+                    keyRepeatEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+
+                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyRepeatEvent);
                 }
                 break;
             }
