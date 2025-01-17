@@ -26,8 +26,8 @@ namespace Citrom::RenderAPI
 		void Resize(uint32 width, uint32 height) override;
 
 		// Buffer
-		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override { return VertexBuffer(); }
-		void BindVertexBuffer(VertexBuffer* vb) override {}
+		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;
+		void BindVertexBuffer(VertexBuffer* vb) override;
 
 		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
 		void BindIndexBuffer(IndexBuffer* ib) override;

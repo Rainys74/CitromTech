@@ -6,11 +6,19 @@
 
 namespace Citrom::RenderAPI
 {
-	// TODO: implement the Device's VB functions here
 	struct VertexBufferDX11
 	{
 		WRL::ComPtr<ID3D11Buffer> buffer;
 	};
+
+	VertexBuffer DX11Device::CreateVertexBuffer(VertexBufferDesc* descriptor) 
+	{ 
+		return VertexBuffer(); 
+	}
+	void DX11Device::BindVertexBuffer(VertexBuffer* vb)
+	{
+
+	}
 
 	struct IndexBufferDX11
 	{
