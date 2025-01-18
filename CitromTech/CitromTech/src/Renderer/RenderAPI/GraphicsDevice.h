@@ -93,6 +93,8 @@ namespace Citrom::RenderAPI
 		static Device* CreateDevice();
 		static Device* s_Instance;
 	protected:
+		// Helper functions
+		size_t GetFormatSize(Format format);
 	};
 
 	// Device for checking the validity of the API, do not use directly! only used for inheritance.

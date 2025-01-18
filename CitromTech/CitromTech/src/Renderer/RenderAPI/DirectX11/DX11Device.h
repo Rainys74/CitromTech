@@ -52,7 +52,7 @@ namespace Citrom::RenderAPI
 		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
 
 		WRL::ComPtr<ID3DBlob> DX11GetVertexShaderBlob(const Shader* shader);
-		WRL::ComPtr<ID3D11Buffer> DX11GetVertexBuffer(const VertexBuffer* vb);
+		//WRL::ComPtr<ID3D11Buffer> DX11GetVertexBuffer(const VertexBuffer* vb);
 
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);

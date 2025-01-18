@@ -79,4 +79,20 @@ namespace Citrom::RenderAPI
         }
         return nullptr;
     }
+
+    size_t Device::GetFormatSize(Format format)
+    {
+#define FORMATSIZE_CASE(x, y, z) case (x): return sizeof(y) * (z); break
+
+        switch (format)
+        {
+            default: case Format::Unknown: return 0; break;
+
+            FORMATSIZE_CASE(Format::R32_FLOAT, float32, 1);
+            FORMATSIZE_CASE(Format::R32G32_FLOAT, float32, 2);
+            FORMATSIZE_CASE(Format::R32G32B32_FLOAT, float32, 3);
+            FORMATSIZE_CASE(Format::R32G32B32A32_FLOAT, float32, 4);
+        }
+        return 0;
+    }
 }

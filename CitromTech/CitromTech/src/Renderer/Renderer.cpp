@@ -86,6 +86,8 @@ namespace Citrom
 
 	void Renderer::DrawTest()
 	{
+		CT_PROFILE_STATIC_FUNCTION(Renderer);
+
 		float positions[] =
 		{
 			-0.5f, -0.5f, 0.0f,
@@ -112,6 +114,7 @@ namespace Citrom
 		vbd1.data = positions;
 		vbd1.size = sizeof(positions);
 		vbd1.usage = Usage::Static;
+		vbd1.format = Format::R32G32B32_FLOAT;
 
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
 		m_Device->BindVertexBuffer(&vbo1);
