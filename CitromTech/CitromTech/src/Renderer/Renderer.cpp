@@ -84,6 +84,19 @@ namespace Citrom
 		m_Device->SwapBuffers();
 	}
 
+	void Renderer::Begin()
+	{
+	}
+
+	void Renderer::End()
+	{
+	}
+
+	void Renderer::SubmitScene(const Scene* scene)
+	{
+
+	}
+
 	void Renderer::DrawTest()
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
