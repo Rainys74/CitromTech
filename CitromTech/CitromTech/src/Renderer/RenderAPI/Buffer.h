@@ -53,9 +53,7 @@ namespace Citrom::RenderAPI
 		const void* data;
 		size_t size;
 		Usage usage;
-		Format format; // Vertex Data position format
-		// TODO: since position format isn't going to cut it long term
-		// consider adding a pointer to vb layouts over here
+		const VertexBufferLayoutDesc* vbLayoutDesc;
 	};
 
 	struct VertexBuffer

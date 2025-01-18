@@ -95,4 +95,14 @@ namespace Citrom::RenderAPI
         }
         return 0;
     }
+
+    size_t Device::GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec)
+    {
+        size_t stridePerVertex = 0;
+        for (auto& element : vbLayoutSpec->layoutElements)
+        {
+            stridePerVertex += GetFormatSize(element.elementFormat);
+        }
+        return stridePerVertex;
+    }
 }

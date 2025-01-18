@@ -40,7 +40,7 @@ namespace Citrom::RenderAPI
 		void BindShader(Shader* shader) override;
 
 		// Render Commands
-		void RCDrawIndexed(uint32 indexCount) override;
+		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
 		// ImGui

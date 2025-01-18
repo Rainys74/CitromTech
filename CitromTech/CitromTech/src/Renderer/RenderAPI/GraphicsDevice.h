@@ -82,7 +82,7 @@ namespace Citrom::RenderAPI
 		virtual void BindShader(Shader* shader) = 0;
 
 		// Render Commands
-		virtual void RCDrawIndexed(uint32 indexCount) = 0;
+		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
 
 		// ImGui
@@ -95,6 +95,7 @@ namespace Citrom::RenderAPI
 	protected:
 		// Helper functions
 		size_t GetFormatSize(Format format);
+		size_t GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec);
 	};
 
 	// Device for checking the validity of the API, do not use directly! only used for inheritance.

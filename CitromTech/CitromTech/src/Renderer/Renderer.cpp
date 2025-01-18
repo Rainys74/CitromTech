@@ -109,16 +109,6 @@ namespace Citrom
 		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
 		m_Device->BindIndexBuffer(&ibo);
 
-		// Vertex Buffer 1
-		VertexBufferDesc vbd1 = {};
-		vbd1.data = positions;
-		vbd1.size = sizeof(positions);
-		vbd1.usage = Usage::Static;
-		vbd1.format = Format::R32G32B32_FLOAT;
-
-		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
-		m_Device->BindVertexBuffer(&vbo1);
-
 		// Shader
 		ShaderDesc sd = {};
 		sd.name = "Standard";
@@ -134,6 +124,16 @@ namespace Citrom
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		m_Device->BindVertexBufferLayout(&vbLayout1);
+
+		// Vertex Buffer 1
+		VertexBufferDesc vbd1 = {};
+		vbd1.data = positions;
+		vbd1.size = sizeof(positions);
+		vbd1.usage = Usage::Static;
+		vbd1.vbLayoutDesc = &vbld1;
+
+		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
+		m_Device->BindVertexBuffer(&vbo1);
 
 		m_Device->RCDrawIndexed(ibo.GetCount());
 	}

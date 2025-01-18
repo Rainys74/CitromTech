@@ -10,9 +10,22 @@ namespace Citrom::RenderAPI
 		const float colors[] = { r, g, b, a };
 		DXCall(m_DeviceContext->ClearRenderTargetView(m_RenderTarget, colors));
 	}
-	void DX11Device::RCDrawIndexed(uint32 indexCount)
+	void DX11Device::RCDrawIndexed(uint32 indexCount, uint32 startIndex, int32 baseVertexLocation)
 	{
-		DXCall(m_DeviceContext->DrawIndexed(indexCount, 0, 0));
+		//glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)), baseVertex);
+		// or
+		//glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)));
+		//vkCmdDrawIndexed(commandBuffer, indexCount, 1, startIndex, baseVertex, instanceOffset);
+		/*
+		* [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                   indexCount:indexCount
+                    indexType:MTLIndexTypeUInt32
+                  indexBuffer:indexBuffer
+            indexBufferOffset:startIndex * sizeof(uint32_t)
+                    instanceCount:1
+                   baseVertex:baseVertex];
+		*/
+		DXCall(m_DeviceContext->DrawIndexed(indexCount, startIndex, baseVertexLocation));
 	}
 }
 #endif

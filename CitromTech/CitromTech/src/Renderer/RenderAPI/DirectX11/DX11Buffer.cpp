@@ -32,7 +32,7 @@ namespace Citrom::RenderAPI
 			vbd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
 		vbd.MiscFlags = 0;
 		vbd.ByteWidth = descriptor->size * sizeof(float);
-		vbd.StructureByteStride = GetFormatSize(descriptor->format); // 3 for x, y, z * type
+		vbd.StructureByteStride = GetLayoutStride(descriptor->vbLayoutDesc);
 
 		D3D11_SUBRESOURCE_DATA vsd = {};
 		vsd.pSysMem = descriptor->data;
@@ -48,7 +48,7 @@ namespace Citrom::RenderAPI
 		auto internalData = static_cast<VertexBufferDX11*>(vb->internal.get());
 
 		// Bind Vertex Buffer to pipeline
-		const UINT stride = GetFormatSize(vb->descriptor.format); // TODO: figure out if this and StructureByteStride is enough.
+		const UINT stride = GetLayoutStride(vb->descriptor.vbLayoutDesc);
 		const UINT offset = 0;
 		DXCall(m_DeviceContext->IASetVertexBuffers(0, 1, internalData->buffer.GetAddressOf(), &stride, &offset));
 	}
