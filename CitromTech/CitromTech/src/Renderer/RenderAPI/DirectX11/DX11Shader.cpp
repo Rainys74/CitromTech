@@ -81,5 +81,34 @@ namespace Citrom::RenderAPI
 
 		return internalData->vertexBlob;
 	}
+
+	DXGI_FORMAT DX11Device::FormatToDXGIFormat(Format format)
+	{
+#define FORMAT_TODXGICASE(x, y) case (x): return (y); break
+		switch (format)
+		{
+			default: return DXGI_FORMAT_UNKNOWN; break;
+
+			FORMAT_TODXGICASE(Format::Unknown, DXGI_FORMAT_UNKNOWN);
+			FORMAT_TODXGICASE(Format::R32_FLOAT, DXGI_FORMAT_R32_FLOAT);
+			FORMAT_TODXGICASE(Format::R32G32_FLOAT, DXGI_FORMAT_R32G32_FLOAT);
+			FORMAT_TODXGICASE(Format::R32G32B32_FLOAT, DXGI_FORMAT_R32G32B32_FLOAT);
+			FORMAT_TODXGICASE(Format::R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		}
+	}
+
+	D3D11_USAGE DX11Device::UsageToD3D11Usage(Usage usage)
+	{
+		switch (usage)
+		{
+			default:
+			case Usage::Static:
+				return D3D11_USAGE_DEFAULT;
+				break;
+			case Usage::Dynamic:
+				return D3D11_USAGE_DYNAMIC;
+				break;
+		}
+	}
 }
 #endif

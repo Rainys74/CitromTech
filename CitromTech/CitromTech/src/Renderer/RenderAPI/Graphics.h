@@ -39,6 +39,19 @@ namespace Citrom::RenderAPI
 		Fragment // Pixel
 	};
 
+	enum class Format
+	{
+		Unknown,
+
+		// Float
+		R32_FLOAT, // 1
+		R32G32_FLOAT, // 2
+		R32G32B32_FLOAT, // 3
+		R32G32B32A32_FLOAT, // 4
+
+		Count
+	};
+
 	struct GPUInfo
 	{
 		std::string vendor;

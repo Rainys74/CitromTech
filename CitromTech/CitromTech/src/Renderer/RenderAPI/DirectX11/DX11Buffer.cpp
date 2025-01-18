@@ -18,11 +18,45 @@ namespace Citrom::RenderAPI
 
 	VertexBuffer DX11Device::CreateVertexBuffer(VertexBufferDesc* descriptor) 
 	{ 
-		return VertexBuffer(); 
+		VertexBuffer vb;
+		vb.internal = CTL::CreateRef<VertexBufferDX11>();
+		auto internalData = static_cast<VertexBufferDX11*>(vb.internal.get());
+		vb.descriptor = *descriptor;
+
+		// Create vertex buffer
+		D3D11_BUFFER_DESC vbd = {};
+		vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		vbd.Usage = UsageToD3D11Usage(descriptor->usage);
+		vbd.CPUAccessFlags = 0;
+		if (vbd.Usage == D3D11_USAGE_DYNAMIC)
+			vbd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
+		vbd.MiscFlags = 0;
+		vbd.ByteWidth = descriptor->size * sizeof(float);
+		vbd.StructureByteStride = 3 * sizeof(float); // 3 for x, y, z
+
+		D3D11_SUBRESOURCE_DATA vsd = {};
+		vsd.pSysMem = descriptor->data;
+
+		HRESULT hr;
+		DXCallHR(m_Device->CreateBuffer(&vbd, &vsd, &internalData->buffer));
+
+		return vb;
 	}
 	void DX11Device::BindVertexBuffer(VertexBuffer* vb)
 	{
+		// // TODO: remove this since vertex buffer needs layout information to get bound, so it will most likely get bound in BindVertexBufferLayout
+		auto internalData = static_cast<VertexBufferDX11*>(vb->internal.get());
 
+		// Bind Vertex Buffer to pipeline
+		const UINT stride = 3 * sizeof(float); // TODO: figure this and StructureByteStride out.
+		const UINT offset = 0;
+		DXCall(m_DeviceContext->IASetVertexBuffers(0, 1, internalData->buffer.GetAddressOf(), &stride, &offset));
+	}
+	WRL::ComPtr<ID3D11Buffer> DX11GetVertexBuffer(const VertexBuffer* vb)
+	{
+		auto internalData = static_cast<VertexBufferDX11*>(vb->internal.get());
+
+		return internalData->buffer;
 	}
 
 	VertexBufferLayout DX11Device::CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor)
@@ -33,21 +67,35 @@ namespace Citrom::RenderAPI
 		//vbLayout.descriptor = *descriptor; // caused a hard to debug error..
 
 		// input (vertex) layout
-		// TODO: this is hardcoded af
-		D3D11_INPUT_ELEMENT_DESC ied = {};
-		ied.SemanticName = "Position";
-		ied.SemanticIndex = 0;
-		ied.Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		ied.InputSlot = 0; // not important
-		ied.AlignedByteOffset = 0;
-		// Instancing stuff (not important)
-		ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		ied.InstanceDataStepRate = 0;
+		CTL::DArray<D3D11_INPUT_ELEMENT_DESC> ieds;
+		for (auto& element : descriptor->layoutElements)
+		{
+			D3D11_INPUT_ELEMENT_DESC ied = {};
+			ied.SemanticName = element.elementName.c_str();
+			ied.SemanticIndex = element.elementID;
+			ied.Format = FormatToDXGIFormat(element.elementFormat);
+			ied.InputSlot = 0; // not important
+			ied.AlignedByteOffset = 0; // TODO: offset between the first item and the current in bytes
+			// Instancing stuff (not important)
+			ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+			ied.InstanceDataStepRate = 0;
+
+			ieds.PushBack(ied);
+		}
+		//D3D11_INPUT_ELEMENT_DESC ied = {};
+		//ied.SemanticName = "Position";
+		//ied.SemanticIndex = 0;
+		//ied.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		//ied.InputSlot = 0; // not important
+		//ied.AlignedByteOffset = 0;
+		//// Instancing stuff (not important)
+		//ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		//ied.InstanceDataStepRate = 0;
 
 		WRL::ComPtr<ID3DBlob> blob = DX11GetVertexShaderBlob(descriptor->shader);
 
 		HRESULT hr;
-		DXCallHR(m_Device->CreateInputLayout(&ied, 1, blob->GetBufferPointer(), blob->GetBufferSize(), &internalData->inputLayout));
+		DXCallHR(m_Device->CreateInputLayout(ieds.Data(), ieds.Count(), blob->GetBufferPointer(), blob->GetBufferSize(), &internalData->inputLayout));
 
 		return vbLayout;
 	}
@@ -75,7 +123,7 @@ namespace Citrom::RenderAPI
 
 		D3D11_BUFFER_DESC ibd = {};
 		ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		ibd.Usage = D3D11_USAGE_DEFAULT; // use descriptor->usage
+		ibd.Usage = UsageToD3D11Usage(descriptor->usage);
 		ibd.CPUAccessFlags = 0;
 		if (ibd.Usage == D3D11_USAGE_DYNAMIC)
 			ibd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;

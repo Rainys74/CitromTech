@@ -126,7 +126,8 @@ namespace Citrom
 		// Vertex Buffer 1 Layout
 		VertexBufferLayoutDesc vbld1 = {};
 		vbld1.shader = &shader;
-		//vbld1.PushLayout();
+
+		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		m_Device->BindVertexBufferLayout(&vbLayout1);
