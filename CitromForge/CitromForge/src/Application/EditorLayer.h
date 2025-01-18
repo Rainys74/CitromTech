@@ -23,3 +23,9 @@ constexpr bool IsEditorBuild()
 	return false;
 #endif
 }
+
+#ifdef CT_EDITOR_ENABLED
+#define IF_EDITOR(x) x
+#else
+#define IF_EDITOR(x)
+#endif

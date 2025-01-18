@@ -15,7 +15,9 @@ namespace Citrom
 	{
 		Math::Vector3 position;
 	};
-
+	
+	// TODO: create a modular render path system with
+	// extendable render steps
 	class Renderer
 	{
 	public:

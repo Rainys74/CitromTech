@@ -71,6 +71,9 @@ namespace Citrom::RenderAPI
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
 		virtual void BindVertexBuffer(VertexBuffer* vb) = 0;
 
+		virtual VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) = 0;
+		virtual void BindVertexBufferLayout(VertexBufferLayout* vbLayout) = 0;
+
 		virtual IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) = 0;
 		virtual void BindIndexBuffer(IndexBuffer* ib) = 0;
 

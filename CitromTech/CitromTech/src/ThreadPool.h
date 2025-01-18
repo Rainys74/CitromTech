@@ -22,6 +22,8 @@ namespace Citrom
 
 		void Submit(void* job, void* args);
 
+		//void ForEach(iterators, callback, shouldWait)
+
 		FORCE_INLINE uint32 GetJobCount() { return m_QueueJobs.Count(); }
 
 		Platform::Mutex& GetMutex() { return m_Mutex; }

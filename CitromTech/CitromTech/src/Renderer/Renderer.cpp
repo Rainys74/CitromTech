@@ -99,6 +99,7 @@ namespace Citrom
 			//2, 3, 0
 		};
 
+		// Index Buffer
 		IndexBufferDesc ibd = {};
 		ibd.data = indices;
 		ibd.count = 3;
@@ -115,7 +116,22 @@ namespace Citrom
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
 		m_Device->BindVertexBuffer(&vbo1);
 
-		//m_Device->RCDrawIndexed(ibo.GetCount());
+		// Shader
+		ShaderDesc sd = {};
+		sd.name = "Standard";
+
+		Shader shader = m_Device->CreateShader(&sd);
+		m_Device->BindShader(&shader);
+
+		// Vertex Buffer 1 Layout
+		VertexBufferLayoutDesc vbld1 = {};
+		vbld1.shader = &shader;
+		//vbld1.PushLayout();
+
+		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
+		m_Device->BindVertexBufferLayout(&vbLayout1);
+
+		m_Device->RCDrawIndexed(ibo.GetCount());
 	}
 
 	

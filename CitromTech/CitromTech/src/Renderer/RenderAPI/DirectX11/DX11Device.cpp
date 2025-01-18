@@ -79,6 +79,11 @@ namespace Citrom::RenderAPI
 		HRESULT hr;
 
 		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, D3D11_CREATE_DEVICE_DEBUG /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, &m_D3DFeatureLevel, &m_DeviceContext));
+
+		// TODO: afaik this is set in initialization in vulkan and metal
+		// every time you draw call in opengl, and however you want in d3d11.
+		// Set primitive topology to triangle list (groups of 3 vertices)
+		m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	DX11Device::~DX11Device()
 	{

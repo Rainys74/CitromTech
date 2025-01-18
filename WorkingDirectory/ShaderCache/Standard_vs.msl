@@ -1,0 +1,44 @@
+#include <metal_stdlib>
+#include <metal_texture>
+using namespace metal;
+
+#if !(__HAVE_FMA__)
+#define fma(a,b,c) ((a) * (b) + (c))
+#endif
+
+struct CBuf_Type
+{
+    float4x4 transform;
+};
+
+struct Mtl_VertexIn
+{
+    float3 Position0 [[ attribute(0) ]] ;
+};
+
+struct Mtl_VertexOut
+{
+    float4 mtl_Position [[ position ]];
+};
+
+vertex Mtl_VertexOut xlatMtlMain(
+    constant CBuf_Type& CBuf [[ buffer(0) ]],
+    Mtl_VertexIn input [[ stage_in ]])
+{
+    Mtl_VertexOut output;
+    //--- Start Early Main ---
+    float3 u_xlat0;
+    //--- End Early Main ---
+    //MOV
+    output.mtl_Position.zw = float2(0.0, 1.0);
+    //MOV
+    u_xlat0.xy = input.Position0.xy;
+    //MOV
+    u_xlat0.z = 1.0;
+    //DP3
+    output.mtl_Position.x = dot(u_xlat0.xyz, CBuf.transform[0].xyw);
+    //DP3
+    output.mtl_Position.y = dot(u_xlat0.xyz, CBuf.transform[1].xyw);
+    //RET
+    return output;
+}

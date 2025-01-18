@@ -121,7 +121,7 @@ int SharedMain(int argc, char* argv[])
 	CT_INFO("Initializing Thread Pool with {} threads. Thread count is ({})", threadCount - 1, threadCount);
 
 	// TODO: eventually change the -1
-	ThreadPool::Initialize(threadCount - 1);
+	//ThreadPool::Initialize(threadCount - 1);
 
 #if 0
 	TestOutMain(argc, argv);

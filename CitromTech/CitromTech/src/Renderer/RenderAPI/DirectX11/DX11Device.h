@@ -29,12 +29,15 @@ namespace Citrom::RenderAPI
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;
 		void BindVertexBuffer(VertexBuffer* vb) override;
 
+		VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) override;
+		void BindVertexBufferLayout(VertexBufferLayout* vbLayout) override;
+
 		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
 		void BindIndexBuffer(IndexBuffer* ib) override;
 
 		// Shader
-		Shader CreateShader(ShaderDesc* descriptor) override { return Shader(); }
-		void BindShader(Shader* shader) override {}
+		Shader CreateShader(ShaderDesc* descriptor) override;
+		void BindShader(Shader* shader) override;
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount) override;
@@ -47,6 +50,8 @@ namespace Citrom::RenderAPI
 		// DirectX11 Special
 		ID3D11Device* DX11GetDevice() { return m_Device; }
 		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
+
+		WRL::ComPtr<ID3DBlob> DX11GetVertexShaderBlob(const Shader* shader);
 	private:
 		// Helper Functions
 		void CreateRenderTarget();
