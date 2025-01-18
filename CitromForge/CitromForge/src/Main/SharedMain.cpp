@@ -24,6 +24,7 @@
 
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
+#include "Math/Matrix4x4.h"
 
 #include "Profiling/Profiler.h"
 
@@ -211,6 +212,15 @@ int SharedMain(int argc, char* argv[])
 	CT_WARN("Editor Build: {}", IsEditorBuild());
 
 	//CT_CORE_ASSERT(false, "Test assert!");
+
+	//Math::Matrix4x4 testMat(1.0f);
+	//Math::Matrix4x4 testMat{ {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4} , {1, 2, 3, 4} };
+	Math::Matrix4x4 testMat{ {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
+
+	CT_WARN("\n{}", testMat.ToString());
+	CT_ERROR("Transposing...");
+	testMat.Transpose();
+	CT_WARN("\n{}", testMat.ToString());
 
 	using namespace Platform;
 
