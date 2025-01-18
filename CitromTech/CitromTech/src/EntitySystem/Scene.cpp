@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "Components/EssentialComponents.h"
 
 #include "Entity.h"
 
@@ -12,7 +13,12 @@ namespace Citrom
     }
     Entity Scene::CreateEntity()
     {
-        return Entity(m_SceneRegistry.create(), this);
+        Entity entity = Entity(m_SceneRegistry.create(), this);
+
+        entity.AddComponent<UUIDComponent>();
+        entity.AddComponent<TransformComponent>();
+
+        return entity;
     }
     void Scene::DestroyEntity(Entity entity)
     {

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Scene.h"
+#include "Components/EssentialComponents.h"
+
+#include "CitromUUID.h"
 
 namespace Citrom
 {
@@ -34,6 +37,13 @@ namespace Citrom
 		void DestroyComponent()
 		{
 			m_Scene->m_SceneRegistry.remove<T>(m_EntityID);
+		}
+
+		FORCE_INLINE Scene* GetScene() { return m_Scene; }
+
+		UUID UUID()
+		{
+			return GetComponent<UUIDComponent>().id;
 		}
 
 		FORCE_INLINE operator bool() const { return m_EntityID != entt::null; }
