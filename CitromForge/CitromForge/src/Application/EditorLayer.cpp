@@ -6,6 +6,7 @@
 #include "Editor/EditorConsole.h"
 #include "Editor/ProfilerWindow.h"
 #include "Editor/PreferenceWindow.h"
+#include "Editor/SceneHierarchy.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -45,6 +46,7 @@ void EditorLayer::OnImGuiRender()
 	//ImGui::ShowDemoWindow(&show);
 
     static bool preferenceWindowOpen = false; // preferenceWindowOn, Open, Show, Enabled, Status
+    static bool sceneHierarchyOpen = true;
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
@@ -126,6 +128,8 @@ void EditorLayer::OnImGuiRender()
         ImGui::EndTabBar();
     }
     ImGui::End();
+
+    SceneHierarchyWindow::ImGuiDraw(nullptr);
 
     PreferenceWindow::ImGuiDraw(&preferenceWindowOpen);
 
