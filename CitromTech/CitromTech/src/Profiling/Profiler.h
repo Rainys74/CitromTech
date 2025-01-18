@@ -3,6 +3,7 @@
 #include "Core.h"
 
 #include <string>
+#include <typeinfo>
 
 /*namespace CTL
 {

@@ -216,6 +216,8 @@ int SharedMain(int argc, char* argv[])
 	//Math::Matrix4x4 testMat(1.0f);
 	//Math::Matrix4x4 testMat{ {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4} , {1, 2, 3, 4} };
 	Math::Matrix4x4 testMat{ {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
+	Math::Matrix4x4 idMat(Math::Matrix4x4::Identity());
+	CT_VERBOSE("\n{}\n", idMat.ToString());
 
 	CT_WARN("\n{}", testMat.ToString());
 	CT_ERROR("Transposing...");
