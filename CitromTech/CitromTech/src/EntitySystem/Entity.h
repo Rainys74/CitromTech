@@ -12,6 +12,7 @@ namespace Citrom
 	public:
 		Entity(entt::entity entityID, Scene* parentScene)
 			: m_EntityID(entityID), m_Scene(parentScene) {}
+		Entity(const Entity&) = default;
 		~Entity() = default;
 
 		template<typename T, typename... Args>

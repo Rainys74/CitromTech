@@ -11,3 +11,5 @@ void ForgeLoop();
 
 float64 MainDeltaTime();
 float64 MainFPS();
+
+void* GetCurrentScene();

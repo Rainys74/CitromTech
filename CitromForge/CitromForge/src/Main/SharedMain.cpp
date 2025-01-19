@@ -22,6 +22,10 @@
 
 #include "Renderer/Renderer.h"
 
+#include "EntitySystem/Entity.h"
+#include "EntitySystem/Components/EssentialComponents.h"
+#include "EntitySystem/Components/RendererComponents.h"
+
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
@@ -43,6 +47,8 @@ Platform::Window g_Window;
 LayerStack g_LayerStack;
 ImGuiLayer g_ImLayer;
 
+Scene* g_CurrentScene;
+
 float64 g_DeltaTime; // Frame Time
 
 // Layers
@@ -56,6 +62,11 @@ float64 MainDeltaTime()
 float64 MainFPS()
 {
 	return 1.0 / g_DeltaTime;
+}
+
+void* GetCurrentScene()
+{
+	return g_CurrentScene;
 }
 
 int SharedMain(int argc, char* argv[])
@@ -291,6 +302,14 @@ void ForgeLoop()
 		g_LayerStack.Render();
 
 		Renderer::DrawTest();
+
+		Scene scene; g_CurrentScene = &scene;
+		Entity cube1 = g_CurrentScene->CreateEntity();
+		Entity e2 = g_CurrentScene->CreateEntity();
+		CubeComponent& cubeComponent = cube1.AddComponent<CubeComponent>();
+		cubeComponent.material.shaderName = "Standard";
+
+		Renderer::SubmitScene(g_CurrentScene);
 
 		{
 			CT_PROFILE_SCOPE("ImGui Render");

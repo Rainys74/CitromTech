@@ -6,6 +6,7 @@
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
 #include "Events/WindowEvents.h"
+
 #include "EntitySystem/Scene.h"
 
 #include "CTL/ScopedPointer.h"
@@ -19,19 +20,13 @@ namespace Citrom
 
 	struct Mesh
 	{
-		CTL::DArray<Vertex> m_Vertices;
-		CTL::DArray<uint32> m_Indices;
+		CTL::DArray<Vertex> vertices;
+		CTL::DArray<uint32> indices;
 	};
 
 	struct Material
 	{
 		std::string shaderName;
-	};
-
-	struct Model
-	{
-		Mesh mesh;
-		Material material;
 	};
 	
 	// TODO: create a modular render path system with
@@ -50,7 +45,7 @@ namespace Citrom
 		static void End();
 
 		//static void Submit(void* model);
-		static void SubmitScene(const Scene* scene);
+		static void SubmitScene(Scene* scene);
 
 		// TODO: temporary
 		static void DrawTest();
@@ -60,6 +55,7 @@ namespace Citrom
 		static void ImGuiRenderDrawData(void* imDrawData);
 	private:
 		// RenderMesh
+		static void RenderMesh(const Mesh& mesh);
 	private:
 		static RenderAPI::Device* m_Device;
 		static EventListener<WindowEvents> s_WindowEventListener;

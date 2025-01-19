@@ -16,6 +16,12 @@ namespace Citrom
 		Entity CreateEntity();
 		void DestroyEntity(Entity entity);
 
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_SceneRegistry.view<Components...>();
+		}
+
 	private:
 		entt::registry m_SceneRegistry;
 

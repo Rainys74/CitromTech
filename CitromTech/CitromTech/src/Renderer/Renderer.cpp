@@ -3,6 +3,12 @@
 #include "Renderer/RenderAPI/Buffer.h"
 #include "Vendor/stb/stb_image_write.h"
 
+#include "EntitySystem/Components/EssentialComponents.h"
+#include "EntitySystem/Components/RendererComponents.h"
+#include "EntitySystem/Entity.h"
+
+#include "Math/Vector.h"
+
 namespace Citrom
 {
 	using namespace RenderAPI;
@@ -93,9 +99,72 @@ namespace Citrom
 	{
 	}
 
-	void Renderer::SubmitScene(const Scene* scene)
+	void Renderer::SubmitScene(Scene* scene)
 	{
+		// TODO: make sure it uses submittion
+		// Right now it draws immediately
+		auto view = scene->GetAllEntitiesWith<CubeComponent>();
+		for (auto cube : view)
+		{
+			//auto& transformComponent = view.get<TransformComponent>(cube);
+			//auto& cubeComponent = view.get<CubeComponent>(cube);
 
+			static constexpr float32 positions[] =
+			{
+				// Front face
+				-0.5f, -0.5f,  0.5f, // Bottom-left
+				 0.5f, -0.5f,  0.5f, // Bottom-right
+				 0.5f,  0.5f,  0.5f, // Top-right
+				-0.5f,  0.5f,  0.5f, // Top-left
+
+				// Back face
+				-0.5f, -0.5f, -0.5f, // Bottom-left
+				 0.5f, -0.5f, -0.5f, // Bottom-right
+				 0.5f,  0.5f, -0.5f, // Top-right
+				-0.5f,  0.5f, -0.5f, // Top-left
+			};
+			static constexpr uint32 indices[] =
+			{
+				// Front face
+				0, 1, 2,
+				2, 3, 0,
+
+				// Back face
+				4, 5, 6,
+				6, 7, 4,
+
+				// Left face
+				4, 0, 3,
+				3, 7, 4,
+
+				// Right face
+				1, 5, 6,
+				6, 2, 1,
+
+				// Top face
+				3, 2, 6,
+				6, 7, 3,
+
+				// Bottom face
+				4, 5, 1,
+				1, 0, 4,
+			};
+
+			Mesh cubeMesh;
+
+			for (size_t i = 0; i < CT_ARRAY_LENGTH(positions) / 3; i++)
+			{
+				Vertex v;
+				v.position = Math::Vector3({ positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2] });
+
+				cubeMesh.vertices.PushBack(v);
+			}
+
+			for (size_t i = 0; i < CT_ARRAY_LENGTH(indices); i++)
+				cubeMesh.indices.PushBack(indices[i]);
+
+			RenderMesh(cubeMesh);
+		}
 	}
 
 	void Renderer::DrawTest()
@@ -155,7 +224,7 @@ namespace Citrom
 		fbd1.format = FramebufferFormat::RGBA8;
 		Framebuffer fbo1 = m_Device->CreateFramebuffer(&fbd1);
 
-		m_Device->SetTargetFramebuffer(&fbo1);
+		//m_Device->SetTargetFramebuffer(&fbo1);
 
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
@@ -196,5 +265,10 @@ namespace Citrom
 	void Renderer::ImGuiRenderDrawData(void* imDrawData)
 	{
 		m_Device->ImGuiRenderDrawData(imDrawData);
+	}
+
+	void Renderer::RenderMesh(const Mesh& mesh)
+	{
+
 	}
 }

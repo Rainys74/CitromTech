@@ -1,8 +1,12 @@
 #include "SceneHierarchy.h"
+#include "Main/SharedMain.h"
+
+#include "EntitySystem/Scene.h"
+#include "EntitySystem/Components/EssentialComponents.h"
 
 #include "imgui.h"
 
-//using namespace Citrom;
+using namespace Citrom;
 
 static void DrawRightClickPopupContext()
 {
@@ -42,6 +46,17 @@ static void DrawRightClickPopupContext()
     }
 }
 
+static void DrawHierarchy(Scene* scene)
+{
+    // probably use .each later on
+    auto view = scene->GetAllEntitiesWith<UUIDComponent>();
+    for (auto entity : view)
+    {
+        const UUIDComponent uuidComponent = view.get<UUIDComponent>(entity);
+        ImGui::Text("%zu", uuidComponent.id);
+    }
+}
+
 void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
 {
     if (showWindow && !(*showWindow))
@@ -50,6 +65,8 @@ void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
     ImGui::Begin("Scene Hierarchy", showWindow);
     
     DrawRightClickPopupContext();
+
+    DrawHierarchy((Scene*)GetCurrentScene());
 
     ImGui::End();
 }
