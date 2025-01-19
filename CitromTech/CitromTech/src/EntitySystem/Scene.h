@@ -21,6 +21,21 @@ namespace Citrom
 		{
 			return m_SceneRegistry.view<Components...>();
 		}
+		
+		/*template<typename T, typename... Args>
+		void ForEachEntityCallback(Args&&... args)
+		{
+			m_Scene->m_Registry.each(std::forward<Args>(args)...);
+		}*/
+		/*template<typename T, typename... Args>
+		void ForEachEntityCallback(void(*callback)(T&, Args&&...))
+		{
+			m_Scene->m_Registry.each([callback](auto entity) 
+			{
+				auto& component = m_Scene->m_Registry.get<T>(entity);
+				callback(component, std::forward<Args>(args)...);
+			});
+		}*/
 
 	private:
 		entt::registry m_SceneRegistry;

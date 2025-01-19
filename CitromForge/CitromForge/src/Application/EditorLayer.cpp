@@ -7,6 +7,7 @@
 #include "Editor/ProfilerWindow.h"
 #include "Editor/PreferenceWindow.h"
 #include "Editor/SceneHierarchy.h"
+#include "Editor/InspectorWindow.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -130,6 +131,7 @@ void EditorLayer::OnImGuiRender()
     ImGui::End();
 
     SceneHierarchyWindow::ImGuiDraw(nullptr);
+    InspectorWindow::ImGuiDraw(nullptr);
 
     PreferenceWindow::ImGuiDraw(&preferenceWindowOpen);
 

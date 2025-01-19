@@ -3,10 +3,13 @@
 
 #include "EntitySystem/Scene.h"
 #include "EntitySystem/Components/EssentialComponents.h"
+#include "Logger/Logger.h"
 
 #include "imgui.h"
 
 using namespace Citrom;
+
+static entt::entity g_SelectedEntity = entt::null;
 
 static void DrawRightClickPopupContext()
 {
@@ -53,7 +56,38 @@ static void DrawHierarchy(Scene* scene)
     for (auto entity : view)
     {
         const UUIDComponent uuidComponent = view.get<UUIDComponent>(entity);
-        ImGui::Text("%zu", uuidComponent.id);
+        //ImGui::Text("%zu", uuidComponent.id);
+        /*ImGuiTreeNodeFlags flags = ((/*entt::null* / entity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+        flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
+        bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, std::to_string(uuidComponent.id).c_str());
+        if (ImGui::IsItemClicked())
+        {
+            CT_WARN("Clicked");
+        }
+
+        if (opened)
+        {
+            ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+            bool opened = ImGui::TreeNodeEx((void*)9817239, flags, std::to_string(uuidComponent.id).c_str());
+            if (opened)
+                ImGui::TreePop();
+            ImGui::TreePop();
+        }*/
+
+        bool isSelected = (g_SelectedEntity == entity);
+
+        //ImGui::GetWindowDrawList()->AddRectFilled(
+        //    ImVec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y),            // Top-left corner
+        //    ImVec2(ImGui::GetCursorPos().x + ImVec2(20.0f, 20.0f).x, ImGui::GetCursorPos().y + ImVec2(20.0f, 20.0f).y), // Bottom-right corner
+        //    IM_COL32(255, 0, 0, 255)                // Red color (RGBA)
+        //);
+
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
+        if (ImGui::Selectable(std::to_string(uuidComponent.id).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
+        {
+            CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
+            g_SelectedEntity = entity;
+        }
     }
 }
 
@@ -69,4 +103,9 @@ void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
     DrawHierarchy((Scene*)GetCurrentScene());
 
     ImGui::End();
+}
+
+void* SceneHierarchyWindow::GetSelectedEntity()
+{
+    return g_SelectedEntity == entt::null ? nullptr : (void*)g_SelectedEntity;
 }
