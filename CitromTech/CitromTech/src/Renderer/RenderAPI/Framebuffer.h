@@ -17,7 +17,7 @@ namespace Citrom::RenderAPI
 
 	struct FramebufferDesc
 	{
-		uint32 width, height;
+		uint32 width = 0, height = 0; // 0 will take the screen's size
 		uint32 samples = 1;
 
 		FramebufferFormat format;

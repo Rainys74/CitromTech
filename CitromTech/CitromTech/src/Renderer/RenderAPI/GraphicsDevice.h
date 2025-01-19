@@ -53,6 +53,8 @@ namespace Citrom::RenderAPI
 		virtual void SetTargetFramebuffer(Framebuffer* fb) = 0;
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb) = 0;
 
+		virtual Image GetImageDataFromTexture(void* texture) = 0;
+
 		// Swap Chain
 		// Thoughts?: user technically should have access to/own the swap chain, but
 		// the device would be a better owner because every time you for example

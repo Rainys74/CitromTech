@@ -20,6 +20,8 @@ namespace Citrom::RenderAPI
 		void SetTargetFramebuffer(Framebuffer* fb) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb) override;
 
+		Image GetImageDataFromTexture(void* texture) override;
+
 		void MakeSwapChain(SwapChainDesc* descriptor) override;
 		void SwapBuffers() override;
 		void SetVSync(VSyncMode vSync) override;

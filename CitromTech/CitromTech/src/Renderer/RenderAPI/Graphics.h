@@ -62,4 +62,13 @@ namespace Citrom::RenderAPI
 
 		size_t videoMemory; // VRAM in bytes
 	};
+
+	struct Image
+	{
+		struct Pixel
+		{
+			uint8 r, g, b, a;
+		};
+		CTL::DArray<Pixel> pixels;
+	};
 }
