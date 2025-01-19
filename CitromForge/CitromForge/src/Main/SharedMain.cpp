@@ -235,6 +235,13 @@ int SharedMain(int argc, char* argv[])
 	testMat.Transpose();
 	CT_WARN("\n{}", testMat.ToString());
 
+	Scene scene; g_CurrentScene = &scene;
+
+	Entity cube1 = g_CurrentScene->CreateEntity();
+	Entity e2 = g_CurrentScene->CreateEntity();
+	CubeComponent& cubeComponent = cube1.AddComponent<CubeComponent>();
+	cubeComponent.material.shaderName = "Standard";
+
 	using namespace Platform;
 
 	g_Window.Create(1280, 720, CTL::String("test"));
@@ -302,12 +309,6 @@ void ForgeLoop()
 		g_LayerStack.Render();
 
 		Renderer::DrawTest();
-
-		Scene scene; g_CurrentScene = &scene;
-		Entity cube1 = g_CurrentScene->CreateEntity();
-		Entity e2 = g_CurrentScene->CreateEntity();
-		CubeComponent& cubeComponent = cube1.AddComponent<CubeComponent>();
-		cubeComponent.material.shaderName = "Standard";
 
 		Renderer::SubmitScene(g_CurrentScene);
 
