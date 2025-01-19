@@ -400,10 +400,18 @@ namespace Citrom::Platform
     }
 	int WindowBackendWin32::GetWidth()
 	{
+		RECT rect;
+		CT_CORE_VERIFY(GetClientRect(m_HWnd, &rect), "Failed to get Client Rect!"); // GetWindowRect()
+		m_Width = rect.right - rect.left;
+		//m_Height = rect.bottom - rect.top;
 		return m_Width;
 	}
 	int WindowBackendWin32::GetHeight()
 	{
+		RECT rect;
+		CT_CORE_VERIFY(GetClientRect(m_HWnd, &rect), "Failed to get Client Rect!"); // GetWindowRect()
+		//m_Width = rect.right - rect.left;
+		m_Height = rect.bottom - rect.top;
 		return m_Height;
 	}
 

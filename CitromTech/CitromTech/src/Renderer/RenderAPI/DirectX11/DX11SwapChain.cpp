@@ -19,7 +19,43 @@ namespace Citrom::RenderAPI
 
 		DXCallHR(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTarget));
 
-		DXCall(m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, nullptr));
+		// Depth Stencil View
+		{
+			D3D11_DEPTH_STENCIL_DESC dsd = {};
+			dsd.DepthEnable = true;
+			dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			dsd.DepthFunc = D3D11_COMPARISON_LESS;
+
+			WRL::ComPtr<ID3D11DepthStencilState> dsState;
+			DXCallHR(m_Device->CreateDepthStencilState(&dsd, &dsState));
+
+			DXCall(m_DeviceContext->OMSetDepthStencilState(dsState.Get(), 1u));
+
+			// Depth Stencil Texture
+			WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
+			D3D11_TEXTURE2D_DESC td = {};
+			td.Width = m_Width;
+			td.Height = m_Height;
+			td.MipLevels = 1;
+			td.ArraySize = 1;
+			td.Format = DXGI_FORMAT_D32_FLOAT; //DXGI_FORMAT_D24_UNORM_S8_UINT
+			td.SampleDesc.Count = 1;
+			td.SampleDesc.Quality = 0;
+			td.Usage = D3D11_USAGE_DEFAULT;
+			td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+			DXCallHR(m_Device->CreateTexture2D(&td, nullptr, &depthStencilTex));
+
+			// Create DSV
+			D3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
+			dsvd.Format = DXGI_FORMAT_D32_FLOAT; // or use DXGI_FORMAT_UNKNOWN to use the texture's
+			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			dsvd.Texture2D.MipSlice = 0;
+
+			DXCallHR(m_Device->CreateDepthStencilView(depthStencilTex.Get(), &dsvd, &m_DepthStencilView));
+		}
+
+		DXCall(m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, m_DepthStencilView.Get()));
 	}
 	void DX11Device::DestroyRenderTarget()
 	{
@@ -32,6 +68,9 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor)
 	{
+		m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
+		m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
+
 		DXGI_SWAP_CHAIN_DESC scd = {};
 		scd.BufferDesc.Width = 0;
 		scd.BufferDesc.Height = 0;

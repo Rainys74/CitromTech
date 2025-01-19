@@ -98,8 +98,11 @@ namespace Citrom::RenderAPI
 			auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
 
 			ID3D11RenderTargetView* renderTargets[2] = { internalData->renderTarget.Get(), m_RenderTarget};
-			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets /*&internalData->renderTarget*/, nullptr));
-			//DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
+			//DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets /*&internalData->renderTarget*/, nullptr));
+			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
+
+			if (internalData->depthStencilView)
+				m_DeviceContext->ClearDepthStencilView(internalData->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 		}
 	}
 	void* DX11Device::GetFramebufferColorAttachment(Framebuffer* fb)

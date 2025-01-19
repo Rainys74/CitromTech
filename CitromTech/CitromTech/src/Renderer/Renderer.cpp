@@ -160,29 +160,29 @@ namespace Citrom
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		void* colorTexture = m_Device->GetFramebufferColorAttachment(&fbo1);
-		Image colorImage = m_Device->GetImageDataFromTexture(colorTexture);
-		for (Image::Pixel& pixel : colorImage.pixels)
-		{
-			//CT_WARN("[{}, {}, {}, {}],\n", pixel.r, pixel.g, pixel.b, pixel.a);
-		}
-
-		{
-			CTL::DArray<uint8> pixels(800 * 600 * 4);
-
-			for (int i = 0; i < 800 * 600; ++i)
-			{
-				const auto& pixel = colorImage.pixels[i];
-
-				int index = i * 4;
-				pixels[index + 0] = pixel.r; // Red
-				pixels[index + 1] = pixel.g; // Green
-				pixels[index + 2] = pixel.b; // Blue
-				pixels[index + 3] = pixel.a; // Alpha
-			}
-
-			// Save the image using stb_image_write
-			int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
-		}
+		//Image colorImage = m_Device->GetImageDataFromTexture(colorTexture);
+		//for (Image::Pixel& pixel : colorImage.pixels)
+		//{
+		//	//CT_WARN("[{}, {}, {}, {}],\n", pixel.r, pixel.g, pixel.b, pixel.a);
+		//}
+		//
+		//{
+		//	CTL::DArray<uint8> pixels(800 * 600 * 4);
+		//
+		//	for (int i = 0; i < 800 * 600; ++i)
+		//	{
+		//		const auto& pixel = colorImage.pixels[i];
+		//
+		//		int index = i * 4;
+		//		pixels[index + 0] = pixel.r; // Red
+		//		pixels[index + 1] = pixel.g; // Green
+		//		pixels[index + 2] = pixel.b; // Blue
+		//		pixels[index + 3] = pixel.a; // Alpha
+		//	}
+		//
+		//	// Save the image using stb_image_write
+		//	int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
+		//}
 
 		m_Device->SetTargetFramebuffer(nullptr);
 	}

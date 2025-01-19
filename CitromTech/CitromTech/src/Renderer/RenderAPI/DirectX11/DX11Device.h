@@ -74,6 +74,7 @@ namespace Citrom::RenderAPI
 		UINT m_VSyncInterval = 1;
 
 		ID3D11RenderTargetView* m_RenderTarget;
+		WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
 	};
 
 	class DX11DummyDevice : public DummyDevice

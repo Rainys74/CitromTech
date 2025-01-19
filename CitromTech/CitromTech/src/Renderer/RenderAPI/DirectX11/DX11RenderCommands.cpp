@@ -9,6 +9,8 @@ namespace Citrom::RenderAPI
 	{
 		const float colors[] = { r, g, b, a };
 		DXCall(m_DeviceContext->ClearRenderTargetView(m_RenderTarget, colors));
+		// TODO: is this ok here?
+		DXCall(m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
 	}
 	void DX11Device::RCDrawIndexed(uint32 indexCount, uint32 startIndex, int32 baseVertexLocation)
 	{
