@@ -16,8 +16,9 @@ namespace Citrom::RenderAPI
 		GPUInfo GetCurrentGPUInfo() override;
 
 		// Frame Buffer (Render Target View)
-		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override { return Framebuffer(); }
-		void BindFramebuffer(Framebuffer* fb) override {}
+		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
+		void SetTargetFramebuffer(Framebuffer* fb) override;
+		void* GetFramebufferColorAttachment(Framebuffer* fb) override;
 
 		void MakeSwapChain(SwapChainDesc* descriptor) override;
 		void SwapBuffers() override;

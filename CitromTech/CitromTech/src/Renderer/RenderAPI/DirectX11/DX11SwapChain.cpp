@@ -19,7 +19,7 @@ namespace Citrom::RenderAPI
 
 		DXCallHR(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTarget));
 
-		m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, nullptr);
+		DXCall(m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, nullptr));
 	}
 	void DX11Device::DestroyRenderTarget()
 	{
@@ -88,6 +88,9 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::Resize(uint32 width, uint32 height)
 	{
+		m_Width = width;
+		m_Height = height;
+
 		DestroyRenderTarget();
 
 		HRESULT hr;
@@ -103,7 +106,7 @@ namespace Citrom::RenderAPI
 		vp.MaxDepth = 1;
 		vp.TopLeftX = 0; // xPos
 		vp.TopLeftY = 0; // yPos
-		m_DeviceContext->RSSetViewports(1, &vp);
+		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
 }
 #endif

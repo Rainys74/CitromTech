@@ -148,7 +148,19 @@ namespace Citrom
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
 		m_Device->BindVertexBuffer(&vbo1);
 
+		FramebufferDesc fbd1 = {};
+		fbd1.width = 800;
+		fbd1.height = 600;
+		fbd1.format = FramebufferFormat::RGBA8;
+		Framebuffer fbo1 = m_Device->CreateFramebuffer(&fbd1);
+
+		m_Device->SetTargetFramebuffer(&fbo1);
+
 		m_Device->RCDrawIndexed(ibo.GetCount());
+
+		void* colorImage = m_Device->GetFramebufferColorAttachment(&fbo1);
+
+		m_Device->SetTargetFramebuffer(nullptr);
 	}
 
 	

@@ -50,8 +50,8 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
-		virtual void BindFramebuffer(Framebuffer* fb) = 0;
-		// GetColorAttachmentRendererID? to return texture id
+		virtual void SetTargetFramebuffer(Framebuffer* fb) = 0;
+		virtual void* GetFramebufferColorAttachment(Framebuffer* fb) = 0;
 
 		// Swap Chain
 		// Thoughts?: user technically should have access to/own the swap chain, but
@@ -96,6 +96,8 @@ namespace Citrom::RenderAPI
 		// Helper functions
 		size_t GetFormatSize(Format format);
 		size_t GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec);
+	protected:
+		uint32 m_Width, m_Height;
 	};
 
 	// Device for checking the validity of the API, do not use directly! only used for inheritance.
