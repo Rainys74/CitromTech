@@ -40,6 +40,8 @@ namespace Citrom
 			m_Scene->m_SceneRegistry.remove<T>(m_EntityID);
 		}
 
+		//FORCE_INLINE operator bool() const { return m_EntityID != entt::null && m_Scene != nullptr; }
+
 		FORCE_INLINE Scene* GetScene() { return m_Scene; }
 
 		UUID UUID()

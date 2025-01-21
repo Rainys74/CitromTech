@@ -35,7 +35,7 @@ void InspectorWindow::ImGuiDraw(bool* showWindow)
 
     ImGui::Begin("Inspector", showWindow);
 
-    entt::entity selectedEntity = SceneHierarchyWindow::GetSelectedEntity() ? (entt::entity)(uintptr)SceneHierarchyWindow::GetSelectedEntity() : entt::null;
+    entt::entity selectedEntity = (entt::entity)SceneHierarchyWindow::GetSelectedEntity();
 
     DrawComponentsUUID(selectedEntity, (Scene*)GetCurrentScene());
     //scene->ForEachEntityCallback([&](auto entity)

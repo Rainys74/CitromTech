@@ -2,6 +2,7 @@
 #include "Main/SharedMain.h"
 
 #include "EntitySystem/Scene.h"
+#include "EntitySystem/Entity.h"
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "Logger/Logger.h"
 
@@ -9,7 +10,8 @@
 
 using namespace Citrom;
 
-static entt::entity g_SelectedEntity = entt::null;
+static entt::entity g_SelectedEntt = entt::null;
+//static Entity g_SelectedEntity = Entity(entt::null, nullptr);
 
 static void DrawRightClickPopupContext()
 {
@@ -74,7 +76,7 @@ static void DrawHierarchy(Scene* scene)
             ImGui::TreePop();
         }*/
 
-        bool isSelected = (g_SelectedEntity == entity);
+        bool isSelected = (g_SelectedEntt == entity);
 
         //ImGui::GetWindowDrawList()->AddRectFilled(
         //    ImVec2(ImGui::GetCursorPos().x, ImGui::GetCursorPos().y),            // Top-left corner
@@ -86,7 +88,8 @@ static void DrawHierarchy(Scene* scene)
         if (ImGui::Selectable(std::to_string(uuidComponent.id).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
         {
             CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
-            g_SelectedEntity = entity;
+            g_SelectedEntt = entity;
+            //g_SelectedEntity = Entity(g_SelectedEntt, scene);
         }
     }
 }
@@ -105,7 +108,7 @@ void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
     ImGui::End();
 }
 
-void* SceneHierarchyWindow::GetSelectedEntity()
+uint32 SceneHierarchyWindow::GetSelectedEntity()
 {
-    return g_SelectedEntity == entt::null ? nullptr : (void*)g_SelectedEntity;
+    return (uint32)g_SelectedEntt;
 }

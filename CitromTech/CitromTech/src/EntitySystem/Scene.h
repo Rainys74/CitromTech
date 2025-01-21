@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "CitromUUID.h"
 
 #include "Vendor/EnTT/entt.hpp"
 
@@ -21,6 +22,8 @@ namespace Citrom
 		{
 			return m_SceneRegistry.view<Components...>();
 		}
+
+		Entity GetByUUID(UUID uuid);
 		
 		/*template<typename T, typename... Args>
 		void ForEachEntityCallback(Args&&... args)
