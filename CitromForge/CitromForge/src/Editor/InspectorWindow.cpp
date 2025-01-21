@@ -24,7 +24,10 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 
         auto& uuidComponent = view.get<UUIDComponent>(entity);
 
-        ImGui::Text("%zu", uuidComponent.id);
+        if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::Text("%zu", uuidComponent.id);
+        }
     }
 }
 
