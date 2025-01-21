@@ -28,6 +28,18 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         {
             ImGui::Text("%zu", uuidComponent.id);
         }
+
+        // Add Component
+        constexpr float buttonWidth = 200.0f;
+
+        const float offsetX = (ImGui::GetContentRegionAvail().x - buttonWidth) * 0.5f;
+        if (offsetX > 0.0f)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
+
+        if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0.0f)))
+        {
+            
+        }
     }
 }
 
