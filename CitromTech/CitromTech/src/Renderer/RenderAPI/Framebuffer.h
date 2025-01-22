@@ -12,7 +12,48 @@ namespace Citrom::RenderAPI
 
 		RGBA8,
 		DEPTH24STENCIL8,
-		R32F
+		D32F,
+
+		// defaults
+		Color = RGBA8,
+		Depth = D32F,
+		DepthStencil = DEPTH24STENCIL8
+	};
+
+	enum class FramebufferAttachmentType
+	{
+		Color,
+		DepthStencil
+	};
+
+	struct FramebufferAttachment
+	{
+		FramebufferAttachmentType type;
+		FramebufferFormat format;
+	};
+
+	struct FramebufferAttachments
+	{
+		/*FramebufferAttachments(std::initializer_list<FramebufferAttachment> initList)
+		{
+			attachments.Reserve(initList.size());
+			for (const auto& attachment : initList)
+			{
+				attachments.PushBack(attachment);
+			}
+		}*/
+		FramebufferAttachments& operator=(std::initializer_list<FramebufferAttachment> initList)
+		{
+			attachments.Clear();
+			attachments.Resize(initList.size()); //Reserve(initList.size());
+			for (const FramebufferAttachment& attachment : initList)
+			{
+				attachments.PushBack(attachment);
+			}
+			return *this;
+		}
+
+		CTL::DArray<FramebufferAttachment> attachments;
 	};
 
 	struct FramebufferDesc
@@ -20,7 +61,7 @@ namespace Citrom::RenderAPI
 		uint32 width = 0, height = 0; // 0 will take the screen's size
 		uint32 samples = 1;
 
-		FramebufferFormat format;
+		FramebufferAttachments attachments;
 	};
 
 	struct Framebuffer

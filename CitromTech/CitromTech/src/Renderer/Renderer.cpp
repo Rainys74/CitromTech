@@ -221,7 +221,13 @@ namespace Citrom
 		FramebufferDesc fbd1 = {};
 		fbd1.width = 800;
 		fbd1.height = 600;
-		fbd1.format = FramebufferFormat::RGBA8;
+		//fbd1.attachments =
+		//{
+		//	{FramebufferAttachmentType::Color, FramebufferFormat::Color},
+		//	{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth}
+		//};
+		//fbd1.attachments.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::Color, FramebufferFormat::Color});
+		//fbd1.attachments.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth});
 		Framebuffer fbo1 = m_Device->CreateFramebuffer(&fbd1);
 
 		//m_Device->SetTargetFramebuffer(&fbo1);

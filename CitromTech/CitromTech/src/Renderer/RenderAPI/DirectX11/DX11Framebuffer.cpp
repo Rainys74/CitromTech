@@ -17,17 +17,12 @@ namespace Citrom::RenderAPI
 
 	Framebuffer DX11Device::CreateFramebuffer(FramebufferDesc* descriptor)
 	{
+		//CREATE_BUFFER_INTERNAL(Framebuffer, FramebufferDX11, fb, internalData);
 		Framebuffer fb;
 		fb.internal = CTL::CreateRef<FramebufferDX11>();
 		auto internalData = static_cast<FramebufferDX11*>(fb.internal.get());
-		fb.descriptor = *descriptor;
+		//fb.descriptor = *descriptor; // CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY SUCH AS DARRAY IN THIS CASE!
 
-		//auto texWidth = descriptor->width;
-		//if (texWidth == 0)
-		//	texWidth = m_Width;
-		//auto texHeight = descriptor->height;
-		//if (texHeight == 0)
-		//	texHeight = m_Height;
 		const auto texWidth = descriptor->width == 0 ? m_Width : descriptor->width;
 		const auto texHeight = descriptor->height == 0 ? m_Height : descriptor->height;
 
@@ -107,6 +102,9 @@ namespace Citrom::RenderAPI
 	}
 	void* DX11Device::GetFramebufferColorAttachment(Framebuffer* fb)
 	{
+		//GET_BUFFER_INTERNAL(FramebufferDX11, fb, internalData);
+		// vs auto internalData = GetInternalBuffer(fb); and the function uses macros to simplify
+		// function overloading to not duplicate code too much
 		auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
 
 		return internalData->renderTexture.Get();
