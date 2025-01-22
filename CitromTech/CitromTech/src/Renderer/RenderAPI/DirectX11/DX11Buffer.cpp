@@ -18,10 +18,7 @@ namespace Citrom::RenderAPI
 
 	VertexBuffer DX11Device::CreateVertexBuffer(VertexBufferDesc* descriptor) 
 	{ 
-		VertexBuffer vb;
-		vb.internal = CTL::CreateRef<VertexBufferDX11>();
-		auto internalData = static_cast<VertexBufferDX11*>(vb.internal.get());
-		vb.descriptor = *descriptor;
+		CREATE_BUFFER_INTERNAL(VertexBuffer, VertexBufferDX11, vb, internalData);
 
 		// Create vertex buffer
 		D3D11_BUFFER_DESC vbd = {};
@@ -114,10 +111,7 @@ namespace Citrom::RenderAPI
 
 	IndexBuffer DX11Device::CreateIndexBuffer(IndexBufferDesc* descriptor)
 	{
-		IndexBuffer ib;
-		ib.internal = CTL::CreateRef<IndexBufferDX11>();
-		auto internalData = static_cast<IndexBufferDX11*>(ib.internal.get());
-		ib.descriptor = *descriptor;
+		CREATE_BUFFER_INTERNAL(IndexBuffer, IndexBufferDX11, ib, internalData);
 
 		//internalData->count = descriptor->count;
 

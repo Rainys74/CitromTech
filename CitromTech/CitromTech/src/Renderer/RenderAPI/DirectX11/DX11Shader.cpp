@@ -42,10 +42,7 @@ namespace Citrom::RenderAPI
 
 	Shader DX11Device::CreateShader(ShaderDesc* descriptor)
 	{
-		Shader shader;
-		shader.internal = CTL::CreateRef<ShaderDX11>();
-		auto internalData = static_cast<ShaderDX11*>(shader.internal.get());
-		shader.descriptor = *descriptor;
+		CREATE_BUFFER_INTERNAL(Shader, ShaderDX11, shader, internalData);
 
 		HRESULT hr;
 		

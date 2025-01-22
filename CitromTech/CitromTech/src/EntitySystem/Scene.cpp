@@ -22,6 +22,7 @@ namespace Citrom
     }
     void Scene::DestroyEntity(Entity entity)
     {
+        m_SceneRegistry.destroy(entity);
     }
     Entity Scene::GetByUUID(UUID uuid)
     {

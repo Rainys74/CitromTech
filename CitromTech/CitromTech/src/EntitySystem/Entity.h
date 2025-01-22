@@ -50,6 +50,7 @@ namespace Citrom
 		}
 
 		FORCE_INLINE operator bool() const { return m_EntityID != entt::null; }
+		FORCE_INLINE operator entt::entity() const { return m_EntityID; }
 	private:
 		entt::entity m_EntityID = entt::null;
 		Scene* m_Scene = nullptr;

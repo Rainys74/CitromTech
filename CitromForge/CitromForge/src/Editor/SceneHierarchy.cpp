@@ -13,25 +13,39 @@ using namespace Citrom;
 static entt::entity g_SelectedEntt = entt::null;
 //static Entity g_SelectedEntity = Entity(entt::null, nullptr);
 
-static void DrawRightClickPopupContext()
+static Entity CreateEmptyEntity(Scene* scene)
+{
+    return scene->CreateEntity();
+}
+
+static void DrawRightClickPopupContext(Scene* currentScene)
 {
     if (ImGui::BeginPopupContextWindow("HierarchyRightClickMenu", ImGuiPopupFlags_MouseButtonRight))
     {
-        ImGui::BeginDisabled(); // Disable if no object is selected
-        if (ImGui::MenuItem("Rename"))
+        if (g_SelectedEntt == entt::null)
         {
-
+            ImGui::BeginDisabled(); // Disable if no object is selected
+            if (ImGui::MenuItem("Rename"));
+            if (ImGui::MenuItem("Delete"));
+            ImGui::EndDisabled(); // End disabling if no object is selected
         }
-        if (ImGui::MenuItem("Delete"))
+        else
         {
+            if (ImGui::MenuItem("Rename"))
+            {
 
+            }
+            if (ImGui::MenuItem("Delete"))
+            {
+                currentScene->DestroyEntity(Entity(g_SelectedEntt, currentScene));
+                g_SelectedEntt = entt::null;
+            }
         }
-        ImGui::EndDisabled(); // End disabling if no object is selected
 
         ImGui::Separator();
         if (ImGui::MenuItem("Create Empty Object"))
         {
-
+            Entity emptyEntity = CreateEmptyEntity(currentScene);
         }
         if (ImGui::BeginMenu("Create Light"))
         {
@@ -101,7 +115,7 @@ void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
 
     ImGui::Begin("Scene Hierarchy", showWindow);
     
-    DrawRightClickPopupContext();
+    DrawRightClickPopupContext((Scene*)GetCurrentScene());
 
     DrawHierarchy((Scene*)GetCurrentScene());
 
