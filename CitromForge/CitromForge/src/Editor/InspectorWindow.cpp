@@ -3,6 +3,7 @@
 #include "Main/SharedMain.h"
 
 #include "EntitySystem/Scene.h"
+#include "EntitySystem/Entity.h"
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "EntitySystem/Components/RendererComponents.h"
 #include "Logger/Logger.h"
@@ -23,11 +24,22 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             continue;
 
         auto& uuidComponent = view.get<UUIDComponent>(entity);
+        auto& transformComponent = Entity(entity, scene).GetComponent<TransformComponent>();
 
         if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::Text("%zu", uuidComponent.id);
         }
+        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            //static Math::Vector3 position;
+            //static Math::Quaternion rotation;
+            //static Math::Vector3 scale;
+            ImGui::DragFloat3("Position", &transformComponent.position[0]);
+            ImGui::DragFloat4("Rotation", &transformComponent.rotation[0]);
+            ImGui::DragFloat3("Scale", &transformComponent.scale[0]);
+        }
+        ImGui::Separator();
 
         // Add Component
         constexpr float buttonWidth = 200.0f;

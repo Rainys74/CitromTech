@@ -44,6 +44,24 @@ namespace Citrom::Math
 		return std::sqrt(number);
 	}
 
+	float32 Sine(const float32 number)
+	{
+		return std::sinf(number);
+	}
+	float64 Sine(const float64 number)
+	{
+		return std::sin(number);
+	}
+
+	float32 Cosine(const float32 number)
+	{
+		return std::cosf(number);
+	}
+	float64 Cosine(const float64 number)
+	{
+		return std::cos(number);
+	}
+
 	float32 InverseSquareRoot(const float32 number)
 	{
 		const float32 halfInput = number * 0.5f; // (x2)

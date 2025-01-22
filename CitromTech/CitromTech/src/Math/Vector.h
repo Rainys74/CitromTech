@@ -40,6 +40,8 @@ namespace Citrom::Math
     class Vector3
     {
     public:
+        //Vector3(const Vector3&) = default;
+
         float32 Magnitude() const;
         float32 SquaredMagnitude() const;
         Vector3 Normalized() const;
@@ -186,12 +188,13 @@ namespace Citrom::Math
     template<size_t C>
     using Vector = VectorBase<C, VectorVT>;
 
-    /*class Vector4 : public Vector<4>
+    // TODO: do something about this 48 byte monstrosity
+    class Vector4 : public Vector<4>
     {
     public:
         VectorVT& x = data[0];
         VectorVT& y = data[1];
         VectorVT& z = data[2];
         VectorVT& w = data[3];
-    };*/
+    };
 }

@@ -14,6 +14,8 @@ namespace Citrom::Math
 	class Matrix4x4
 	{
 	public:
+		using DataContainerType = CTL::Array<CTL::Array<float32, 4>, 4>;
+	public:
 		Matrix4x4();
 		Matrix4x4(float32 number);
 		Matrix4x4(const Matrix4x4&) = default;
