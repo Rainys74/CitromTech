@@ -1,5 +1,6 @@
 #include "Scene.h"
 #include "Components/EssentialComponents.h"
+#include "Components/RendererComponents.h"
 
 #include "Entity.h"
 
@@ -36,6 +37,17 @@ namespace Citrom
             }
         }
 
+        return Entity(entt::null, this);
+    }
+    Entity Scene::GetMainCameraEntity()
+    {
+        auto view = m_SceneRegistry.view<CameraComponent>();
+        for (auto entity : view)
+        {
+            const auto& cameraComponent = view.get<CameraComponent>(entity);
+
+            return Entity(entity, this);
+        }
         return Entity(entt::null, this);
     }
 }

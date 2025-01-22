@@ -29,6 +29,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" -- Debug-Windows
 IncludeDir = {}
 IncludeDir["GLFW"] = "../vendor/GLFW/glfw/include"
 IncludeDir["ImGui"] = "../vendor/ImGui/imgui"
+IncludeDir["ImGuizmo"] = "../vendor/ImGuizmo/ImGuizmo"
 IncludeDir["HLSLcc"] = "../vendor/HLSLcc/HLSLcc/include"
 
 -- CMake Dependencies
@@ -63,6 +64,7 @@ include "CitromForge/Premake-CitromForge.lua"
 -- Third Party Dependencies
 include "vendor/GLFW/Premake-GLFW.lua"
 include "vendor/ImGui/Premake-ImGui.lua"
+include "vendor/ImGuizmo/Premake-ImGuizmo.lua"
 include "vendor/HLSLcc/Premake-HLSLcc.lua"
 
 -- Third Party Scripts

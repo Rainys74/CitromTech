@@ -24,6 +24,8 @@ namespace Citrom
 		}
 
 		Entity GetByUUID(UUID uuid);
+
+		Entity GetMainCameraEntity();
 		
 		/*template<typename T, typename... Args>
 		void ForEachEntityCallback(Args&&... args)

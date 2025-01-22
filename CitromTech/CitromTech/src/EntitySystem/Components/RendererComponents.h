@@ -4,6 +4,10 @@
 
 namespace Citrom
 {
+	struct CameraComponent
+	{
+		Camera camera;
+	};
 	struct ModelComponent
 	{
 		Mesh mesh;

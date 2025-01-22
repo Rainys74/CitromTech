@@ -7,6 +7,7 @@
 #include "Profiling/Profiler.h"
 
 #include "imgui.h"
+#include "ImGuizmo.h"
 
 namespace Citrom
 {
@@ -96,6 +97,7 @@ namespace Citrom
 	{
 		Platform::ImGui::NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 	void ImGuiLayer::End()
 	{

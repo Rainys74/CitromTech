@@ -13,6 +13,12 @@
 
 namespace Citrom
 {
+	struct Camera
+	{
+		Math::Matrix4x4 view;
+		Math::Matrix4x4 projection;
+	};
+
 	struct Vertex
 	{
 		Math::Vector3 position;

@@ -24,7 +24,8 @@ project "CitromForge" -- EXE
 
             "../CitromTech/CitromTech/src",
 
-            "%{IncludeDir.ImGui}"
+            "%{IncludeDir.ImGui}",
+            "%{IncludeDir.ImGuizmo}"
         }
 
         defines
@@ -45,6 +46,7 @@ project "CitromForge" -- EXE
             
             "GLFW",
             "ImGui",
+            "ImGuizmo",
             "HLSLcc",
         }
         DefineCitromLibraryTypeMacros()

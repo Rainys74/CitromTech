@@ -9,6 +9,7 @@
 #include "Logger/Logger.h"
 
 #include "imgui.h"
+#include "ImGuizmo.h"
 
 using namespace Citrom;
 
@@ -66,6 +67,17 @@ void InspectorWindow::ImGuiDraw(bool* showWindow)
     //{
     //
     //});
+
+    // TODO: get this shit out of here
+    if (selectedEntity != entt::null)
+    {
+        ImGuizmo::SetOrthographic(false);
+        ImGuizmo::SetDrawlist();
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+        // TODO: this is NOT an editor camera!
+        auto cameraEntity = ((Scene*)GetCurrentScene())->GetMainCameraEntity();
+    }
 
     ImGui::End();
 }
