@@ -95,6 +95,19 @@ namespace Citrom::RenderAPI
         }
         return 0;
     }
+    size_t Device::GetFBFormatSize(FramebufferFormat format)
+    {
+#define FORMATSIZE_CASE_MANUAL(x, y) case (x): return (y); break
+        switch (format)
+        {
+            default: case FramebufferFormat::None: return 0; break;
+
+            FORMATSIZE_CASE(FramebufferFormat::RGBA8, uint8, 4);
+            FORMATSIZE_CASE(FramebufferFormat::D32F, float32, 1);
+            FORMATSIZE_CASE_MANUAL(FramebufferFormat::DEPTH24STENCIL8, 4 /*32 / 8*/);
+        }
+        return 0;
+    }
 
     size_t Device::GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec)
     {

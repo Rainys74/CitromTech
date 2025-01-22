@@ -96,6 +96,17 @@ namespace Citrom::RenderAPI
 			FORMAT_TODXGICASE(Format::R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		}
 	}
+	DXGI_FORMAT DX11Device::FBFormatToDXGIFormat(FramebufferFormat format)
+	{
+		switch (format)
+		{
+			default: return DXGI_FORMAT_UNKNOWN; break;
+
+			//FORMAT_TODXGICASE(FramebufferFormat::RGBA8, DXGI_FORMAT_R8G8B8A8_UINT);
+			FORMAT_TODXGICASE(FramebufferFormat::DEPTH24STENCIL8, DXGI_FORMAT_D24_UNORM_S8_UINT);
+			FORMAT_TODXGICASE(FramebufferFormat::D32F, DXGI_FORMAT_D32_FLOAT);
+		}
+	}
 
 	D3D11_USAGE DX11Device::UsageToD3D11Usage(Usage usage)
 	{

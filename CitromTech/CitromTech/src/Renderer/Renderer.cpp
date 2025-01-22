@@ -218,9 +218,19 @@ namespace Citrom
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
 		m_Device->BindVertexBuffer(&vbo1);
 
+		/*FramebufferAttachments fba1; fba1 =
+		{
+			{FramebufferAttachmentType::Color, FramebufferFormat::Color},
+			{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth}
+		};*/
+		FramebufferAttachments fba1;
+		fba1.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::Color, FramebufferFormat::Color});
+		fba1.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth});
+
 		FramebufferDesc fbd1 = {};
 		fbd1.width = 800;
 		fbd1.height = 600;
+		fbd1.attachments = &fba1;
 		//fbd1.attachments =
 		//{
 		//	{FramebufferAttachmentType::Color, FramebufferFormat::Color},

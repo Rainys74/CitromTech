@@ -64,7 +64,7 @@ namespace Citrom::RenderAPI
 		VertexBufferLayout vbLayout;
 		vbLayout.internal = CTL::CreateRef<VertexBufferLayoutDX11>();
 		auto internalData = static_cast<VertexBufferLayoutDX11*>(vbLayout.internal.get());
-		//vbLayout.descriptor = *descriptor; // caused a hard to debug error..
+		//vbLayout.descriptor = *descriptor; // caused a hard to debug error.. realized it's because CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY SUCH AS DARRAY IN THIS CASE!
 
 		// input (vertex) layout
 		CTL::DArray<D3D11_INPUT_ELEMENT_DESC> ieds;

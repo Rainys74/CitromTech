@@ -21,62 +21,67 @@ namespace Citrom::RenderAPI
 		Framebuffer fb;
 		fb.internal = CTL::CreateRef<FramebufferDX11>();
 		auto internalData = static_cast<FramebufferDX11*>(fb.internal.get());
-		//fb.descriptor = *descriptor; // CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY SUCH AS DARRAY IN THIS CASE!
+		fb.descriptor = *descriptor; // CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY SUCH AS DARRAY IN THIS CASE!
 
 		const auto texWidth = descriptor->width == 0 ? m_Width : descriptor->width;
 		const auto texHeight = descriptor->height == 0 ? m_Height : descriptor->height;
 
-		// Create Render Target
-		D3D11_TEXTURE2D_DESC textureDesc = {};
-		textureDesc.Width = texWidth;
-		textureDesc.Height = texHeight;
-		textureDesc.MipLevels = 1; // Usually 1 for render targets
-		textureDesc.ArraySize = 1; // Single texture
-		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // DXGI_FORMAT_R8G8B8A8_UNORM DXGI_FORMAT_R32G32B32A32_FLOAT // Use your desired DXGI_FORMAT
-		textureDesc.SampleDesc.Count = descriptor->samples; // Multisampling count
-		textureDesc.SampleDesc.Quality = 0; // Multisampling quality
-		textureDesc.Usage = D3D11_USAGE_DEFAULT; // Default usage
-		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; // Bind as render target and shader resource
-		textureDesc.CPUAccessFlags = 0; // No CPU access needed
-		textureDesc.MiscFlags = 0; // No additional flags
-
 		HRESULT hr;
-		DXCallHR(m_Device->CreateTexture2D(&textureDesc, nullptr, &internalData->renderTexture));
 
-		DXCallHR(m_Device->CreateRenderTargetView(internalData->renderTexture.Get(), nullptr, &internalData->renderTarget));
+		// Create Render Target
+		{
+			D3D11_TEXTURE2D_DESC textureDesc = {};
+			textureDesc.Width = texWidth;
+			textureDesc.Height = texHeight;
+			textureDesc.MipLevels = 1; // Usually 1 for render targets
+			textureDesc.ArraySize = 1; // Single texture
+			textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // DXGI_FORMAT_R8G8B8A8_UNORM DXGI_FORMAT_R32G32B32A32_FLOAT // Use your desired DXGI_FORMAT
+			textureDesc.SampleDesc.Count = descriptor->samples; // Multisampling count
+			textureDesc.SampleDesc.Quality = 0; // Multisampling quality
+			textureDesc.Usage = D3D11_USAGE_DEFAULT; // Default usage
+			textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE; // Bind as render target and shader resource
+			textureDesc.CPUAccessFlags = 0; // No CPU access needed
+			textureDesc.MiscFlags = 0; // No additional flags
+
+			DXCallHR(m_Device->CreateTexture2D(&textureDesc, nullptr, &internalData->renderTexture));
+
+			DXCallHR(m_Device->CreateRenderTargetView(internalData->renderTexture.Get(), nullptr, &internalData->renderTarget));
+		}
 
 		// Create Depth Stencil
-		D3D11_DEPTH_STENCIL_DESC dsd = {};
-		dsd.DepthEnable = true;
-		dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		dsd.DepthFunc = D3D11_COMPARISON_LESS;
+		{
+			D3D11_DEPTH_STENCIL_DESC dsd = {};
+			dsd.DepthEnable = true;
+			dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+			dsd.DepthFunc = D3D11_COMPARISON_LESS;
 
-		WRL::ComPtr<ID3D11DepthStencilState> dsState;
-		DXCallHR(m_Device->CreateDepthStencilState(&dsd, &dsState));
+			WRL::ComPtr<ID3D11DepthStencilState> dsState;
+			DXCallHR(m_Device->CreateDepthStencilState(&dsd, &dsState));
 
-		//DXCall(m_DeviceContext->OMSetDepthStencilState(dsState.Get(), 1u));
+			DXCall(m_DeviceContext->OMSetDepthStencilState(dsState.Get(), 1u));
 
-		// Depth Stencil Texture
-		WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
-		D3D11_TEXTURE2D_DESC td = {};
-		td.Width = texWidth;
-		td.Height = texHeight;
-		td.MipLevels = 1;
-		td.ArraySize = 1;
-		td.Format = DXGI_FORMAT_D32_FLOAT;
-		td.SampleDesc.Count = 1;
-		td.SampleDesc.Quality = 0;
-		td.Usage = D3D11_USAGE_DEFAULT;
-		td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		DXCallHR(m_Device->CreateTexture2D(&td, nullptr, &depthStencilTex));
+			// Depth Stencil Texture
+			WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
+			D3D11_TEXTURE2D_DESC td = {};
+			td.Width = texWidth;
+			td.Height = texHeight;
+			td.MipLevels = 1;
+			td.ArraySize = 1;
+			td.Format = DXGI_FORMAT_D32_FLOAT;
+			td.SampleDesc.Count = 1;
+			td.SampleDesc.Quality = 0;
+			td.Usage = D3D11_USAGE_DEFAULT;
+			td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+			DXCallHR(m_Device->CreateTexture2D(&td, nullptr, &depthStencilTex));
 
-		// Create DS View
-		D3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
-		dsvd.Format = DXGI_FORMAT_D32_FLOAT; // or use DXGI_FORMAT_UNKNOWN to use the texture's
-		dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-		dsvd.Texture2D.MipSlice = 0;
+			// Create DS View
+			D3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
+			dsvd.Format = DXGI_FORMAT_D32_FLOAT; // or use DXGI_FORMAT_UNKNOWN to use the texture's
+			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+			dsvd.Texture2D.MipSlice = 0;
 
-		DXCallHR(m_Device->CreateDepthStencilView(depthStencilTex.Get(), &dsvd, &internalData->depthStencilView));
+			DXCallHR(m_Device->CreateDepthStencilView(depthStencilTex.Get(), &dsvd, &internalData->depthStencilView));
+		}
 
 		return fb;
 	}

@@ -61,7 +61,7 @@ namespace Citrom::RenderAPI
 		uint32 width = 0, height = 0; // 0 will take the screen's size
 		uint32 samples = 1;
 
-		FramebufferAttachments attachments;
+		FramebufferAttachments* attachments;
 	};
 
 	struct Framebuffer

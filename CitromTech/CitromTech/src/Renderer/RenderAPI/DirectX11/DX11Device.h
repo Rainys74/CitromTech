@@ -60,6 +60,9 @@ namespace Citrom::RenderAPI
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);
 		D3D11_USAGE UsageToD3D11Usage(Usage usage);
+
+		// Framebuffer
+		DXGI_FORMAT FBFormatToDXGIFormat(FramebufferFormat format);
 	private:
 		// Helper Functions
 		void CreateRenderTarget();

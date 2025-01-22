@@ -97,6 +97,7 @@ namespace Citrom::RenderAPI
 	protected:
 		// Helper functions
 		size_t GetFormatSize(Format format);
+		size_t GetFBFormatSize(FramebufferFormat format);
 		size_t GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec);
 	protected:
 		uint32 m_Width, m_Height;
