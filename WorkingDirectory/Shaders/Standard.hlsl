@@ -20,9 +20,14 @@ struct VSInput
     float3 pos : Position;
 };
 
+cbuffer CBuffer1
+{
+    matrix transform;
+};
+
 float4 vsmain(VSInput input) : SV_Position
 {
-    return float4(input.pos, 1.0f);
+    return mul(float4(input.pos, 1.0f), transform);
 }
 
 float4 psmain() : SV_Target

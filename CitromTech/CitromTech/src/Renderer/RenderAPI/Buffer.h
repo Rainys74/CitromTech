@@ -77,4 +77,18 @@ namespace Citrom::RenderAPI
 
 		FORCE_INLINE uint32 GetCount() const { return descriptor.count; }
 	};
+
+	// Constant Buffer
+	struct UniformBufferDesc
+	{
+		const void* data;
+		size_t dataBytes;
+		Usage usage = Usage::Dynamic;
+	};
+
+	struct UniformBuffer
+	{
+		UniformBufferDesc descriptor;
+		CTL::Ref<void> internal;
+	};
 }

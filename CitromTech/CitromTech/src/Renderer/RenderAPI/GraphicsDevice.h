@@ -83,6 +83,9 @@ namespace Citrom::RenderAPI
 		virtual Shader CreateShader(ShaderDesc* descriptor) = 0;
 		virtual void BindShader(Shader* shader) = 0;
 
+		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
+		virtual void BindUniformBuffer(UniformBuffer* ub) = 0;
+
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;

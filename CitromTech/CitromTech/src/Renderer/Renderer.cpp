@@ -199,6 +199,23 @@ namespace Citrom
 		Shader shader = m_Device->CreateShader(&sd);
 		m_Device->BindShader(&shader);
 
+		// Shader Constant Buffer
+		struct ConstantBufferTest
+		{
+			Math::Matrix4x4 transform;
+		};
+		ConstantBufferTest cbt = {};
+		cbt.transform = Math::Matrix4x4::Identity();
+		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} }; // WORKS PERFECTLY! (i think)
+
+		UniformBufferDesc ubd = {};
+		ubd.data = &cbt;
+		ubd.dataBytes = sizeof(cbt);
+		ubd.usage = Usage::Dynamic;
+
+		UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
+		m_Device->BindUniformBuffer(&ub);
+
 		// Vertex Buffer 1 Layout
 		VertexBufferLayoutDesc vbld1 = {};
 		vbld1.shader = &shader;

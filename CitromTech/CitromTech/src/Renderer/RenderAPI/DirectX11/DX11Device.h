@@ -42,6 +42,9 @@ namespace Citrom::RenderAPI
 		Shader CreateShader(ShaderDesc* descriptor) override;
 		void BindShader(Shader* shader) override;
 
+		UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) override;
+		void BindUniformBuffer(UniformBuffer* ub) override;
+
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;

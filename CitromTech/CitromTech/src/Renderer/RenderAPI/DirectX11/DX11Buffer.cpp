@@ -143,5 +143,39 @@ namespace Citrom::RenderAPI
 		// Bind index buffer
 		DXCall(m_DeviceContext->IASetIndexBuffer(internalData->buffer.Get(), DXGI_FORMAT_R32_UINT, 0));
 	}
+
+	struct UniformBufferDX11
+	{
+		WRL::ComPtr<ID3D11Buffer> buffer;
+	};
+
+	UniformBuffer DX11Device::CreateUniformBuffer(UniformBufferDesc* descriptor)
+	{
+		CREATE_BUFFER_INTERNAL(UniformBuffer, UniformBufferDX11, ub, internalData);
+
+		D3D11_BUFFER_DESC cbd = {};
+		cbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		cbd.Usage = UsageToD3D11Usage(descriptor->usage);
+		cbd.CPUAccessFlags = 0;
+		if (cbd.Usage == D3D11_USAGE_DYNAMIC)
+			cbd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
+		cbd.MiscFlags = 0x00000000;
+		cbd.ByteWidth = descriptor->dataBytes;
+		cbd.StructureByteStride = 0;
+
+		D3D11_SUBRESOURCE_DATA csd = {};
+		csd.pSysMem = descriptor->data;
+
+		HRESULT hr;
+		DXCallHR(m_Device->CreateBuffer(&cbd, &csd, &internalData->buffer));
+
+		return ub;
+	}
+	void DX11Device::BindUniformBuffer(UniformBuffer* ub)
+	{
+		GET_BUFFER_INTERNAL(UniformBufferDX11, ub, internalData);
+
+		DXCall(m_DeviceContext->VSSetConstantBuffers(0, 1, internalData->buffer.GetAddressOf()));
+	}
 }
 #endif

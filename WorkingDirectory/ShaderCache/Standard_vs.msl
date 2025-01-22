@@ -6,6 +6,11 @@ using namespace metal;
 #define fma(a,b,c) ((a) * (b) + (c))
 #endif
 
+struct CBuffer1_Type
+{
+    float4x4 transform;
+};
+
 struct Mtl_VertexIn
 {
     float3 Position0 [[ attribute(0) ]] ;
@@ -17,13 +22,25 @@ struct Mtl_VertexOut
 };
 
 vertex Mtl_VertexOut xlatMtlMain(
+    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
+    //--- Start Early Main ---
+    float4 u_xlat0;
+    //--- End Early Main ---
     //MOV
-    output.mtl_Position.xyz = input.Position0.xyz;
+    u_xlat0.xyz = input.Position0.xyz;
     //MOV
-    output.mtl_Position.w = 1.0;
+    u_xlat0.w = 1.0;
+    //DP4
+    output.mtl_Position.x = dot(u_xlat0, CBuffer1.transform[0]);
+    //DP4
+    output.mtl_Position.y = dot(u_xlat0, CBuffer1.transform[1]);
+    //DP4
+    output.mtl_Position.z = dot(u_xlat0, CBuffer1.transform[2]);
+    //DP4
+    output.mtl_Position.w = dot(u_xlat0, CBuffer1.transform[3]);
     //RET
     return output;
 }

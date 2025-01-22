@@ -5,6 +5,7 @@
 #include "ShaderCompiler.h"
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
+#include "Math/Matrix4x4.h"
 #include "Events/WindowEvents.h"
 
 #include "EntitySystem/Scene.h"
