@@ -10,9 +10,13 @@ namespace Citrom::RenderAPI
 {
 	struct FramebufferDX11
 	{
-		WRL::ComPtr<ID3D11RenderTargetView> renderTarget;
-		WRL::ComPtr<ID3D11Texture2D> renderTexture;
+		CTL::DArray<FramebufferAttachment> colorAttachments;
+
+		CTL::DArray<WRL::ComPtr<ID3D11RenderTargetView>> renderTargets;
+		CTL::DArray<WRL::ComPtr<ID3D11Texture2D>> renderTextures;
+
 		WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+		WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
 	};
 
 	Framebuffer DX11Device::CreateFramebuffer(FramebufferDesc* descriptor)
@@ -26,10 +30,21 @@ namespace Citrom::RenderAPI
 		const auto texWidth = descriptor->width == 0 ? m_Width : descriptor->width;
 		const auto texHeight = descriptor->height == 0 ? m_Height : descriptor->height;
 
+		for (auto& attachment : descriptor->attachments->attachments)
+		{
+			if (attachment.type == FramebufferAttachmentType::Color)
+				internalData->colorAttachments.PushBack(attachment);
+		}
+
 		HRESULT hr;
 
-		// Create Render Target
+		// Create Render Targets
+		auto& attachments = descriptor->attachments->attachments;
+		for (size_t i = 0; i < attachments.Count(); i++)
 		{
+			if (attachments[i].type != FramebufferAttachmentType::Color)
+				continue;
+
 			D3D11_TEXTURE2D_DESC textureDesc = {};
 			textureDesc.Width = texWidth;
 			textureDesc.Height = texHeight;
@@ -43,9 +58,9 @@ namespace Citrom::RenderAPI
 			textureDesc.CPUAccessFlags = 0; // No CPU access needed
 			textureDesc.MiscFlags = 0; // No additional flags
 
-			DXCallHR(m_Device->CreateTexture2D(&textureDesc, nullptr, &internalData->renderTexture));
+			DXCallHR(m_Device->CreateTexture2D(&textureDesc, nullptr, &(internalData->renderTextures[i])));
 
-			DXCallHR(m_Device->CreateRenderTargetView(internalData->renderTexture.Get(), nullptr, &internalData->renderTarget));
+			DXCallHR(m_Device->CreateRenderTargetView((internalData->renderTextures[i]).Get(), nullptr, &(internalData->renderTargets[i])));
 		}
 
 		// Create Depth Stencil
@@ -61,7 +76,6 @@ namespace Citrom::RenderAPI
 			DXCall(m_DeviceContext->OMSetDepthStencilState(dsState.Get(), 1u));
 
 			// Depth Stencil Texture
-			WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
 			D3D11_TEXTURE2D_DESC td = {};
 			td.Width = texWidth;
 			td.Height = texHeight;
@@ -72,7 +86,7 @@ namespace Citrom::RenderAPI
 			td.SampleDesc.Quality = 0;
 			td.Usage = D3D11_USAGE_DEFAULT;
 			td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			DXCallHR(m_Device->CreateTexture2D(&td, nullptr, &depthStencilTex));
+			DXCallHR(m_Device->CreateTexture2D(&td, nullptr, &internalData->depthStencilTex));
 
 			// Create DS View
 			D3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
@@ -80,7 +94,7 @@ namespace Citrom::RenderAPI
 			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 			dsvd.Texture2D.MipSlice = 0;
 
-			DXCallHR(m_Device->CreateDepthStencilView(depthStencilTex.Get(), &dsvd, &internalData->depthStencilView));
+			DXCallHR(m_Device->CreateDepthStencilView(internalData->depthStencilTex.Get(), &dsvd, &internalData->depthStencilView));
 		}
 
 		return fb;
@@ -97,8 +111,7 @@ namespace Citrom::RenderAPI
 		{
 			auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
 
-			ID3D11RenderTargetView* renderTargets[2] = { internalData->renderTarget.Get(), m_RenderTarget};
-			//DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets /*&internalData->renderTarget*/, nullptr));
+			ID3D11RenderTargetView* renderTargets[2] = { (internalData->renderTargets[0]).Get(), m_RenderTarget};
 			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
 
 			if (internalData->depthStencilView)
@@ -112,7 +125,7 @@ namespace Citrom::RenderAPI
 		// function overloading to not duplicate code too much
 		auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
 
-		return internalData->renderTexture.Get();
+		return (internalData->renderTextures[0]).Get();
 	}
 
 	//TODO: is this a good/useful function and is it worth putting it here?
