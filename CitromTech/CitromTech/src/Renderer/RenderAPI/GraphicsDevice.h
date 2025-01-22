@@ -113,4 +113,28 @@ namespace Citrom::RenderAPI
 	protected:
 		bool m_Valid = false;
 	};
+
+	// Macros for easier device backend development
+	#define GET_BUFFER_INTERNAL(INTERNTYPE, BUFFERPTRNAME, INTERNDATANAME) auto INTERNDATANAME = static_cast<INTERNTYPE*>((BUFFERPTRNAME)->internal.get())
+
+	//GET_BUFFER_INTERNAL(FramebufferDX11, fb, internalData);
+	//auto internalData = static_cast<FramebufferDX11*>((fb)->internal.get());
+	//auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
+
+	#define CREATE_BUFFER_INTERNAL(BUFFERTYPE, BUFFERINTERNTYPE, BUFFEROBJNAME, INTERNDATANAME)		BUFFERTYPE BUFFEROBJNAME; \
+																								BUFFEROBJNAME.internal = CTL::CreateRef<BUFFERINTERNTYPE>(); \
+																								auto INTERNDATANAME = static_cast<BUFFERINTERNTYPE*>(BUFFEROBJNAME.internal.get()); \
+																								BUFFEROBJNAME.descriptor = *descriptor  // CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY FOR EXAMPLE DARRAY IN MOST CASES!
+
+	//CREATE_BUFFER_INTERNAL(Framebuffer, FramebufferDX11, fb, internalData);
+	//
+	//Framebuffer fb; 
+	//fb.internal = CTL::CreateRef<FramebufferDX11>(); 
+	//auto internalData = static_cast<FramebufferDX11*>(fb.internal.get()); 
+	//fb.descriptor = *descriptor;;
+	//
+	//Framebuffer fb;
+	//fb.internal = CTL::CreateRef<FramebufferDX11>();
+	//auto internalData = static_cast<FramebufferDX11*>(fb.internal.get());
+	//fb.descriptor = *descriptor;
 }

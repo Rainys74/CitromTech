@@ -67,6 +67,9 @@ namespace Citrom::RenderAPI
 		// Helper Functions
 		void CreateRenderTarget();
 		void DestroyRenderTarget();
+
+		// Function Overloading To convert buffers to internal buffers
+		// hmm no can't do because internal structs are declared in .cpp files.. unless static?
 	private:
 		ID3D11Device* m_Device;
 		ID3D11DeviceContext* m_DeviceContext;

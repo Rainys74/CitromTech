@@ -21,11 +21,7 @@ namespace Citrom::RenderAPI
 
 	Framebuffer DX11Device::CreateFramebuffer(FramebufferDesc* descriptor)
 	{
-		//CREATE_BUFFER_INTERNAL(Framebuffer, FramebufferDX11, fb, internalData);
-		Framebuffer fb;
-		fb.internal = CTL::CreateRef<FramebufferDX11>();
-		auto internalData = static_cast<FramebufferDX11*>(fb.internal.get());
-		fb.descriptor = *descriptor; // CANNOT COPY DESCRIPTOR IF IT INCLUDES ALLOCATED MEMORY SUCH AS DARRAY IN THIS CASE!
+		CREATE_BUFFER_INTERNAL(Framebuffer, FramebufferDX11, fb, internalData);
 
 		const auto texWidth = descriptor->width == 0 ? m_Width : descriptor->width;
 		const auto texHeight = descriptor->height == 0 ? m_Height : descriptor->height;
