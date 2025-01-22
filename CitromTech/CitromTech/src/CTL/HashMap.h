@@ -20,6 +20,7 @@ namespace CTL
         {
             CTL_PROFILE_MEMBER_FUNC();
 
+            //return XXH3_64bits(&key, sizeof(T));
             return XXH64(&key, sizeof(T), 0); // XXH64 or XXH3_64bits
         }
     };

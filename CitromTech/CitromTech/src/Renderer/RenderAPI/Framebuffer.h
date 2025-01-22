@@ -34,14 +34,15 @@ namespace Citrom::RenderAPI
 
 	struct FramebufferAttachments
 	{
-		/*FramebufferAttachments(std::initializer_list<FramebufferAttachment> initList)
+		FramebufferAttachments() = default;
+		FramebufferAttachments(std::initializer_list<FramebufferAttachment> initList)
 		{
 			attachments.Reserve(initList.size());
 			for (const auto& attachment : initList)
 			{
 				attachments.PushBack(attachment);
 			}
-		}*/
+		}
 		FramebufferAttachments& operator=(std::initializer_list<FramebufferAttachment> initList)
 		{
 			attachments.Clear();
@@ -51,6 +52,16 @@ namespace Citrom::RenderAPI
 				attachments.PushBack(attachment);
 			}
 			return *this;
+		}
+
+		bool HasAttachmentType(FramebufferAttachmentType type) const
+		{
+			for (const auto& attachment : attachments)
+			{
+				if (attachment.type == type)
+					return true;
+			}
+			return false;
 		}
 
 		CTL::DArray<FramebufferAttachment> attachments;

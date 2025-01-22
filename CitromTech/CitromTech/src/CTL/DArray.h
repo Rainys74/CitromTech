@@ -8,7 +8,7 @@ namespace CTL
     // Dynamic Array wrapper, also known as
     // Vector (C++)
     // List (C#)
-    template<typename T>
+    template<typename T, auto ResizeMult = 2, typename CountType = uint32>
     class DArray
     {
     public:
@@ -19,7 +19,7 @@ namespace CTL
         }
         ~DArray()
         {
-            Clear();
+            Clear(true);
         }
 
         void Resize(const uint32 newCapacity)
@@ -49,8 +49,7 @@ namespace CTL
         {
             if (m_Count >= m_Capacity)
             {
-                // the 2.0f might be templated to allow for configuration
-                Resize(m_Capacity * 2);
+                Resize(m_Capacity * ResizeMult);
             }
             m_Data[m_Count++] = value;
         }
@@ -61,11 +60,21 @@ namespace CTL
             m_Count -= 1;
         }
 
-        void Clear()
+        void Clear(bool clearData = true)
         {
-            delete[] m_Data;
-            m_Count = 0;
-            m_Capacity = 0;
+            if (clearData)
+            {
+                delete[] m_Data;
+                //m_Data = nullptr;
+                m_Count = 0;
+                m_Capacity = 0;
+            }
+            else
+            {
+                for (uint32 i = 0; i < m_Count; i++)
+                    m_Data[i].~T();
+                m_Count = 0;
+            }
         }
 
         void Erase(const T* iter)
