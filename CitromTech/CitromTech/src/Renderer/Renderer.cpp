@@ -224,8 +224,8 @@ namespace Citrom
 			{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth}
 		};*/
 		FramebufferAttachments fba1;
-		fba1.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::Color, FramebufferFormat::Color});
-		fba1.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth});
+		fba1.PushAttachment(FramebufferAttachmentType::Color, FramebufferFormat::Color);
+		fba1.PushAttachment(FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth);
 
 		FramebufferDesc fbd1 = {};
 		fbd1.width = 800;

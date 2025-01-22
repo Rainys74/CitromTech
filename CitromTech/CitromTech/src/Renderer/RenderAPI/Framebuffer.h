@@ -54,6 +54,11 @@ namespace Citrom::RenderAPI
 			return *this;
 		}
 
+		void PushAttachment(FramebufferAttachmentType type, FramebufferFormat format)
+		{
+			attachments.PushBack(FramebufferAttachment{type, format});
+		}
+
 		bool HasAttachmentType(FramebufferAttachmentType type) const
 		{
 			for (const auto& attachment : attachments)

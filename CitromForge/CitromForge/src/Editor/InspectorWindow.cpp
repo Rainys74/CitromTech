@@ -32,12 +32,9 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         }
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            //static Math::Vector3 position;
-            //static Math::Quaternion rotation;
-            //static Math::Vector3 scale;
-            ImGui::DragFloat3("Position", &transformComponent.position[0]);
-            ImGui::DragFloat4("Rotation", &transformComponent.rotation[0]);
-            ImGui::DragFloat3("Scale", &transformComponent.scale[0]);
+            ImGui::DragFloat3("Position", &transformComponent.transform.position[0]);
+            ImGui::DragFloat4("Rotation", &transformComponent.transform.rotation[0]);
+            ImGui::DragFloat3("Scale", &transformComponent.transform.scale[0]);
         }
         ImGui::Separator();
 

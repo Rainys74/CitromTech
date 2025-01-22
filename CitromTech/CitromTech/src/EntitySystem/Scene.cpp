@@ -16,7 +16,7 @@ namespace Citrom
         Entity entity = Entity(m_SceneRegistry.create(), this);
 
         entity.AddComponent<UUIDComponent>();
-        entity.AddComponent<TransformComponent>().scale = Math::Vector3{1.0f, 1.0f, 1.0f};
+        entity.AddComponent<TransformComponent>().transform.scale = Math::Vector3{1.0f, 1.0f, 1.0f};
 
         return entity;
     }
