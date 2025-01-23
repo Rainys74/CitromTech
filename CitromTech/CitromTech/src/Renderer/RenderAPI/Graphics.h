@@ -49,6 +49,12 @@ namespace Citrom::RenderAPI
 		R32G32B32_FLOAT, // 3
 		R32G32B32A32_FLOAT, // 4
 
+		// Unsigned Normalized (UNORM) [0, MaxUIntValue] to [0.0f, 1.0f]
+		R8_U2FNORM, // 1
+		R8G8_U2FNORM, // 2
+		R8G8B8A8_U2FNORM, // 4
+		B8G8R8A8_U2FNORM, // 4
+
 		Count
 	};
 

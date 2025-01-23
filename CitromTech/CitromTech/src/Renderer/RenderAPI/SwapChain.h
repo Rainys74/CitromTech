@@ -8,5 +8,6 @@ namespace Citrom::RenderAPI
 	struct SwapChainDesc
 	{
 		Platform::Window* windowPtr;
+		Format renderFormat;
 	};
 }

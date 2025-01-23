@@ -74,7 +74,7 @@ namespace Citrom::RenderAPI
 		DXGI_SWAP_CHAIN_DESC scd = {};
 		scd.BufferDesc.Width = 0;
 		scd.BufferDesc.Height = 0;
-		scd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+		scd.BufferDesc.Format = FormatToDXGIFormat(descriptor->renderFormat);
 		scd.BufferDesc.RefreshRate.Numerator = 0;
 		scd.BufferDesc.RefreshRate.Denominator = 0;
 		scd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;

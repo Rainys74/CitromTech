@@ -32,6 +32,7 @@ namespace Citrom
 
 		SwapChainDesc scd;
 		scd.windowPtr = window;
+		scd.renderFormat = Format::B8G8R8A8_U2FNORM;
 
 		m_Device->SetVSync(VSyncMode::On);
 		m_Device->MakeSwapChain(&scd);
