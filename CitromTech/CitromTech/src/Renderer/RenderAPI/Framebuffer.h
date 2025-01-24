@@ -6,7 +6,7 @@
 
 namespace Citrom::RenderAPI
 {
-	enum class FramebufferFormat
+	enum class FramebufferFormat : uint8fast
 	{
 		None,
 
@@ -20,7 +20,7 @@ namespace Citrom::RenderAPI
 		DepthStencil = DEPTH24STENCIL8
 	};
 
-	enum class FramebufferAttachmentType
+	enum class FramebufferAttachmentType : uint8fast
 	{
 		Color,
 		DepthStencil

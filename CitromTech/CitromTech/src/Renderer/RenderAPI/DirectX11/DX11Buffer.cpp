@@ -177,5 +177,17 @@ namespace Citrom::RenderAPI
 
 		DXCall(m_DeviceContext->VSSetConstantBuffers(0, 1, internalData->buffer.GetAddressOf()));
 	}
+	void DX11Device::SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size)
+	{
+		GET_BUFFER_INTERNAL(UniformBufferDX11, ub, internalData);
+
+		HRESULT hr;
+		D3D11_MAPPED_SUBRESOURCE msr;
+		DXCallHR(m_DeviceContext->Map(internalData->buffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0x00000000, &msr));
+
+		Memory::Copy(msr.pData, data, size);
+
+		DXCall(m_DeviceContext->Unmap(internalData->buffer.Get(), 0));
+	}
 }
 #endif

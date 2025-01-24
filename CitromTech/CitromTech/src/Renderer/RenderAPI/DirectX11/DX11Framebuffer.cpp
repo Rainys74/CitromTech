@@ -15,6 +15,8 @@ namespace Citrom::RenderAPI
 		CTL::DArray<WRL::ComPtr<ID3D11RenderTargetView>> renderTargets;
 		CTL::DArray<WRL::ComPtr<ID3D11Texture2D>> renderTextures;
 
+		bool hasDepthStencil;
+
 		WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 		WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
 	};
@@ -59,7 +61,10 @@ namespace Citrom::RenderAPI
 			DXCallHR(m_Device->CreateRenderTargetView((internalData->renderTextures[i]).Get(), nullptr, &(internalData->renderTargets[i])));
 		}
 
+		internalData->hasDepthStencil = descriptor->attachments->HasAttachmentType(FramebufferAttachmentType::DepthStencil);
+
 		// Create Depth Stencil
+		if (internalData->hasDepthStencil)
 		{
 			D3D11_DEPTH_STENCIL_DESC dsd = {};
 			dsd.DepthEnable = true;
@@ -110,18 +115,24 @@ namespace Citrom::RenderAPI
 			ID3D11RenderTargetView* renderTargets[2] = { (internalData->renderTargets[0]).Get(), m_RenderTarget};
 			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
 
-			if (internalData->depthStencilView)
+			if (internalData->hasDepthStencil)
 				m_DeviceContext->ClearDepthStencilView(internalData->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 		}
 	}
-	void* DX11Device::GetFramebufferColorAttachment(Framebuffer* fb)
+	void* DX11Device::GetFramebufferColorAttachment(Framebuffer* fb, uint32 index)
 	{
 		//GET_BUFFER_INTERNAL(FramebufferDX11, fb, internalData);
 		// vs auto internalData = GetInternalBuffer(fb); and the function uses macros to simplify
 		// function overloading to not duplicate code too much
 		auto internalData = static_cast<FramebufferDX11*>(fb->internal.get());
 
-		return (internalData->renderTextures[0]).Get();
+		return (internalData->renderTextures[index]).Get();
+	}
+	void* DX11Device::GetFramebufferDepthStencilAttachment(Framebuffer* fb)
+	{
+		GET_BUFFER_INTERNAL(FramebufferDX11, fb, internalData);
+
+		return internalData->depthStencilTex.Get();
 	}
 
 	//TODO: is this a good/useful function and is it worth putting it here?

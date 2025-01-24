@@ -18,7 +18,8 @@ namespace Citrom::RenderAPI
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
 		void SetTargetFramebuffer(Framebuffer* fb) override;
-		void* GetFramebufferColorAttachment(Framebuffer* fb) override;
+		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override;
+		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override;
 
 		Image GetImageDataFromTexture(void* texture) override;
 
@@ -44,6 +45,7 @@ namespace Citrom::RenderAPI
 
 		UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) override;
 		void BindUniformBuffer(UniformBuffer* ub) override;
+		void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override;
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
