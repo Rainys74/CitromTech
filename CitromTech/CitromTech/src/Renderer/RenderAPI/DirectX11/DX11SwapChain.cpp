@@ -124,6 +124,10 @@ namespace Citrom::RenderAPI
 
 		m_VSyncInterval = swapInterval;
 	}
+	VSyncMode DX11Device::GetVSync()
+	{
+		return static_cast<VSyncMode>(m_VSyncInterval);
+	}
 
 	void DX11Device::Resize(uint32 width, uint32 height)
 	{

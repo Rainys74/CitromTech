@@ -8,6 +8,7 @@
 #include "Editor/PreferenceWindow.h"
 #include "Editor/SceneHierarchy.h"
 #include "Editor/InspectorWindow.h"
+#include "Editor/ProjectSettingsWindow.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -113,22 +114,7 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::Begin("Lighting"); ImGui::End();
 
-    ImGui::Begin("Project Settings"); 
-    if (ImGui::BeginTabBar("ProjectSettingTabs"))
-    {
-        if (ImGui::BeginTabItem("Graphics"))
-        {
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Input System"))
-        {
-            ImGui::EndTabItem();
-        } 
-        if (ImGui::BeginTabItem("Input System2")) ImGui::EndTabItem();
-
-        ImGui::EndTabBar();
-    }
-    ImGui::End();
+    ProjectSettingsWindow::ImGuiDraw();
 
     SceneHierarchyWindow::ImGuiDraw(nullptr);
     InspectorWindow::ImGuiDraw(nullptr);

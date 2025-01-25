@@ -51,15 +51,11 @@ namespace Citrom
 
 		inline void SetActive(bool state = true)
 		{
-			m_Enabled = state;
+			GetComponent<ActiveComponent>().active = state;
 		}
-		FORCE_INLINE bool IsActive() const
+		FORCE_INLINE bool IsActive()
 		{
-			return m_Enabled;
-		}
-		FORCE_INLINE bool& Active()
-		{
-			return m_Enabled;
+			return GetComponent<ActiveComponent>().active;
 		}
 
 		FORCE_INLINE operator bool() const { return m_EntityID != entt::null; }
@@ -67,7 +63,5 @@ namespace Citrom
 	private:
 		entt::entity m_EntityID = entt::null;
 		Scene* m_Scene = nullptr;
-
-		bool m_Enabled = true;
 	};
 }

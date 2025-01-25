@@ -26,6 +26,7 @@ namespace Citrom::RenderAPI
 		void MakeSwapChain(SwapChainDesc* descriptor) override;
 		void SwapBuffers() override;
 		void SetVSync(VSyncMode vSync) override;
+		VSyncMode GetVSync() override;
 
 		void Resize(uint32 width, uint32 height) override;
 

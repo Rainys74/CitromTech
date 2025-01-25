@@ -66,6 +66,7 @@ namespace Citrom::RenderAPI
 		virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
 		virtual void SwapBuffers() = 0; // implemented in device for better error checking on DX11
 		virtual void SetVSync(VSyncMode vSync) = 0; // implemented in device for better error checking on DX11
+		virtual VSyncMode GetVSync() = 0;
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
 

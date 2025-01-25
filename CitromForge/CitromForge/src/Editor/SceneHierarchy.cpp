@@ -73,6 +73,7 @@ static void DrawHierarchy(Scene* scene)
     {
         const UUIDComponent uuidComponent = view.get<UUIDComponent>(entity);
         const NameComponent& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
+        const ActiveComponent& activeComponent = Entity(entity, scene).GetComponent<ActiveComponent>();
         //ImGui::Text("%zu", uuidComponent.id);
         /*ImGuiTreeNodeFlags flags = ((/*entt::null* / entity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
         flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -99,6 +100,16 @@ static void DrawHierarchy(Scene* scene)
         //    IM_COL32(255, 0, 0, 255)                // Red color (RGBA)
         //);
 
+        if (!activeComponent.active)
+        {
+            //ImGuiContext& g = *ImGui::GetCurrentContext();
+            //
+            //g.DisabledAlphaBackup = g.Style.Alpha;
+            //g.Style.Alpha *= g.Style.DisabledAlpha; // PushStyleVar(ImGuiStyleVar_Alpha, g.Style.Alpha * g.Style.DisabledAlpha);
+
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
+        }
+
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
         if (ImGui::Selectable(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
         {
@@ -106,6 +117,9 @@ static void DrawHierarchy(Scene* scene)
             g_SelectedEntt = entity;
             //g_SelectedEntity = Entity(g_SelectedEntt, scene);
         }
+
+        if (!activeComponent.active) 
+            ImGui::PopStyleColor();
     }
 
     if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))

@@ -23,6 +23,13 @@ namespace Citrom
 		NameComponent() = default;
 		NameComponent(const NameComponent&) = default;
 	};
+	struct ActiveComponent // ToggleComponent
+	{
+		bool active;
+
+		ActiveComponent() = default;
+		ActiveComponent(const ActiveComponent&) = default;
+	};
 
 	struct TransformComponent
 	{

@@ -33,6 +33,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 
         auto& uuidComponent = view.get<UUIDComponent>(entity);
         auto& nameComponent = frontEntity.GetComponent<NameComponent>();
+        auto& activeComponent = frontEntity.GetComponent<ActiveComponent>();
         auto& transformComponent = frontEntity.GetComponent<TransformComponent>();
 
         //{
@@ -43,7 +44,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         //    nameComponent.name = std::string(entityName);
         //    delete[] entityName;
         //}
-        ImGui::Checkbox("##EntityEnabledToggleTick", &frontEntity.Active()); // this doesn't work because Entities get constructed every frame.. TODO: move active status into a component
+        ImGui::Checkbox("##EntityEnabledToggleTick", &activeComponent.active); // this doesn't work because Entities get constructed every frame.. TODO: move active status into a component
 
         ImGui::SameLine();
         ImGui::InputText("##ComponentNameInput", &nameComponent.name);
