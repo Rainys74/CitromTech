@@ -14,6 +14,7 @@
 #include "misc/cpp/imgui_stdlib.h"
 #include "misc/cpp/imgui_stdlib.cpp" // unity build?
 #include "ImGuizmo.h"
+#include "Vendor/ImGuiNotify/ImGuiNotify.hpp"
 
 using namespace Citrom;
 
@@ -28,9 +29,11 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         if (entity != selectedEntity)
             continue;
 
+        Entity frontEntity = Entity(entity, scene);
+
         auto& uuidComponent = view.get<UUIDComponent>(entity);
-        auto& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
-        auto& transformComponent = Entity(entity, scene).GetComponent<TransformComponent>();
+        auto& nameComponent = frontEntity.GetComponent<NameComponent>();
+        auto& transformComponent = frontEntity.GetComponent<TransformComponent>();
 
         //{
         //    //char* entityName = const_cast<char*>(nameComponent.name.c_str());
@@ -40,8 +43,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         //    nameComponent.name = std::string(entityName);
         //    delete[] entityName;
         //}
-        static bool testEnableBool = true;
-        ImGui::Checkbox("##EntityEnabledToggleTick", &testEnableBool);
+        ImGui::Checkbox("##EntityEnabledToggleTick", &frontEntity.Active()); // this doesn't work because Entities get constructed every frame.. TODO: move active status into a component
 
         ImGui::SameLine();
         ImGui::InputText("##ComponentNameInput", &nameComponent.name);
@@ -94,7 +96,8 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         
         if (ImGui::BeginPopup("ComponentAdder"))
         {
-            if (ImGui::MenuItem("Test"));
+            if (ImGui::MenuItem("Test"))
+                ImGui::InsertNotification({ ImGuiToastType::Success, 3000, "That is a success! %s", "(Format here)" });
 
             ImGui::EndPopup();
         }

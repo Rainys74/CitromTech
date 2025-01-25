@@ -107,6 +107,9 @@ static void DrawHierarchy(Scene* scene)
             //g_SelectedEntity = Entity(g_SelectedEntt, scene);
         }
     }
+
+    if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
+        g_SelectedEntt = entt::null;
 }
 
 void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)

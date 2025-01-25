@@ -9,6 +9,11 @@
 #include "imgui.h"
 #include "ImGuizmo.h"
 
+// ImGui Notify by TyomaVader (Original by patrickcjk)
+#include "Vendor/ImGuiNotify/ImGuiNotify.hpp"
+#include "Vendor/ImGuiNotify/IconsFontAwesome6.h"
+#include "Vendor/ImGuiNotify/fa-solid-900.h"
+
 namespace Citrom
 {
 	static float g_ResizeFont = 0.0f;
@@ -50,6 +55,7 @@ namespace Citrom
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		constexpr float fontSize = 17.0f; //13.0f;
 
@@ -91,6 +97,20 @@ namespace Citrom
 	{
 		Platform::ImGui::Initialize(window);
 		Renderer::ImGuiInit();
+
+		// ImGui Notify
+		ImGuiIO& io = ImGui::GetIO();
+		io.Fonts->AddFontDefault();
+
+		static constexpr float baseFontSize = 16.0f;
+		static constexpr float iconFontSize = baseFontSize * 2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+
+		static constexpr ImWchar iconsRanges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+		ImFontConfig iconsConfig;
+		iconsConfig.MergeMode = true;
+		iconsConfig.PixelSnapH = true;
+		iconsConfig.GlyphMinAdvanceX = iconFontSize;
+		io.Fonts->AddFontFromMemoryCompressedTTF(fa_solid_900_compressed_data, fa_solid_900_compressed_size, iconFontSize, &iconsConfig, iconsRanges);
 	}
 
 	void ImGuiLayer::Begin()
@@ -102,6 +122,37 @@ namespace Citrom
 	void ImGuiLayer::End()
 	{
 		CT_PROFILE_MEMBER_FUNCTION();
+
+#if 0 // TyomaVader
+		{
+			// Notifications style setup
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f); // Disable round borders
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f); // Disable borders
+
+			// Notifications color setup
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.10f, 0.10f, 0.10f, 1.00f)); // Background color
+
+			// Main rendering function
+			ImGui::RenderNotifications();
+
+			//——————————————————————————————— WARNING ———————————————————————————————
+			// Argument MUST match the amount of ImGui::PushStyleVar() calls 
+			ImGui::PopStyleVar(2);
+			// Argument MUST match the amount of ImGui::PushStyleColor() calls 
+			ImGui::PopStyleColor(1);
+		}
+#else // patrickcjk
+		{
+			// Render toasts on top of everything, at the end of your code!
+			// You should push style vars here
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 100.f / 255.f)); // Background color
+
+			ImGui::RenderNotifications(); // <-- Here we render all notifications
+			ImGui::PopStyleVar(1); // Don't forget to Pop()
+			ImGui::PopStyleColor(1);
+		}
+#endif
 
 		ImGui::Render();
 		Renderer::ImGuiRenderDrawData(ImGui::GetDrawData());

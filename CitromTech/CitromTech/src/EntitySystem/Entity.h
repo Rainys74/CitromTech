@@ -44,7 +44,7 @@ namespace Citrom
 
 		FORCE_INLINE Scene* GetScene() { return m_Scene; }
 
-		UUID UUID()
+		UUID GetUUID()
 		{
 			return GetComponent<UUIDComponent>().id;
 		}
@@ -54,6 +54,10 @@ namespace Citrom
 			m_Enabled = state;
 		}
 		FORCE_INLINE bool IsActive() const
+		{
+			return m_Enabled;
+		}
+		FORCE_INLINE bool& Active()
 		{
 			return m_Enabled;
 		}
