@@ -8,7 +8,11 @@
 #include "EntitySystem/Components/RendererComponents.h"
 #include "Logger/Logger.h"
 
+#include "CTL/CStringHandling.h"
+
 #include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
+#include "misc/cpp/imgui_stdlib.cpp" // unity build?
 #include "ImGuizmo.h"
 
 using namespace Citrom;
@@ -28,20 +32,38 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         auto& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
         auto& transformComponent = Entity(entity, scene).GetComponent<TransformComponent>();
 
-        //ImGui::InputText("##ComponentNameInput", );
-        ImGui::Text("Test1");
+        //{
+        //    //char* entityName = const_cast<char*>(nameComponent.name.c_str());
+        //    char* entityName = new char[nameComponent.name.size()+2];
+        //    CTL::CString::Copy(entityName, nameComponent.name.c_str());
+        //    ImGui::InputText("##ComponentNameInput", entityName, nameComponent.name.size()+2);
+        //    nameComponent.name = std::string(entityName);
+        //    delete[] entityName;
+        //}
+        static bool testEnableBool = true;
+        ImGui::Checkbox("##EntityEnabledToggleTick", &testEnableBool);
+
+        ImGui::SameLine();
+        ImGui::InputText("##ComponentNameInput", &nameComponent.name);
 
         ImGui::SameLine();
         ImGui::PushItemWidth(-1);
 
         ImGui::BeginDisabled();
-        //ImGui::Text("%X", uuidComponent.id);
-        //ImGui::Text("%08X", uuidComponent.id);
-        //ImGui::Text("%016llX", (uint64)uuidComponent.id);
         ImGui::Text("%016llx", (uint64)uuidComponent.id);
         ImGui::EndDisabled();
 
         ImGui::PopItemWidth();
+
+        //ImGui::Button("TESTNAME");
+        //if (ImGui::BeginPopupContextItem())
+        //{
+        //    ImGui::Text("Edit name:");
+        //    ImGui::InputText("##edit", (char*)"NAME", 5);
+        //    if (ImGui::Button("Close"))
+        //        ImGui::CloseCurrentPopup();
+        //    ImGui::EndPopup();
+        //}
 
         if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
         {

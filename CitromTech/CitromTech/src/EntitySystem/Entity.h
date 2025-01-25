@@ -49,10 +49,21 @@ namespace Citrom
 			return GetComponent<UUIDComponent>().id;
 		}
 
+		inline void SetActive(bool state = true)
+		{
+			m_Enabled = state;
+		}
+		FORCE_INLINE bool IsActive() const
+		{
+			return m_Enabled;
+		}
+
 		FORCE_INLINE operator bool() const { return m_EntityID != entt::null; }
 		FORCE_INLINE operator entt::entity() const { return m_EntityID; }
 	private:
 		entt::entity m_EntityID = entt::null;
 		Scene* m_Scene = nullptr;
+
+		bool m_Enabled = true;
 	};
 }
