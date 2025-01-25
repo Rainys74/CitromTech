@@ -28,6 +28,21 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         auto& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
         auto& transformComponent = Entity(entity, scene).GetComponent<TransformComponent>();
 
+        //ImGui::InputText("##ComponentNameInput", );
+        ImGui::Text("Test1");
+
+        ImGui::SameLine();
+        ImGui::PushItemWidth(-1);
+
+        ImGui::BeginDisabled();
+        //ImGui::Text("%X", uuidComponent.id);
+        //ImGui::Text("%08X", uuidComponent.id);
+        //ImGui::Text("%016llX", (uint64)uuidComponent.id);
+        ImGui::Text("%016llx", (uint64)uuidComponent.id);
+        ImGui::EndDisabled();
+
+        ImGui::PopItemWidth();
+
         if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::BeginDisabled();

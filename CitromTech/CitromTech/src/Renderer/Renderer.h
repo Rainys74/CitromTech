@@ -6,6 +6,7 @@
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
+#include "Math/Color.h"
 #include "Events/WindowEvents.h"
 
 #include "EntitySystem/Scene.h"
@@ -16,6 +17,7 @@ namespace Citrom
 {
 	struct Camera
 	{
+		// TODO: instead maybe hold values/parameters and generate the matrices with functions?
 		Math::Matrix4x4 view;
 		Math::Matrix4x4 projection;
 	};
@@ -33,7 +35,12 @@ namespace Citrom
 
 	struct Material
 	{
-		std::string shaderName;
+		std::string shaderName; // TODO: shader reference or shader name?
+
+		Math::Color albedoColor;
+		// TODO: convert into a class that combines multipliers and textures as well as maybe combines all PBR stuff
+		float32 smoothness; // smoothness/glossiness vs roughness
+		float32 metallic; // metalness
 	};
 	
 	// TODO: create a modular render path system with

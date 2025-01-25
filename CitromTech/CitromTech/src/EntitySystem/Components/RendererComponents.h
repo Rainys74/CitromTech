@@ -12,6 +12,8 @@ namespace Citrom
 	{
 		Mesh mesh;
 		Material material;
+		
+		bool castShadows; // or use flags maybe?
 	};
 	struct CubeComponent // Box Component
 	{
