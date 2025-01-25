@@ -14,6 +14,10 @@
 #include "Vendor/ImGuiNotify/IconsFontAwesome6.h"
 #include "Vendor/ImGuiNotify/fa-solid-900.h"
 
+// ImCandy
+#define M_PI PI_MACRO(0)
+#include "Vendor/ImCandy/candy.h"
+
 namespace Citrom
 {
 	static float g_ResizeFont = 0.0f;
@@ -77,6 +81,9 @@ namespace Citrom
 		ImGuiStyles::Push(ImGuiStyleObj{"Comfy",				ImThemes::Comfy});
 		ImGuiStyles::Push(ImGuiStyleObj{"Cherry",				ImThemes::Cherry});
 		ImGuiStyles::Push(ImGuiStyleObj{"Quick Minimal Look",	ImThemes::QuickMinimalLook});
+
+		ImGuiStyles::Push(ImGuiStyleObj{"ImCandy Blender",	[]() {ImCandy::Theme_Blender();}	});
+		ImGuiStyles::Push(ImGuiStyleObj{"ImCandy Nord",		[]() {ImCandy::Theme_Nord();}		});
 
 		ImGuiStyles::Push(ImGuiStyleObj{"ImGui Dark",		[]() {ImGui::StyleColorsDark();}	});
 		ImGuiStyles::Push(ImGuiStyleObj{"ImGui Classic",	[]() {ImGui::StyleColorsClassic();} });

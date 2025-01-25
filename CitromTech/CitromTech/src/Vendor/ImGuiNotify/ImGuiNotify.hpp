@@ -48,7 +48,12 @@
 #define NOTIFY_RENDER_LIMIT					5			// Max number of toasts rendered at the same time. Set to 0 for unlimited
 
 // Warning: Requires ImGui docking with multi-viewport enabled
-#define NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW	true		// If true, the notifications will be rendered in the corner of the monitor, otherwise in the corner of the main window
+#define NOTIFY_RENDER_OUTSIDE_MAIN_WINDOW	false		// If true, the notifications will be rendered in the corner of the monitor, otherwise in the corner of the main window // Default: true
+
+// Citrom Tech
+#ifndef CT_NOTIFY_DISMISS_BUTTON_TEXT
+#define CT_NOTIFY_DISMISS_BUTTON_TEXT "x" //"X" //ICON_FA_XMARK
+#endif
 
 /**
  * CONFIGURATION SECTION End
@@ -618,7 +623,7 @@ namespace ImGui
                     SetCursorPosX(GetCursorPosX() + (GetWindowSize().x - GetCursorPosX()) * scale);
 
                     // If the button is pressed, we want to remove the notification
-                    if (Button(ICON_FA_XMARK))
+                    if (Button(CT_NOTIFY_DISMISS_BUTTON_TEXT))
                     {
                         RemoveNotification(i);
                     }
