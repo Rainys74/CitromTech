@@ -17,6 +17,7 @@ namespace Citrom
         Entity entity = Entity(m_SceneRegistry.create(), this);
 
         entity.AddComponent<UUIDComponent>();
+        entity.AddComponent<NameComponent>().name = "New Entity";
         entity.AddComponent<TransformComponent>().transform.scale = Math::Vector3{1.0f, 1.0f, 1.0f};
 
         return entity;
@@ -41,6 +42,8 @@ namespace Citrom
     }
     Entity Scene::GetMainCameraEntity()
     {
+        // TODO: not exactly sure if this is the best place, but
+        // maybe look into returning Editor's Camera here? instead maybe in the renderer?
         auto view = m_SceneRegistry.view<CameraComponent>();
         for (auto entity : view)
         {

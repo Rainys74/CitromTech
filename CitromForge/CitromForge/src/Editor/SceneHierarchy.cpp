@@ -33,7 +33,7 @@ static void DrawRightClickPopupContext(Scene* currentScene)
         {
             if (ImGui::MenuItem("Rename"))
             {
-
+                Entity(g_SelectedEntt, currentScene).GetComponent<NameComponent>().name = "Renamed";
             }
             if (ImGui::MenuItem("Delete"))
             {
@@ -72,6 +72,7 @@ static void DrawHierarchy(Scene* scene)
     for (auto entity : view)
     {
         const UUIDComponent uuidComponent = view.get<UUIDComponent>(entity);
+        const NameComponent& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
         //ImGui::Text("%zu", uuidComponent.id);
         /*ImGuiTreeNodeFlags flags = ((/*entt::null* / entity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
         flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
@@ -99,7 +100,7 @@ static void DrawHierarchy(Scene* scene)
         //);
 
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
-        if (ImGui::Selectable(std::to_string(uuidComponent.id).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
+        if (ImGui::Selectable(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
         {
             CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
             g_SelectedEntt = entity;

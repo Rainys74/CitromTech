@@ -5,6 +5,8 @@
 #include "CitromUUID.h"
 #include "Math/Transform.h"
 
+#include "CTL/String.h"
+
 namespace Citrom
 {
 	struct UUIDComponent
@@ -13,6 +15,13 @@ namespace Citrom
 
 		UUIDComponent() = default;
 		UUIDComponent(const UUIDComponent&) = default;
+	};
+	struct NameComponent
+	{
+		std::string name;
+
+		NameComponent() = default;
+		NameComponent(const NameComponent&) = default;
 	};
 
 	struct TransformComponent

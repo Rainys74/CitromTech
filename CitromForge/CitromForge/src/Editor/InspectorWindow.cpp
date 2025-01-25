@@ -25,11 +25,15 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             continue;
 
         auto& uuidComponent = view.get<UUIDComponent>(entity);
+        auto& nameComponent = Entity(entity, scene).GetComponent<NameComponent>();
         auto& transformComponent = Entity(entity, scene).GetComponent<TransformComponent>();
 
         if (ImGui::CollapsingHeader("General", ImGuiTreeNodeFlags_DefaultOpen))
         {
+            ImGui::BeginDisabled();
             ImGui::Text("%zu", uuidComponent.id);
+            ImGui::Text("%s", nameComponent.name.c_str());
+            ImGui::EndDisabled();
         }
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -48,7 +52,14 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 
         if (ImGui::Button("Add Component", ImVec2(buttonWidth, 0.0f)))
         {
-            
+            ImGui::OpenPopup("ComponentAdder");
+        }
+        
+        if (ImGui::BeginPopup("ComponentAdder"))
+        {
+            if (ImGui::MenuItem("Test"));
+
+            ImGui::EndPopup();
         }
     }
 }
