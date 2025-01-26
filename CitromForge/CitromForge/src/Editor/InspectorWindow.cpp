@@ -54,6 +54,8 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 
         ImGui::BeginDisabled();
         ImGui::Text("%016llx", (uint64)uuidComponent.id);
+        //char formattedUUID[32 + 8 + 1]; // 32 hex chars, 8 dashes, 1 null terminator
+        //std::snprintf(formattedUUID, sizeof(formattedUUID), "{%08llx-%08llx-%08llx-%08llx}", (uuidComponent.id >> 48) & 0xFFFF, (uuidComponent.id >> 32) & 0xFFFF, (uuidComponent.id >> 16) & 0xFFFF, uuidComponent.id & 0xFFFF);
         ImGui::EndDisabled();
 
         ImGui::PopItemWidth();

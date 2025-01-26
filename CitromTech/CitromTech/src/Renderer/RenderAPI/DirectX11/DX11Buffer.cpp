@@ -65,6 +65,7 @@ namespace Citrom::RenderAPI
 
 		// input (vertex) layout
 		CTL::DArray<D3D11_INPUT_ELEMENT_DESC> ieds;
+		UINT offset = 0; // also known as pointer in OpenGL
 		for (auto& element : descriptor->layoutElements)
 		{
 			D3D11_INPUT_ELEMENT_DESC ied = {};
@@ -72,7 +73,10 @@ namespace Citrom::RenderAPI
 			ied.SemanticIndex = element.elementID;
 			ied.Format = FormatToDXGIFormat(element.elementFormat);
 			ied.InputSlot = 0; // not important
-			ied.AlignedByteOffset = 0; // TODO: offset between the first item and the current in bytes
+			ied.AlignedByteOffset = offset; // offset between the first item and the current in bytes
+
+			offset += GetFormatSize(element.elementFormat);
+
 			// Instancing stuff (not important)
 			ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 			ied.InstanceDataStepRate = 0;

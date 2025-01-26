@@ -6,6 +6,7 @@
 #include "Buffer.h"
 #include "Shader.h"
 #include "SwapChain.h"
+#include "Texture.h"
 
 // Also referred to as the Render Hardware Interface (RHI) in engines such as Unreal Engine and O3DE
 namespace Citrom::RenderAPI
@@ -88,6 +89,10 @@ namespace Citrom::RenderAPI
 		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
 		virtual void BindUniformBuffer(UniformBuffer* ub) = 0;
 		virtual void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) = 0;
+
+		// Textures
+		virtual Texture2D CreateTexture2D(Texture2DDesc* descriptor) = 0;
+		virtual void BindTexture2D(Texture2D* tex2D) = 0;
 
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0;

@@ -48,6 +48,10 @@ namespace Citrom::RenderAPI
 		void BindUniformBuffer(UniformBuffer* ub) override;
 		void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override;
 
+		// Textures
+		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override;
+		void BindTexture2D(Texture2D* tex2D) override;
+
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
