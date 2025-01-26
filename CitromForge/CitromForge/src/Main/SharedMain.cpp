@@ -135,6 +135,14 @@ int SharedMain(int argc, char* argv[])
 	// TODO: eventually change the -1
 	//ThreadPool::Initialize(threadCount - 1);
 
+	//CTL::DArray<uint32> testIter(5);
+	//for (uint32 i = 0; i < 5; i++)
+	//	testIter.PushBack(34);
+	//ThreadPool::Get()->ForEach<uint32>(testIter.begin(), testIter.end(), [](uint32 i) // TODO: convert IDXType to T to use foreach loops
+	//	{
+	//		CT_ERROR("TP: {}. {}", i, 2);
+	//	});
+
 #if 0
 	TestOutMain(argc, argv);
 #endif

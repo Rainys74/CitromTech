@@ -22,12 +22,21 @@ namespace Citrom
 
 		void Submit(void* job, void* args);
 
-		//void ForEach(iterators, callback, shouldWait)
+		template<typename IdxType = uint32>
+		void ForEach(IdxType* iteratorBegin, IdxType* iteratorEnd, void(*callback)(IdxType index)/*, bool shouldWait*/)
+		{
+			IdxType i = 0;
+			for (auto it = iteratorBegin; it != iteratorEnd; ++it)
+			{
+				i++;
+				Submit(callback, reinterpret_cast<void*>(&i));
+			}
+		}
 
 		FORCE_INLINE uint32 GetJobCount() { return m_QueueJobs.Count(); }
 
-		Platform::Mutex& GetMutex() { return m_Mutex; }
-		CTL::DArray<ThreadPoolJob>* GetJobQueue() { return &m_QueueJobs; }
+		FORCE_INLINE Platform::Mutex& GetMutex() { return m_Mutex; }
+		FORCE_INLINE CTL::DArray<ThreadPoolJob>* GetJobQueue() { return &m_QueueJobs; }
 	private:
 		uint32 m_MaxThreads;
 
