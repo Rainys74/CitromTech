@@ -92,7 +92,7 @@ namespace Citrom::RenderAPI
 
 		// Textures
 		virtual Texture2D CreateTexture2D(Texture2DDesc* descriptor) = 0;
-		virtual void BindTexture2D(Texture2D* tex2D) = 0;
+		virtual void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) = 0;
 
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0;

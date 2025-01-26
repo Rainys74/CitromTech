@@ -20,9 +20,9 @@ namespace Citrom::RenderAPI
 
 		D3D11_TEXTURE2D_DESC td = {};
 		td.Width = descriptor->width;
-		td.Height = descriptor->height;
+		td.Height = descriptor->height; // size values of EACH texture
 		td.MipLevels = descriptor->mipLevels;
-		td.ArraySize = 1;
+		td.ArraySize = descriptor->arraySize;
 		td.Format = FormatToDXGIFormat(descriptor->format);
 		td.SampleDesc.Count = 1;
 		td.SampleDesc.Quality = 0;
@@ -44,8 +44,18 @@ namespace Citrom::RenderAPI
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
 		srvd.Format = td.Format;
 		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		srvd.Texture2D.MostDetailedMip = 0;
-		srvd.Texture2D.MipLevels = descriptor->mipLevels;
+		if (descriptor->arraySize > 1)
+		{
+			srvd.Texture2DArray.ArraySize = descriptor->arraySize;
+			srvd.Texture2DArray.MostDetailedMip = 0;
+			srvd.Texture2DArray.MipLevels = descriptor->mipLevels;
+			srvd.Texture2DArray.FirstArraySlice = 0;
+		}
+		else
+		{
+			srvd.Texture2D.MostDetailedMip = 0;
+			srvd.Texture2D.MipLevels = descriptor->mipLevels;
+		}
 
 		DXCallHR(m_Device->CreateShaderResourceView(internalData->texture.Get(), &srvd, &internalData->textureView));
 
@@ -60,12 +70,12 @@ namespace Citrom::RenderAPI
 
 		return tex2D;
 	}
-	void DX11Device::BindTexture2D(Texture2D* tex2D)
+	void DX11Device::BindTexture2D(Texture2D* tex2D, uint32 startSlot)
 	{
 		GET_BUFFER_INTERNAL(Texture2DDX11, tex2D, internalData);
 
-		DXCall(m_DeviceContext->PSSetShaderResources(0, 1, internalData->textureView.GetAddressOf()));
-		DXCall(m_DeviceContext->PSSetSamplers(0, 1, internalData->sampler.GetAddressOf()));
+		DXCall(m_DeviceContext->PSSetShaderResources(startSlot, tex2D->descriptor.arraySize, internalData->textureView.GetAddressOf()));
+		DXCall(m_DeviceContext->PSSetSamplers(startSlot, tex2D->descriptor.arraySize, internalData->sampler.GetAddressOf()));
 	}
 }
 #endif

@@ -50,7 +50,7 @@ namespace Citrom::RenderAPI
 
 		// Textures
 		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override;
-		void BindTexture2D(Texture2D* tex2D) override;
+		void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) override;
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
