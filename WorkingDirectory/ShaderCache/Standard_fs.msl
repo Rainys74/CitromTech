@@ -10,17 +10,24 @@ using namespace metal;
 	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
 #endif
 constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
+struct Mtl_FragmentIn
+{
+    float2 TexCoord0 [[ user(TexCoord0) ]] ;
+};
+
 struct Mtl_FragmentOut
 {
     float4 SV_Target0 [[ color(xlt_remap_o[0]) ]];
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
-)
+    sampler samplersplr [[ sampler (0) ]],
+    texture2d<float, access::sample > tex [[ texture(0) ]] ,
+    Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
-    //MOV
-    output.SV_Target0 = float4(1.0, 1.0, 0.0, 1.0);
+    //SAMPLE
+    output.SV_Target0 = tex.sample(splr, input.TexCoord0.xy);
     //RET
     return output;
 }

@@ -2,6 +2,7 @@
 
 #include "Renderer/RenderAPI/Buffer.h"
 #include "Vendor/stb/stb_image_write.h"
+#include "Vendor/stb/stb_image.h"
 
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "EntitySystem/Components/RendererComponents.h"
@@ -172,11 +173,11 @@ namespace Citrom
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
-		float positions[] =
+		float vertices[] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+			 0.0f,  0.5f, 0.0f,		0.5f, 1.0f,
+			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f
 		};
 
 		unsigned int indices[] =
@@ -227,19 +228,36 @@ namespace Citrom
 		vbld1.shader = &shader;
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		m_Device->BindVertexBufferLayout(&vbLayout1);
 
 		// Vertex Buffer 1
 		VertexBufferDesc vbd1 = {};
-		vbd1.data = positions;
-		vbd1.size = sizeof(positions);
+		vbd1.data = vertices;
+		vbd1.size = sizeof(vertices);
 		vbd1.usage = Usage::Static;
 		vbd1.vbLayoutDesc = &vbld1;
 
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
 		m_Device->BindVertexBuffer(&vbo1);
+
+		// Texture
+		Texture2DDesc td = {};
+		{
+			int width, height, channelsInFile;
+			td.data = stbi_load("texture.png", &width, &height, &channelsInFile, 0);
+			td.width = width;
+			td.height = height;
+		}
+		td.format = Format::R8G8B8A8_U2FNORM;
+		td.usage = Usage::Static;
+
+		Texture2D tex2D = m_Device->CreateTexture2D(&td);
+		m_Device->BindTexture2D(&tex2D);
+
+		stbi_image_free(td.data);
 
 		/*FramebufferAttachments fba1; fba1 =
 		{

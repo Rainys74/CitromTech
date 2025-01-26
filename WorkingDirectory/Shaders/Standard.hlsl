@@ -18,6 +18,12 @@ float4 psmain() : SV_Target
 struct VSInput
 {
     float3 pos : Position;
+    float2 tex : TexCoord1;
+};
+struct VSOut
+{
+    float2 tex : TexCoord;
+    float4 pos : SV_Position;
 };
 
 cbuffer CBuffer1
@@ -25,12 +31,19 @@ cbuffer CBuffer1
     matrix transform;
 };
 
-float4 vsmain(VSInput input) : SV_Position
+VSOut vsmain(VSInput input)
 {
-    return mul(float4(input.pos, 1.0f), transform);
+    VSOut vso;
+    vso.pos = mul(float4(input.pos, 1.0f), transform);
+    vso.tex = input.tex;
+    return vso;
 }
 
-float4 psmain() : SV_Target
+Texture2D tex;
+SamplerState splr;
+
+float4 psmain(float2 texCoord : TexCoord) : SV_Target
 {
-    return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
+    //return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
+    return tex.Sample(splr, texCoord);
 }

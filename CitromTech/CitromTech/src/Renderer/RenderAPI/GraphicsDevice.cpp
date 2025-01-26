@@ -92,6 +92,8 @@ namespace Citrom::RenderAPI
             FORMATSIZE_CASE(Format::R32G32_FLOAT, float32, 2);
             FORMATSIZE_CASE(Format::R32G32B32_FLOAT, float32, 3);
             FORMATSIZE_CASE(Format::R32G32B32A32_FLOAT, float32, 4);
+
+            FORMATSIZE_CASE(Format::R8G8B8A8_U2FNORM, uint8, 4); // TODO: CONTINUE
         }
         return 0;
     }
