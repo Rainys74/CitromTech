@@ -27,9 +27,15 @@ namespace Citrom::Input
 		static bool GetKey(KeyCode keyCode);
 
 		static bool GetMouseButton(MouseButton mouseButton);
+
+		static float GetMouseDeltaX();
+		static float GetMouseDeltaY();
 	private:
 		static void TryInitialize();
 	private:
+		static float s_LastMousePositionX, s_LastMousePositionY;
+		static float s_CurrentMousePositionX, s_CurrentMousePositionY;
+
 		static bool s_KeysDown[(size_t)KeyCode::Count];
 		static bool s_MButtonsDown[(size_t)MouseButton::Count];
 		// or use states like CitromTech2D which requires updating, and calling get functions between the registering and update?

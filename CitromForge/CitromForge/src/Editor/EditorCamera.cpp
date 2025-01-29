@@ -15,5 +15,26 @@ void EditorCamera::Update(float deltaTime)
 	// input detect!
 
 	if (Input::SimpleInput::GetMouseButton(Input::MouseButton::RightButton))
-		m_Transform.position.x += 0.1f * deltaTime;
+	{
+		constexpr float moveSpeed = 0.1f;
+
+		// TODO: use 3D and orientation instead of 2D!
+		if (Input::SimpleInput::GetKey(Input::KeyCode::A))
+			m_Transform.position.x -= moveSpeed * deltaTime;
+		if (Input::SimpleInput::GetKey(Input::KeyCode::D))
+			m_Transform.position.x += moveSpeed * deltaTime;
+
+		if (Input::SimpleInput::GetKey(Input::KeyCode::S))
+			m_Transform.position.y -= moveSpeed * deltaTime;
+		if (Input::SimpleInput::GetKey(Input::KeyCode::W))
+			m_Transform.position.y += moveSpeed * deltaTime;
+	}
+	else if (Input::SimpleInput::GetMouseButton(Input::MouseButton::MiddleButton))
+	{
+		m_Transform.position.x += Input::SimpleInput::GetMouseDeltaX() * deltaTime;
+		m_Transform.position.y += Input::SimpleInput::GetMouseDeltaY() * deltaTime;
+	}
+
+	CT_VERBOSE("MOUSE DELTA X: {}", Input::SimpleInput::GetMouseDeltaX());
+	CT_VERBOSE("MOUSE DELTA Y: {}", Input::SimpleInput::GetMouseDeltaY());
 }

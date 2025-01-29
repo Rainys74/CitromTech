@@ -11,6 +11,8 @@
 
 #include "Input/KeyboardInput.h"
 
+#include <windowsx.h>
+
 #ifdef CT_EDITOR_ENABLED
 #include "Renderer/Renderer.h"
 
@@ -216,6 +218,18 @@ namespace Citrom::Platform
 			mouseUpEvent.mouseButton = eventButton;
 
 			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseUpEvent);
+		}
+		break;
+		case WM_MOUSEMOVE:
+		{
+			auto xPos = GET_X_LPARAM(lParam); // prefer instead of LOWORD because systems with multiple monitors might have negative coords
+			auto yPos = GET_Y_LPARAM(lParam);
+
+			MouseMoveEvent mouseMoveEvent;
+			mouseMoveEvent.x = xPos;
+			mouseMoveEvent.y = yPos;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseMoveEvent);
 		}
 		break;
 		// Mouse Events End

@@ -62,6 +62,8 @@ namespace Citrom::Math
         Vector3 operator*(const Vector3& vec3B) const { return Vector3{ this->x * vec3B.x, this->y * vec3B.y, this->z * vec3B.z }; } // Multiply
         Vector3 operator/(const Vector3& vec3B) const { return Vector3{ this->x / vec3B.x, this->y / vec3B.y, this->z / vec3B.z }; } // Divide
 
+        Vector3 operator-() const { return Vector3{ -x, -y, -z }; }
+
         // Referencing
         /*
          * Works because stack memory is stored contiguously,
