@@ -249,6 +249,9 @@ int SharedMain(int argc, char* argv[])
 	Entity e2 = g_CurrentScene->CreateEntity();
 	CubeComponent& cubeComponent = cube1.AddComponent<CubeComponent>();
 	cubeComponent.material.shaderName = "Standard";
+	Entity camera = g_CurrentScene->CreateEntity();
+	camera.GetComponent<NameComponent>().name = "Main Camera";
+	camera.AddComponent<CameraComponent>();
 
 	using namespace Platform;
 
@@ -316,7 +319,7 @@ void ForgeLoop()
 		Renderer::BeginFrame();
 		g_LayerStack.Render();
 
-		Renderer::DrawTest();
+		Renderer::DrawTest(&g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera, &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform);
 
 		Renderer::SubmitScene(g_CurrentScene);
 

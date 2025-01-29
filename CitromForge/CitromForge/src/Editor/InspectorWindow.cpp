@@ -77,11 +77,53 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::Text("%s", nameComponent.name.c_str());
             ImGui::EndDisabled();
         }
+        ImGui::Spacing();
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            ImGui::DragFloat3("Position", &transformComponent.transform.position[0]);
+            ImGui::DragFloat3("Position", &transformComponent.transform.position[0], 0.25f);
             ImGui::DragFloat4("Rotation", &transformComponent.transform.rotation[0]);
             ImGui::DragFloat3("Scale", &transformComponent.transform.scale[0]);
+        }
+        ImGui::Spacing();
+        if (frontEntity.HasComponent<CameraComponent>() && ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            //ProjectionType m_ProjectionType = ProjectionType::Orthographic;
+            //
+            //float32 m_PerspectiveFOV = Math::DegreesToRadians(45.0f);
+            //float32 m_PerspectiveNear = 0.01f, m_PerspectiveFar = 1000.0f;
+            //
+            //float32 m_OrthographicSize = 10.0f;
+            //float32 m_OrthographicNear = -1.0f, m_OrthographicFar = 1.0f;
+            //
+            //float32 m_AspectRatio = 0.0f;
+            //
+            //Math::Matrix4x4 m_Projection = Math::Matrix4x4::Identity();
+
+            auto& cameraComponent = frontEntity.GetComponent<CameraComponent>();
+
+            static uint8fast projectionType = (uint8fast)cameraComponent.camera.GetProjectionType();
+
+            // Perspective
+            static float32 perspectiveYFOV = cameraComponent.camera.GetPerspectiveVerticalFOV();
+            static float32 perspectiveNear = cameraComponent.camera.GetPerspectiveNearClip();
+            static float32 perspectiveFar = cameraComponent.camera.GetPerspectiveFarClip();
+
+            // Orthographic
+            static float32 orthoSize = cameraComponent.camera.GetOrthographicSize();
+            static float32 orthoNear = cameraComponent.camera.GetOrthographicNearClip();
+            static float32 orthoFar = cameraComponent.camera.GetOrthographicFarClip();
+
+            ImGui::DragFloat3("Position2", &transformComponent.transform.position[0]);
+            ImGui::DragFloat4("Rotation2", &transformComponent.transform.rotation[0]);
+            ImGui::DragFloat3("Scale2", &transformComponent.transform.scale[0]);
+
+            cameraComponent.camera.SetPerspectiveVerticalFOV(perspectiveYFOV);
+            cameraComponent.camera.SetPerspectiveNearClip(perspectiveNear);
+            cameraComponent.camera.SetPerspectiveFarClip(perspectiveFar);
+
+            cameraComponent.camera.SetOrthographicSize(orthoSize);
+            cameraComponent.camera.SetOrthographicNearClip(orthoNear);
+            cameraComponent.camera.SetOrthographicFarClip(orthoFar);
         }
         ImGui::Separator();
 

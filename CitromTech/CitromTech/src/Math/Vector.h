@@ -40,7 +40,9 @@ namespace Citrom::Math
     class Vector3
     {
     public:
-        Vector3() = default;
+        //Vector3() = default;
+        Vector3()
+            : x(0), y(0), z(0) {}
         Vector3(const Vector3&) = default;
         Vector3(float32 vecX, float32 vecY, float32 vecZ)
             : x(vecX), y(vecY), z(vecZ) {}

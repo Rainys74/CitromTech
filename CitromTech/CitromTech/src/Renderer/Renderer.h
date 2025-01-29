@@ -11,6 +11,8 @@
 #include "Events/WindowEvents.h"
 
 #include "EntitySystem/Scene.h"
+//#include "EntitySystem/Components/EssentialComponents.h"
+#include "Math/Transform.h"
 
 #include "CTL/ScopedPointer.h"
 
@@ -66,7 +68,7 @@ namespace Citrom
 		static void SubmitScene(Scene* scene);
 
 		// TODO: temporary
-		static void DrawTest();
+		static void DrawTest(Camera* camera, Math::Transform* cameraTransform);
 
 		// ImGui
 		static void ImGuiInit();

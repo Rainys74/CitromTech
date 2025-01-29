@@ -124,20 +124,7 @@ namespace Citrom::Math
 	}
 	void Matrix4x4::Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
 	{
-		Zero();
-
-		// TODO: RH_ZO (Right-Handed, Zero-Origin) is this ok?
-		const float rl = 1.0f / (right - left);
-		const float tb = 1.0f / (top - bottom);
-		const float fn = -1.0f / (zFar - zNear);
-
-		m_Data[0][0] = 2.0f * rl;
-		m_Data[1][1] = 2.0f * tb;
-		m_Data[2][2] = fn;
-		m_Data[3][0] = -(right + left) * rl;
-		m_Data[3][1] = -(top + bottom) * tb;
-		m_Data[3][2] = zNear * fn;
-		m_Data[3][3] = 1.0f;
+		FUNCTION_TO_MATRIX_TYPE(Orthographic, (left, right, bottom, top, zNear, zFar));
 	}
 	void Matrix4x4::Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
 	{
@@ -149,12 +136,12 @@ namespace Citrom::Math
 	{
 		Matrix4x4 result(mat);
 		
-		//// Create the translation matrix (no scaling or rotation)
+		// Create the translation matrix (no scaling or rotation)
 		//result.m_Data[3][0] += vec3.x;  // translation in X
 		//result.m_Data[3][1] += vec3.y;  // translation in Y
 		//result.m_Data[3][2] += vec3.z;  // translation in Z
 
-		// Create a translation matrix (Homogeneous)
+		//// Create a translation matrix (Homogeneous)
 		//result.m_Data[0][3] = vec3.x;  // translation in X
 		//result.m_Data[1][3] = vec3.y;  // translation in Y
 		//result.m_Data[2][3] = vec3.z;  // translation in Z
@@ -292,6 +279,8 @@ namespace Citrom::Math
 
 	void Matrix4x4::Orthographic_RH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
 	{
+		Zero();
+
 		// TODO: RH_ZO (Right-Handed, Zero-Origin) is this ok?
 		const float rl = 1.0f / (right - left);
 		const float tb = 1.0f / (top - bottom);

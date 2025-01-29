@@ -9,6 +9,8 @@
 #include "Events/MouseEvents.h"
 #include "Events/WindowEvents.h"
 
+#include "Input/KeyboardInput.h"
+
 #ifdef CT_EDITOR_ENABLED
 #include "Renderer/Renderer.h"
 
@@ -306,6 +308,14 @@ namespace Citrom::Platform
 		case WM_KEYUP:
 		{
 			//input_system_register_key_release(win_key_to_input_system(wParam));
+
+			KeyUpEvent keyUpEvent;
+			keyUpEvent.keyCode = Input::WinKeyToInputSystem(wParam);
+
+			EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyUpEvent);
+
+			CT_CORE_VERBOSE("KeyUp WPARAM: {}", wParam);
+			CT_CORE_VERBOSE("KeyUp LPARAM: {}", lParam);
 		}
 		break;
 		}

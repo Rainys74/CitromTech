@@ -4,6 +4,40 @@
 
 namespace Citrom::Math
 {
+    // TODO: see if this templated shit is the equivalent of the past ones
+    // or instead do not use templates and instead use macros to stream-line
+    // the development of the other classes
+    template<typename T, T AlphaDefault, T OtherDefault = 0>
+    class ColorX4
+    {
+    public:
+        using ColorT = ColorX4<T, AlphaDefault, OtherDefault>;
+    public:
+        ColorX4(T red, T green, T blue, T alpha = AlphaDefault)
+            : r(red), g(green), b(blue), a(alpha) {}
+        ColorX4()
+            : r(OtherDefault), g(OtherDefault), b(OtherDefault), a(OtherDefault) {}
+
+        // Math equations
+        ColorT operator+(const ColorT& colB) const { return ColorT{ static_cast<T>(this->r + colB.r), static_cast<T>(this->g + colB.g), static_cast<T>(this->b + colB.b), static_cast<T>(this->a + colB.a) }; } // Add
+        ColorT operator-(const ColorT& colB) const { return ColorT{ static_cast<T>(this->r - colB.r), static_cast<T>(this->g - colB.g), static_cast<T>(this->b - colB.b), static_cast<T>(this->a - colB.a) }; } // Subtract
+
+        ColorT operator*(const ColorT& colB) const { return ColorT{ static_cast<T>(this->r * colB.r), static_cast<T>(this->g * colB.g), static_cast<T>(this->b * colB.b), static_cast<T>(this->a * colB.a) }; } // Multiply
+        ColorT operator/(const ColorT& colB) const { return ColorT{ static_cast<T>(this->r / colB.r), static_cast<T>(this->g / colB.g), static_cast<T>(this->b / colB.b), static_cast<T>(this->a / colB.a) }; } // Divide
+
+        /*
+         * Works because stack memory is stored contiguously,
+         * No need to account for byte sizes (sizeof() operator) because if the type is known
+         * the compiler already calculates it correctly
+        */
+        FORCE_INLINE T& operator[](size_t index) { return *(T*)(&r + index); }
+        FORCE_INLINE const T& operator[](size_t index) const { return *(T*)(&r + index); }
+    public:
+        T r, g, b, a;
+    };
+    using ColorU8x4TemplatedTest = ColorX4<uint8, 0xFF, 0>;
+    using ColorF32x4TemplatedTest = ColorX4<float32, 1.0f, 0.0f>;
+
 	class ColorU8x4
 	{
     public:

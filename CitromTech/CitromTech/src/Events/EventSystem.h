@@ -66,6 +66,11 @@ namespace Citrom
             CT_CORE_ASSERT_WARN(eventListener, "Adding null event listener!");
             m_EventListeners.PushBack(eventListener);
         }
+        void RemoveListener(EventListener<T>* eventListener)
+        {
+            CT_CORE_ASSERT_WARN(eventListener, "Trying to remove null event listener!");
+            m_EventListeners.Erase(&eventListener);
+        }
     private:
         CTL::DArray<EventListener<T>*> m_EventListeners;
     };

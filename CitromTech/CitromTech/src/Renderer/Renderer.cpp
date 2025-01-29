@@ -169,7 +169,7 @@ namespace Citrom
 		}
 	}
 
-	void Renderer::DrawTest()
+	void Renderer::DrawTest(Camera* camera, Math::Transform* cameraTransform)
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
@@ -211,12 +211,14 @@ namespace Citrom
 		Math::Matrix4x4 projection;
 		//projection.Orthographic(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 		projection.Orthographic(-2.67f, 2.67f, -1.5f, 1.5f, -1.0f, 1.0f);
-		//projection.Perspective(Math::DegreesToRadians(45.0f), 16.0f / 9.0f, 0.01f, 1000.0f);
-		Math::Matrix4x4 view = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, -5.0f));
+		//projection.Perspective(Math::DegreesToRadians(45.0f), 16.0f / 9.0f, 0.01f, 1000.0f); // also Z positive and negative values would be great to reverse them (try glm::inverse counterpart?)
+		Math::Matrix4x4 view = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), cameraTransform->position);
 		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
 		cbt.transform = projection * view * model;
-		//cbt.transform = model * view * projection;
+		//cbt.transform = model * view * projection; // INCORRECT!
+		cbt.transform.Transpose(); // TODO: what to do to not need this? because without it some weird looking artifacts appear. About ~0.002 ms worth of overhead
 
+		/*
 		CT_ERROR("PROJECTION!");
 		CT_WARN("\n{}", projection.ToString());
 
@@ -231,6 +233,7 @@ namespace Citrom
 
 		CT_ERROR("MODEL * VIEW * PROJECTION!");
 		CT_WARN("\n{}", (model * view * projection).ToString());
+		*/
 
 		//glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationA); // model matrix
 		//glm::mat4 mvp = m_Proj * m_View * model;

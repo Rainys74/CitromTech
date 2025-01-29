@@ -26,7 +26,7 @@ namespace Citrom
             return string;
         }
     public:
-        EventKeyCode keyCode;
+        EventKeyCode keyCode; // should "mods" be included here?
     };
 
     class KeyDownEvent : public KeyEventBase

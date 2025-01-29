@@ -3,8 +3,38 @@
 #include "Math/MathCommon.h"
 #include "Math/Matrix4x4.h"
 
+#include "Events/EventSystem.h"
+#include "Events/WindowEvents.h"
+
 namespace Citrom
 {
+	class CameraViewport
+	{
+	public:
+		static CameraViewport* Get()
+		{
+			static CameraViewport instance;
+			return &instance;
+		}
+
+		inline void SetViewport(uint32 width, uint32 height)
+		{
+			m_Width = width;
+			m_Height = height;
+		}
+		FORCE_INLINE uint32 GetViewportWidth() const
+		{
+			return m_Width;
+		}
+		FORCE_INLINE uint32 GetViewportHeight() const
+		{
+			return m_Height;
+		}
+	private:
+		uint32 m_Width;
+		uint32 m_Height;
+	};
+
 	class Camera
 	{
 	public:
@@ -14,8 +44,25 @@ namespace Citrom
 			Orthographic
 		};
 	public:
-		Camera() { RecalculateProjection(); }
-		~Camera() = default;
+		Camera() 
+		{
+			RecalculateProjection();
+
+			// On Resize Callback
+			m_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
+			{
+				if (event.GetEventType() == WindowEvents::WindowResize)
+				{
+					const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+					CameraViewport::Get()->SetViewport(transformedEvent.width, transformedEvent.height);
+				}
+			};
+			EventBus::GetDispatcher<WindowEvents>()->AddListener(&m_WindowEventListener);
+		}
+		~Camera()
+		{
+			EventBus::GetDispatcher<WindowEvents>()->RemoveListener(&m_WindowEventListener);
+		}
 
 		void SetPerspective(float32 verticalFOV, float32 nearClip, float32 farClip)
 		{
@@ -36,8 +83,6 @@ namespace Citrom
 			RecalculateProjection();
 		}
 
-		void SetViewportSize(uint32_t width, uint32_t height) { m_AspectRatio = (float32)width / (float32)height; RecalculateProjection(); }
-
 		FORCE_INLINE float32 GetPerspectiveVerticalFOV() const { return m_PerspectiveFOV; }
 		void SetPerspectiveVerticalFOV(float32 verticalFov) { m_PerspectiveFOV = verticalFov; RecalculateProjection(); }
 		FORCE_INLINE float32 GetPerspectiveNearClip() const { return m_PerspectiveNear; }
@@ -57,6 +102,8 @@ namespace Citrom
 	private:
 		void RecalculateProjection()
 		{
+			m_AspectRatio = (float32)CameraViewport::Get()->GetViewportWidth() / (float32)CameraViewport::Get()->GetViewportHeight();
+
 			if (m_ProjectionType == ProjectionType::Perspective)
 			{
 				//m_Projection = glm::perspective(m_PerspectiveFOV, m_AspectRatio, m_PerspectiveNear, m_PerspectiveFar);
@@ -74,6 +121,8 @@ namespace Citrom
 			}
 		}
 	private:
+		EventListener<WindowEvents> m_WindowEventListener;
+
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
 
 		float32 m_PerspectiveFOV = Math::DegreesToRadians(45.0f);
