@@ -12,7 +12,7 @@ namespace Citrom::Math
 	public:
 		Math::Vector3 position;
 		Math::Quaternion rotation;
-		Math::Vector3 scale;
+		Math::Vector3 scale = Math::Vector3(1.0f, 1.0f, 1.0f);
 
 		const Math::Matrix4x4& GetTransformMatrix() const
 		{

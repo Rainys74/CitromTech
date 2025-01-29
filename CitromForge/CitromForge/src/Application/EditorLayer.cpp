@@ -1,4 +1,5 @@
 #include "EditorLayer.h"
+#include "Main/SharedMain.h"
 
 #include "Profiling/Profiler.h"
 #include "Logger/Logger.h"
@@ -9,6 +10,8 @@
 #include "Editor/SceneHierarchy.h"
 #include "Editor/InspectorWindow.h"
 #include "Editor/ProjectSettingsWindow.h"
+
+#include "Editor/EditorCamera.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -40,6 +43,7 @@ void EditorLayer::OnDetach()
 
 void EditorLayer::OnUpdate()
 {
+    EditorCamera::Get()->Update(MainDeltaTime());
 }
 
 void EditorLayer::OnImGuiRender()

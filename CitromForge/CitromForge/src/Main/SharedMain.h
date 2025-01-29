@@ -13,3 +13,6 @@ float64 MainDeltaTime();
 float64 MainFPS();
 
 void* GetCurrentScene();
+
+void* GetCamera();
+void* GetCameraTransform();

@@ -15,6 +15,8 @@
 #include "Events/WindowEvents.h"
 #include "Events/MouseEvents.h"
 
+#include "Editor/EditorCamera.h"
+
 #include "Input/KeyboardInput.h"
 
 #include "Platform/PlatformWindow.h"
@@ -67,6 +69,15 @@ float64 MainFPS()
 void* GetCurrentScene()
 {
 	return g_CurrentScene;
+}
+
+void* GetCamera()
+{
+	return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetCamera() : &g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+}
+void* GetCameraTransform()
+{
+	return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetTransform() : &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
 }
 
 int SharedMain(int argc, char* argv[])
@@ -319,7 +330,10 @@ void ForgeLoop()
 		Renderer::BeginFrame();
 		g_LayerStack.Render();
 
-		Renderer::DrawTest(&g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera, &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform);
+		Camera* currentCamera = (Camera*)GetCamera();
+		Math::Transform* currentCameraTransform = (Math::Transform*)GetCameraTransform();
+
+		Renderer::DrawTest(currentCamera, currentCameraTransform);
 
 		Renderer::SubmitScene(g_CurrentScene);
 
