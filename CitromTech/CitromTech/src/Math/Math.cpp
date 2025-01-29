@@ -84,4 +84,15 @@ namespace Citrom::Math
 	{
 		return 1 / SquareRoot(number);
 	}
+
+	float32 FovXToFovY(float32 fovX, float32 aspect)
+	{
+		// tan(fovy / 2) = tan(fovx / 2) / aspect
+		return 2.0f * std::atan(std::tan(fovX * 0.5f) / aspect);
+	}
+	float32 FovYToFovX(float32 fovY, float32 aspect)
+	{
+		// tan(fovx / 2) = tan(fovy / 2) * aspect
+		return 2.0f * std::atan(std::tan(fovY * 0.5f) * aspect);
+	}
 }

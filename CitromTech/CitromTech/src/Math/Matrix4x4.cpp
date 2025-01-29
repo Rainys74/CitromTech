@@ -4,6 +4,8 @@
 
 namespace Citrom::Math
 {
+#define FUNCTION_TO_MATRIX_TYPE(FOO, ARGS) FOO ## _LH_ZO ## ARGS // TODO: TEMPORARY!!
+
 	Matrix4x4::Matrix4x4()
 	{
 	}
@@ -131,6 +133,11 @@ namespace Citrom::Math
 		m_Data[3][2] = zNear * fn;
 		m_Data[3][3] = 1.0f;
 	}
+	void Matrix4x4::Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
+	{
+		//FUNCTION_TO_MATRIX_TYPE(Perspective)(fovy, aspect, zNear, zFar);
+		FUNCTION_TO_MATRIX_TYPE(Perspective, (fovy, aspect, zNear, zFar));
+	}
 	void Matrix4x4::FlipHandedness()
 	{
 		//In RH systems, the near plane is closer to the viewer(z = 0), and the far plane is farther(z = 1).
@@ -208,5 +215,66 @@ namespace Citrom::Math
 				prettyString += "\n";
 		}
 		return prettyString;
+	}
+
+	void Matrix4x4::Perspective_LH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
+	{
+		//glm_mat4_zero(dest);
+
+		const float32 f = 1.0f / tanf(fovy * 0.5f);
+		const float32 fn = 1.0f / (zNear - zFar);
+
+		m_Data[0][0] = f / aspect;
+		m_Data[1][1] = f;
+		m_Data[2][2] = -zFar * fn;
+		m_Data[2][3] = 1.0f;
+		m_Data[3][2] = zNear * zFar * fn;
+	}
+
+	void Matrix4x4::Perspective_RH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
+	{
+		//glm_mat4_zero(dest);
+
+		const float32 f = 1.0f / tanf(fovy * 0.5f);
+		const float32 fn = 1.0f / (zNear - zFar);
+
+		m_Data[0][0] = f / aspect;
+		m_Data[1][1] = f;
+		m_Data[2][2] = zFar * fn;
+		m_Data[2][3] = -1.0f;
+		m_Data[3][2] = zNear * zFar * fn;
+	}
+
+	void Matrix4x4::Orthographic_LH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
+	{
+		//glm_mat4_zero(dest);
+
+		const float32 rl = 1.0f / (right - left);
+		const float32 tb = 1.0f / (top - bottom);
+		const float32 fn = -1.0f / (zFar - zNear);
+
+		m_Data[0][0] = 2.0f * rl;
+		m_Data[1][1] = 2.0f * tb;
+		m_Data[2][2] = -fn;
+		m_Data[3][0] = -(right + left) * rl;
+		m_Data[3][1] = -(top + bottom) * tb;
+		m_Data[3][2] = zNear * fn;
+		m_Data[3][3] = 1.0f;
+	}
+
+	void Matrix4x4::Orthographic_RH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
+	{
+		// TODO: RH_ZO (Right-Handed, Zero-Origin) is this ok?
+		const float rl = 1.0f / (right - left);
+		const float tb = 1.0f / (top - bottom);
+		const float fn = -1.0f / (zFar - zNear);
+
+		m_Data[0][0] = 2.0f * rl;
+		m_Data[1][1] = 2.0f * tb;
+		m_Data[2][2] = fn;
+		m_Data[3][0] = -(right + left) * rl;
+		m_Data[3][1] = -(top + bottom) * tb;
+		m_Data[3][2] = zNear * fn;
+		m_Data[3][3] = 1.0f;
 	}
 }

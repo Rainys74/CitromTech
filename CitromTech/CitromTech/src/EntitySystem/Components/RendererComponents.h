@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Camera.h"
 
 namespace Citrom
 {

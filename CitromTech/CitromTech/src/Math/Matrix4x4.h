@@ -26,10 +26,11 @@ namespace Citrom::Math
 
 		void Transpose();
 		void Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear = 0.0f, const float32 zFar = 1.0f);
+		void Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar);
 
 		// TODO: test out if these work
 		void FlipHandedness(); // Reverses LH to RH matrices and vice-versa
-		void ConvertDepth(); // Changes ZO to ZN and vice-versa
+		void ConvertDepth(); // Changes ZO to ZN (NO) and vice-versa
 
 		static Matrix4x4 Identity();
 		//inline static Matrix4x4 IdentityFast() { return Matrix4x4({ {1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f} }); }
@@ -39,6 +40,13 @@ namespace Citrom::Math
 
 		FORCE_INLINE CTL::Array<CTL::Array<float32, 4>, 4>& Data() { return m_Data; }
 		FORCE_INLINE const CTL::Array<CTL::Array<float32, 4>, 4>& Data() const { return m_Data; }
+	private:
+		void Perspective_LH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar); // DirectX 11/12, Vulkan, Metal
+		void Perspective_RH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar); // OpenGL (modern w/ Vulkan-style depth)
+
+		void Orthographic_LH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar); // DirectX 11/12, Vulkan, Metal
+		void Orthographic_RH_NO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar){} // OpenGL (legacy)
+		void Orthographic_RH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar); // OpenGL (modern w/ Vulkan-style depth)
 	private:
 		CTL::Array<CTL::Array<float32, 4>, 4> m_Data;
 	};

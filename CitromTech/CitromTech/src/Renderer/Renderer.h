@@ -3,6 +3,7 @@
 #include "Core.h"
 
 #include "ShaderCompiler.h"
+#include "Camera.h"
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
 #include "Math/Matrix4x4.h"
@@ -15,13 +16,6 @@
 
 namespace Citrom
 {
-	struct Camera
-	{
-		// TODO: instead maybe hold values/parameters and generate the matrices with functions?
-		Math::Matrix4x4 view;
-		Math::Matrix4x4 projection;
-	};
-
 	struct Vertex
 	{
 		Math::Vector3 position;

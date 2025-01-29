@@ -59,4 +59,16 @@ namespace Citrom::Math
 
 	float32 InverseSquareRoot(const float32 number); // uses the Quake-3 style fast square root algorithm
 	float64 InverseSquareRoot(const float64 number);
+
+	float32 FovXToFovY(float32 fovX, float32 aspect);
+	float32 FovYToFovX(float32 fovY, float32 aspect);
+
+	constexpr float32 DegreesToRadians(float32 degrees)
+	{
+		return DEGREES_TO_RADIANS(degrees, f);
+	}
+	constexpr float64 DegreesToRadians(float64 degrees)
+	{
+		return DEGREES_TO_RADIANS(degrees, 0);
+	}
 }
