@@ -55,7 +55,7 @@ namespace Citrom
 		CT_CORE_INFO("\tRenderer: {}", gpuInfo.renderer);
 		CT_CORE_INFO("\tVersion: {}", gpuInfo.version);
 		CT_CORE_INFO("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
-		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6
+		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6 (10 ^ +6 = 1'000'000)
 
 		/*constexpr const char* shaderPath = "Shaders/";
 		constexpr const char* shaderCachePath = "ShaderCache/";

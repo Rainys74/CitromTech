@@ -6,12 +6,27 @@
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "Logger/Logger.h"
 
+#include "SceneHierarchyEvents.h"
+
 #include "imgui.h"
 
 using namespace Citrom;
 
 static entt::entity g_SelectedEntt = entt::null;
 //static Entity g_SelectedEntity = Entity(entt::null, nullptr);
+
+static void FireEntitySelectionEvent()
+{
+    EntitySelectEvent entitySelectionEvent;
+    entitySelectionEvent.entityHandleID = (EventEntityHandleType)g_SelectedEntt;
+
+    EventBus::GetDispatcher<SceneHierarchyEvents>()->Dispatch(entitySelectionEvent);
+}
+static void SetSelectedEntity(entt::entity selectedEntt)
+{
+    g_SelectedEntt = selectedEntt;
+    FireEntitySelectionEvent();
+}
 
 static Entity CreateEmptyEntity(Scene* scene)
 {
@@ -38,7 +53,7 @@ static void DrawRightClickPopupContext(Scene* currentScene)
             if (ImGui::MenuItem("Delete"))
             {
                 currentScene->DestroyEntity(Entity(g_SelectedEntt, currentScene));
-                g_SelectedEntt = entt::null;
+                SetSelectedEntity(entt::null);
             }
         }
 
@@ -114,7 +129,8 @@ static void DrawHierarchy(Scene* scene)
         if (ImGui::Selectable(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
         {
             CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
-            g_SelectedEntt = entity;
+            SetSelectedEntity(entity);
+
             //g_SelectedEntity = Entity(g_SelectedEntt, scene);
         }
 
@@ -123,7 +139,7 @@ static void DrawHierarchy(Scene* scene)
     }
 
     if (ImGui::IsMouseClicked(0) && !ImGui::IsAnyItemHovered() && ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByPopup))
-        g_SelectedEntt = entt::null;
+        SetSelectedEntity(entt::null);
 }
 
 void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
@@ -138,9 +154,4 @@ void SceneHierarchyWindow::ImGuiDraw(bool* showWindow)
     DrawHierarchy((Scene*)GetCurrentScene());
 
     ImGui::End();
-}
-
-uint32 SceneHierarchyWindow::GetSelectedEntity()
-{
-    return (uint32)g_SelectedEntt;
 }

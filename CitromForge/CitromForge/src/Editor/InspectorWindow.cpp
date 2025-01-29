@@ -8,6 +8,8 @@
 #include "EntitySystem/Components/RendererComponents.h"
 #include "Logger/Logger.h"
 
+#include "SceneHierarchyEvents.h"
+
 #include "CTL/CStringHandling.h"
 
 #include "imgui.h"
@@ -17,6 +19,9 @@
 #include "Vendor/ImGuiNotify/ImGuiNotify.hpp"
 
 using namespace Citrom;
+
+static EventListener<SceneHierarchyEvents> g_HierarchyEventListener;
+static entt::entity g_SelectedEntity = entt::null;
 
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 {
@@ -156,16 +161,24 @@ void InspectorWindow::ImGuiDraw(bool* showWindow)
 
     ImGui::Begin("Inspector", showWindow);
 
-    entt::entity selectedEntity = (entt::entity)SceneHierarchyWindow::GetSelectedEntity();
+    g_HierarchyEventListener.OnEvent = [](const Event<SceneHierarchyEvents>& event)
+    {
+        if (event.GetEventType() == SceneHierarchyEvents::EntitySelect)
+        {
+            const EntitySelectEvent& transformedEvent = (const EntitySelectEvent&)event;
+            g_SelectedEntity = (entt::entity)transformedEvent.entityHandleID;
+        }
+    };
+    EventBus::GetDispatcher<SceneHierarchyEvents>()->AddListener(&g_HierarchyEventListener);
 
-    DrawComponentsUUID(selectedEntity, (Scene*)GetCurrentScene());
+    DrawComponentsUUID(g_SelectedEntity, (Scene*)GetCurrentScene());
     //scene->ForEachEntityCallback([&](auto entity)
     //{
     //
     //});
 
     // TODO: get this shit out of here
-    if (selectedEntity != entt::null)
+    if (g_SelectedEntity != entt::null)
     {
         ImGuizmo::SetOrthographic(false);
         ImGuizmo::SetDrawlist();
