@@ -19,6 +19,7 @@ namespace Citrom::Math
 
 		static Quaternion Identity() { return Quaternion({0.0f, 0.0f, 0.0f, 1.0f}); }
 		static Quaternion Euler(float eulerX, float eulerY, float eulerZ);
+		static Quaternion Euler(const Vector3& vec3);
 
 		/*
 		 * Works because stack memory is stored contiguously,

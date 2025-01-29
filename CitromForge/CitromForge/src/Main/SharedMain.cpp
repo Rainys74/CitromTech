@@ -189,6 +189,9 @@ int SharedMain(int argc, char* argv[])
 
 	EventListener<MouseEvents> mouseEventListener;
 	mouseEventListener.OnEvent = [](const Event<MouseEvents>& event) {
+		if (event.GetEventType() == MouseEvents::MouseMove)
+			return;
+
 		CT_ERROR("Mouse Event!: {}", (int)event.GetEventType());
 
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());

@@ -1,12 +1,14 @@
 #include "KeyMouseInputSystem.h"
 
+#include "Profiling/Profiler.h"
+
 namespace Citrom::Input
 {
     float g_LastMousePositionX, g_LastMousePositionY;
     float g_CurrentMousePositionX, g_CurrentMousePositionY;
 
-    bool g_KeysDown[(size_t)KeyCode::Count];
-    bool g_MButtonsDown[(size_t)MouseButton::Count];
+    bool g_KeysDown[(size_t)KeyCode::Count], g_KeysPrev[(size_t)KeyCode::Count];
+    bool g_MButtonsDown[(size_t)MouseButton::Count], g_MButtonsPrev[(size_t)MouseButton::Count];
 
     //bool s_KeyStateJustChanged
 
@@ -14,10 +16,30 @@ namespace Citrom::Input
     {
         return g_KeysDown[(size_t)keyCode];
     }
+
+    bool SimpleInput::GetKeyDown(KeyCode keyCode)
+    {
+        return !g_KeysPrev[(size_t)keyCode] && g_KeysDown[(size_t)keyCode];
+    }
+    bool SimpleInput::GetKeyUp(KeyCode keyCode)
+    {
+        return g_KeysPrev[(size_t)keyCode] && !g_KeysDown[(size_t)keyCode];
+    }
+
+
     bool SimpleInput::GetMouseButton(MouseButton mouseButton)
     {
         return g_MButtonsDown[(size_t)mouseButton];
     }
+    bool SimpleInput::GetMouseButtonDown(MouseButton mouseButton)
+    {
+        return false;
+    }
+    bool SimpleInput::GetMouseButtonUp(MouseButton mouseButton)
+    {
+        return false;
+    }
+
 
     float SimpleInput::GetMouseDeltaX()
     {
@@ -75,7 +97,15 @@ namespace Citrom::Input
     }
     void SimpleInputManager::Update()
     {
+        CT_PROFILE_MEMBER_FUNCTION();
+
         g_LastMousePositionX = g_CurrentMousePositionX;
         g_LastMousePositionY = g_CurrentMousePositionY;
+
+        for (size_t i = 0; i < CT_ARRAY_LENGTH(g_KeysDown); i++)
+            g_KeysPrev[i] = g_KeysDown[i];
+
+        for (size_t i = 0; i < CT_ARRAY_LENGTH(g_MButtonsDown); i++)
+            g_MButtonsPrev[i] = g_MButtonsDown[i];
     }
 }

@@ -2,6 +2,7 @@
 
 #include "MathCommon.h"
 #include "Vector.h"
+#include "Quaternion.h"
 
 #include "CTL/StaticArray.h"
 
@@ -21,6 +22,7 @@ namespace Citrom::Math
 		Matrix4x4(float32 number);
 		Matrix4x4(const Matrix4x4&) = default;
 		Matrix4x4(std::initializer_list<std::initializer_list<float32>> values);
+		Matrix4x4& operator=(const Matrix4x4&) = default;
 		~Matrix4x4() = default;
 
 		void Zero();
@@ -31,6 +33,7 @@ namespace Citrom::Math
 		void Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar);
 
 		static Matrix4x4 Translate(const Matrix4x4& mat, const Vector3& vec3);
+		static Matrix4x4 TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 
 		// TODO: test out if these work
 		void FlipHandedness(); // Reverses LH to RH matrices and vice-versa

@@ -14,9 +14,11 @@ namespace Citrom::Math
 		Math::Quaternion rotation;
 		Math::Vector3 scale = Math::Vector3(1.0f, 1.0f, 1.0f);
 
-		const Math::Matrix4x4& GetTransformMatrix() const
+		Math::Vector3 editorEulerAngles; // Only for the editor.
+
+		Math::Matrix4x4& GetTransformMatrix()
 		{
-			//m_Matrix = Matrix4x4::TRS();
+			m_Matrix = Math::Matrix4x4::TRS(position, rotation, scale);
 			return m_Matrix;
 		}
 

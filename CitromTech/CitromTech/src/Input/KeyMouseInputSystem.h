@@ -19,8 +19,12 @@ namespace Citrom::Input
 	{
 	public:
 		static bool GetKey(KeyCode keyCode);
+		static bool GetKeyDown(KeyCode keyCode);
+		static bool GetKeyUp(KeyCode keyCode);
 
 		static bool GetMouseButton(MouseButton mouseButton);
+		static bool GetMouseButtonDown(MouseButton mouseButton);
+		static bool GetMouseButtonUp(MouseButton mouseButton);
 
 		static float GetMouseDeltaX();
 		static float GetMouseDeltaY();
@@ -34,6 +38,15 @@ namespace Citrom::Input
 			static SimpleInputManager instance;
 			return &instance;
 		}
+
+		enum class KeyState
+		{
+			Down, // Held
+			Up, // Released
+
+			Pressed, // just pressed
+			Released // just released
+		};
 	public:
 		SimpleInputManager();
 		~SimpleInputManager();

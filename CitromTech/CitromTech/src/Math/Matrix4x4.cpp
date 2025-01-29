@@ -153,6 +153,55 @@ namespace Citrom::Math
 
 		return result;
 	}
+	Matrix4x4 Matrix4x4::TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+	{
+		Matrix4x4 result = Matrix4x4::Identity();
+
+		// Translation Matrix
+		result.Data()[0][3] = position.x;
+		result.Data()[1][3] = position.y;
+		result.Data()[2][3] = position.z;
+
+		// Convert Quaternion to Rotation Matrix (Row-Major)
+		float32 xx = rotation.x * rotation.x;
+		float32 yy = rotation.y * rotation.y;
+		float32 zz = rotation.z * rotation.z;
+		float32 ww = rotation.w * rotation.w;
+
+		float32 xy = rotation.x * rotation.y;
+		float32 xz = rotation.x * rotation.z;
+		float32 xw = rotation.x * rotation.w;
+		float32 yz = rotation.y * rotation.z;
+		float32 yw = rotation.y * rotation.w;
+		float32 zw = rotation.z * rotation.w;
+
+		result.Data()[0][0] = ww + xx - yy - zz;
+		result.Data()[0][1] = 2.0f * (xy - zw);
+		result.Data()[0][2] = 2.0f * (xz + yw);
+
+		result.Data()[1][0] = 2.0f * (xy + zw);
+		result.Data()[1][1] = ww - xx + yy - zz;
+		result.Data()[1][2] = 2.0f * (yz - xw);
+
+		result.Data()[2][0] = 2.0f * (xz - yw);
+		result.Data()[2][1] = 2.0f * (yz + xw);
+		result.Data()[2][2] = ww - xx - yy + zz;
+
+		// Scale Matrix (Component-wise multiplication)
+		result.Data()[0][0] *= scale.x;
+		result.Data()[0][1] *= scale.x;
+		result.Data()[0][2] *= scale.x;
+
+		result.Data()[1][0] *= scale.y;
+		result.Data()[1][1] *= scale.y;
+		result.Data()[1][2] *= scale.y;
+
+		result.Data()[2][0] *= scale.z;
+		result.Data()[2][1] *= scale.z;
+		result.Data()[2][2] *= scale.z;
+
+		return result;
+	}
 	void Matrix4x4::FlipHandedness()
 	{
 		//In RH systems, the near plane is closer to the viewer(z = 0), and the far plane is farther(z = 1).

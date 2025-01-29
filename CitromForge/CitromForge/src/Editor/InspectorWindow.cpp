@@ -86,8 +86,27 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::DragFloat3("Position", &transformComponent.transform.position[0], 0.25f);
-            ImGui::DragFloat4("Rotation", &transformComponent.transform.rotation[0]);
+            
+            //Math::Vector3 eulerAngles = transformComponent.transform.rotation.ToEulerAngles();
+            //if (ImGui::DragFloat3("Rotation", &eulerAngles[0]))
+            //    transformComponent.transform.rotation = Math::Quaternion::Euler(eulerAngles);
+
+            if (ImGui::DragFloat3("Rotation", &transformComponent.transform.editorEulerAngles[0]))
+                transformComponent.transform.rotation = Math::Quaternion::Euler(transformComponent.transform.editorEulerAngles);
+
             ImGui::DragFloat3("Scale", &transformComponent.transform.scale[0]);
+
+            // Advanced
+            ImGui::Separator();
+            ImGui::DragFloat4("Quaternion Rotation", &transformComponent.transform.rotation[0]); // Quaternion
+            ImGui::Separator();
+
+            // Matrix
+            Math::Matrix4x4& mat4 = transformComponent.transform.GetTransformMatrix();
+            ImGui::DragFloat4("Row 1", mat4.Data()[0].Data());
+            ImGui::DragFloat4("Row 2", mat4.Data()[1].Data());
+            ImGui::DragFloat4("Row 3", mat4.Data()[2].Data());
+            ImGui::DragFloat4("Row 4", mat4.Data()[3].Data());
         }
         ImGui::Spacing();
         if (frontEntity.HasComponent<CameraComponent>() && ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))

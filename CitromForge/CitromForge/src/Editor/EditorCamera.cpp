@@ -12,7 +12,8 @@ EditorCamera::EditorCamera()
 
 void EditorCamera::Update(float deltaTime)
 {
-	// input detect!
+	if (Input::SimpleInput::GetKeyDown(Input::KeyCode::F9))
+		m_Active = !m_Active;
 
 	if (Input::SimpleInput::GetMouseButton(Input::MouseButton::RightButton))
 	{
@@ -34,7 +35,4 @@ void EditorCamera::Update(float deltaTime)
 		m_Transform.position.x += Input::SimpleInput::GetMouseDeltaX() * deltaTime;
 		m_Transform.position.y += Input::SimpleInput::GetMouseDeltaY() * deltaTime;
 	}
-
-	CT_VERBOSE("MOUSE DELTA X: {}", Input::SimpleInput::GetMouseDeltaX());
-	CT_VERBOSE("MOUSE DELTA Y: {}", Input::SimpleInput::GetMouseDeltaY());
 }
