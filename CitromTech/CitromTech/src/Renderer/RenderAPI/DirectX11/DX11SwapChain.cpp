@@ -95,6 +95,7 @@ namespace Citrom::RenderAPI
 		DXCallHR(m_DXGIFactory->CreateSwapChain(m_Device, &scd, &m_SwapChain));
 
 		CreateRenderTarget();
+		Resize(m_Width, m_Height); // Create viewport to not depend on Win32's resize call on UpdateWindow
 	}
 	void DX11Device::SwapBuffers()
 	{

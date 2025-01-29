@@ -36,6 +36,7 @@
 
 #include "ThreadPool.h"
 #include "LayerSystem/ImGuiLayer.h"
+#include "LayerSystem/SimpleInputLayer.h"
 
 #include "Application/EditorLayer.h"
 
@@ -276,6 +277,7 @@ int SharedMain(int argc, char* argv[])
 
 	// Push Layers
 	g_LayerStack.Push(&g_EditorLayer);
+	SimpleInputLayer inputLayer; g_LayerStack.Push(&inputLayer);
 
 	::ForgeLoop();
 

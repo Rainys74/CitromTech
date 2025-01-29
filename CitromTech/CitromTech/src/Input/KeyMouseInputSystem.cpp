@@ -2,69 +2,80 @@
 
 namespace Citrom::Input
 {
-    float SimpleInput::s_LastMousePositionX;
-    float SimpleInput::s_LastMousePositionY;
-    float SimpleInput::s_CurrentMousePositionX;
-    float SimpleInput::s_CurrentMousePositionY;
+    float g_LastMousePositionX, g_LastMousePositionY;
+    float g_CurrentMousePositionX, g_CurrentMousePositionY;
 
-    bool SimpleInput::s_KeysDown[(size_t)KeyCode::Count];
-    bool SimpleInput::s_MButtonsDown[(size_t)MouseButton::Count];
-    // or use states like CitromTech2D which requires updating, and calling get functions between the registering and update?
+    bool g_KeysDown[(size_t)KeyCode::Count];
+    bool g_MButtonsDown[(size_t)MouseButton::Count];
 
-    EventListener<KeyEvents> SimpleInput::s_KeyEventsListener;
-    EventListener<MouseEvents> SimpleInput::s_MouseEventsListener;
-
-    bool SimpleInput::s_Initialized = false;
-
-    void SimpleInput::TryInitialize()
-    {
-        if (!s_Initialized)
-        {
-            s_MouseEventsListener.OnEvent = [](const Event<MouseEvents>& event) 
-            {
-                if (event.GetEventType() == MouseEvents::MouseDown)
-                {
-                    const MouseDownEvent& transformedEvent = (const MouseDownEvent&)event;
-                    s_MButtonsDown[(size_t)transformedEvent.mouseButton] = true;
-                }
-                else if (event.GetEventType() == MouseEvents::MouseUp)
-                {
-                    const MouseUpEvent& transformedEvent = (const MouseUpEvent&)event;
-                    s_MButtonsDown[(size_t)transformedEvent.mouseButton] = false;
-                }
-                else if (event.GetEventType() == MouseEvents::MouseMove)
-                {
-                    const MouseMoveEvent& transformedEvent = (const MouseMoveEvent&)event;
-                    s_CurrentMousePositionX = transformedEvent.x;
-                    s_CurrentMousePositionY = transformedEvent.y;
-                }
-            };
-            EventBus::GetDispatcher<MouseEvents>()->AddListener(&s_MouseEventsListener);
-
-            s_Initialized = true;
-        }
-    }
+    //bool s_KeyStateJustChanged
 
     bool SimpleInput::GetKey(KeyCode keyCode)
     {
-        return false;
+        return g_KeysDown[(size_t)keyCode];
     }
     bool SimpleInput::GetMouseButton(MouseButton mouseButton)
     {
-        TryInitialize();
-        return s_MButtonsDown[(size_t)mouseButton];
+        return g_MButtonsDown[(size_t)mouseButton];
     }
 
     float SimpleInput::GetMouseDeltaX()
     {
-        const float deltaX = s_CurrentMousePositionX - s_LastMousePositionX;
-        s_LastMousePositionX = s_CurrentMousePositionX;
+        const float deltaX = g_CurrentMousePositionX - g_LastMousePositionX;
         return deltaX;
     }
     float SimpleInput::GetMouseDeltaY()
     {
-        const float deltaY = s_CurrentMousePositionY - s_LastMousePositionY;
-        s_LastMousePositionY = s_CurrentMousePositionY;
+        const float deltaY = g_CurrentMousePositionY - g_LastMousePositionY;
         return deltaY;
+    }
+
+    SimpleInputManager::SimpleInputManager()
+    {
+        m_MouseEventsListener.OnEvent = [](const Event<MouseEvents>& event)
+        {
+            if (event.GetEventType() == MouseEvents::MouseDown)
+            {
+                const MouseDownEvent& transformedEvent = (const MouseDownEvent&)event;
+                g_MButtonsDown[(size_t)transformedEvent.mouseButton] = true;
+            }
+            else if (event.GetEventType() == MouseEvents::MouseUp)
+            {
+                const MouseUpEvent& transformedEvent = (const MouseUpEvent&)event;
+                g_MButtonsDown[(size_t)transformedEvent.mouseButton] = false;
+            }
+            else if (event.GetEventType() == MouseEvents::MouseMove)
+            {
+                const MouseMoveEvent& transformedEvent = (const MouseMoveEvent&)event;
+                g_CurrentMousePositionX = transformedEvent.x;
+                g_CurrentMousePositionY = transformedEvent.y;
+            }
+        };
+        EventBus::GetDispatcher<MouseEvents>()->AddListener(&m_MouseEventsListener);
+
+        m_KeyEventsListener.OnEvent = [](const Event<KeyEvents>& event)
+        {
+            if (event.GetEventType() == KeyEvents::KeyDown)
+            {
+                const KeyDownEvent& transformedEvent = (const KeyDownEvent&)event;
+                g_KeysDown[(size_t)transformedEvent.keyCode] = true;
+            }
+            else if (event.GetEventType() == KeyEvents::KeyUp)
+            {
+                const KeyUpEvent& transformedEvent = (const KeyUpEvent&)event;
+                g_KeysDown[(size_t)transformedEvent.keyCode] = false;
+            }
+        };
+        EventBus::GetDispatcher<KeyEvents>()->AddListener(&m_KeyEventsListener);
+    }
+    SimpleInputManager::~SimpleInputManager()
+    {
+        EventBus::GetDispatcher<MouseEvents>()->RemoveListener(&m_MouseEventsListener);
+        EventBus::GetDispatcher<KeyEvents>()->RemoveListener(&m_KeyEventsListener);
+    }
+    void SimpleInputManager::Update()
+    {
+        g_LastMousePositionX = g_CurrentMousePositionX;
+        g_LastMousePositionY = g_CurrentMousePositionY;
     }
 }

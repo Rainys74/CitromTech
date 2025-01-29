@@ -311,6 +311,12 @@ namespace Citrom::Platform
 				{
 					//KeyDownEvent keyDownEvent(wParam);
 					//EventBus::GetInstance()->Dispatch<KeyEvents>(keyDownEvent);
+
+					// TODO: TEMPORARY IMPROVE DIS!
+					KeyDownEvent keyDownEvent;
+					keyDownEvent.keyCode = Input::WinKeyToInputSystem(wParam);
+
+					EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
 				}
 			}
 			else
