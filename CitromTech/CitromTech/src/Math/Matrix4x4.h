@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MathCommon.h"
+#include "Vector.h"
 
 #include "CTL/StaticArray.h"
 
@@ -22,11 +23,14 @@ namespace Citrom::Math
 		Matrix4x4(std::initializer_list<std::initializer_list<float32>> values);
 		~Matrix4x4() = default;
 
+		void Zero();
 		void Multiply(const Matrix4x4& mat4B);
 
 		void Transpose();
 		void Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear = 0.0f, const float32 zFar = 1.0f);
 		void Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar);
+
+		static Matrix4x4 Translate(const Matrix4x4& mat, const Vector3& vec3);
 
 		// TODO: test out if these work
 		void FlipHandedness(); // Reverses LH to RH matrices and vice-versa
@@ -37,6 +41,8 @@ namespace Citrom::Math
 
 		// Should only be used for debugging purposes
 		std::string ToString();
+
+		Matrix4x4 operator*(const Matrix4x4& mat4B) const { Matrix4x4 result = *this; result.Multiply(mat4B); return result; }
 
 		FORCE_INLINE CTL::Array<CTL::Array<float32, 4>, 4>& Data() { return m_Data; }
 		FORCE_INLINE const CTL::Array<CTL::Array<float32, 4>, 4>& Data() const { return m_Data; }

@@ -41,7 +41,7 @@ namespace Citrom::Math
 	}
 	Vector3 Vector3::Normalized() const
 	{
-		Vector3 normalized = { 0 };
+		Vector3 normalized;
 		float32 magnitude = Magnitude();
 
 		normalized.x = this->x / magnitude;

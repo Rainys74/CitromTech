@@ -208,6 +208,34 @@ namespace Citrom
 		};
 		ConstantBufferTest cbt = {};
 		cbt.transform = Math::Matrix4x4::Identity();
+		Math::Matrix4x4 projection;
+		//projection.Orthographic(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+		projection.Orthographic(-2.67f, 2.67f, -1.5f, 1.5f, -1.0f, 1.0f);
+		//projection.Perspective(Math::DegreesToRadians(45.0f), 16.0f / 9.0f, 0.01f, 1000.0f);
+		Math::Matrix4x4 view = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, -5.0f));
+		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
+		cbt.transform = projection * view * model;
+		//cbt.transform = model * view * projection;
+
+		CT_ERROR("PROJECTION!");
+		CT_WARN("\n{}", projection.ToString());
+
+		CT_ERROR("VIEW!");
+		CT_WARN("\n{}", view.ToString());
+
+		CT_ERROR("MODEL!");
+		CT_WARN("\n{}", model.ToString());
+
+		CT_ERROR("PROJECTION * VIEW * MODEL!");
+		CT_WARN("\n{}", (projection * view * model).ToString());
+
+		CT_ERROR("MODEL * VIEW * PROJECTION!");
+		CT_WARN("\n{}", (model * view * projection).ToString());
+
+		//glm::mat4 model = glm::translate(glm::mat4(1.0f), m_TranslationA); // model matrix
+		//glm::mat4 mvp = m_Proj * m_View * model;
+		// m_Proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), 
+		// m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0)))
 		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} }; // WORKS PERFECTLY! (i think)
 
 		UniformBufferDesc ubd = {};

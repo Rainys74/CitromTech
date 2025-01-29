@@ -39,6 +39,10 @@ namespace Citrom::Math
 			}
 		}
 	}
+	void Matrix4x4::Zero()
+	{
+		Memory::Zero(m_Data.Data(), sizeof(float32) * (4 * 4));
+	}
 	void Matrix4x4::Multiply(const Matrix4x4& mat4B)
 	{
 		CT_PROFILE_MEMBER_FUNCTION();
@@ -120,6 +124,8 @@ namespace Citrom::Math
 	}
 	void Matrix4x4::Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
 	{
+		Zero();
+
 		// TODO: RH_ZO (Right-Handed, Zero-Origin) is this ok?
 		const float rl = 1.0f / (right - left);
 		const float tb = 1.0f / (top - bottom);
@@ -137,6 +143,28 @@ namespace Citrom::Math
 	{
 		//FUNCTION_TO_MATRIX_TYPE(Perspective)(fovy, aspect, zNear, zFar);
 		FUNCTION_TO_MATRIX_TYPE(Perspective, (fovy, aspect, zNear, zFar));
+	}
+
+	Matrix4x4 Matrix4x4::Translate(const Matrix4x4& mat, const Vector3& vec3)
+	{
+		Matrix4x4 result(mat);
+		
+		//// Create the translation matrix (no scaling or rotation)
+		//result.m_Data[3][0] += vec3.x;  // translation in X
+		//result.m_Data[3][1] += vec3.y;  // translation in Y
+		//result.m_Data[3][2] += vec3.z;  // translation in Z
+
+		// Create a translation matrix (Homogeneous)
+		//result.m_Data[0][3] = vec3.x;  // translation in X
+		//result.m_Data[1][3] = vec3.y;  // translation in Y
+		//result.m_Data[2][3] = vec3.z;  // translation in Z
+
+		for (int i = 0; i < 4; ++i)
+			result.m_Data[3][i] += (result.m_Data[0][i] * vec3.x +
+				result.m_Data[1][i] * vec3.y +
+				result.m_Data[2][i] * vec3.z);
+
+		return result;
 	}
 	void Matrix4x4::FlipHandedness()
 	{
@@ -219,7 +247,7 @@ namespace Citrom::Math
 
 	void Matrix4x4::Perspective_LH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
 	{
-		//glm_mat4_zero(dest);
+		Zero();
 
 		const float32 f = 1.0f / tanf(fovy * 0.5f);
 		const float32 fn = 1.0f / (zNear - zFar);
@@ -233,7 +261,7 @@ namespace Citrom::Math
 
 	void Matrix4x4::Perspective_RH_ZO(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar)
 	{
-		//glm_mat4_zero(dest);
+		Zero();
 
 		const float32 f = 1.0f / tanf(fovy * 0.5f);
 		const float32 fn = 1.0f / (zNear - zFar);
@@ -247,7 +275,7 @@ namespace Citrom::Math
 
 	void Matrix4x4::Orthographic_LH_ZO(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear, const float32 zFar)
 	{
-		//glm_mat4_zero(dest);
+		Zero();
 
 		const float32 rl = 1.0f / (right - left);
 		const float32 tb = 1.0f / (top - bottom);
