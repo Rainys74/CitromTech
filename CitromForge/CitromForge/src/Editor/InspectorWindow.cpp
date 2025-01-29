@@ -9,6 +9,7 @@
 #include "Logger/Logger.h"
 
 #include "SceneHierarchyEvents.h"
+#include "NativeFileDialog/NativeFileDialog.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -167,6 +168,12 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         {
             if (ImGui::MenuItem("Test"))
                 ImGui::InsertNotification({ ImGuiToastType::Success, 3000, "That is a success! %s", "(Format here)" });
+            if (ImGui::MenuItem("NFD TEST!"))
+            {
+                NativeFileDialog nfd;
+                NativeFileDialogFilter filters[2] = { { "Source code", "c,cpp,cc" }, { "Headers", "h,hpp" } };
+                CT_CORE_WARN("NFD RESULT!: {}", nfd.OpenFile(filters, CT_ARRAY_LENGTH(filters)));
+            }
 
             ImGui::EndPopup();
         }

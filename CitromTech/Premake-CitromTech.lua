@@ -24,6 +24,7 @@ project "CitromTech"   -- Engine Library
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.ImGuizmo}",
             "%{IncludeDir.HLSLcc}",
+            "%{IncludeDir.nativefiledialog_extended}",
             
             "%{IncludeDir.glslcc}",
         }
@@ -38,7 +39,8 @@ project "CitromTech"   -- Engine Library
             "GLFW",
             "ImGui",
             "ImGuizmo",
-            "HLSLcc"
+            "HLSLcc",
+            "nativefiledialog-extended"
 
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"
