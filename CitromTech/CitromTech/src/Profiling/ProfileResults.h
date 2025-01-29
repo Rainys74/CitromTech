@@ -24,12 +24,12 @@ namespace Citrom::Profiler
 		static void IterateResultsCallback(CallbackFN callback);
 		static void IterateResultsOrderedCallback(CallbackFN callback);
 
-		static CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual>& GetResults();
-		static CTL::DArray<const char*>& GetResultOrder();
+		static CStringHashMap& GetResults();
+		static ResultOrderArray& GetResultOrder();
 
 		[[deprecated("Manually retrieve the time instead.")]] static void PrintResults();
 	private:
-		static CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual> m_Results;
-		static CTL::DArray<const char*> m_Order;
+		static CStringHashMap m_Results;
+		static ResultOrderArray m_Order;
 	};
 }

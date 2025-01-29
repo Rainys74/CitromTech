@@ -263,7 +263,7 @@ int SharedMain(int argc, char* argv[])
 	Entity cube1 = g_CurrentScene->CreateEntity();
 	Entity e2 = g_CurrentScene->CreateEntity();
 	CubeComponent& cubeComponent = cube1.AddComponent<CubeComponent>();
-	cubeComponent.material.shaderName = "Standard";
+	//cubeComponent.material.shaderName = "Standard";
 	Entity camera = g_CurrentScene->CreateEntity();
 	camera.GetComponent<NameComponent>().name = "Main Camera";
 	camera.AddComponent<CameraComponent>();

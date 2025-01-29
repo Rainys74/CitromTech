@@ -2,6 +2,7 @@
 
 #include "Renderer/Renderer.h"
 #include "Renderer/Camera.h"
+#include "Renderer/MaterialSystem.h"
 
 namespace Citrom
 {

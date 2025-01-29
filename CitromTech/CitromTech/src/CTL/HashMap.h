@@ -81,4 +81,10 @@ namespace CTL
     // Custom Unordered_Map wrapper with xxHash as the default hash function
     template<typename K, typename T, typename Hash = XXHash<K>, typename Comparison = std::equal_to<K>>
     using HashMap = std::unordered_map<K, T, Hash, Comparison>;
+
+    template<typename T>
+    using CStrHashMap = HashMap<const char*, T, CStringHash, CStringHashEqual>;
+
+    template<typename T>
+    using StdStrHashMap = HashMap<std::string, T, StdStringHash, StdStringHashEqual>;
 }

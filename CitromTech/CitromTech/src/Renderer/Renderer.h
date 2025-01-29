@@ -32,22 +32,6 @@ namespace Citrom
 		CTL::DArray<Vertex> vertices;
 		CTL::DArray<uint32> indices;
 	};
-
-	// or instead just make a shader/uniform buffer wrapper with functions for setting specific values?
-	struct Material
-	{
-		std::string shaderName; // TODO: shader reference or shader name?
-
-		Math::Color albedoColor;
-		// TODO: convert into a class that combines multipliers and textures as well as maybe combines all PBR stuff
-		float32 smoothness; // smoothness/glossiness vs roughness
-		float32 metallic; // metalness
-	};
-	struct MaterialInstance
-	{
-		Material* mat;
-		Material values;
-	};
 	
 	// TODO: create a modular render path system with
 	// extendable render steps
