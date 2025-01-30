@@ -41,6 +41,7 @@ namespace Citrom::Math
 		// Presets
 		FORCE_INLINE Vector3 Forward() const { return rotation.Rotate(Vector3::Forward()); }
 		FORCE_INLINE Vector3 Right() const { return rotation.Rotate(Vector3::Right()); }
+		FORCE_INLINE Vector3 Up() const { return rotation.Rotate(Vector3::Up()); }
 
 		// Operator Overloading for relative transformations
 		Transform operator*(const Transform& trans2) const

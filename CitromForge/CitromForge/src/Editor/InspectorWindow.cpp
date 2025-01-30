@@ -43,6 +43,18 @@ static void TryInitializeHierarchyEventListener()
     }
 }
 
+namespace ImToolkit //ImPresets
+{
+    static bool DrawVector3Control(const char* label, float values[3], float speed = 0.25f, float resetValue = 0.0f)
+    {
+        bool modified = false;
+
+        modified = ImGui::DragFloat3(label, values, speed);
+
+        return modified;
+    }
+}
+
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 {
     if (selectedEntity == entt::null)
@@ -105,16 +117,16 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         ImGui::Spacing();
         if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
         {
-            ImGui::DragFloat3("Position", &transformComponent.transform.position[0], 0.25f);
+            ImToolkit::DrawVector3Control("Position", &transformComponent.transform.position[0], 0.25f);
             
             //Math::Vector3 eulerAngles = transformComponent.transform.rotation.ToEulerAngles();
             //if (ImGui::DragFloat3("Rotation", &eulerAngles[0]))
             //    transformComponent.transform.rotation = Math::Quaternion::Euler(eulerAngles);
 
-            if (ImGui::DragFloat3("Rotation", &transformComponent.transform.editorEulerAngles[0], 0.1f)) // 0.1f for Radians!
+            if (ImToolkit::DrawVector3Control("Rotation", &transformComponent.transform.editorEulerAngles[0], 0.1f)) // 0.1f for Radians!
                 transformComponent.transform.rotation = Math::Quaternion::Euler(transformComponent.transform.editorEulerAngles);
 
-            ImGui::DragFloat3("Scale", &transformComponent.transform.scale[0]);
+            ImToolkit::DrawVector3Control("Scale", &transformComponent.transform.scale[0]);
 
             // Advanced
             ImGui::Separator();
