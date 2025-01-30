@@ -71,7 +71,7 @@ void EditorCamera::UpdateRotation(float deltaTime)
 	
 	CT_WARN("Pitch: {}", m_Pitch);
 	CT_WARN("Yaw: {}", m_Yaw);
-	m_Transform.editorEulerAngles = Vector3(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f); // testing!
+	m_Transform.eulerAnglesHint = Vector3(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f); // testing!
 	m_Transform.rotation = Quaternion::Euler(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f);
 	CT_ERROR("Quaternion: {}", m_Transform.rotation.ToString());
 

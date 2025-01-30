@@ -123,8 +123,12 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             //if (ImGui::DragFloat3("Rotation", &eulerAngles[0]))
             //    transformComponent.transform.rotation = Math::Quaternion::Euler(eulerAngles);
 
-            if (ImToolkit::DrawVector3Control("Rotation", &transformComponent.transform.editorEulerAngles[0], 0.1f)) // 0.1f for Radians!
-                transformComponent.transform.rotation = Math::Quaternion::Euler(transformComponent.transform.editorEulerAngles);
+            Math::Vector3 degreeRot = transformComponent.transform.eulerAnglesHint.RadToDegrees();
+            if (ImToolkit::DrawVector3Control("Rotation", &degreeRot[0], 0.1f))
+            {
+                transformComponent.transform.eulerAnglesHint = degreeRot.DegToRadians();
+                transformComponent.transform.rotation = Math::Quaternion::Euler(transformComponent.transform.eulerAnglesHint);
+            }
 
             ImToolkit::DrawVector3Control("Scale", &transformComponent.transform.scale[0]);
 
@@ -173,7 +177,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             Math::Transform* camTransform = (Math::Transform*)GetCameraTransform();
 
             ImGui::DragFloat3("CCPosition2", &camTransform->position[0]);
-            ImGui::DragFloat3("CCEulerAnglesHint2", &camTransform->editorEulerAngles[0]);
+            ImGui::DragFloat3("CCEulerAnglesHint2", &camTransform->eulerAnglesHint[0] );
             ImGui::DragFloat3("CCScale2", &camTransform->scale[0]);
             ImGui::Separator();
             ImGui::DragFloat4("CCRotation2", &camTransform->rotation[0]);

@@ -88,8 +88,7 @@ void EditorGizmos::ImGuiDraw(uint16 showGizmos)
             Math::Matrix4x4::DecomposeTransform(entityTransform, translation, eulerAngles, scale);
 
             etc.transform.position = translation;
-            //etc.transform.eulerAnglesHint = eulerAngles;
-            etc.transform.editorEulerAngles = eulerAngles;
+            etc.transform.eulerAnglesHint = eulerAngles;
             //etc.transform.rotation = Math::Quaternion::Euler(eulerAngles);
             etc.transform.scale = scale; // TODO: scale keeps increasing, might be due to the square root not being that accurate?
         }

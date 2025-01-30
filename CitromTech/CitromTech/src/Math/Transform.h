@@ -14,7 +14,7 @@ namespace Citrom::Math
 		Math::Quaternion rotation = Math::Quaternion::Identity();
 		Math::Vector3 scale = Math::Vector3(1.0f, 1.0f, 1.0f);
 
-		Math::Vector3 editorEulerAngles; // Only for the editor.
+		Math::Vector3 eulerAnglesHint;
 
 		Math::Matrix4x4& GetTransformMatrix()
 		{

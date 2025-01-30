@@ -66,6 +66,9 @@ namespace Citrom::Math
         float32 Dot(const Vector3& vec3B) const;
         Vector3 Cross(const Vector3& vec3B) const;
 
+        FORCE_INLINE Vector3 RadToDegrees() const { return Vector3(RadiansToDegrees(this->x), RadiansToDegrees(this->y), RadiansToDegrees(this->z)); }
+        FORCE_INLINE Vector3 DegToRadians() const { return Vector3(DegreesToRadians(this->x), DegreesToRadians(this->y), DegreesToRadians(this->z)); }
+
         // Math equations
         FORCE_INLINE Vector3 operator+(const Vector3& vec3B) const { return Vector3{ this->x + vec3B.x, this->y + vec3B.y, this->z + vec3B.z }; } // Add
         FORCE_INLINE Vector3 operator-(const Vector3& vec3B) const { return Vector3{ this->x - vec3B.x, this->y - vec3B.y, this->z - vec3B.z }; } // Subtract
