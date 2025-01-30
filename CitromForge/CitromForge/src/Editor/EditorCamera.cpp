@@ -56,26 +56,26 @@ void EditorCamera::UpdateRotation(float deltaTime)
 	float mouseX = Input::SimpleInput::GetMouseDeltaX();
 	float mouseY = Input::SimpleInput::GetMouseDeltaY();
 
-	//float m_MouseSensitivity = 0.1f;
-	//bool m_InvertY = false;
-	//
-	//float sensitivity = m_MouseSensitivity;
-	//if (m_InvertY)
-	//	mouseY = -mouseY;
-	//
-	//m_Yaw += mouseX * sensitivity;
-	//m_Pitch += mouseY * sensitivity;
-	//
-	////// Clamp pitch to prevent flipping
-	////if (m_Pitch > 89.0f) m_Pitch = 89.0f;
-	////if (m_Pitch < -89.0f) m_Pitch = -89.0f;
-	//
-	//CT_WARN("Pitch: {}", m_Pitch);
-	//CT_WARN("Yaw: {}", m_Yaw);
-	//m_Transform.editorEulerAngles = Vector3(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f); // testing!
-	////m_Transform.rotation = Quaternion::Euler(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f);
-	//m_Transform.rotation = Quaternion::Euler(0.0f, DegreesToRadians(m_Yaw), 0.0f) * Quaternion::Euler(DegreesToRadians(m_Pitch), 0.0f, 0.0f);
-	//CT_ERROR("Quaternion: {}", m_Transform.rotation.ToString());
+	float m_MouseSensitivity = 0.1f;
+	bool m_InvertY = false;
+	
+	float sensitivity = m_MouseSensitivity;
+	if (m_InvertY)
+		mouseY = -mouseY;
+	
+	m_Yaw += mouseX * sensitivity;
+	m_Pitch += mouseY * sensitivity;
+	
+	//// Clamp pitch to prevent flipping
+	//if (m_Pitch > 89.0f) m_Pitch = 89.0f;
+	//if (m_Pitch < -89.0f) m_Pitch = -89.0f;
+	
+	CT_WARN("Pitch: {}", m_Pitch);
+	CT_WARN("Yaw: {}", m_Yaw);
+	m_Transform.editorEulerAngles = Vector3(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f); // testing!
+	//m_Transform.rotation = Quaternion::Euler(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f);
+	m_Transform.rotation = Quaternion::Euler(0.0f, DegreesToRadians(m_Yaw), 0.0f) * Quaternion::Euler(DegreesToRadians(m_Pitch), 0.0f, 0.0f);
+	CT_ERROR("Quaternion: {}", m_Transform.rotation.ToString());
 
 	/* 
 	// get input
@@ -98,7 +98,7 @@ void EditorCamera::UpdateRotation(float deltaTime)
         orientation.transform.localRotation = Quaternion.Euler(0, desiredX, 0);
 	*/
 
-	float m_MouseSensitivity = 0.1f;
+	/*float m_MouseSensitivity = 0.1f;
 	bool m_InvertY = false;
 
 	float sensitivity = m_MouseSensitivity;
@@ -122,7 +122,7 @@ void EditorCamera::UpdateRotation(float deltaTime)
 	m_Transform.rotation = Quaternion::Euler(DegreesToRadians(m_Pitch), DegreesToRadians(m_Yaw), 0.0f);
 
 	CT_WARN("Pitch: {}", m_Pitch);
-	CT_WARN("Yaw: {}", m_Yaw);
+	CT_WARN("Yaw: {}", m_Yaw);*/
 }
 
 void EditorCamera::UpdateMovement(float deltaTime)
@@ -168,7 +168,6 @@ void EditorCamera::UpdateMovement(float deltaTime)
 		Vector3 moveDirection = m_Transform.Forward() * verticalInput + m_Transform.Right() * horizontalInput;
 		m_Transform.position += moveDirection.Normalized() * speed * deltaTime;
 		CT_ERROR("MOVEDIR: {}", moveDirection.ToString());
-
 	}
 
 	// Adjust boost speed with mouse scroll

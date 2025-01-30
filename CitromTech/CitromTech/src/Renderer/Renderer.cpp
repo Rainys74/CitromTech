@@ -215,9 +215,8 @@ namespace Citrom
 		Math::Matrix4x4 view = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), -cameraTransform->position);
 		Math::Matrix4x4 translationView = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), -cameraTransform->position);
 		Math::Matrix4x4 rotationView = Math::Matrix4x4::FromQuaternion(cameraTransform->rotation);
-		//view.LookAt(cameraTransform->position, cameraTransform->position + Math::Vector3::Forward(), Math::Vector3::Up());
-		//view.LookAt(cameraTransform->position, cameraTransform->position + Math::Vector3::Back(), Math::Vector3::Up());
-		view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
+		view = rotationView * translationView; // The most correct right now.
+		//view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
 		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
 		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!
