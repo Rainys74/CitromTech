@@ -8,6 +8,7 @@
 #include "Logger/Logger.h"
 
 #include "SceneHierarchyEvents.h"
+#include "Input/KeyMouseInputSystem.h"
 
 #include "imgui.h"
 #include "ImGuizmo.h"
@@ -59,18 +60,22 @@ void EditorGizmos::ImGuiDraw(uint16 showGizmos)
         const Math::Matrix4x4& cameraProjection = camera->GetProjection();
         Math::Matrix4x4 cameraView = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
 
-        CT_ERROR("CAMERA PROJECTION MATRIX: \n{}", camera->GetProjection().ToString());
-        CT_ERROR("CAMERA TRANSFORMATION: \n POSITION: {}\n ROTATION: {}\n SCALE: {}\n", cameraTransform->position.ToString(), cameraTransform->rotation.ToString(), cameraTransform->scale.ToString());
-        CT_ERROR("CAMERA TRANSFORM MATRIX: \n{}", cameraTransform->GetTransformMatrix().ToString());
-        CT_ERROR("CAMERA VIEW MATRIX (TRANSFORM INVERSE): \n{}", Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix()).ToString());
+        //CT_ERROR("CAMERA PROJECTION MATRIX: \n{}", camera->GetProjection().ToString());
+        //CT_ERROR("CAMERA TRANSFORMATION: \n POSITION: {}\n ROTATION: {}\n SCALE: {}\n", cameraTransform->position.ToString(), cameraTransform->rotation.ToString(), cameraTransform->scale.ToString());
+        //CT_ERROR("CAMERA TRANSFORM MATRIX: \n{}", cameraTransform->GetTransformMatrix().ToString());
+        //CT_ERROR("CAMERA VIEW MATRIX (TRANSFORM INVERSE): \n{}", Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix()).ToString());
 
         // Entity Transform
         auto& etc = Entity(g_SelectedEntity, (Scene*)GetCurrentScene()).GetComponent<TransformComponent>();
         Math::Matrix4x4 entityTransform = etc.transform.GetTransformMatrix();
 
-        CT_ERROR("ENTITY TRANSFORM MATRIX: \n{}", etc.transform.GetTransformMatrix().ToString());
+        //CT_ERROR("ENTITY TRANSFORM MATRIX: \n{}", etc.transform.GetTransformMatrix().ToString());
 
-        ImGuizmo::Manipulate(&cameraView.Data()[0][0], &cameraProjection.Data()[0][0], (ImGuizmo::OPERATION)showGizmos, ImGuizmo::LOCAL /*ImGuizmo::WORLD*/, &entityTransform.Data()[0][0]);
+        bool snap = Input::SimpleInput::GetKey(Input::KeyCode::Ctrl); //TODO: cannot DIFFERENTIATE RIGHT NOW! (Input::KeyCode::LCtrl); Also win32 (most likely due to the else's) doesn't work..
+        float snapValue = showGizmos == ImGuizmo::OPERATION::ROTATE ? 45.0f : 0.5f;
+        float snapValues[3] = {snapValue, snapValue, snapValue};
+
+        ImGuizmo::Manipulate(&cameraView.Data()[0][0], &cameraProjection.Data()[0][0], (ImGuizmo::OPERATION)showGizmos, ImGuizmo::LOCAL /*ImGuizmo::WORLD*/, &entityTransform.Data()[0][0], nullptr, snap ? snapValues : nullptr);
 
         if (ImGuizmo::IsUsing())
         {
