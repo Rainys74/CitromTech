@@ -1,4 +1,5 @@
 #include "Matrix4x4.h"
+#include "MathCommon.h"
 
 #include "Profiling/Profiler.h"
 
@@ -285,45 +286,70 @@ namespace Citrom::Math
 		return result;
 	}
 
-	template<typename T>
-	static FORCE_INLINE T epsilon()
+	namespace glmRepl
 	{
-		if constexpr (std::is_same<T, float>::value)
+		template<typename T>
+		static FORCE_INLINE T epsilon()
 		{
-			return static_cast<T>(1e-5); // epsilon for float
+			//if constexpr (std::is_same<T, float>::value)
+			//{
+			//	return static_cast<T>(1e-5); // epsilon for float
+			//}
+			//else if constexpr (std::is_same<T, double>::value)
+			//{
+			//	return static_cast<T>(1e-8); // epsilon for double
+			//}
+			//else
+			//{
+			//	return static_cast<T>(0); // for other types
+			//}
+
+			static_assert(std::numeric_limits<T>::is_iec559, "'epsilon' only accepts floating-point inputs");
+			return std::numeric_limits<T>::epsilon();
 		}
-		else if constexpr (std::is_same<T, double>::value)
+
+		template <typename T>
+		static FORCE_INLINE bool epsilonEqual(T x, T y, T epsilon) { return false; }
+
+		template<>
+		static FORCE_INLINE bool epsilonEqual(float32 x, float32 y, float32 epsilon)
 		{
-			return static_cast<T>(1e-8); // epsilon for double
+			return std::abs(x - y) < epsilon;
 		}
-		else
+
+		template<typename T>
+		static FORCE_INLINE bool epsilonNotEqual(T x, T y, T epsilon) { return false; }
+
+		template <>
+		static FORCE_INLINE bool epsilonNotEqual(float32 x, float32 y, float32 epsilon)
 		{
-			return static_cast<T>(0); // for other types
+			return std::abs(x - y) >= epsilon;
 		}
-	}
 
-	template <typename T>
-	static FORCE_INLINE bool epsilonEqual(T x, T y, T epsilon) { return false; }
-
-	template<>
-	static FORCE_INLINE bool epsilonEqual(float32 x, float32 y, float32 epsilon)
-	{
-		return std::abs(x - y) < epsilon;
-	}
-
-	template<typename T>
-	static FORCE_INLINE bool epsilonNotEqual(T x, T y, T epsilon) { return false; }
-
-	template <>
-	static FORCE_INLINE bool epsilonNotEqual(float32 x, float32 y, float32 epsilon)
-	{
-		return std::abs(x - y) >= epsilon;
+		static float32 length(const Vector3& v)
+		{
+			return SquareRoot(v.x * v.x + v.y * v.y + v.z * v.z);
+		}
+		namespace detail
+		{
+			static Vector3 scale(const Vector3& v, float32 desiredLength)
+			{
+				//return v * desiredLength / length(v);
+				auto len = length(v);
+				return Vector3(
+					v.x * desiredLength / len,
+					v.y * desiredLength / len,
+					v.z * desiredLength / len
+				);
+			}
+		}
 	}
 
 	bool Matrix4x4::DecomposeTransform(const Matrix4x4& transform, Vector3& outTranslation, Vector3& outRotationEuler, Vector3& outScale)
 	{
 		// From glm::decompose in matrix_decompose.inl
 
+		using namespace glmRepl;
 		using T = float32;
 		using length_t = size_t;
 
@@ -364,12 +390,12 @@ namespace Citrom::Math
 				Row[i][j] = LocalMatrix[i][j];
 
 		// Compute X outScale factor and normalize first row.
-		//outScale.x = length(Row[0]);
-		//Row[0] = detail::scale(Row[0], static_cast<T>(1));
-		//outScale.y = length(Row[1]);
-		//Row[1] = detail::scale(Row[1], static_cast<T>(1));
-		//outScale.z = length(Row[2]);
-		//Row[2] = detail::scale(Row[2], static_cast<T>(1));
+		outScale.x = length(Row[0]);
+		Row[0] = detail::scale(Row[0], static_cast<T>(1));
+		outScale.y = length(Row[1]);
+		Row[1] = detail::scale(Row[1], static_cast<T>(1));
+		outScale.z = length(Row[2]);
+		Row[2] = detail::scale(Row[2], static_cast<T>(1));
 
 		// At this point, the matrix (in rows[]) is orthonormal.
 		// Check for a coordinate system flip.  If the determinant

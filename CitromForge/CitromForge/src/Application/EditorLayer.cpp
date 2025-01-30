@@ -17,6 +17,7 @@
 #include "CTL/CStringHandling.h"
 
 #include "imgui.h"
+#include "ImGuizmo.h"
 
 using namespace Citrom;
 using namespace EditorImGui;
@@ -129,5 +130,6 @@ void EditorLayer::OnImGuiRender()
     EditorConsole::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();
 
-    EditorGizmos::ImGuiDraw(nullptr); // TODO: Gizmos should NOT be drawn on top of everything.
+    ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+    EditorGizmos::ImGuiDraw(gizmoOperation); // TODO: Gizmos should NOT be drawn on top of everything.
 }

@@ -5,5 +5,5 @@
 class EditorGizmos
 {
 public:
-	static void ImGuiDraw(bool* showGizmos);
+	static void ImGuiDraw(uint16 showGizmos);
 };

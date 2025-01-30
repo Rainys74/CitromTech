@@ -37,9 +37,9 @@ static void TryInitializeHierarchyEventListener()
     }
 }
 
-void EditorGizmos::ImGuiDraw(bool* showGizmos)
+void EditorGizmos::ImGuiDraw(uint16 showGizmos)
 {
-    if (showGizmos && !(*showGizmos))
+    if (showGizmos <= 0)
         return;
 
     TryInitializeHierarchyEventListener();
@@ -48,13 +48,13 @@ void EditorGizmos::ImGuiDraw(bool* showGizmos)
 
     if (g_SelectedEntity != entt::null)
     {
-        ImGuizmo::SetOrthographic(false);
+        auto camera = (Camera*)GetCamera();
+        auto cameraTransform = (Math::Transform*)GetCameraTransform();
+
+        ImGuizmo::SetOrthographic(camera->GetProjectionType() == Camera::ProjectionType::Orthographic);
         //ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList()); // ImGui::GetBackgroundDrawList()
         //ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
         ImGuizmo::SetRect(0.0f, 0.0f, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
-
-        auto camera = (Camera*)GetCamera();
-        auto cameraTransform = (Math::Transform*)GetCameraTransform();
 
         const Math::Matrix4x4& cameraProjection = camera->GetProjection();
         Math::Matrix4x4 cameraView = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
@@ -70,7 +70,7 @@ void EditorGizmos::ImGuiDraw(bool* showGizmos)
 
         CT_ERROR("ENTITY TRANSFORM MATRIX: \n{}", etc.transform.GetTransformMatrix().ToString());
 
-        ImGuizmo::Manipulate(&cameraView.Data()[0][0], &cameraProjection.Data()[0][0], ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::LOCAL /*ImGuizmo::WORLD*/, &entityTransform.Data()[0][0]);
+        ImGuizmo::Manipulate(&cameraView.Data()[0][0], &cameraProjection.Data()[0][0], (ImGuizmo::OPERATION)showGizmos, ImGuizmo::LOCAL /*ImGuizmo::WORLD*/, &entityTransform.Data()[0][0]);
 
         if (ImGuizmo::IsUsing())
         {
@@ -86,7 +86,7 @@ void EditorGizmos::ImGuiDraw(bool* showGizmos)
             //etc.transform.eulerAnglesHint = eulerAngles;
             etc.transform.editorEulerAngles = eulerAngles;
             //etc.transform.rotation = Math::Quaternion::Euler(eulerAngles);
-            //etc.transform.scale = scale;
+            etc.transform.scale = scale; // TODO: scale keeps increasing, might be due to the square root not being that accurate?
         }
     }
 
