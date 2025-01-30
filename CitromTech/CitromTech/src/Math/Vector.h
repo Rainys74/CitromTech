@@ -64,6 +64,9 @@ namespace Citrom::Math
 
         Vector3 operator-() const { return Vector3{ -x, -y, -z }; }
 
+        // Should only be used for debugging purposes
+        std::string ToString() const;
+
         // Referencing
         /*
          * Works because stack memory is stored contiguously,

@@ -262,4 +262,19 @@ namespace Citrom::Math
     {
         return Euler(vec3.x, vec3.y, vec3.z);
     }
+
+    std::string Quaternion::ToString() const
+    {
+        std::string prettyString("(");
+        prettyString.append(std::to_string(this->x));
+        prettyString.append(", ");
+        prettyString.append(std::to_string(this->y));
+        prettyString.append(", ");
+        prettyString.append(std::to_string(this->z));
+        prettyString.append(", ");
+        prettyString.append(std::to_string(this->w));
+        prettyString.append(")");
+
+        return prettyString;
+    }
 }

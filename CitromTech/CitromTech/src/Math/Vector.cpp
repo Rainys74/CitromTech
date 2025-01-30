@@ -69,4 +69,17 @@ namespace Citrom::Math
 			this->x * vec3B.y - this->y * vec3B.x  // Z
 		};
 	}
+
+	std::string Vector3::ToString() const
+	{
+		std::string prettyString("(");
+		prettyString.append(std::to_string(this->x));
+		prettyString.append(", ");
+		prettyString.append(std::to_string(this->y));
+		prettyString.append(", ");
+		prettyString.append(std::to_string(this->z));
+		prettyString.append(")");
+
+		return prettyString;
+	}
 }

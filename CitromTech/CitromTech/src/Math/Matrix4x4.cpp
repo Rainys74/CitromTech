@@ -74,6 +74,17 @@ namespace Citrom::Math
 		m_Data[3][2] = a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33;
 		m_Data[3][3] = a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33;
 	}
+	Vector3 Matrix4x4::GetTranslation()
+	{
+		Vector3 result;
+
+		// Row-Major
+		result.x = m_Data[3][0];
+		result.y = m_Data[3][1];
+		result.z = m_Data[3][2];
+
+		return result;
+	}
 	void Matrix4x4::Transpose()
 	{
 		CT_PROFILE_MEMBER_FUNCTION();
@@ -153,14 +164,33 @@ namespace Citrom::Math
 
 		return result;
 	}
+
+	static void /*_Intern_*/ TRS_Translation(Matrix4x4& result, const Vector3& position)
+	{
+	}
+	static void TRS_Rotation(Matrix4x4& result, const Quaternion& rotation)
+	{
+	}
+	static void TRS_Scaling(Matrix4x4& result, const Vector3& scale)
+	{
+	}
+
 	Matrix4x4 Matrix4x4::TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
 	{
 		Matrix4x4 result = Matrix4x4::Identity();
 
-		// Translation Matrix
+#ifdef COLUMN_MAJOR
+		// Translation Matrix (Column Major)
 		result.Data()[0][3] = position.x;
 		result.Data()[1][3] = position.y;
 		result.Data()[2][3] = position.z;
+#else
+
+		// Translation Matrix (Row Major)
+		result.Data()[3][0] = position.x;
+		result.Data()[3][1] = position.y;
+		result.Data()[3][2] = position.z;
+#endif
 
 		// Convert Quaternion to Rotation Matrix (Row-Major)
 		float32 xx = rotation.x * rotation.x;
@@ -201,6 +231,174 @@ namespace Citrom::Math
 		result.Data()[2][2] *= scale.z;
 
 		return result;
+	}
+	Matrix4x4 Matrix4x4::Inverse(const Matrix4x4& matB)
+	{
+		auto& a = matB.Data();
+
+		auto s0 = a[0][0] * a[1][1] - a[1][0] * a[0][1];
+		auto s1 = a[0][0] * a[1][2] - a[1][0] * a[0][2];
+		auto s2 = a[0][0] * a[1][3] - a[1][0] * a[0][3];
+		auto s3 = a[0][1] * a[1][2] - a[1][1] * a[0][2];
+		auto s4 = a[0][1] * a[1][3] - a[1][1] * a[0][3];
+		auto s5 = a[0][2] * a[1][3] - a[1][2] * a[0][3];
+
+		auto c5 = a[2][2] * a[3][3] - a[3][2] * a[2][3];
+		auto c4 = a[2][1] * a[3][3] - a[3][1] * a[2][3];
+		auto c3 = a[2][1] * a[3][2] - a[3][1] * a[2][2];
+		auto c2 = a[2][0] * a[3][3] - a[3][0] * a[2][3];
+		auto c1 = a[2][0] * a[3][2] - a[3][0] * a[2][2];
+		auto c0 = a[2][0] * a[3][1] - a[3][0] * a[2][1];
+
+		// Should check for 0 determinant
+		//auto invdet = 1.0 / (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+
+		auto det = (s0 * c5 - s1 * c4 + s2 * c3 + s3 * c2 - s4 * c1 + s5 * c0);
+		if (std::abs(det) < 1e-6)
+			return Matrix4x4::Identity();
+
+		auto invdet = 1.0f / det;
+
+		Matrix4x4 result;
+		auto& b = result.Data();
+
+		b[0][0] = (a[1][1] * c5 - a[1][2] * c4 + a[1][3] * c3) * invdet;
+		b[0][1] = (-a[0][1] * c5 + a[0][2] * c4 - a[0][3] * c3) * invdet;
+		b[0][2] = (a[3][1] * s5 - a[3][2] * s4 + a[3][3] * s3) * invdet;
+		b[0][3] = (-a[2][1] * s5 + a[2][2] * s4 - a[2][3] * s3) * invdet;
+
+		b[1][0] = (-a[1][0] * c5 + a[1][2] * c2 - a[1][3] * c1) * invdet;
+		b[1][1] = (a[0][0] * c5 - a[0][2] * c2 + a[0][3] * c1) * invdet;
+		b[1][2] = (-a[3][0] * s5 + a[3][2] * s2 - a[3][3] * s1) * invdet;
+		b[1][3] = (a[2][0] * s5 - a[2][2] * s2 + a[2][3] * s1) * invdet;
+
+		b[2][0] = (a[1][0] * c4 - a[1][1] * c2 + a[1][3] * c0) * invdet;
+		b[2][1] = (-a[0][0] * c4 + a[0][1] * c2 - a[0][3] * c0) * invdet;
+		b[2][2] = (a[3][0] * s4 - a[3][1] * s2 + a[3][3] * s0) * invdet;
+		b[2][3] = (-a[2][0] * s4 + a[2][1] * s2 - a[2][3] * s0) * invdet;
+
+		b[3][0] = (-a[1][0] * c3 + a[1][1] * c1 - a[1][2] * c0) * invdet;
+		b[3][1] = (a[0][0] * c3 - a[0][1] * c1 + a[0][2] * c0) * invdet;
+		b[3][2] = (-a[3][0] * s3 + a[3][1] * s1 - a[3][2] * s0) * invdet;
+		b[3][3] = (a[2][0] * s3 - a[2][1] * s1 + a[2][2] * s0) * invdet;
+
+		return result;
+	}
+
+	template<typename T>
+	static FORCE_INLINE T epsilon()
+	{
+		if constexpr (std::is_same<T, float>::value)
+		{
+			return static_cast<T>(1e-5); // epsilon for float
+		}
+		else if constexpr (std::is_same<T, double>::value)
+		{
+			return static_cast<T>(1e-8); // epsilon for double
+		}
+		else
+		{
+			return static_cast<T>(0); // for other types
+		}
+	}
+
+	template <typename T>
+	static FORCE_INLINE bool epsilonEqual(T x, T y, T epsilon) { return false; }
+
+	template<>
+	static FORCE_INLINE bool epsilonEqual(float32 x, float32 y, float32 epsilon)
+	{
+		return std::abs(x - y) < epsilon;
+	}
+
+	template<typename T>
+	static FORCE_INLINE bool epsilonNotEqual(T x, T y, T epsilon) { return false; }
+
+	template <>
+	static FORCE_INLINE bool epsilonNotEqual(float32 x, float32 y, float32 epsilon)
+	{
+		return std::abs(x - y) >= epsilon;
+	}
+
+	bool Matrix4x4::DecomposeTransform(const Matrix4x4& transform, Vector3& outTranslation, Vector3& outRotationEuler, Vector3& outScale)
+	{
+		// From glm::decompose in matrix_decompose.inl
+
+		using T = float32;
+		using length_t = size_t;
+
+		Matrix4x4 LocalMatrix(transform);
+
+		// Normalize the matrix.
+		if (epsilonEqual(LocalMatrix[3][3], static_cast<float>(0), epsilon<T>()))
+			return false;
+
+		// First, isolate perspective.  This is the messiest.
+		if (
+			epsilonNotEqual(LocalMatrix[0][3], static_cast<T>(0), epsilon<T>()) ||
+			epsilonNotEqual(LocalMatrix[1][3], static_cast<T>(0), epsilon<T>()) ||
+			epsilonNotEqual(LocalMatrix[2][3], static_cast<T>(0), epsilon<T>()))
+		{
+			// Clear the perspective partition
+			LocalMatrix[0][3] = LocalMatrix[1][3] = LocalMatrix[2][3] = static_cast<T>(0);
+			LocalMatrix[3][3] = static_cast<T>(1);
+		}
+
+		// Next take care of outTranslation (easy).
+		//outTranslation = vec3(LocalMatrix[3]);
+		outTranslation.x = LocalMatrix[3][0];
+		outTranslation.y = LocalMatrix[3][1];
+		outTranslation.z = LocalMatrix[3][2];
+
+		//LocalMatrix[3] = vec4(0, 0, 0, LocalMatrix[3].w);
+		LocalMatrix[3][0] = 0;
+		LocalMatrix[3][1] = 0;
+		LocalMatrix[3][2] = 0; 
+		LocalMatrix[3][3] = LocalMatrix[3][3];
+
+		Vector3 Row[3], Pdum3;
+
+		// Now get outScale and shear.
+		for (length_t i = 0; i < 3; ++i)
+			for (length_t j = 0; j < 3; ++j)
+				Row[i][j] = LocalMatrix[i][j];
+
+		// Compute X outScale factor and normalize first row.
+		//outScale.x = length(Row[0]);
+		//Row[0] = detail::scale(Row[0], static_cast<T>(1));
+		//outScale.y = length(Row[1]);
+		//Row[1] = detail::scale(Row[1], static_cast<T>(1));
+		//outScale.z = length(Row[2]);
+		//Row[2] = detail::scale(Row[2], static_cast<T>(1));
+
+		// At this point, the matrix (in rows[]) is orthonormal.
+		// Check for a coordinate system flip.  If the determinant
+		// is -1, then negate the matrix and the scaling factors.
+#if 0
+		Pdum3 = cross(Row[1], Row[2]); // v3Cross(row[1], row[2], Pdum3);
+		if (dot(Row[0], Pdum3) < 0)
+		{
+			for (length_t i = 0; i < 3; i++)
+			{
+				outScale[i] *= static_cast<T>(-1);
+				Row[i] *= static_cast<T>(-1);
+			}
+		}
+#endif
+
+		outRotationEuler.y = asin(-Row[0][2]);
+		if (cos(outRotationEuler.y) != 0) 
+		{
+			outRotationEuler.x = atan2(Row[1][2], Row[2][2]);
+			outRotationEuler.z = atan2(Row[0][1], Row[0][0]);
+		}
+		else 
+		{
+			outRotationEuler.x = atan2(-Row[2][0], Row[1][1]);
+			outRotationEuler.z = 0;
+		}
+
+		return true;
 	}
 	void Matrix4x4::FlipHandedness()
 	{
@@ -258,7 +456,7 @@ namespace Citrom::Math
 			});
 	}
 
-	std::string Matrix4x4::ToString()
+	std::string Matrix4x4::ToString() const
 	{
 		std::string prettyString;
 		for (uint32 i = 0; i < m_Data.Length(); i++) // Column

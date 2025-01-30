@@ -28,12 +28,17 @@ namespace Citrom::Math
 		void Zero();
 		void Multiply(const Matrix4x4& mat4B);
 
+		Vector3 GetTranslation();
+
 		void Transpose();
 		void Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear = 0.0f, const float32 zFar = 1.0f);
 		void Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar);
 
 		static Matrix4x4 Translate(const Matrix4x4& mat, const Vector3& vec3);
 		static Matrix4x4 TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
+		static Matrix4x4 Inverse(const Matrix4x4& matB);
+
+		static bool DecomposeTransform(const Matrix4x4& transform, Vector3& outTranslation, Vector3& outRotationEuler, Vector3& outScale);
 
 		// TODO: test out if these work
 		void FlipHandedness(); // Reverses LH to RH matrices and vice-versa
@@ -43,9 +48,16 @@ namespace Citrom::Math
 		//inline static Matrix4x4 IdentityFast() { return Matrix4x4({ {1.0f, 0.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f, 1.0f} }); }
 
 		// Should only be used for debugging purposes
-		std::string ToString();
+		std::string ToString() const;
 
 		Matrix4x4 operator*(const Matrix4x4& mat4B) const { Matrix4x4 result = *this; result.Multiply(mat4B); return result; }
+
+		// Operator overloading
+		//FORCE_INLINE Vector4& operator[](size_t index) { return &m_Data[index].Data(); }
+		//FORCE_INLINE const Vector4& operator[](size_t index) const { return &m_Data[index].Data(); }
+
+		FORCE_INLINE const float32* operator[](size_t row) const { return m_Data[row].Data(); }
+		FORCE_INLINE float32* operator[](size_t row) { return m_Data[row].Data(); }
 
 		FORCE_INLINE CTL::Array<CTL::Array<float32, 4>, 4>& Data() { return m_Data; }
 		FORCE_INLINE const CTL::Array<CTL::Array<float32, 4>, 4>& Data() const { return m_Data; }

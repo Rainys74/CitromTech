@@ -21,6 +21,9 @@ namespace Citrom::Math
 		static Quaternion Euler(float eulerX, float eulerY, float eulerZ);
 		static Quaternion Euler(const Vector3& vec3);
 
+		// Should only be used for debugging purposes
+		std::string ToString() const;
+
 		/*
 		 * Works because stack memory is stored contiguously,
 		 * No need to account for byte sizes (sizeof() operator) because if the type is known

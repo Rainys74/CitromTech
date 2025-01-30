@@ -11,7 +11,7 @@ namespace Citrom::Math
 	{
 	public:
 		Math::Vector3 position;
-		Math::Quaternion rotation;
+		Math::Quaternion rotation = Math::Quaternion::Identity();
 		Math::Vector3 scale = Math::Vector3(1.0f, 1.0f, 1.0f);
 
 		Math::Vector3 editorEulerAngles; // Only for the editor.
@@ -30,7 +30,17 @@ namespace Citrom::Math
 			transform.position.y = this->position.y + trans2.position.y;
 			transform.position.z = this->position.z + trans2.position.z;
 
+			// TODO: multiply rotation quaternions
+
+			transform.scale = this->scale * trans2.scale;
+
 			return transform;
+		}
+
+		// Should only be used for debugging purposes
+		std::string ToString() const
+		{
+			return std::string("TO BE IMPLEMENTED!");
 		}
 	private:
 		Math::Matrix4x4 m_Matrix = Math::Matrix4x4::Identity();

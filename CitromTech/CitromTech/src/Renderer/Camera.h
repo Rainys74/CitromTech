@@ -99,6 +99,8 @@ namespace Citrom
 
 		FORCE_INLINE ProjectionType GetProjectionType() const { return m_ProjectionType; }
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateProjection(); }
+
+		FORCE_INLINE const Math::Matrix4x4& GetProjection() const { return m_Projection; }
 	private:
 		void RecalculateProjection()
 		{

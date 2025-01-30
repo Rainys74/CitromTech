@@ -12,6 +12,7 @@
 #include "Editor/ProjectSettingsWindow.h"
 
 #include "Editor/EditorCamera.h"
+#include "Editor/EditorGizmos.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -127,4 +128,6 @@ void EditorLayer::OnImGuiRender()
 
     EditorConsole::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();
+
+    EditorGizmos::ImGuiDraw(nullptr); // TODO: Gizmos should NOT be drawn on top of everything.
 }

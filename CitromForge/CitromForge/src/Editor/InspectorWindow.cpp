@@ -16,13 +16,32 @@
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 #include "misc/cpp/imgui_stdlib.cpp" // unity build?
-#include "ImGuizmo.h"
 #include "Vendor/ImGuiNotify/ImGuiNotify.hpp"
 
 using namespace Citrom;
 
 static EventListener<SceneHierarchyEvents> g_HierarchyEventListener;
 static entt::entity g_SelectedEntity = entt::null;
+
+static void TryInitializeHierarchyEventListener()
+{
+    static bool initialized = false;
+
+    if (!initialized)
+    {
+        g_HierarchyEventListener.OnEvent = [](const Event<SceneHierarchyEvents>& event)
+        {
+            if (event.GetEventType() == SceneHierarchyEvents::EntitySelect)
+            {
+                const EntitySelectEvent& transformedEvent = (const EntitySelectEvent&)event;
+                g_SelectedEntity = (entt::entity)transformedEvent.entityHandleID;
+            }
+        };
+        EventBus::GetDispatcher<SceneHierarchyEvents>()->AddListener(&g_HierarchyEventListener);
+
+        initialized = true;
+    }
+}
 
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 {
@@ -151,6 +170,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             cameraComponent.camera.SetOrthographicFarClip(orthoFar);
         }
         ImGui::Separator();
+        ImGui::Spacing();
 
         // Add Component
         constexpr float buttonWidth = 200.0f;
@@ -187,32 +207,13 @@ void InspectorWindow::ImGuiDraw(bool* showWindow)
 
     ImGui::Begin("Inspector", showWindow);
 
-    g_HierarchyEventListener.OnEvent = [](const Event<SceneHierarchyEvents>& event)
-    {
-        if (event.GetEventType() == SceneHierarchyEvents::EntitySelect)
-        {
-            const EntitySelectEvent& transformedEvent = (const EntitySelectEvent&)event;
-            g_SelectedEntity = (entt::entity)transformedEvent.entityHandleID;
-        }
-    };
-    EventBus::GetDispatcher<SceneHierarchyEvents>()->AddListener(&g_HierarchyEventListener);
+    TryInitializeHierarchyEventListener();
 
     DrawComponentsUUID(g_SelectedEntity, (Scene*)GetCurrentScene());
     //scene->ForEachEntityCallback([&](auto entity)
     //{
     //
     //});
-
-    // TODO: get this shit out of here
-    if (g_SelectedEntity != entt::null)
-    {
-        ImGuizmo::SetOrthographic(false);
-        ImGuizmo::SetDrawlist();
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
-
-        // TODO: this is NOT an editor camera!
-        auto cameraEntity = ((Scene*)GetCurrentScene())->GetMainCameraEntity();
-    }
 
     ImGui::End();
 }
