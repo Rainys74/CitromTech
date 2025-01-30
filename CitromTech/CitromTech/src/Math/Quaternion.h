@@ -21,6 +21,25 @@ namespace Citrom::Math
 		static Quaternion Euler(float eulerX, float eulerY, float eulerZ);
 		static Quaternion Euler(const Vector3& vec3);
 
+		FORCE_INLINE Quaternion Conjugate() const { return Quaternion({ -x, -y, -z, w }); }
+
+		inline Quaternion operator*(const Quaternion& q) const
+		{
+			return Quaternion({
+				w * q.x + x * q.w + y * q.z - z * q.y,
+				w * q.y - x * q.z + y * q.w + z * q.x,
+				w * q.z + x * q.y - y * q.x + z * q.w,
+				w * q.w - x * q.x - y * q.y - z * q.z
+			});
+		}
+
+		inline Vector3 operator*(const Vector3& v) const
+		{
+			Quaternion qv({ v.x, v.y, v.z, 0.0f }); // Convert vector to quaternion
+			Quaternion res = (*this) * qv * this->Conjugate(); // q * v * q^-1
+			return Vector3(res.x, res.y, res.z); // Extract rotated vector
+		}
+
 		// Should only be used for debugging purposes
 		std::string ToString() const;
 

@@ -34,9 +34,13 @@ namespace Citrom::Math
 		void Orthographic(const float32 left, const float32 right, const float32 bottom, const float32 top, const float32 zNear = 0.0f, const float32 zFar = 1.0f);
 		void Perspective(const float32 fovy, const float32 aspect, const float32 zNear, const float32 zFar);
 
+		void LookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
+
 		static Matrix4x4 Translate(const Matrix4x4& mat, const Vector3& vec3);
 		static Matrix4x4 TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 		static Matrix4x4 Inverse(const Matrix4x4& matB);
+
+		static Matrix4x4 FromQuaternion(const Quaternion& quat);
 
 		static bool DecomposeTransform(const Matrix4x4& transform, Vector3& outTranslation, Vector3& outRotationEuler, Vector3& outScale);
 

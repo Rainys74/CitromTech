@@ -111,7 +111,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             //if (ImGui::DragFloat3("Rotation", &eulerAngles[0]))
             //    transformComponent.transform.rotation = Math::Quaternion::Euler(eulerAngles);
 
-            if (ImGui::DragFloat3("Rotation", &transformComponent.transform.editorEulerAngles[0]))
+            if (ImGui::DragFloat3("Rotation", &transformComponent.transform.editorEulerAngles[0], 0.1f)) // 0.1f for Radians!
                 transformComponent.transform.rotation = Math::Quaternion::Euler(transformComponent.transform.editorEulerAngles);
 
             ImGui::DragFloat3("Scale", &transformComponent.transform.scale[0]);
@@ -157,9 +157,14 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             static float32 orthoNear = cameraComponent.camera.GetOrthographicNearClip();
             static float32 orthoFar = cameraComponent.camera.GetOrthographicFarClip();
 
-            ImGui::DragFloat3("Position2", &transformComponent.transform.position[0]);
-            ImGui::DragFloat4("Rotation2", &transformComponent.transform.rotation[0]);
-            ImGui::DragFloat3("Scale2", &transformComponent.transform.scale[0]);
+            // TODO: temporary test!
+            Math::Transform* camTransform = (Math::Transform*)GetCameraTransform();
+
+            ImGui::DragFloat3("CCPosition2", &camTransform->position[0]);
+            ImGui::DragFloat3("CCEulerAnglesHint2", &camTransform->editorEulerAngles[0]);
+            ImGui::DragFloat3("CCScale2", &camTransform->scale[0]);
+            ImGui::Separator();
+            ImGui::DragFloat4("CCRotation2", &camTransform->rotation[0]);
 
             cameraComponent.camera.SetPerspectiveVerticalFOV(perspectiveYFOV);
             cameraComponent.camera.SetPerspectiveNearClip(perspectiveNear);

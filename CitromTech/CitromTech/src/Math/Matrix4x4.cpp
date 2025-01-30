@@ -144,6 +144,82 @@ namespace Citrom::Math
 		FUNCTION_TO_MATRIX_TYPE(Perspective, (fovy, aspect, zNear, zFar));
 	}
 
+	void Matrix4x4::LookAt(const Vector3& eye, const Vector3& center, const Vector3& up)
+	{
+		//Vector3 f, u, s;
+		//
+		//glm_vec3_sub(center, eye, f);
+		//f = f.Normalized();
+		//
+		//glm_vec3_crossn(up, f, s);
+		//glm_vec3_cross(f, s, u);
+		//
+		//m_Data[0][0] = s[0];
+		//m_Data[0][1] = u[0];
+		//m_Data[0][2] = f[0];
+		//m_Data[1][0] = s[1];
+		//m_Data[1][1] = u[1];
+		//m_Data[1][2] = f[1];
+		//m_Data[2][0] = s[2];
+		//m_Data[2][1] = u[2];
+		//m_Data[2][2] = f[2];
+		//m_Data[3][0] = -glm_vec3_dot(s, eye);
+		//m_Data[3][1] = -glm_vec3_dot(u, eye);
+		//m_Data[3][2] = -glm_vec3_dot(f, eye);
+		//m_Data[0][3] = m_Data[1][3] = m_Data[2][3] = 0.0f;
+		//m_Data[3][3] = 1.0f;
+
+		// LH
+		Vector3 f = center - eye;
+		f = f.Normalized();
+
+		Vector3 s = up.Cross(f);
+		s = s.Normalized();
+
+		Vector3 u = f.Cross(s);
+
+		m_Data[0][0] = s[0];
+		m_Data[0][1] = u[0];
+		m_Data[0][2] = f[0];
+		m_Data[1][0] = s[1];
+		m_Data[1][1] = u[1];
+		m_Data[1][2] = f[1];
+		m_Data[2][0] = s[2];
+		m_Data[2][1] = u[2];
+		m_Data[2][2] = f[2];
+		m_Data[3][0] = -s.Dot(eye);
+		m_Data[3][1] = -u.Dot(eye);
+		m_Data[3][2] = -f.Dot(eye);
+		m_Data[0][3] = m_Data[1][3] = m_Data[2][3] = 0.0f;
+		m_Data[3][3] = 1.0f;
+
+		// RH
+		/*
+		CGLM_ALIGN(8) vec3 f, u, s;
+
+		glm_vec3_sub(center, eye, f);
+		glm_vec3_normalize(f);
+
+		glm_vec3_crossn(f, up, s);
+		glm_vec3_cross(s, f, u);
+
+		dest[0][0] = s[0];
+		dest[0][1] = u[0];
+		dest[0][2] =-f[0];
+		dest[1][0] = s[1];
+		dest[1][1] = u[1];
+		dest[1][2] =-f[1];
+		dest[2][0] = s[2];
+		dest[2][1] = u[2];
+		dest[2][2] =-f[2];
+		dest[3][0] =-glm_vec3_dot(s, eye);
+		dest[3][1] =-glm_vec3_dot(u, eye);
+		dest[3][2] = glm_vec3_dot(f, eye);
+		dest[0][3] = dest[1][3] = dest[2][3] = 0.0f;
+		dest[3][3] = 1.0f;
+		*/
+	}
+
 	Matrix4x4 Matrix4x4::Translate(const Matrix4x4& mat, const Vector3& vec3)
 	{
 		Matrix4x4 result(mat);
@@ -168,18 +244,6 @@ namespace Citrom::Math
 
 	static void /*_Intern_*/ TRS_Translation(Matrix4x4& result, const Vector3& position)
 	{
-	}
-	static void TRS_Rotation(Matrix4x4& result, const Quaternion& rotation)
-	{
-	}
-	static void TRS_Scaling(Matrix4x4& result, const Vector3& scale)
-	{
-	}
-
-	Matrix4x4 Matrix4x4::TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
-	{
-		Matrix4x4 result = Matrix4x4::Identity();
-
 #ifdef COLUMN_MAJOR
 		// Translation Matrix (Column Major)
 		result.Data()[0][3] = position.x;
@@ -192,7 +256,9 @@ namespace Citrom::Math
 		result.Data()[3][1] = position.y;
 		result.Data()[3][2] = position.z;
 #endif
-
+	}
+	static void TRS_Rotation(Matrix4x4& result, const Quaternion& rotation)
+	{
 		// Convert Quaternion to Rotation Matrix (Row-Major)
 		float32 xx = rotation.x * rotation.x;
 		float32 yy = rotation.y * rotation.y;
@@ -217,7 +283,9 @@ namespace Citrom::Math
 		result.Data()[2][0] = 2.0f * (xz - yw);
 		result.Data()[2][1] = 2.0f * (yz + xw);
 		result.Data()[2][2] = ww - xx - yy + zz;
-
+	}
+	static void TRS_Scaling(Matrix4x4& result, const Vector3& scale)
+	{
 		// Scale Matrix (Component-wise multiplication)
 		result.Data()[0][0] *= scale.x;
 		result.Data()[0][1] *= scale.x;
@@ -230,6 +298,21 @@ namespace Citrom::Math
 		result.Data()[2][0] *= scale.z;
 		result.Data()[2][1] *= scale.z;
 		result.Data()[2][2] *= scale.z;
+	}
+
+	Matrix4x4 Matrix4x4::TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
+	{
+		Matrix4x4 result = Matrix4x4::Identity();
+
+#if 1
+		TRS_Translation(result, position);
+		TRS_Rotation(result, rotation);
+		TRS_Scaling(result, scale);
+#else
+		TRS_Scaling(result, scale);
+		TRS_Rotation(result, rotation);
+		TRS_Translation(result, position);
+#endif
 
 		return result;
 	}
@@ -284,6 +367,54 @@ namespace Citrom::Math
 		b[3][3] = (a[2][0] * s3 - a[2][1] * s1 + a[2][2] * s0) * invdet;
 
 		return result;
+	}
+
+	Matrix4x4 Matrix4x4::FromQuaternion(const Quaternion& quat)
+	{
+		//float xx = quat.x * quat.x;
+		//float yy = quat.y * quat.y;
+		//float zz = quat.z * quat.z;
+		//float xy = quat.x * quat.y;
+		//float xz = quat.x * quat.z;
+		//float yz = quat.y * quat.z;
+		//float wx = quat.w * quat.x;
+		//float wy = quat.w * quat.y;
+		//float wz = quat.w * quat.z;
+		//
+		//return Matrix4x4({
+		//	1.0f - 2.0f * (yy + zz), 2.0f * (xy - wz),       2.0f * (xz + wy),       0.0f,
+		//	2.0f * (xy + wz),       1.0f - 2.0f * (xx + zz), 2.0f * (yz - wx),       0.0f,
+		//	2.0f * (xz - wy),       2.0f * (yz + wx),       1.0f - 2.0f * (xx + yy), 0.0f,
+		//	0.0f,                   0.0f,                   0.0f,                   1.0f
+		//});
+		Matrix4x4 m;
+
+		const float32 sqw = quat.w * quat.w;
+		const float32 sqx = quat.x * quat.x;
+		const float32 sqy = quat.y * quat.y;
+		const float32 sqz = quat.z * quat.z;
+
+		// invs (inverse square length) is only required if quaternion is not already normalised
+		const float32 invs = 1 / (sqx + sqy + sqz + sqw);
+		m[0][0] = (sqx - sqy - sqz + sqw) * invs; // since sqw + sqx + sqy + sqz =1/invs*invs
+		m[1][1] = (-sqx + sqy - sqz + sqw) * invs;
+		m[2][2] = (-sqx - sqy + sqz + sqw) * invs;
+
+		float32 tmp1 = quat.x * quat.y;
+		float32 tmp2 = quat.z * quat.w;
+		m[1][0] = 2.0 * (tmp1 + tmp2) * invs;
+		m[0][1] = 2.0 * (tmp1 - tmp2) * invs;
+
+		tmp1 = quat.x * quat.z;
+		tmp2 = quat.y * quat.w;
+		m[2][0] = 2.0 * (tmp1 - tmp2) * invs;
+		m[0][2] = 2.0 * (tmp1 + tmp2) * invs;
+		tmp1 = quat.y * quat.z;
+		tmp2 = quat.x * quat.w;
+		m[2][1] = 2.0 * (tmp1 + tmp2) * invs;
+		m[1][2] = 2.0 * (tmp1 - tmp2) * invs;
+
+		return m;
 	}
 
 	namespace glmRepl

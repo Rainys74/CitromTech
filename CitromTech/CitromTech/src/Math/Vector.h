@@ -51,18 +51,42 @@ namespace Citrom::Math
         float32 SquaredMagnitude() const;
         Vector3 Normalized() const;
 
+        // Presets
+        FORCE_INLINE static Vector3 Zero()      { return Vector3();                 }
+
+        FORCE_INLINE static Vector3 Right()     { return Vector3(1.0f, 0.0f, 0.0f); }
+        FORCE_INLINE static Vector3 Up()        { return Vector3(0.0f, 1.0f, 0.0f); }
+        FORCE_INLINE static Vector3 Forward()   { return Vector3(0.0f, 0.0f, 1.0f); }
+
+        FORCE_INLINE static Vector3 Left() { return -Right(); }
+        FORCE_INLINE static Vector3 Down() { return -Up(); }
+        FORCE_INLINE static Vector3 Back() { return -Forward(); }
+
         // Products
         float32 Dot(const Vector3& vec3B) const;
         Vector3 Cross(const Vector3& vec3B) const;
 
         // Math equations
-        Vector3 operator+(const Vector3& vec3B) const { return Vector3{ this->x + vec3B.x, this->y + vec3B.y, this->z + vec3B.z }; } // Add
-        Vector3 operator-(const Vector3& vec3B) const { return Vector3{ this->x - vec3B.x, this->y - vec3B.y, this->z - vec3B.z }; } // Subtract
+        FORCE_INLINE Vector3 operator+(const Vector3& vec3B) const { return Vector3{ this->x + vec3B.x, this->y + vec3B.y, this->z + vec3B.z }; } // Add
+        FORCE_INLINE Vector3 operator-(const Vector3& vec3B) const { return Vector3{ this->x - vec3B.x, this->y - vec3B.y, this->z - vec3B.z }; } // Subtract
 
-        Vector3 operator*(const Vector3& vec3B) const { return Vector3{ this->x * vec3B.x, this->y * vec3B.y, this->z * vec3B.z }; } // Multiply
-        Vector3 operator/(const Vector3& vec3B) const { return Vector3{ this->x / vec3B.x, this->y / vec3B.y, this->z / vec3B.z }; } // Divide
+        FORCE_INLINE Vector3 operator*(const Vector3& vec3B) const { return Vector3{ this->x * vec3B.x, this->y * vec3B.y, this->z * vec3B.z }; } // Multiply
+        FORCE_INLINE Vector3 operator/(const Vector3& vec3B) const { return Vector3{ this->x / vec3B.x, this->y / vec3B.y, this->z / vec3B.z }; } // Divide
 
-        Vector3 operator-() const { return Vector3{ -x, -y, -z }; }
+        // Float32
+        FORCE_INLINE Vector3 operator+(const float32 value) const { return Vector3{ this->x + value, this->y + value, this->z + value }; } // Add
+        FORCE_INLINE Vector3 operator-(const float32 value) const { return Vector3{ this->x - value, this->y - value, this->z - value }; } // Subtract
+
+        FORCE_INLINE Vector3 operator*(const float32 value) const { return Vector3{ this->x * value, this->y * value, this->z * value }; } // Multiply
+        FORCE_INLINE Vector3 operator/(const float32 value) const { return Vector3{ this->x / value, this->y / value, this->z / value }; } // Divide
+
+        FORCE_INLINE Vector3 operator-() const { return Vector3{ -x, -y, -z }; }
+
+        inline Vector3& operator+=(const Vector3& vec3B) { this->x += vec3B.x; this->y += vec3B.y; this->z += vec3B.z; return *this; }
+        inline Vector3& operator-=(const Vector3& vec3B) { this->x -= vec3B.x; this->y -= vec3B.y; this->z -= vec3B.z; return *this; }
+
+        FORCE_INLINE bool operator==(const Vector3& vec3B) const { return (this->x == vec3B.x && this->y == vec3B.y && this->z == vec3B.z); }
+        FORCE_INLINE bool operator!=(const Vector3& vec3B) const { return !(*this == vec3B); }
 
         // Should only be used for debugging purposes
         std::string ToString() const;

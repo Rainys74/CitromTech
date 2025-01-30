@@ -266,6 +266,7 @@ int SharedMain(int argc, char* argv[])
 	//cubeComponent.material.shaderName = "Standard";
 	Entity camera = g_CurrentScene->CreateEntity();
 	camera.GetComponent<NameComponent>().name = "Main Camera";
+	camera.GetComponent<TransformComponent>().transform.position.z = -0.5f;
 	camera.AddComponent<CameraComponent>();
 
 	using namespace Platform;

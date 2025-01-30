@@ -12,14 +12,14 @@ namespace Citrom
         ShaderDesc sd = {};
         sd.name = shaderName;
 
-        m_Shader = m_Device->CreateShader(&sd);
+        //m_Shader = m_Device->CreateShader(&sd);
         
         UniformBufferDesc ubd = {};
         ubd.data = nullptr;
         ubd.dataBytes = 0;
         ubd.usage = Usage::Dynamic;
 
-        m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
+        //m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
     }
     Material::~Material()
     {
