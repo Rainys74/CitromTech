@@ -95,4 +95,11 @@ namespace Citrom::Math
 		// tan(fovx / 2) = tan(fovy / 2) * aspect
 		return 2.0f * std::atan(std::tan(fovY * 0.5f) * aspect);
 	}
+
+	float32 Clamp(float32 value, float32 min, float32 max)
+	{
+		if (value > max) value = max;
+		if (value < min) value = min;
+		return value;
+	}
 }

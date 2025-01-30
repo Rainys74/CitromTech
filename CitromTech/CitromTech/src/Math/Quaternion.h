@@ -10,9 +10,11 @@ namespace Citrom::Math
 	class Quaternion
 	{
 	public:
-		Quaternion();
+		Quaternion() = default;
 		Quaternion(const Quaternion&) = default;
 		Quaternion(std::initializer_list<float32> values);
+		Quaternion(float32 quatX, float32 quatY, float32 quatZ, float32 quatW = 1.0f)
+			: x(quatX), y(quatY), z(quatZ), w(quatW) {}
 		~Quaternion() = default;
 
 		Vector3 ToEulerAngles();
@@ -21,23 +23,27 @@ namespace Citrom::Math
 		static Quaternion Euler(float eulerX, float eulerY, float eulerZ);
 		static Quaternion Euler(const Vector3& vec3);
 
-		FORCE_INLINE Quaternion Conjugate() const { return Quaternion({ -x, -y, -z, w }); }
+		FORCE_INLINE Quaternion Conjugate() const { return Quaternion(-x, -y, -z, w); }
 
 		inline Quaternion operator*(const Quaternion& q) const
 		{
-			return Quaternion({
+			return Quaternion(
 				w * q.x + x * q.w + y * q.z - z * q.y,
 				w * q.y - x * q.z + y * q.w + z * q.x,
 				w * q.z + x * q.y - y * q.x + z * q.w,
 				w * q.w - x * q.x - y * q.y - z * q.z
-			});
+			);
 		}
 
 		inline Vector3 operator*(const Vector3& v) const
 		{
-			Quaternion qv({ v.x, v.y, v.z, 0.0f }); // Convert vector to quaternion
+			Quaternion qv(v.x, v.y, v.z, 0.0f); // Convert vector to quaternion
 			Quaternion res = (*this) * qv * this->Conjugate(); // q * v * q^-1
 			return Vector3(res.x, res.y, res.z); // Extract rotated vector
+		}
+		inline Vector3 Rotate(const Vector3& v) const
+		{
+			return operator*(v);
 		}
 
 		// Should only be used for debugging purposes

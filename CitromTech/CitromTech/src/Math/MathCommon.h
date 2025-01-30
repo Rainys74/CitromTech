@@ -71,4 +71,14 @@ namespace Citrom::Math
 	{
 		return DEGREES_TO_RADIANS(degrees, 0);
 	}
+	constexpr float32 RadiansToDegrees(float32 radians)
+	{
+		return RADIANS_TO_DEGREES(radians, f);
+	}
+	constexpr float64 RadiansToDegrees(float64 radians)
+	{
+		return RADIANS_TO_DEGREES(radians, 0);
+	}
+
+	float32 Clamp(float32 value, float32 min, float32 max);
 }

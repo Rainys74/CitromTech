@@ -154,10 +154,6 @@ namespace Citrom::Math
         }
     }
 
-    Quaternion::Quaternion()
-    {
-    }
-
     Quaternion::Quaternion(std::initializer_list<float32> values)
     {
         CT_CORE_ASSERT(values.size() <= 4, "A Quaternion cannot be initialized with more than 4 values!");

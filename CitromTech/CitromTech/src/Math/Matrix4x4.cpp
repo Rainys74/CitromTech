@@ -242,6 +242,17 @@ namespace Citrom::Math
 		return result;
 	}
 
+	Matrix4x4 Matrix4x4::Scale(const Matrix4x4& mat, const Vector3& vec3)
+	{
+		Matrix4x4 result(mat);
+
+		result.Data()[0][0] *= vec3.x; // Scale X
+		result.Data()[1][1] *= vec3.y; // Scale Y
+		result.Data()[2][2] *= vec3.z; // Scale Z
+
+		return result;
+	}
+
 	static void /*_Intern_*/ TRS_Translation(Matrix4x4& result, const Vector3& position)
 	{
 #ifdef COLUMN_MAJOR
@@ -387,7 +398,18 @@ namespace Citrom::Math
 		//	2.0f * (xz - wy),       2.0f * (yz + wx),       1.0f - 2.0f * (xx + yy), 0.0f,
 		//	0.0f,                   0.0f,                   0.0f,                   1.0f
 		//});
-		Matrix4x4 m;
+
+		/*// Ensure quaternion is normalized (just in case)
+		float32 length = SquareRoot(quat.x * quat.x + quat.y * quat.y + quat.z * quat.z + quat.w * quat.w);
+		if (length > 0) 
+		{
+			quat.x /= length;
+			quat.y /= length;
+			quat.z /= length;
+			quat.w /= length;
+		}*/
+
+		Matrix4x4 m = Matrix4x4::Identity();
 
 		const float32 sqw = quat.w * quat.w;
 		const float32 sqx = quat.x * quat.x;

@@ -37,6 +37,7 @@ namespace Citrom::Math
 		void LookAt(const Vector3& eye, const Vector3& center, const Vector3& up);
 
 		static Matrix4x4 Translate(const Matrix4x4& mat, const Vector3& vec3);
+		static Matrix4x4 Scale(const Matrix4x4& mat, const Vector3& vec3);
 		static Matrix4x4 TRS(const Vector3& position, const Quaternion& rotation, const Vector3& scale);
 		static Matrix4x4 Inverse(const Matrix4x4& matB);
 
