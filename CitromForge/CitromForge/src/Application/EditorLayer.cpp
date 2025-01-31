@@ -118,6 +118,22 @@ void EditorLayer::OnImGuiRender()
         ImGui::End();
     }
 
+    // profiling statistics overlay:
+    {
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+        ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+        //ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
+
+        static bool showStatOverlay = false;
+        ImGui::Begin("Statistics Overlay", &showStatOverlay, windowFlags);
+
+        ImGui::Text("FPS: 64");
+        ImGui::Text("DrawCalls: 69");
+
+        ImGui::End();
+    }
+
     ImGui::Begin("Lighting"); ImGui::End();
 
     ProjectSettingsWindow::ImGuiDraw();

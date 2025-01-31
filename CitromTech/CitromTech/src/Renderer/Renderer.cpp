@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "ArgumentHandler.h"
 
 #include "Renderer/RenderAPI/Buffer.h"
 #include "Vendor/stb/stb_image_write.h"
@@ -21,6 +22,9 @@ namespace Citrom
 	{
 		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
+
+		if (ArgumentHandler::HasArgument("-force-d3d11"))
+			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		
 		CT_TRACE("CURRENT API: {}", (size_t)GraphicsAPIManager::GetGraphicsAPI());
 		for (size_t i = 0; i < (size_t)GraphicsAPI::Count; i++)
