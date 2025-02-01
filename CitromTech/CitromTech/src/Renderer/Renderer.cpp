@@ -445,7 +445,7 @@ namespace Citrom
 		m_GridFragUBData.GridSize = m_GridVertUBData.GridSize;
 		m_GridFragUBData.GridMinPixelsBetweenCells = 2.0f;
 		m_GridFragUBData.GridCellSize = 0.025f;
-		m_GridFragUBData.GridColorThin = Math::ColorF32x4(0.5f, 0.5f, 0.5f, 1.0f);
+		m_GridFragUBData.GridColorThin = Math::ColorF32x4(0.5f, 0.5f, 0.5f, 1.0f); // Math::ColorF32x4(1.5f, 0.5f, 0.5f, 1.0f)
 		m_GridFragUBData.GridColorThick = Math::ColorF32x4(0.0f, 0.0f, 0.0f, 1.0f);
 
 		UniformBufferDesc ubdVertex = {};

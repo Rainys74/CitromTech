@@ -61,10 +61,10 @@ namespace Citrom
 			float GridMinPixelsBetweenCells;
 			float GridCellSize;
 
+			uint8 padding1[8]; // from 24 to 32
+
 			Math::ColorF32x4 GridColorThin;
 			Math::ColorF32x4 GridColorThick;
-
-			uint8 padding1[8];
 		} m_GridFragUBData;
 
 		RenderAPI::Shader m_GridShader;
