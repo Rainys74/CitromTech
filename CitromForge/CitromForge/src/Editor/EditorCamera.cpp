@@ -150,6 +150,7 @@ void EditorCamera::UpdateMovement(float deltaTime)
 	CT_ERROR("MOVEDIR: {}", moveDirection.ToString());
 
 	// Adjust boost speed with mouse scroll
-	//m_Boost += Input::SimpleInput::GetMouseScrollDelta() * 0.2f;
-	//m_Boost = std::max(1.0f, m_Boost);
+	m_Boost += Input::SimpleInput::GetMouseScrollDeltaY() * 0.1f;
+	m_Boost = Math::Clamp(m_Boost, 0.1f, 5.0f);
+	CT_WARN("M_BOOST!: {}", m_Boost);
 }

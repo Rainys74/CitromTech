@@ -242,7 +242,7 @@ namespace Citrom::Platform
 
 			MouseScrollEvent mouseScrollEvent;
 			mouseScrollEvent.x = 0;
-			mouseScrollEvent.y = zDelta;
+			mouseScrollEvent.y = (float32)zDelta / 120.0f;
 
 			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseScrollEvent);
 		}
@@ -252,7 +252,7 @@ namespace Citrom::Platform
 			auto zDelta = GET_WHEEL_DELTA_WPARAM(wParam); // H/X Delta
 
 			MouseScrollEvent mouseScrollEvent;
-			mouseScrollEvent.x = zDelta;
+			mouseScrollEvent.x = (float32)zDelta / 120.0f;
 			mouseScrollEvent.y = 0;
 
 			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseScrollEvent);

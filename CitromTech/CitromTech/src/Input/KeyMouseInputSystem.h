@@ -28,6 +28,9 @@ namespace Citrom::Input
 
 		static float GetMouseDeltaX();
 		static float GetMouseDeltaY();
+		
+		static float GetMouseScrollDeltaY();
+		static float GetMouseScrollDeltaX();
 	};
 
 	class SimpleInputManager

@@ -6,6 +6,7 @@ namespace Citrom::Input
 {
     float g_LastMousePositionX, g_LastMousePositionY;
     float g_CurrentMousePositionX, g_CurrentMousePositionY;
+    float g_MouseScrollDeltaY, g_MouseScrollDeltaX;
 
     bool g_KeysDown[(size_t)KeyCode::Count], g_KeysPrev[(size_t)KeyCode::Count];
     bool g_MButtonsDown[(size_t)MouseButton::Count], g_MButtonsPrev[(size_t)MouseButton::Count];
@@ -52,6 +53,15 @@ namespace Citrom::Input
         return deltaY;
     }
 
+    float SimpleInput::GetMouseScrollDeltaY()
+    {
+        return g_MouseScrollDeltaY;
+    }
+    float SimpleInput::GetMouseScrollDeltaX()
+    {
+        return g_MouseScrollDeltaX;
+    }
+
     SimpleInputManager::SimpleInputManager()
     {
         m_MouseEventsListener.OnEvent = [](const Event<MouseEvents>& event)
@@ -71,6 +81,12 @@ namespace Citrom::Input
                 const MouseMoveEvent& transformedEvent = (const MouseMoveEvent&)event;
                 g_CurrentMousePositionX = transformedEvent.x;
                 g_CurrentMousePositionY = transformedEvent.y;
+            }
+            else if (event.GetEventType() == MouseEvents::MouseScroll)
+            {
+                const MouseScrollEvent& transformedEvent = (const MouseScrollEvent&)event;
+                g_MouseScrollDeltaY = transformedEvent.y;
+                g_MouseScrollDeltaX = transformedEvent.x;
             }
         };
         EventBus::GetDispatcher<MouseEvents>()->AddListener(&m_MouseEventsListener);
@@ -98,6 +114,8 @@ namespace Citrom::Input
     void SimpleInputManager::Update()
     {
         CT_PROFILE_MEMBER_FUNCTION();
+
+        g_MouseScrollDeltaY = g_MouseScrollDeltaX = 0.0f;
 
         g_LastMousePositionX = g_CurrentMousePositionX;
         g_LastMousePositionY = g_CurrentMousePositionY;

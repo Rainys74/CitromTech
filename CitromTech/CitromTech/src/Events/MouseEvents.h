@@ -75,6 +75,6 @@ namespace Citrom
             return string;
         }
     public:
-        int x, y;
+        float32 x, y;
     };
 }
