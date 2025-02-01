@@ -4,6 +4,7 @@
 #include "Renderer/RenderAPI/Buffer.h"
 #include "Vendor/stb/stb_image_write.h"
 #include "Vendor/stb/stb_image.h"
+#include "Vendor/tinyobjloader/tiny_obj_loader.h"
 
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "EntitySystem/Components/RendererComponents.h"
@@ -216,11 +217,13 @@ namespace Citrom
 		//projection.Orthographic(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 		//projection.Orthographic(-2.67f, 2.67f, -1.5f, 1.5f, -1.0f, 1.0f);
 		projection.Perspective(Math::DegreesToRadians(90.0f), 16.0f / 9.0f, 0.01f, 1000.0f); // also Z positive and negative values would be great to reverse them (try glm::inverse counterpart?)
+		projection = camera->GetProjection();
 		Math::Matrix4x4 view = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), -cameraTransform->position);
 		Math::Matrix4x4 translationView = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), -cameraTransform->position);
 		Math::Matrix4x4 rotationView = Math::Matrix4x4::FromQuaternion(cameraTransform->rotation);
-		view = rotationView * translationView; // The most correct right now.
+		//view = rotationView * translationView; // The most correct right now.
 		//view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
+		view = cameraTransform->GetCameraViewFromTransform();
 		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
 		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!

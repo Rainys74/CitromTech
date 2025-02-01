@@ -58,7 +58,7 @@ void EditorGizmos::ImGuiDraw(uint16 showGizmos)
         ImGuizmo::SetRect(0.0f, 0.0f, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
         const Math::Matrix4x4& cameraProjection = camera->GetProjection();
-        Math::Matrix4x4 cameraView = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
+        Math::Matrix4x4 cameraView = cameraTransform->GetCameraViewFromTransform();
 
         //CT_ERROR("CAMERA PROJECTION MATRIX: \n{}", camera->GetProjection().ToString());
         //CT_ERROR("CAMERA TRANSFORMATION: \n POSITION: {}\n ROTATION: {}\n SCALE: {}\n", cameraTransform->position.ToString(), cameraTransform->rotation.ToString(), cameraTransform->scale.ToString());

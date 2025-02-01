@@ -32,10 +32,18 @@ namespace Citrom::Math
 			//CT_WARN("TRANSLATED * ROTATEDFROMQUAT: {}", (Matrix4x4::Translate(Matrix4x4::Identity(), position) * Matrix4x4::FromQuaternion(rotation)).ToString());
 			//CT_WARN("TRANSLATED * ROTATEDFROMQUAT * SCALED: {}", (Matrix4x4::Translate(Matrix4x4::Identity(), position) * Matrix4x4::FromQuaternion(rotation) * Matrix4x4::Scale(Matrix4x4::Identity(), scale)).ToString());
 
+			//m_Matrix = Matrix4x4::Scale(Matrix4x4::Identity(), scale)
+			//	* Matrix4x4::FromQuaternion(rotation)
+			//	* Matrix4x4::Translate(Matrix4x4::Identity(), position);
 			m_Matrix = Matrix4x4::Translate(Matrix4x4::Identity(), position)
 				* Matrix4x4::FromQuaternion(rotation)
 				* Matrix4x4::Scale(Matrix4x4::Identity(), scale);
 			return m_Matrix;
+		}
+		Math::Matrix4x4 GetCameraViewFromTransform() const
+		{
+			return Matrix4x4::FromQuaternion(rotation)
+				* Matrix4x4::Translate(Matrix4x4::Identity(), -position);
 		}
 
 		// Presets

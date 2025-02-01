@@ -267,7 +267,8 @@ int SharedMain(int argc, char* argv[])
 	Entity camera = g_CurrentScene->CreateEntity();
 	camera.GetComponent<NameComponent>().name = "Main Camera";
 	camera.GetComponent<TransformComponent>().transform.position.z = -0.5f;
-	camera.AddComponent<CameraComponent>();
+	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
+	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
 
 	using namespace Platform;
 
