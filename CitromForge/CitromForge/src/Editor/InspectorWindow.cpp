@@ -45,6 +45,58 @@ static void TryInitializeHierarchyEventListener()
 
 namespace ImToolkit //ImPresets
 {
+    static bool _DrawControlElementDragButton(const char* label, const char* invisibleDragLabel, float* value, float speed, const ImVec2& buttonSize, const ImVec4& color, const ImVec4& highlightedColor)
+    {
+        bool modified = false;
+
+        // Render Rect
+        auto cursorPos = ImGui::GetCursorScreenPos();
+        ImGui::GetWindowDrawList()->AddRectFilled(cursorPos,
+            ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), ImGui::GetColorU32(color), ImGui::GetStyle().FrameRounding);
+
+        //ImGui::RenderTextClipped(textPos, ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), "X", NULL, &textSize, ImVec2(0.5f, 0.5f));
+
+        //ImVec2 textSize = ImGui::CalcTextSize("X");
+        //
+        //// Compute position to center the text
+        //ImVec2 textPos = ImVec2(
+        //    cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
+        //    cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
+        //);
+        //
+        //// Manually set cursor position for text
+        //ImGui::SetCursorScreenPos(textPos);
+
+        // Render Text
+        ImVec2 textSize = ImGui::CalcTextSize(label);
+        ImVec2 textPos = ImVec2(
+            cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
+            cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
+        );
+
+        auto cursorScreenPosBackup = ImGui::GetCursorScreenPos();
+        ImGui::SetCursorScreenPos(textPos);
+
+        ImGui::Text(label);
+        ImGui::SetCursorScreenPos(cursorScreenPosBackup);
+
+        ImGui::PushStyleColor(ImGuiCol_Header, color);
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, highlightedColor);
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, color);
+        ImGui::Selectable(invisibleDragLabel, false, 0, buttonSize);
+        if (ImGui::IsItemActive())
+        {
+            float dragDelta = ImGui::GetIO().MouseDelta.x * speed; // Drag affects X value
+            value[0] += dragDelta;
+            modified = true;
+        }
+        ImGui::PopStyleColor(3);
+
+        //ImGui::GetWindowDrawList()->AddText(textPos, ImGui::GetColorU32(ImGuiCol_Text), label);
+
+        return modified;
+    }
+
     static bool DrawVector3Control(const char* label, float values[3], float speed = 0.25f, float resetValue = 0.0f)
     {
         /* // Fresh Start
@@ -123,52 +175,28 @@ namespace ImToolkit //ImPresets
         float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
         ImVec2 buttonSize = ImVec2{ lineHeight + 3.0f, lineHeight };
 
-        // Render Rect
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
-        auto cursorPos = ImGui::GetCursorScreenPos();
-        ImGui::GetWindowDrawList()->AddRectFilled(cursorPos,
-            ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), ImGui::GetColorU32(ImVec4(0.8f, 0.1f, 0.15f, 1.0f)), 4.0f);
-
-        // Render Text
-        ImVec2 textSize = ImGui::CalcTextSize("X");
-        ImVec2 textPos = ImVec2(
-            cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
-            cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
-        );
-        auto cursorScreenPosBackup = ImGui::GetCursorScreenPos();
-        ImGui::SetCursorScreenPos(textPos);
-
-        ImGui::Text("X");
-        ImGui::SetCursorScreenPos(cursorScreenPosBackup);
-        //ImGui::RenderTextClipped(textPos, ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), "X", NULL, &textSize, ImVec2(0.5f, 0.5f));
-
-        //ImVec2 textSize = ImGui::CalcTextSize("X");
-        //
-        //// Compute position to center the text
-        //ImVec2 textPos = ImVec2(
-        //    cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
-        //    cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
-        //);
-        //
-        //// Manually set cursor position for text
-        //ImGui::SetCursorScreenPos(textPos);
-
-        ImGui::Selectable("##X_SelectableDrag", false, 0, buttonSize);
-        if (ImGui::IsItemActive())
-        {
-            float dragDelta = ImGui::GetIO().MouseDelta.x * speed; // Drag affects X value
-            values[0] += dragDelta;
-            modified = true;
-        }
-        ImGui::PopStyleColor(3);
+        // X
+        modified |= _DrawControlElementDragButton("X", "##X_SelectableDrag", &values[0], speed, buttonSize, ImVec4(0.8f, 0.1f, 0.15f, 1.0f), ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
 
         ImGui::SameLine();
-        modified = ImGui::DragFloat("##X", &values[0], speed);
+        modified |= ImGui::DragFloat("##X", &values[0], speed);
         ImGui::PopItemWidth();
 
-        // others!
+        // Y
+        ImGui::SameLine();
+        modified |= _DrawControlElementDragButton("Y", "##Y_SelectableDrag", &values[1], speed, buttonSize, ImVec4(0.2f, 0.7f, 0.2f, 1.0f), ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+
+        ImGui::SameLine();
+        modified |= ImGui::DragFloat("##Y", &values[1], speed);
+        ImGui::PopItemWidth();
+
+        // Z
+        ImGui::SameLine();
+        modified |= _DrawControlElementDragButton("Z", "##Z_SelectableDrag", &values[2], speed, buttonSize, ImVec4(0.1f, 0.25f, 0.8f, 1.0f), ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+
+        ImGui::SameLine();
+        modified |= ImGui::DragFloat("##Z", &values[2], speed);
+        ImGui::PopItemWidth();
 
         ImGui::PopStyleVar();
 
