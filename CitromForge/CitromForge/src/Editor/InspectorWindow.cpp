@@ -47,9 +47,134 @@ namespace ImToolkit //ImPresets
 {
     static bool DrawVector3Control(const char* label, float values[3], float speed = 0.25f, float resetValue = 0.0f)
     {
+        /* // Fresh Start
         bool modified = false;
 
-        modified = ImGui::DragFloat3(label, values, speed);
+        ImGui::PushID(label);
+
+        ImGui::Columns(2);
+
+        // Column 1
+        ImGui::SetColumnWidth(0, 100.0f);
+        ImGui::Text(label);
+
+        ImGui::NextColumn();
+        // --------
+
+        ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // TODO: buttons and sliders should be close, each values should be spaced out.
+
+        float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        ImVec2 buttonSize = ImVec2{lineHeight + 3.0f, lineHeight};
+        
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+        if (ImGui::Button("X", buttonSize));
+        ImGui::PopStyleColor(2);
+
+        ImGui::SameLine();
+        modified = ImGui::DragFloat("##X", &values[0], speed);
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+        if (ImGui::Button("Y", buttonSize));
+        ImGui::PopStyleColor(2);
+
+        ImGui::SameLine();
+        modified = ImGui::DragFloat("##Y", &values[1], speed);
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+        if (ImGui::Button("Z", buttonSize));
+        ImGui::PopStyleColor(2);
+
+        ImGui::SameLine();
+        modified = ImGui::DragFloat("##Z", &values[2], speed);
+        ImGui::PopItemWidth();
+
+        ImGui::PopStyleVar();
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return modified;
+        */
+        bool modified = false;
+
+        ImGui::PushID(label);
+
+        ImGui::Columns(2);
+
+        // Column 1
+        ImGui::SetColumnWidth(0, 100.0f);
+        ImGui::Text(label);
+
+        ImGui::NextColumn();
+        // --------
+
+        ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // TODO: buttons and sliders should be close, each values should be spaced out.
+
+        float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        ImVec2 buttonSize = ImVec2{ lineHeight + 3.0f, lineHeight };
+
+        // Render Rect
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+        auto cursorPos = ImGui::GetCursorScreenPos();
+        ImGui::GetWindowDrawList()->AddRectFilled(cursorPos,
+            ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), ImGui::GetColorU32(ImVec4(0.8f, 0.1f, 0.15f, 1.0f)), 4.0f);
+
+        // Render Text
+        ImVec2 textSize = ImGui::CalcTextSize("X");
+        ImVec2 textPos = ImVec2(
+            cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
+            cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
+        );
+        auto cursorScreenPosBackup = ImGui::GetCursorScreenPos();
+        ImGui::SetCursorScreenPos(textPos);
+
+        ImGui::Text("X");
+        ImGui::SetCursorScreenPos(cursorScreenPosBackup);
+        //ImGui::RenderTextClipped(textPos, ImVec2(cursorPos.x + buttonSize.x, cursorPos.y + buttonSize.y), "X", NULL, &textSize, ImVec2(0.5f, 0.5f));
+
+        //ImVec2 textSize = ImGui::CalcTextSize("X");
+        //
+        //// Compute position to center the text
+        //ImVec2 textPos = ImVec2(
+        //    cursorPos.x + (buttonSize.x - textSize.x) * 0.5f,  // Center X
+        //    cursorPos.y + (buttonSize.y - textSize.y) * 0.5f   // Center Y
+        //);
+        //
+        //// Manually set cursor position for text
+        //ImGui::SetCursorScreenPos(textPos);
+
+        ImGui::Selectable("##X_SelectableDrag", false, 0, buttonSize);
+        if (ImGui::IsItemActive())
+        {
+            float dragDelta = ImGui::GetIO().MouseDelta.x * speed; // Drag affects X value
+            values[0] += dragDelta;
+            modified = true;
+        }
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+        modified = ImGui::DragFloat("##X", &values[0], speed);
+        ImGui::PopItemWidth();
+
+        // others!
+
+        ImGui::PopStyleVar();
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
 
         return modified;
     }
