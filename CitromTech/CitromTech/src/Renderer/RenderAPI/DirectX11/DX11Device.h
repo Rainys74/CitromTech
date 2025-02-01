@@ -23,7 +23,7 @@ namespace Citrom::RenderAPI
 
 		Image GetImageDataFromTexture(void* texture) override;
 
-		void MakeSwapChain(SwapChainDesc* descriptor) override;
+		void MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec = nullptr) override;
 		void SwapBuffers() override;
 		void SetVSync(VSyncMode vSync) override;
 		VSyncMode GetVSync() override;
@@ -74,6 +74,11 @@ namespace Citrom::RenderAPI
 
 		// Framebuffer
 		DXGI_FORMAT FBFormatToDXGIFormat(FramebufferFormat format);
+
+		// Blending
+		D3D11_BLEND BlendFactorToD3D11Blend(BlendFactor factor);
+		D3D11_BLEND_OP BlendOpToD3D11BlendOp(BlendOp blendOp);
+		UINT RenderTargetWriteMaskToD3D11(RenderTargetWriteMask mask);
 	private:
 		// Helper Functions
 		void CreateRenderTarget();

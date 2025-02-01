@@ -42,8 +42,15 @@ namespace Citrom
 		scd.windowPtr = window;
 		scd.renderFormat = Format::B8G8R8A8_U2FNORM;
 
+		BlendStateDesc bsd;
+		bsd.srcBlend = BlendFactor::SrcAlpha;
+		bsd.destBlend = BlendFactor::OneMinusSrcAlpha;
+		bsd.blendOperation = BlendOp::Add;
+
+		bsd.renderTargetWriteMask = RenderTargetWriteMask::All;
+
 		m_Device->SetVSync(VSyncMode::On);
-		m_Device->MakeSwapChain(&scd);
+		m_Device->MakeSwapChain(&scd, &bsd);
 
 		// On Resize Callback
 		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)

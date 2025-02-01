@@ -66,7 +66,7 @@ namespace Citrom::RenderAPI
 		}
 	}
 
-	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor)
+	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec)
 	{
 		m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
 		m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
@@ -96,6 +96,25 @@ namespace Citrom::RenderAPI
 
 		CreateRenderTarget();
 		Resize(m_Width, m_Height); // Create viewport to not depend on Win32's resize call on UpdateWindow
+
+		if (blendSpec)
+		{
+			D3D11_BLEND_DESC bd = {};
+			bd.RenderTarget[0].BlendEnable = true;
+			bd.RenderTarget[0].SrcBlend = BlendFactorToD3D11Blend(blendSpec->srcBlend);
+			bd.RenderTarget[0].DestBlend = BlendFactorToD3D11Blend(blendSpec->destBlend);
+			bd.RenderTarget[0].BlendOp = BlendOpToD3D11BlendOp(blendSpec->blendOperation);
+			bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE; // TODO: figure these alpha males out
+			bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+			bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+			bd.RenderTarget[0].RenderTargetWriteMask = RenderTargetWriteMaskToD3D11(blendSpec->renderTargetWriteMask);
+
+			WRL::ComPtr<ID3D11BlendState> blendState; // TODO: do i need to store this?
+
+			DXCallHR(m_Device->CreateBlendState(&bd, &blendState));
+
+			DXCall(m_DeviceContext->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF));
+		}
 	}
 	void DX11Device::SwapBuffers()
 	{
@@ -151,6 +170,51 @@ namespace Citrom::RenderAPI
 		vp.TopLeftX = 0; // xPos
 		vp.TopLeftY = 0; // yPos
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
+	}
+
+	D3D11_BLEND DX11Device::BlendFactorToD3D11Blend(BlendFactor factor)
+	{
+#define BLENDOPT_TOD3D11CASE(x, y) case (x): return (y); break
+		switch (factor)
+		{
+			default: return D3D11_BLEND_ONE; break;
+
+			BLENDOPT_TOD3D11CASE(BlendFactor::Zero, D3D11_BLEND_ZERO);
+			BLENDOPT_TOD3D11CASE(BlendFactor::One, D3D11_BLEND_ONE);
+			BLENDOPT_TOD3D11CASE(BlendFactor::SrcAlpha, D3D11_BLEND_SRC_ALPHA);
+			BLENDOPT_TOD3D11CASE(BlendFactor::OneMinusSrcAlpha, D3D11_BLEND_INV_SRC_ALPHA);
+		}
+	}
+
+	D3D11_BLEND_OP DX11Device::BlendOpToD3D11BlendOp(BlendOp blendOp)
+	{
+		switch (blendOp)
+		{
+			default: return D3D11_BLEND_OP_ADD; break;
+
+			BLENDOPT_TOD3D11CASE(BlendOp::Add, D3D11_BLEND_OP_ADD);
+			BLENDOPT_TOD3D11CASE(BlendOp::Subtract, D3D11_BLEND_OP_SUBTRACT);
+			BLENDOPT_TOD3D11CASE(BlendOp::ReverseSubtract, D3D11_BLEND_OP_REV_SUBTRACT);
+			BLENDOPT_TOD3D11CASE(BlendOp::Min, D3D11_BLEND_OP_MIN);
+			BLENDOPT_TOD3D11CASE(BlendOp::Max, D3D11_BLEND_OP_MAX);
+		}
+	}
+
+	UINT DX11Device::RenderTargetWriteMaskToD3D11(RenderTargetWriteMask mask)
+	{
+#define MASK_MATCH(MASK1, MASK2, DO) if (static_cast<uint8fast>(MASK1) & static_cast<uint8fast>(MASK2)) {DO;}
+
+		//if (mask & RenderTargetWriteMask::Red) writeMask |= D3D11_COLOR_WRITE_ENABLE_RED;
+		//if (mask & RenderTargetWriteMask::Green) writeMask |= D3D11_COLOR_WRITE_ENABLE_GREEN;
+		//if (mask & RenderTargetWriteMask::Blue) writeMask |= D3D11_COLOR_WRITE_ENABLE_BLUE;
+		//if (mask & RenderTargetWriteMask::Alpha) writeMask |= D3D11_COLOR_WRITE_ENABLE_ALPHA;
+
+		UINT writeMask = 0;
+		MASK_MATCH(mask, RenderTargetWriteMask::Red, writeMask |= D3D11_COLOR_WRITE_ENABLE_RED);
+		MASK_MATCH(mask, RenderTargetWriteMask::Green, writeMask |= D3D11_COLOR_WRITE_ENABLE_GREEN);
+		MASK_MATCH(mask, RenderTargetWriteMask::Blue, writeMask |= D3D11_COLOR_WRITE_ENABLE_BLUE);
+		MASK_MATCH(mask, RenderTargetWriteMask::Alpha, writeMask |= D3D11_COLOR_WRITE_ENABLE_ALPHA);
+		return writeMask;
 	}
 }
 #endif

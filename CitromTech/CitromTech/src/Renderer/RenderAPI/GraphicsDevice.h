@@ -64,7 +64,7 @@ namespace Citrom::RenderAPI
 		// maybe Device should be responsible for that and to listen to the event?
 		// e.g. Torque3D holds an internal swap-chain and RTV's inside D3D11's Gfx (This)
 		// Wicked Engine holds an internal swap-chain and RTV's inside a SwapChain class and it's internal ref
-		virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
+		virtual void MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec = nullptr) = 0;
 		virtual void SwapBuffers() = 0; // implemented in device for better error checking on DX11
 		virtual void SetVSync(VSyncMode vSync) = 0; // implemented in device for better error checking on DX11
 		virtual VSyncMode GetVSync() = 0;
