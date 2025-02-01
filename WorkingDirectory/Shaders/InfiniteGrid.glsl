@@ -1,3 +1,5 @@
+//@begin_vert
+
 /*
 
         Copyright 2024 Etay Meiri
@@ -16,7 +18,6 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-//@begin_vert
 #version 460
 
 layout(location = 1) out vec3 WorldPos;

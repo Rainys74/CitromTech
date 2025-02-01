@@ -46,9 +46,13 @@ namespace Citrom::RenderAPI
 			float32 r, g, b, a;
 		} blendFactorMult;*/
 		
-		BlendFactor srcBlend = BlendFactor::SrcAlpha;
-		BlendFactor destBlend = BlendFactor::OneMinusSrcAlpha;
+		BlendFactor srcBlend = BlendFactor::One;
+		BlendFactor destBlend = BlendFactor::Zero;
 		BlendOp blendOperation = BlendOp::Add;
+
+		BlendFactor srcBlendAlpha = BlendFactor::SrcAlpha;
+		BlendFactor destBlendAlpha = BlendFactor::OneMinusSrcAlpha;
+		BlendOp blendOperationAlpha = BlendOp::Add;
 
 		RenderTargetWriteMask renderTargetWriteMask = RenderTargetWriteMask::All;
 	};

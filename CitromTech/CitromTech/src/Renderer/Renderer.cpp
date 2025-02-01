@@ -463,7 +463,7 @@ namespace Citrom
 		m_GridFragUB = m_Device->CreateUniformBuffer(&ubdFrag);
 
 		ShaderDesc grsd = {};
-		grsd.name = "InfiniteGrid_hlsl";
+		grsd.name = "InfiniteGrid";
 
 		m_GridShader = m_Device->CreateShader(&grsd);
 	}

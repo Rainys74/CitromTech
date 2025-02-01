@@ -104,9 +104,9 @@ namespace Citrom::RenderAPI
 			bd.RenderTarget[0].SrcBlend = BlendFactorToD3D11Blend(blendSpec->srcBlend);
 			bd.RenderTarget[0].DestBlend = BlendFactorToD3D11Blend(blendSpec->destBlend);
 			bd.RenderTarget[0].BlendOp = BlendOpToD3D11BlendOp(blendSpec->blendOperation);
-			bd.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE; // TODO: figure these alpha males out
-			bd.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-			bd.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+			bd.RenderTarget[0].SrcBlendAlpha = BlendFactorToD3D11Blend(blendSpec->srcBlendAlpha); // TODO: figure these alpha males out and their differences from beta
+			bd.RenderTarget[0].DestBlendAlpha = BlendFactorToD3D11Blend(blendSpec->destBlendAlpha);
+			bd.RenderTarget[0].BlendOpAlpha = BlendOpToD3D11BlendOp(blendSpec->blendOperationAlpha);
 			bd.RenderTarget[0].RenderTargetWriteMask = RenderTargetWriteMaskToD3D11(blendSpec->renderTargetWriteMask);
 
 			WRL::ComPtr<ID3D11BlendState> blendState; // TODO: do i need to store this?
