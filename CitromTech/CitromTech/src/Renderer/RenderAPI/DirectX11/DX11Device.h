@@ -54,6 +54,7 @@ namespace Citrom::RenderAPI
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
+		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
 		// ImGui

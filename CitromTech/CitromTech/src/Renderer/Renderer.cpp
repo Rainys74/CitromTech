@@ -182,6 +182,8 @@ namespace Citrom
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
+		g_EditorRenderer.Render(camera, cameraTransform);
+
 		CTL::DArray<float> vertices;
 		CTL::DArray<unsigned int> indices;
 
@@ -364,8 +366,6 @@ namespace Citrom
 		//}
 
 		m_Device->SetTargetFramebuffer(nullptr);
-
-		g_EditorRenderer.Render(camera, cameraTransform);
 	}
 
 	
@@ -473,6 +473,6 @@ namespace Citrom
 
 		m_Device->BindShader(&m_GridShader);
 
-		m_Device->RCDrawIndexed(0);
+		m_Device->RCDraw(6);
 	}
 }

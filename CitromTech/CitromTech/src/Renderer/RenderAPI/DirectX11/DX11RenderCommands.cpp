@@ -29,5 +29,10 @@ namespace Citrom::RenderAPI
 		*/
 		DXCall(m_DeviceContext->DrawIndexed(indexCount, startIndex, baseVertexLocation));
 	}
+	void DX11Device::RCDraw(uint32 vertexCount, uint32 startVertexLocation)
+	{
+		//glDrawArrays(GL_TRIANGLES, 0 /*first*/, vertex_count);
+		m_DeviceContext->Draw(vertexCount, startVertexLocation);
+	}
 }
 #endif
