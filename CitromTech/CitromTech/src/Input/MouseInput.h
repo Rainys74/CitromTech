@@ -34,13 +34,13 @@ namespace Citrom::Input
         Mouse19,
         Mouse20,
 
-        // Scrolling
+        /*// Scrolling
         WheelUp,
         WheelDown,
 
         // Horizontal Scrolling
         WheelLeft,
-        WheelRight,
+        WheelRight,*/
 
         Count
     };

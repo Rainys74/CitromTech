@@ -119,6 +119,15 @@ namespace Citrom::Platform
 
             EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseMoveEvent);
         });
+        // WM_MOUSEWHEEL, WM_MOUSEHWHEEL
+        glfwSetScrollCallback(glfwWindow, [](GLFWwindow* window, double xoffset, double yoffset)
+        {
+            MouseScrollEvent mouseScrollEvent;
+            mouseScrollEvent.x = xoffset;
+            mouseScrollEvent.y = yoffset;
+
+            EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseScrollEvent);
+        });
         // WM_KEYDOWN, WM_KEYUP
         glfwSetKeyCallback(glfwWindow, [](GLFWwindow* window, int key, int scancode, int action, int mods)
         {

@@ -232,6 +232,32 @@ namespace Citrom::Platform
 			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseMoveEvent);
 		}
 		break;
+		case WM_MOUSEWHEEL:
+		{
+			//auto xPos = GET_X_LPARAM(lParam); // prefer instead of LOWORD because systems with multiple monitors might have negative coords
+			//auto yPos = GET_Y_LPARAM(lParam);
+
+			//auto fwKeys = GET_KEYSTATE_WPARAM(wParam);
+			auto zDelta = GET_WHEEL_DELTA_WPARAM(wParam); // V/Y Delta
+
+			MouseScrollEvent mouseScrollEvent;
+			mouseScrollEvent.x = 0;
+			mouseScrollEvent.y = zDelta;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseScrollEvent);
+		}
+		break;
+		case WM_MOUSEHWHEEL:
+		{
+			auto zDelta = GET_WHEEL_DELTA_WPARAM(wParam); // H/X Delta
+
+			MouseScrollEvent mouseScrollEvent;
+			mouseScrollEvent.x = zDelta;
+			mouseScrollEvent.y = 0;
+
+			EventBus::GetDispatcher<MouseEvents>()->Dispatch(mouseScrollEvent);
+		}
+		break;
 		// Mouse Events End
 		case WM_ACTIVATE:
 		{

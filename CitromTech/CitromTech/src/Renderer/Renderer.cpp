@@ -178,23 +178,30 @@ namespace Citrom
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
-		float vertices[] =
+		CTL::DArray<float> vertices;
+		CTL::DArray<unsigned int> indices;
+
+		float triangleVertices[] =
 		{
 			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
 			 0.0f,  0.5f, 0.0f,		0.5f, 1.0f,
 			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f
 		};
-
-		unsigned int indices[] =
+		
+		unsigned int triangleIndices[] =
 		{
 			0, 1, 2//,
 			//2, 3, 0
 		};
+		for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleVertices); i++)
+			vertices.PushBack(triangleVertices[i]);
+		for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleIndices); i++)
+			indices.PushBack(triangleIndices[i]);
 
 		// Index Buffer
 		IndexBufferDesc ibd = {};
-		ibd.data = indices;
-		ibd.count = 3;
+		ibd.data = indices.Data();
+		ibd.count = indices.Count();
 
 		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
 		m_Device->BindIndexBuffer(&ibo);
@@ -277,8 +284,8 @@ namespace Citrom
 
 		// Vertex Buffer 1
 		VertexBufferDesc vbd1 = {};
-		vbd1.data = vertices;
-		vbd1.size = sizeof(vertices);
+		vbd1.data = vertices.Data();
+		vbd1.size = vertices.Size();
 		vbd1.usage = Usage::Static;
 		vbd1.vbLayoutDesc = &vbld1;
 

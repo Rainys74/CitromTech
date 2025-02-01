@@ -44,19 +44,19 @@ namespace Citrom
 			Orthographic
 		};
 	public:
-		Camera() 
+		Camera()
 		{
 			RecalculateProjection();
 
 			// On Resize Callback
 			m_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
-			{
-				if (event.GetEventType() == WindowEvents::WindowResize)
 				{
-					const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
-					CameraViewport::Get()->SetViewport(transformedEvent.width, transformedEvent.height);
-				}
-			};
+					if (event.GetEventType() == WindowEvents::WindowResize)
+					{
+						const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+						CameraViewport::Get()->SetViewport(transformedEvent.width, transformedEvent.height);
+					}
+				};
 			EventBus::GetDispatcher<WindowEvents>()->AddListener(&m_WindowEventListener);
 		}
 		~Camera()
@@ -101,6 +101,8 @@ namespace Citrom
 		void SetProjectionType(ProjectionType type) { m_ProjectionType = type; RecalculateProjection(); }
 
 		FORCE_INLINE const Math::Matrix4x4& GetProjection() const { return m_Projection; }
+
+		FORCE_INLINE float32 GetAspectRatio() { m_AspectRatio = (float32)CameraViewport::Get()->GetViewportWidth() / (float32)CameraViewport::Get()->GetViewportHeight(); return m_AspectRatio; }
 	private:
 		void RecalculateProjection()
 		{
@@ -127,7 +129,7 @@ namespace Citrom
 
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
 
-		float32 m_PerspectiveFOV = Math::DegreesToRadians(45.0f);
+		float32 m_PerspectiveFOV = Math::DegreesToRadians(45.0f); // Vertical FOV as Radians
 		float32 m_PerspectiveNear = 0.01f, m_PerspectiveFar = 1000.0f;
 
 		float32 m_OrthographicSize = 10.0f;

@@ -10,8 +10,7 @@ static constexpr float boostSpeed = 10.0f;
 
 EditorCamera::EditorCamera()
 {
-	const float32 aspectRatio = (float32)CameraViewport::Get()->GetViewportWidth() / (float32)CameraViewport::Get()->GetViewportHeight();
-	m_Camera.SetPerspective(Math::FovXToFovY(70.0f, aspectRatio), 0.01f, 1000.0f);
+	m_Camera.SetPerspective(DegreesToRadians(70.0f), 0.01f, 1000.0f);
 }
 
 void EditorCamera::Update(float deltaTime)

@@ -12,7 +12,8 @@ namespace Citrom
     {
         MouseDown,
         MouseUp,
-        MouseMove
+        MouseMove,
+        MouseScroll
     };
     using EventMouseButton = Input::MouseButton;
 
@@ -46,6 +47,23 @@ namespace Citrom
     {
     public:
         EVENT_CLASS_TYPE(MouseEvents, MouseMove);
+
+        CTL::String ToString() const override
+        {
+            CTL::String string(GetEventTypeName());
+            string.Append("Event: ");
+            string.Append(std::to_string(x).c_str());
+            string.Append(", ");
+            string.Append(std::to_string(y).c_str());
+            return string;
+        }
+    public:
+        int x, y;
+    };
+    class MouseScrollEvent : public Event<MouseEvents>
+    {
+    public:
+        EVENT_CLASS_TYPE(MouseEvents, MouseScroll);
 
         CTL::String ToString() const override
         {
