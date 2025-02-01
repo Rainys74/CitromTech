@@ -33,6 +33,45 @@ namespace Citrom
 		CTL::DArray<uint32> indices;
 	};
 	
+	// Additional editor stuff
+	class EditorRenderer
+	{
+	public:
+		EditorRenderer()
+			: m_Device(RenderAPI::Device::Get()) {}
+		~EditorRenderer() = default;
+
+		void Initialize();
+		void Render(Camera* camera, Math::Transform* camTransform);
+	private:
+		RenderAPI::Device* m_Device;
+
+		struct VertexUBO
+		{
+			Math::Matrix4x4 VP;
+			float GridSize;
+			Math::Vector3 CameraWorldPos;
+
+			uint8 padding1[(4+6+4)];
+		} m_GridVertUBData;
+		struct FragmentUBO
+		{
+			Math::Vector3 CameraWorldPos;
+			float GridSize;
+			float GridMinPixelsBetweenCells;
+			float GridCellSize;
+
+			Math::ColorF32x4 GridColorThin;
+			Math::ColorF32x4 GridColorThick;
+
+			uint8 padding1[8];
+		} m_GridFragUBData;
+
+		RenderAPI::Shader m_GridShader;
+		RenderAPI::UniformBuffer m_GridVertUB;
+		RenderAPI::UniformBuffer m_GridFragUB;
+	};
+
 	// TODO: create a modular render path system with
 	// extendable render steps
 	class Renderer

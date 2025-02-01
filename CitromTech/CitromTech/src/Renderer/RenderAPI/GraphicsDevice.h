@@ -87,7 +87,7 @@ namespace Citrom::RenderAPI
 		virtual void BindShader(Shader* shader) = 0;
 
 		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
-		virtual void BindUniformBuffer(UniformBuffer* ub) = 0;
+		virtual void BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0) = 0;
 		virtual void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) = 0;
 
 		// Textures

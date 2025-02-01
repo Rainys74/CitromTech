@@ -19,6 +19,8 @@ namespace Citrom
 	RenderAPI::Device* Renderer::m_Device;
 	EventListener<WindowEvents> Renderer::s_WindowEventListener;
 
+	static EditorRenderer g_EditorRenderer;
+
 	void Renderer::Initialize(Platform::Window* window)
 	{
 		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
@@ -85,6 +87,8 @@ namespace Citrom
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
 		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+
+		g_EditorRenderer.Initialize();
 	}
 
 	void Renderer::BeginFrame()
@@ -360,6 +364,8 @@ namespace Citrom
 		//}
 
 		m_Device->SetTargetFramebuffer(nullptr);
+
+		g_EditorRenderer.Render(camera, cameraTransform);
 	}
 
 	
@@ -376,5 +382,97 @@ namespace Citrom
 	void Renderer::RenderMesh(const Mesh& mesh)
 	{
 
+	}
+
+		/*struct VertexUBO
+		{
+			Math::Matrix4x4 VP;
+			float GridSize;
+			Math::Vector3 CameraWorldPos;
+		};
+		struct FragmentUBO
+		{
+			Math::Vector3 CameraWorldPos;
+			float GridSize;
+			float GridMinPixelsBetweenCells;
+			float GridCellSize;
+			Math::ColorF32x4 GridColorThin;
+			Math::ColorF32x4 GridColorThick;
+		};
+		VertexUBO vertexUBData = {};
+		vertexUBData.VP = Math::Matrix4x4::Identity();
+		vertexUBData.GridSize = 100.0f;
+		vertexUBData.CameraWorldPos = Math::Vector3::Zero();
+		FragmentUBO fragUBData = {};
+		fragUBData.CameraWorldPos = vertexUBData.CameraWorldPos;
+		fragUBData.GridSize = vertexUBData.GridSize;
+		fragUBData.GridMinPixelsBetweenCells = 2.0f;
+		fragUBData.GridCellSize = 0.025f;
+		fragUBData.GridColorThin = Math::ColorF32x4(0.5f, 0.5f, 0.5f, 1.0f);
+		fragUBData.GridColorThick = Math::ColorF32x4(0.0f, 0.0f, 0.0f, 1.0f);
+
+		UniformBufferDesc ubdVertex = {};
+		ubdVertex.data = &vertexUBData;
+		ubdVertex.dataBytes = sizeof(vertexUBData);
+		ubdVertex.usage = Usage::Dynamic;
+
+		UniformBuffer vertexUBO = m_Device->CreateUniformBuffer(&ubdVertex);
+
+		UniformBufferDesc ubdFrag = {};
+		ubdFrag.data = &fragUBData;
+		ubdFrag.dataBytes = sizeof(fragUBData);
+		ubdFrag.usage = Usage::Dynamic;
+
+		UniformBuffer fragUBO = m_Device->CreateUniformBuffer(&ubdFrag);
+
+		m_Device->BindUniformBuffer(&vertexUBO, ShaderType::Vertex);
+		m_Device->BindUniformBuffer(&fragUBO, ShaderType::Fragment);*/
+
+	void EditorRenderer::Initialize()
+	{
+		m_GridVertUBData.VP = Math::Matrix4x4::Identity();
+		m_GridVertUBData.GridSize = 100.0f;
+		m_GridVertUBData.CameraWorldPos = Math::Vector3::Zero();
+
+		m_GridFragUBData.CameraWorldPos = m_GridVertUBData.CameraWorldPos;
+		m_GridFragUBData.GridSize = m_GridVertUBData.GridSize;
+		m_GridFragUBData.GridMinPixelsBetweenCells = 2.0f;
+		m_GridFragUBData.GridCellSize = 0.025f;
+		m_GridFragUBData.GridColorThin = Math::ColorF32x4(0.5f, 0.5f, 0.5f, 1.0f);
+		m_GridFragUBData.GridColorThick = Math::ColorF32x4(0.0f, 0.0f, 0.0f, 1.0f);
+
+		UniformBufferDesc ubdVertex = {};
+		ubdVertex.data = &m_GridVertUBData;
+		ubdVertex.dataBytes = sizeof(m_GridVertUBData);
+		ubdVertex.usage = Usage::Dynamic;
+
+		m_GridVertUB = m_Device->CreateUniformBuffer(&ubdVertex);
+
+		UniformBufferDesc ubdFrag = {};
+		ubdFrag.data = &m_GridFragUBData;
+		ubdFrag.dataBytes = sizeof(m_GridFragUBData);
+		ubdFrag.usage = Usage::Dynamic;
+
+		m_GridFragUB = m_Device->CreateUniformBuffer(&ubdFrag);
+
+		ShaderDesc grsd = {};
+		grsd.name = "InfiniteGrid_hlsl";
+
+		m_GridShader = m_Device->CreateShader(&grsd);
+	}
+	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform)
+	{
+		m_Device->BindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
+		m_Device->BindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
+
+		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
+		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;
+
+		m_Device->SetUniformBufferData(&m_GridVertUB, &m_GridVertUBData, sizeof(m_GridVertUBData));
+		m_Device->SetUniformBufferData(&m_GridFragUB, &m_GridFragUBData, sizeof(m_GridFragUBData));
+
+		m_Device->BindShader(&m_GridShader);
+
+		m_Device->RCDrawIndexed(0);
 	}
 }

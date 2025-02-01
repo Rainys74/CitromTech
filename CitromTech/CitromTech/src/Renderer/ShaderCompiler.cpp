@@ -25,6 +25,12 @@ namespace Citrom
 		{
 			CT_PROFILE_SCOPE("glslcc_exec");
 
+#ifdef CT_DEBUG
+			CT_CORE_TRACE("Executing GLSLcc with args ({}):", argc);
+			for (int i = 0; i < argc; i++)
+				CT_CORE_TRACE("{}. {}{}", i, argv[i], i == (argc-1) ? "\n" : "");
+#endif
+
 			int result = glslcc_exec(argc, argv);
 			CT_CORE_ASSERT(!result, "glslcc_exec main function failed!");
 		}
@@ -53,7 +59,6 @@ namespace Citrom
 						continue; // Skip non-file entries like directories
 
 					// TODO: Refactor since this looks retarted
-					CT_VERBOSE("{}", entry.path().string());
 					if (entry.path().extension() == ".glsl")
 					{
 						//arguments[1] = std::string("--vert=").append(entry.path().string());

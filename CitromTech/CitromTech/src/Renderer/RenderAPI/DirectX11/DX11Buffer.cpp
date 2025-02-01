@@ -175,11 +175,20 @@ namespace Citrom::RenderAPI
 
 		return ub;
 	}
-	void DX11Device::BindUniformBuffer(UniformBuffer* ub)
+	void DX11Device::BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage, uint32 startSlot)
 	{
 		GET_BUFFER_INTERNAL(UniformBufferDX11, ub, internalData);
 
-		DXCall(m_DeviceContext->VSSetConstantBuffers(0, 1, internalData->buffer.GetAddressOf()));
+		switch (shaderStage)
+		{
+			default:
+			case ShaderType::Vertex:
+				DXCall(m_DeviceContext->VSSetConstantBuffers(startSlot, 1, internalData->buffer.GetAddressOf()));
+				break;
+			case ShaderType::Fragment:
+				DXCall(m_DeviceContext->PSSetConstantBuffers(startSlot, 1, internalData->buffer.GetAddressOf()));
+				break;
+		}
 	}
 	void DX11Device::SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size)
 	{
