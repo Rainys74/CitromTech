@@ -28,7 +28,7 @@ namespace Citrom::RenderAPI
 		if (vbd.Usage == D3D11_USAGE_DYNAMIC)
 			vbd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
 		vbd.MiscFlags = 0;
-		vbd.ByteWidth = descriptor->size * sizeof(float);
+		vbd.ByteWidth = descriptor->size;
 		vbd.StructureByteStride = GetLayoutStride(descriptor->vbLayoutDesc);
 
 		D3D11_SUBRESOURCE_DATA vsd = {};

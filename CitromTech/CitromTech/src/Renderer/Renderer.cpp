@@ -191,8 +191,9 @@ namespace Citrom
 
 		g_EditorRenderer.Render(camera, cameraTransform);
 
-		CTL::DArray<float> vertices;
-		CTL::DArray<unsigned int> indices;
+		static CTL::DArray<float> vertices;
+		static CTL::DArray<unsigned int> indices;
+		static std::string textureName = "texture.png";
 
 		float triangleVertices[] =
 		{
@@ -200,16 +201,84 @@ namespace Citrom
 			 0.0f,  0.5f, 0.0f,		0.5f, 1.0f,
 			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f
 		};
-		
+
 		unsigned int triangleIndices[] =
 		{
 			0, 1, 2//,
 			//2, 3, 0
 		};
-		for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleVertices); i++)
-			vertices.PushBack(triangleVertices[i]);
-		for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleIndices); i++)
-			indices.PushBack(triangleIndices[i]);
+		//for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleVertices); i++)
+		//	vertices.PushBack(triangleVertices[i]);
+		//for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleIndices); i++)
+		//	indices.PushBack(triangleIndices[i]);
+
+		if (vertices.Count() == 0 && indices.Count() == 0)
+		{
+			tinyobj::attrib_t attrib;
+			std::vector<tinyobj::shape_t> shapes;
+			std::vector<tinyobj::material_t> materials;
+			std::string warn, err;
+
+			CT_CORE_VERIFY(tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, "dinosaur.obj"), "TinyObj failed to load!");
+
+			for (size_t s = 0; s < shapes.size(); s++)
+			{
+				CT_WARN("Shape[{}].name = {}", s, shapes[s].name);
+				CT_WARN("Shape[{}].indices = {}", s, shapes[s].mesh.indices.size());
+			}
+
+			for (const auto& shape : shapes)
+			{
+				for (const auto& index : shape.mesh.indices)
+				{
+					// Push back vertex positions (x, y, z)
+					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 0]);
+					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 1]);
+					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 2]);
+
+					// Push back texture coordinates (u, v)
+					if (!attrib.texcoords.empty())
+					{
+						vertices.PushBack(attrib.texcoords[2 * index.texcoord_index + 0]);
+						vertices.PushBack(attrib.texcoords[2 * index.texcoord_index + 1]);
+					}
+					else
+					{
+						vertices.PushBack(0.0f); // Default value if no texture coordinates
+						vertices.PushBack(0.0f); // Default value if no texture coordinates
+					}
+
+//#define REVERSE_WINDING_ORDER 1
+#undef REVERSE_WINDING_ORDER
+
+					// Push back indices
+#if !REVERSE_WINDING_ORDER
+					indices.PushBack(index.vertex_index);
+#endif
+				}
+#if REVERSE_WINDING_ORDER
+				for (size_t i = 0; i < shape.mesh.indices.size(); i += 3)
+				{
+					// Ensure the indices are within bounds
+					if (i + 2 >= shape.mesh.indices.size()) continue;
+
+					// Reverse the winding order by swapping the first and last index in the triangle
+					indices.PushBack(shape.mesh.indices[i + 2].vertex_index);
+					indices.PushBack(shape.mesh.indices[i + 1].vertex_index);
+					indices.PushBack(shape.mesh.indices[i + 0].vertex_index);
+				}
+#endif
+			}
+			for (const auto& material : materials)
+			{
+				CT_WARN("Material name: {}", material.name);
+				if (!material.diffuse_texname.empty())
+				{
+					CT_WARN("Diffuse texture: {}", material.diffuse_texname);
+					textureName = material.diffuse_texname;
+				}
+			}
+		}
 
 		// Index Buffer
 		IndexBufferDesc ibd = {};
@@ -309,7 +378,7 @@ namespace Citrom
 		Texture2DDesc td = {};
 		{
 			int width, height, channelsInFile;
-			td.data = stbi_load("texture.png", &width, &height, &channelsInFile, 0);
+			td.data = stbi_load(textureName.c_str(), &width, &height, &channelsInFile, 4); // D3D11 requires 4 channels! (RGBA)
 			td.width = width;
 			td.height = height;
 		}
