@@ -29,6 +29,7 @@ namespace Citrom::RenderAPI
 		VSyncMode GetVSync() override;
 
 		void Resize(uint32 width, uint32 height) override;
+		void ResizeViewport(uint32 width, uint32 height, int32 xPos = 0, int32 yPos = 0) override;
 
 		// Buffer
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;

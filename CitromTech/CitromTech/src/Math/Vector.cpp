@@ -13,7 +13,7 @@ namespace Citrom::Math
 	}
 	Vector2 Vector2::Normalized() const
 	{
-		Vector2 normalized = {0};
+		Vector2 normalized = {};
 		float32 magnitude = Magnitude();
 
 		normalized.x = this->x / magnitude;

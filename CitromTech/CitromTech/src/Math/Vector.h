@@ -10,6 +10,12 @@ namespace Citrom::Math
     class Vector2
     {
     public:
+        Vector2()
+            : x(0), y(0) {}
+        Vector2(const Vector2&) = default;
+        Vector2(float32 vecX, float32 vecY)
+            : x(vecX), y(vecY) {}
+
         float32 Magnitude() const;
         float32 SquaredMagnitude() const;
         Vector2 Normalized() const;

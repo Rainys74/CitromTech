@@ -23,7 +23,7 @@ namespace Citrom::RenderAPI
 
 	enum class VSyncMode //VSyncType
 	{
-		//Adaptive = -1,
+		Adaptive = -1,
 
 		Off = 0,
 		On = 1, // Every V-Blank

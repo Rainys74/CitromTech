@@ -14,7 +14,7 @@ static const char* VSyncModeToString(RenderAPI::VSyncMode mode)
     using namespace RenderAPI;
     switch (mode)
     {
-        //TO_STRING_CASE(VSyncMode::Adaptive);
+        TO_STRING_CASE(VSyncMode::Adaptive);
 
         TO_STRING_CASE(VSyncMode::Off);
         TO_STRING_CASE(VSyncMode::On);
@@ -84,7 +84,7 @@ void ProjectSettingsWindow::ImGuiDraw(bool* showWindow)
             //    ImGui::EndCombo();
             //}
             RenderAPI::VSyncMode currentVSyncMode = RenderAPI::Device::Get()->GetVSync();
-            static constexpr RenderAPI::VSyncMode availableVSyncModes[] = { /*RenderAPI::VSyncMode::Adaptive,*/ RenderAPI::VSyncMode::Off, RenderAPI::VSyncMode::On, RenderAPI::VSyncMode::Half, RenderAPI::VSyncMode::Quarter, RenderAPI::VSyncMode::Eighth};
+            static constexpr RenderAPI::VSyncMode availableVSyncModes[] = { RenderAPI::VSyncMode::Adaptive, RenderAPI::VSyncMode::Off, RenderAPI::VSyncMode::On, RenderAPI::VSyncMode::Half, RenderAPI::VSyncMode::Quarter, RenderAPI::VSyncMode::Eighth};
             if (ComboEnum<RenderAPI::VSyncMode, VSyncModeToString>("V-Sync Interval", currentVSyncMode, availableVSyncModes, CT_ARRAY_LENGTH(availableVSyncModes)))
             {
                 CT_CORE_INFO("TESTT!~!! {}", (int)currentVSyncMode);

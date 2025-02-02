@@ -70,6 +70,7 @@ namespace Citrom::RenderAPI
 		virtual VSyncMode GetVSync() = 0;
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
+		virtual void ResizeViewport(uint32 width, uint32 height, int32 xPos = 0, int32 yPos = 0) = 0;
 
 		// Vertex Buffer
 		// TODO: figure out whether to return or set using pointers

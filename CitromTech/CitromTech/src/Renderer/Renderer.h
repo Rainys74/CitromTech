@@ -104,6 +104,8 @@ namespace Citrom
 		static RenderAPI::Device* m_Device;
 		static EventListener<WindowEvents> s_WindowEventListener;
 
+		//static Scene* s_CurrentScene;
+
 		//static CTL::DArray<Model> s_ModelsToDraw;
 	};
 }

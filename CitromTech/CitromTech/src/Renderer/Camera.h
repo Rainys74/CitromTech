@@ -2,6 +2,7 @@
 
 #include "Math/MathCommon.h"
 #include "Math/Matrix4x4.h"
+#include "Math/Color.h"
 
 #include "Events/EventSystem.h"
 #include "Events/WindowEvents.h"
@@ -103,6 +104,12 @@ namespace Citrom
 		FORCE_INLINE const Math::Matrix4x4& GetProjection() const { return m_Projection; }
 
 		FORCE_INLINE float32 GetAspectRatio() { m_AspectRatio = (float32)CameraViewport::Get()->GetViewportWidth() / (float32)CameraViewport::Get()->GetViewportHeight(); return m_AspectRatio; }
+	public:
+		Math::ColorF32x4 clearColor = Math::ColorF32x4(0.6399964f, 0.7359726f, 0.8867924f);
+
+		// Viewport multiplies these by width and height of the screen
+		Math::Vector2 viewportSize = Math::Vector2(1.0f, 1.0f);
+		Math::Vector2 viewportOffset = Math::Vector2(0.0f, 0.0f);
 	private:
 		void RecalculateProjection()
 		{

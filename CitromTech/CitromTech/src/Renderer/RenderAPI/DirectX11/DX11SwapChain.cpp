@@ -161,7 +161,7 @@ namespace Citrom::RenderAPI
 
 		CreateRenderTarget();
 
-		// Configure viewport TODO: maybe separate this into ResizeViewport?
+		// Configure viewport
 		D3D11_VIEWPORT vp;
 		vp.Width = width;
 		vp.Height = height;
@@ -169,6 +169,17 @@ namespace Citrom::RenderAPI
 		vp.MaxDepth = 1;
 		vp.TopLeftX = 0; // xPos
 		vp.TopLeftY = 0; // yPos
+		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
+	}
+	void DX11Device::ResizeViewport(uint32 width, uint32 height, int32 xPos, int32 yPos)
+	{
+		D3D11_VIEWPORT vp;
+		vp.Width = width;
+		vp.Height = height;
+		vp.MinDepth = 0;
+		vp.MaxDepth = 1;
+		vp.TopLeftX = xPos; // TODO: i think OpenGL uses this inverted
+		vp.TopLeftY = yPos;
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
 

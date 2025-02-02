@@ -10,6 +10,23 @@ using namespace Citrom;
 
 namespace EditorImGui
 {
+    static void ProfilerStatsOverlay_ImGuiDraw()
+    {
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav;
+
+        ImGui::SetNextWindowBgAlpha(0.35f); // Transparent background
+        //ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
+
+        static bool showStatOverlay = false;
+        ImGui::Begin("Statistics Overlay", &showStatOverlay, windowFlags);
+
+        //ImGui::Text("FPS: %2.f", MainFPS());
+        ImGui::Text("FPS: %.2f", MainFPS());
+        ImGui::Text("DrawCalls: 69");
+
+        ImGui::End();
+    }
+
 	void ProfilerWindow::ImGuiDraw()
 	{
         ImGui::Begin("Profiler");
@@ -55,5 +72,7 @@ namespace EditorImGui
         }
 
         ImGui::End();
+
+        ProfilerStatsOverlay_ImGuiDraw();
 	}
 }
