@@ -446,7 +446,7 @@ namespace Citrom
 		m_GridFragUBData.GridMinPixelsBetweenCells = 2.0f;
 		m_GridFragUBData.GridCellSize = 0.025f;
 		m_GridFragUBData.GridColorThin = Math::ColorF32x4(0.5f, 0.5f, 0.5f, 1.0f); // Math::ColorF32x4(1.5f, 0.5f, 0.5f, 1.0f)
-		m_GridFragUBData.GridColorThick = Math::ColorF32x4(0.0f, 0.0f, 0.0f, 1.0f);
+		m_GridFragUBData.GridColorThick = Math::ColorF32x4(0.25f, 0.25f, 0.25f, 1.0f);
 
 		UniformBufferDesc ubdVertex = {};
 		ubdVertex.data = &m_GridVertUBData;
@@ -469,6 +469,8 @@ namespace Citrom
 	}
 	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform)
 	{
+		CT_PROFILE_STATIC_FUNCTION(Renderer);
+
 		m_Device->BindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
 		m_Device->BindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
 
