@@ -49,8 +49,13 @@ namespace Citrom
 
 		bsd.renderTargetWriteMask = RenderTargetWriteMask::All;
 
+		RasterizerStateDesc rsd;
+		rsd.fillMode = FillMode::Solid;
+		rsd.cullMode = CullMode::Back;
+		rsd.frontCounterClockwise = false;
+
 		m_Device->SetVSync(VSyncMode::On);
-		m_Device->MakeSwapChain(&scd, &bsd);
+		m_Device->MakeSwapChain(&scd, &bsd, &rsd);
 
 		// On Resize Callback
 		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
@@ -191,7 +196,8 @@ namespace Citrom
 
 		g_EditorRenderer.Render(camera, cameraTransform);
 
-		static CTL::DArray<float> vertices;
+		//static CTL::DArray<float> vertices;
+		static CTL::DArray<Vertex> vertexes;
 		static CTL::DArray<unsigned int> indices;
 		static std::string textureName = "texture.png";
 
@@ -212,7 +218,7 @@ namespace Citrom
 		//for (size_t i = 0; i < CT_ARRAY_LENGTH(triangleIndices); i++)
 		//	indices.PushBack(triangleIndices[i]);
 
-		if (vertices.Count() == 0 && indices.Count() == 0)
+		if (vertexes.Count() == 0 && indices.Count() == 0)
 		{
 			tinyobj::attrib_t attrib;
 			std::vector<tinyobj::shape_t> shapes;
@@ -227,48 +233,53 @@ namespace Citrom
 				CT_WARN("Shape[{}].indices = {}", s, shapes[s].mesh.indices.size());
 			}
 
+			vertexes.Reserve(attrib.vertices.size() / 3);
+			for (size_t v = 0; v < attrib.vertices.size() / 3; v++)
+				vertexes.PushBack(Vertex{});
+
+			for (size_t v = 0; v < attrib.vertices.size() / 3; v++)
+			{
+				vertexes[v].position.x = attrib.vertices[3 * v + 0];
+				vertexes[v].position.y = attrib.vertices[3 * v + 1];
+				vertexes[v].position.z = attrib.vertices[3 * v + 2];
+			}
+
+			/*for (size_t v = 0; v < attrib.texcoords.size() / 2; v++)
+			{
+				vertexes[v].texCoord.u = attrib.texcoords[2 * v + 0];
+				vertexes[v].texCoord.v = attrib.texcoords[2 * v + 1];
+			}
+
 			for (const auto& shape : shapes)
 			{
 				for (const auto& index : shape.mesh.indices)
 				{
-					// Push back vertex positions (x, y, z)
-					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 0]);
-					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 1]);
-					vertices.PushBack(attrib.vertices[3 * index.vertex_index + 2]);
-
-					// Push back texture coordinates (u, v)
-					if (!attrib.texcoords.empty())
-					{
-						vertices.PushBack(attrib.texcoords[2 * index.texcoord_index + 0]);
-						vertices.PushBack(attrib.texcoords[2 * index.texcoord_index + 1]);
-					}
-					else
-					{
-						vertices.PushBack(0.0f); // Default value if no texture coordinates
-						vertices.PushBack(0.0f); // Default value if no texture coordinates
-					}
-
-//#define REVERSE_WINDING_ORDER 1
-#undef REVERSE_WINDING_ORDER
-
-					// Push back indices
-#if !REVERSE_WINDING_ORDER
 					indices.PushBack(index.vertex_index);
-#endif
 				}
-#if REVERSE_WINDING_ORDER
-				for (size_t i = 0; i < shape.mesh.indices.size(); i += 3)
+			}*/
+			for (const auto& shape : shapes)
+			{
+				for (const auto& index : shape.mesh.indices)
 				{
-					// Ensure the indices are within bounds
-					if (i + 2 >= shape.mesh.indices.size()) continue;
+					Vertex vert = {}; // Create a new vertex
 
-					// Reverse the winding order by swapping the first and last index in the triangle
-					indices.PushBack(shape.mesh.indices[i + 2].vertex_index);
-					indices.PushBack(shape.mesh.indices[i + 1].vertex_index);
-					indices.PushBack(shape.mesh.indices[i + 0].vertex_index);
+					// Get the correct position
+					vert.position.x = attrib.vertices[3 * index.vertex_index + 0];
+					vert.position.y = attrib.vertices[3 * index.vertex_index + 1];
+					vert.position.z = attrib.vertices[3 * index.vertex_index + 2];
+
+					// Get the correct texture coordinate, ensuring the texcoord index is valid
+					if (index.texcoord_index >= 0)
+					{
+						vert.texCoord.u = attrib.texcoords[2 * index.texcoord_index + 0];
+						vert.texCoord.v = 1.0f - attrib.texcoords[2 * index.texcoord_index + 1]; // Flip V-axis
+					}
+
+					vertexes.PushBack(vert);
+					indices.PushBack(vertexes.Count() - 1); // Store the new vertex index
 				}
-#endif
 			}
+			
 			for (const auto& material : materials)
 			{
 				CT_WARN("Material name: {}", material.name);
@@ -278,6 +289,17 @@ namespace Citrom
 					textureName = material.diffuse_texname;
 				}
 			}
+		}
+
+		CTL::DArray<float> vertices;
+		for (const Vertex& vert : vertexes)
+		{
+			vertices.PushBack(vert.position.x);
+			vertices.PushBack(vert.position.y);
+			vertices.PushBack(vert.position.z);
+
+			vertices.PushBack(vert.texCoord.u);
+			vertices.PushBack(vert.texCoord.v);
 		}
 
 		// Index Buffer

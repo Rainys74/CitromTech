@@ -106,7 +106,7 @@ namespace Citrom::RenderAPI
 		{
 			//DestroyRenderTarget();
 			//CreateRenderTarget();
-			DXCall(m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, nullptr));
+			DXCall(m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, m_DepthStencilView.Get()));
 		}
 		else
 		{

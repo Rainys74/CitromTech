@@ -66,7 +66,7 @@ namespace Citrom::RenderAPI
 		}
 	}
 
-	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec)
+	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec, RasterizerStateDesc* rasterDesc)
 	{
 		m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
 		m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
@@ -114,6 +114,18 @@ namespace Citrom::RenderAPI
 			DXCallHR(m_Device->CreateBlendState(&bd, &blendState));
 
 			DXCall(m_DeviceContext->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF));
+		}
+		if (rasterDesc)
+		{
+			D3D11_RASTERIZER_DESC rd = {};
+			rd.FillMode = FillModeToD3D11FillMode(rasterDesc->fillMode);
+			rd.CullMode = CullModeToD3D11CullMode(rasterDesc->cullMode);
+			rd.FrontCounterClockwise = rasterDesc->frontCounterClockwise;
+
+			WRL::ComPtr<ID3D11RasterizerState> rasterizerState; // TODO: do i need to store this?
+			DXCallHR(m_Device->CreateRasterizerState(&rd, &rasterizerState));
+
+			DXCall(m_DeviceContext->RSSetState(rasterizerState.Get()));
 		}
 	}
 	void DX11Device::SwapBuffers()
@@ -226,6 +238,28 @@ namespace Citrom::RenderAPI
 		MASK_MATCH(mask, RenderTargetWriteMask::Blue, writeMask |= D3D11_COLOR_WRITE_ENABLE_BLUE);
 		MASK_MATCH(mask, RenderTargetWriteMask::Alpha, writeMask |= D3D11_COLOR_WRITE_ENABLE_ALPHA);
 		return writeMask;
+	}
+
+	D3D11_FILL_MODE DX11Device::FillModeToD3D11FillMode(FillMode fillMode)
+	{
+#define RASTOPT_TOD3D11CASE(x, y) case (x): return (y); break
+		switch (fillMode)
+		{
+			default: return D3D11_FILL_SOLID; break;
+
+			RASTOPT_TOD3D11CASE(FillMode::Solid, D3D11_FILL_SOLID);
+			RASTOPT_TOD3D11CASE(FillMode::Wireframe, D3D11_FILL_WIREFRAME);
+		}
+	}
+	D3D11_CULL_MODE DX11Device::CullModeToD3D11CullMode(CullMode cullMode)
+	{
+		switch (cullMode)
+		{
+			default: return D3D11_CULL_BACK; break;
+
+			RASTOPT_TOD3D11CASE(CullMode::Back, D3D11_CULL_BACK);
+			RASTOPT_TOD3D11CASE(CullMode::Front, D3D11_CULL_FRONT);
+		}
 	}
 }
 #endif

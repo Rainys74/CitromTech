@@ -56,4 +56,23 @@ namespace Citrom::RenderAPI
 
 		RenderTargetWriteMask renderTargetWriteMask = RenderTargetWriteMask::All;
 	};
+
+	enum class FillMode
+	{
+		Solid,
+		Wireframe
+	};
+	enum class CullMode
+	{
+		Back,
+		Front
+	};
+
+	struct RasterizerStateDesc
+	{
+		FillMode fillMode = FillMode::Solid;
+		CullMode cullMode = CullMode::Back;
+
+		bool frontCounterClockwise = false;
+	};
 }
