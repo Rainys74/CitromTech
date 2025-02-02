@@ -12,28 +12,27 @@ namespace Citrom
         ShaderDesc sd = {};
         sd.name = shaderName;
 
-        //m_Shader = m_Device->CreateShader(&sd);
+        m_Shader = m_Device->CreateShader(&sd);
         
         UniformBufferDesc ubd = {};
         ubd.data = nullptr;
-        ubd.dataBytes = 0;
+        ubd.dataBytes = 16; // to stop DXGI from bitching, hopefully nullptr doesn't become a problem..
         ubd.usage = Usage::Dynamic;
 
-        //m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
+        m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
     }
     Material::~Material()
     {
-        for (auto& property : m_Properties)
-        {
-            Memory::Free(property.data, GetMaterialFormatSize(property.propertyFormat));
-        }
     }
     void Material::PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData)
     {
-        void* data = Memory::Allocate(GetMaterialFormatSize(format));
-        Memory::Copy(data, propertyData, GetMaterialFormatSize(format));
+        uint8* dataBytes = (uint8*)propertyData;
 
-        m_Properties.PushBack(MaterialProperty{name, format, data});
+        m_BufferData.Reserve(GetMaterialFormatSize(format));
+        for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
+            m_BufferData.PushBack(dataBytes[i]);
+
+        m_Properties.PushBack(MaterialProperty{name, format, (void*)&m_BufferData[(m_BufferData.Count() - GetMaterialFormatSize(format))]});
     }
 
     void Material::UpdateData(const std::string& name, const void* newData, const MaterialFormat format)
@@ -41,32 +40,34 @@ namespace Citrom
         MaterialProperty* property = GetPropertyByName(name);
 
         //Memory::Free(property->data, GetMaterialFormatSize(property->propertyFormat));
-        Memory::Reallocate(property->data, GetMaterialFormatSize(format));
-        Memory::Copy(property->data, newData, GetMaterialFormatSize(format));
+        //Memory::Reallocate(property->data, GetMaterialFormatSize(format));
+        //Memory::Copy(property->data, newData, GetMaterialFormatSize(format));
 
-        //m_Device->BindUniformBuffer(&m_UniformBuffer);
-        //m_Device->SetUniformBufferData(&m_UniformBuffer, newData, GetMaterialFormatSize(format));
+        Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
+
+        m_Device->BindUniformBuffer(&m_UniformBuffer);
+        m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size());
     }
 
     void Material::Render()
     {
-        m_Device->BindUniformBuffer(&m_UniformBuffer);
-
-        size_t bufferSize = 0;
-        for (auto& property : m_Properties)
-            bufferSize += GetMaterialFormatSize(property.propertyFormat);
-
-        uint8* bufferData = (uint8*)Memory::Allocate(bufferSize); // one byte
-        size_t bufferProgress = 0;
-        for (auto& property : m_Properties)
-        {
-            Memory::Copy(bufferData, static_cast<uint8*>(property.data) + bufferProgress, GetMaterialFormatSize(property.propertyFormat));
-            bufferProgress += GetMaterialFormatSize(property.propertyFormat);
-        }
-
-        m_Device->SetUniformBufferData(&m_UniformBuffer, bufferData, bufferSize);
-
-        Memory::Free(bufferData);
+        //m_Device->BindUniformBuffer(&m_UniformBuffer);
+        //
+        //size_t bufferSize = 0;
+        //for (auto& property : m_Properties)
+        //    bufferSize += GetMaterialFormatSize(property.propertyFormat);
+        //
+        //uint8* bufferData = (uint8*)Memory::Allocate(bufferSize); // one byte
+        //size_t bufferProgress = 0;
+        //for (auto& property : m_Properties)
+        //{
+        //    Memory::Copy(bufferData, static_cast<uint8*>(property.data) + bufferProgress, GetMaterialFormatSize(property.propertyFormat));
+        //    bufferProgress += GetMaterialFormatSize(property.propertyFormat);
+        //}
+        //
+        //m_Device->SetUniformBufferData(&m_UniformBuffer, bufferData, bufferSize);
+        //
+        //Memory::Free(bufferData);
     }
 
     MaterialProperty* Material::GetPropertyByName(const std::string& name)

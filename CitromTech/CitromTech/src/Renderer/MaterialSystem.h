@@ -22,7 +22,7 @@ namespace Citrom
 	{
 		std::string name;
 		MaterialFormat propertyFormat;
-		void* data; // Ref or copy data?
+		void* dataPtr; // Ref or copy data?, right now only points to the DArray
 	};
 
 	class Material
@@ -44,7 +44,8 @@ namespace Citrom
 		RenderAPI::UniformBuffer m_UniformBuffer;
 
 		//CTL::StdStrHashMap<MaterialProperty> m_Properties; CTL::DArray<MaterialProperty> properties;
-		CTL::DArray<MaterialProperty> m_Properties; // TODO: maybe separate metadata and buffer data to not handle memory myself?
+		CTL::DArray<MaterialProperty> m_Properties;
+		CTL::DArray<uint8> m_BufferData;
 
 		RenderAPI::Device* m_Device;
 	};
