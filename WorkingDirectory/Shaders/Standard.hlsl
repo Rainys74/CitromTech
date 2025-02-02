@@ -30,6 +30,11 @@ cbuffer CBuffer1
 {
     matrix transform;
 };
+/*cbuffer Material : register(b1)
+{
+    //float u_Test;
+    float4 u_ColorData;
+};*/
 
 VSOut vsmain(VSInput input)
 {
@@ -46,4 +51,5 @@ float4 psmain(float2 texCoord : TexCoord) : SV_Target
 {
     //return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
     return tex.Sample(splr, texCoord);
+    //return u_ColorData;
 }

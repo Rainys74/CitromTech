@@ -372,6 +372,22 @@ namespace Citrom
 		//	int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
 		//}
 
+		//Material matTest;
+		////float32 testData = 0.5f;
+		////matTest.PushProperty("u_Test", MaterialFormat::Float32, &testData);
+		////matTest.UpdateData("u_Test", &testData, MaterialFormat::Float32);
+		////
+		////Math::Vector3 padding1;
+		////matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1);
+
+		//Math::ColorF32x4 u_ColorData(1.0f, 0.2f, 0.5f);
+		//matTest.PushProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		//matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
+		//u_ColorData.r = 0.5f;
+		////matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
+
+		//m_Device->RCDrawIndexed(ibo.GetCount());
+
 		m_Device->SetTargetFramebuffer(nullptr);
 	}
 

@@ -1,4 +1,5 @@
 #include "MaterialSystem.h"
+#include "CitromAssert.h"
 
 namespace Citrom
 {
@@ -14,9 +15,10 @@ namespace Citrom
 
         m_Shader = m_Device->CreateShader(&sd);
         
+        uint8 pad[16] = {};
         UniformBufferDesc ubd = {};
-        ubd.data = nullptr;
-        ubd.dataBytes = 16; // to stop DXGI from bitching, hopefully nullptr doesn't become a problem..
+        ubd.data = &pad;
+        ubd.dataBytes = sizeof(pad);
         ubd.usage = Usage::Dynamic;
 
         m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
@@ -45,7 +47,9 @@ namespace Citrom
 
         Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
 
-        m_Device->BindUniformBuffer(&m_UniformBuffer);
+        m_Device->BindShader(&m_Shader);
+
+        m_Device->BindUniformBuffer(&m_UniformBuffer, ShaderType::Vertex, 1); //hard coded
         m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size());
     }
 
@@ -77,6 +81,7 @@ namespace Citrom
             if (property.name == name)
                 return &property;
         }
+        CT_CORE_ASSERT(false, "Could not find material property with this name!");
         return nullptr;
     }
 
