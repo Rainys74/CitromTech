@@ -26,6 +26,14 @@ namespace Citrom::Math
 
         Vector2 operator*(const Vector2& vec2B) const { return Vector2{ this->x * vec2B.x, this->y * vec2B.y }; } // Multiply
         Vector2 operator/(const Vector2& vec2B) const { return Vector2{ this->x / vec2B.x, this->y / vec2B.y }; } // Divide
+
+        /*
+         * Works because stack memory is stored contiguously,
+         * No need to account for byte sizes (sizeof() operator) because if the type is known
+         * the compiler already calculates it correctly
+        */
+        FORCE_INLINE float32& operator[](size_t index) { return *(float32*)(&x + index); }
+        FORCE_INLINE const float32& operator[](size_t index) const { return *(float32*)(&x + index); }
     public:
         union
         {

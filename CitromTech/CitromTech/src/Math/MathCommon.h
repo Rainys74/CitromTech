@@ -48,6 +48,9 @@ namespace Citrom::Math
 	constexpr int32  Int32Min () { return 0x80000000; }
 	constexpr int64  Int64Min () { return 0x8000000000000000; }
 
+	constexpr float32 UInt8ToFloatNormalized(uint8 value) { return value / (float32)UInt8Max(); }
+	constexpr uint8 FloatToUInt8Normalized(float32 value) { return (uint8)value * UInt8Max(); }
+
 	float32 SquareRoot(const float32 number);
 	float64 SquareRoot(const float64 number);
 

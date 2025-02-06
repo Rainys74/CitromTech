@@ -38,6 +38,22 @@ namespace Citrom::RenderAPI
 		Vertex,
 		Fragment // Pixel
 	};
+	enum class ShaderLanguage
+	{
+		HLSL = 0,
+		GLSL = BIT(0),
+		MSL = BIT(1),
+
+		// Compiled
+		DXBC = BIT(2), // HLSL5
+		//SPIRV = BIT(3),
+
+		// Defaults
+		Text = HLSL | GLSL | MSL,
+		Compiled = DXBC,
+
+		All = HLSL | GLSL | MSL | DXBC
+	};
 
 	enum class Format
 	{
@@ -49,7 +65,7 @@ namespace Citrom::RenderAPI
 		R32G32B32_FLOAT, // 3
 		R32G32B32A32_FLOAT, // 4
 
-		// Unsigned Normalized (UNORM) [0, MaxUIntValue] to [0.0f, 1.0f]
+		// Unsigned Normalized (UNORM) [0, MaxUIntValue] to [0.0f, 1.0f] TODO: think about replacing U2FNORM to U2F
 		R8_U2FNORM, // 1
 		R8G8_U2FNORM, // 2
 		R8G8B8A8_U2FNORM, // 4

@@ -201,6 +201,8 @@ namespace Citrom
 		static CTL::DArray<unsigned int> indices;
 		static std::string textureName = "texture.png";
 
+		static Texture2D tex2D;
+
 		float triangleVertices[] =
 		{
 			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
@@ -397,20 +399,25 @@ namespace Citrom
 		m_Device->BindVertexBuffer(&vbo1);
 
 		// Texture
-		Texture2DDesc td = {};
+		if (!tex2D.internal)
 		{
-			int width, height, channelsInFile;
-			td.data = stbi_load(textureName.c_str(), &width, &height, &channelsInFile, 4); // D3D11 requires 4 channels! (RGBA)
-			td.width = width;
-			td.height = height;
+			Texture2DDesc td = {};
+			{
+				int width, height, channelsInFile;
+				td.data = stbi_load(textureName.c_str(), &width, &height, &channelsInFile, 4); // D3D11 requires 4 channels! (RGBA)
+				td.width = width;
+				td.height = height;
+			}
+			td.format = Format::R8G8B8A8_U2FNORM;
+			td.usage = Usage::Static;
+
+			tex2D = m_Device->CreateTexture2D(&td);
+			m_Device->BindTexture2D(&tex2D);
+
+			stbi_image_free(td.data);
 		}
-		td.format = Format::R8G8B8A8_U2FNORM;
-		td.usage = Usage::Static;
 
-		Texture2D tex2D = m_Device->CreateTexture2D(&td);
 		m_Device->BindTexture2D(&tex2D);
-
-		stbi_image_free(td.data);
 
 		/*FramebufferAttachments fba1; fba1 =
 		{

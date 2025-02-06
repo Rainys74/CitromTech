@@ -131,4 +131,35 @@ namespace Citrom::Math
     };
 
     using Color = ColorF32x4;
+
+    // TODO: finalize this
+    inline ColorU8x4 HexCodeToColorU8x3(uint32 hexCode) // only the first 24 bytes are used
+    {
+        uint8 r = (hexCode >> 16) & 0xFF;
+        uint8 g = (hexCode >> 8) & 0xFF;
+        uint8 b = hexCode & 0xFF;
+
+        return ColorU8x4(r, g, b);
+    }
+    inline ColorU8x4 HexCodeToColorU8x4(uint32 hexCode)
+    {
+        uint8 r = (hexCode >> 24) & 0xFF;
+        uint8 g = (hexCode >> 16) & 0xFF;
+        uint8 b = (hexCode >> 8) & 0xFF;
+        uint8 a = hexCode & 0xFF;
+
+        return ColorU8x4(r, g, b, a);
+    }
+
+    FORCE_INLINE ColorU8x4 ColorF32x4ToColorU8x4(const ColorF32x4& color)
+    {
+        return ColorU8x4(FloatToUInt8Normalized(color.r), FloatToUInt8Normalized(color.g), FloatToUInt8Normalized(color.b), FloatToUInt8Normalized(color.a));
+    }
+    FORCE_INLINE ColorF32x4 ColorU8x4ToColorF32x4(const ColorU8x4& color)
+    {
+        return ColorF32x4(UInt8ToFloatNormalized(color.r), UInt8ToFloatNormalized(color.g), UInt8ToFloatNormalized(color.b), UInt8ToFloatNormalized(color.a));
+    }
+
+    //ColorF32x4 HSVToColorF32x3(const ColorHSV& color);
+    //ColorF32x4 HSVToColorU8x4(const ColorHSV& color) {return ColorF32x4ToColorU8x4(HSVToColorF32x3(color))};
 }

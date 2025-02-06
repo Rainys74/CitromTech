@@ -266,6 +266,43 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
+    static bool DrawVector2Control(const char* label, float values[2], float speed = 0.25f)
+    {
+        bool modified = false;
+
+        ImGui::PushID(label);
+
+        _SetupLabel(label);
+
+        ImGui::PushMultiItemsWidths(2, ImGui::CalcItemWidth());
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // TODO: buttons and sliders should be close, each values should be spaced out.
+
+        float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+        ImVec2 buttonSize = ImVec2{ lineHeight + 3.0f, lineHeight };
+
+        // X
+        modified |= _DrawControlElementDragButton("X", "##X_SelectableDrag", &values[0], speed, buttonSize, ImVec4(0.8f, 0.1f, 0.15f, 1.0f), ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+
+        ImGui::SameLine();
+        modified |= _DrawControlElementDragInput("##X", &values[0]);
+        ImGui::PopItemWidth();
+
+        // Y
+        ImGui::SameLine();
+        modified |= _DrawControlElementDragButton("Y", "##Y_SelectableDrag", &values[1], speed, buttonSize, ImVec4(0.2f, 0.7f, 0.2f, 1.0f), ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+
+        ImGui::SameLine();
+        modified |= _DrawControlElementDragInput("##Y", &values[1]);
+        ImGui::PopItemWidth();
+
+        ImGui::PopStyleVar();
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return modified;
+    }
 }
 
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
@@ -377,14 +414,30 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             static uint8fast projectionType = (uint8fast)cameraComponent.camera.GetProjectionType();
 
             // Perspective
-            static float32 perspectiveYFOV = cameraComponent.camera.GetPerspectiveVerticalFOV();
-            static float32 perspectiveNear = cameraComponent.camera.GetPerspectiveNearClip();
-            static float32 perspectiveFar = cameraComponent.camera.GetPerspectiveFarClip();
+            ImGui::Separator();
+            float32 perspectiveYFOV = cameraComponent.camera.GetPerspectiveVerticalFOV();
+            if (ImGui::DragFloat("Vertical FOV", &perspectiveYFOV, 0.1f))
+                cameraComponent.camera.SetPerspectiveVerticalFOV(perspectiveYFOV);
+
+            float32 perspectiveNear = cameraComponent.camera.GetPerspectiveNearClip();
+            if (ImGui::DragFloat("Near Clip", &perspectiveNear, 0.1f))
+                cameraComponent.camera.SetPerspectiveNearClip(perspectiveNear);
+
+            float32 perspectiveFar = cameraComponent.camera.GetPerspectiveFarClip();
+            if (ImGui::DragFloat("Far Clip", &perspectiveFar, 0.1f))
+                cameraComponent.camera.SetPerspectiveFarClip(perspectiveFar);
 
             // Orthographic
-            static float32 orthoSize = cameraComponent.camera.GetOrthographicSize();
-            static float32 orthoNear = cameraComponent.camera.GetOrthographicNearClip();
-            static float32 orthoFar = cameraComponent.camera.GetOrthographicFarClip();
+            ImGui::Separator();
+            float32 orthoSize = cameraComponent.camera.GetOrthographicSize();
+            float32 orthoNear = cameraComponent.camera.GetOrthographicNearClip();
+            float32 orthoFar = cameraComponent.camera.GetOrthographicFarClip();
+
+            ImGui::Separator();
+            ImGui::ColorEdit4("Clear Color", &cameraComponent.camera.clearColor[0]);
+
+            ImToolkit::DrawVector2Control("Viewport Size", &cameraComponent.camera.viewportSize[0], 0.01f);
+            ImToolkit::DrawVector2Control("Viewport Offset", &cameraComponent.camera.viewportOffset[0], 0.01f);
 
             // TODO: temporary test!
             Math::Transform* camTransform = (Math::Transform*)GetCameraTransform();
@@ -394,10 +447,6 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::DragFloat3("CCScale2", &camTransform->scale[0]);
             ImGui::Separator();
             ImGui::DragFloat4("CCRotation2", &camTransform->rotation[0]);
-
-            cameraComponent.camera.SetPerspectiveVerticalFOV(perspectiveYFOV);
-            cameraComponent.camera.SetPerspectiveNearClip(perspectiveNear);
-            cameraComponent.camera.SetPerspectiveFarClip(perspectiveFar);
 
             cameraComponent.camera.SetOrthographicSize(orthoSize);
             cameraComponent.camera.SetOrthographicNearClip(orthoNear);
