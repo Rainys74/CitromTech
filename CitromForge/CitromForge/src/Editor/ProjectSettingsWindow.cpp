@@ -1,5 +1,6 @@
 #include "ProjectSettingsWindow.h"
 #include "Main/SharedMain.h"
+#include "ImGui/ImGuiToolkit.h"
 
 #include "Logger/Logger.h"
 #include "Renderer/RenderAPI/GraphicsDevice.h"
@@ -25,32 +26,6 @@ static const char* VSyncModeToString(RenderAPI::VSyncMode mode)
         default: return "Unknown";
     }
     return "Unknown";
-}
-
-template<typename T, const char* (*TToString)(T)>
-static bool ComboEnum(const char* label, T& currentValue, const T* values, int valuesCount, const int valuesBegin = 0) 
-{
-    bool valueChanged = false;
-    const char* previewValue = TToString(currentValue);
-
-    if (ImGui::BeginCombo(label, previewValue))
-    {
-        for (int n = valuesBegin; n < valuesCount; n++)
-        {
-            bool selected = (currentValue == values[n]);
-            if (ImGui::Selectable(TToString(values[n]), selected))
-            {
-                currentValue = values[n];
-                valueChanged = true;
-            }
-            if (selected)
-            {
-                ImGui::SetItemDefaultFocus();
-            }
-        }
-        ImGui::EndCombo();
-    }
-    return valueChanged;
 }
 
 void ProjectSettingsWindow::ImGuiDraw(bool* showWindow)
@@ -85,7 +60,7 @@ void ProjectSettingsWindow::ImGuiDraw(bool* showWindow)
             //}
             RenderAPI::VSyncMode currentVSyncMode = RenderAPI::Device::Get()->GetVSync();
             static constexpr RenderAPI::VSyncMode availableVSyncModes[] = { RenderAPI::VSyncMode::Adaptive, RenderAPI::VSyncMode::Off, RenderAPI::VSyncMode::On, RenderAPI::VSyncMode::Half, RenderAPI::VSyncMode::Quarter, RenderAPI::VSyncMode::Eighth};
-            if (ComboEnum<RenderAPI::VSyncMode, VSyncModeToString>("V-Sync Interval", currentVSyncMode, availableVSyncModes, CT_ARRAY_LENGTH(availableVSyncModes)))
+            if (ImToolkit::ComboEnum<RenderAPI::VSyncMode, VSyncModeToString>("V-Sync Interval", currentVSyncMode, availableVSyncModes, CT_ARRAY_LENGTH(availableVSyncModes)))
             {
                 CT_CORE_INFO("TESTT!~!! {}", (int)currentVSyncMode);
                 RenderAPI::Device::Get()->SetVSync(currentVSyncMode);

@@ -8,6 +8,14 @@
 */
 namespace Citrom::Platform
 {
+	enum class DisplayMode // ScreenMode
+	{
+		Windowed,
+		//Borderless,
+		//Fullscreen,
+		//ExclusiveFullscreen
+	};
+
     class WindowBackend
     {
     public:

@@ -368,6 +368,41 @@ namespace Citrom::Platform
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
+	/* // TODO: implement multiple fullscreen options
+	void platform_update_screen()
+	{
+		if (platformPtr->surfaceData.fullscreen)
+		{
+			// Retrieve the primary display device name
+			DISPLAY_DEVICE dd = { 0 };
+			dd.cb = sizeof(DISPLAY_DEVICE);
+			EnumDisplayDevices(NULL, 0, &dd, 0);
+	
+			// Retrieve current display settings
+			DEVMODE dm = { 0 };
+			dm.dmSize = sizeof(DEVMODE);
+			EnumDisplaySettings(dd.DeviceName, ENUM_CURRENT_SETTINGS, &dm);
+	
+			// Get monitor width and height
+			int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+			int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	
+			CT_CORE_ASSERT(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+	
+			SetWindowLongPtr(platformPtr->internalData->hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+			SetWindowPos(platformPtr->internalData->hWnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
+		}
+		else
+		{
+			// Restore window style to overlapped window
+			SetWindowLongPtr(platformPtr->internalData->hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+	
+			// Adjust window size and position as desired
+			SetWindowPos(platformPtr->internalData->hWnd, HWND_TOP, platformPtr->surfaceData.x, platformPtr->surfaceData.y, platformPtr->surfaceData.width, platformPtr->surfaceData.height, SWP_FRAMECHANGED);
+		}
+	}
+	*/
+
     WindowBackendWin32::WindowBackendWin32()
         : m_WindowShouldClose(false), m_Width(0), m_Height(0), m_ClassName((TCHAR*)TEXT("Class Name")), m_HInstance(GetModuleHandle(NULL)), m_HWnd(0)
     {
