@@ -25,12 +25,20 @@ layout(location = 0) out vec2 vs_TexCoord0;
 vec4 u_xlat0;
 void main()
 {
+    //MOV
     vs_TexCoord0.xy = in_TexCoord1.xy;
+    //MOV
     u_xlat0.xyz = in_Position0.xyz;
+    //MOV
     u_xlat0.w = 1.0;
+    //DP4
     gl_Position.x = dot(u_xlat0, CBuffer1VS.transform[0]);
+    //DP4
     gl_Position.y = dot(u_xlat0, CBuffer1VS.transform[1]);
+    //DP4
     gl_Position.z = dot(u_xlat0, CBuffer1VS.transform[2]);
+    //DP4
     gl_Position.w = dot(u_xlat0, CBuffer1VS.transform[3]);
+    //RET
     return;
 }

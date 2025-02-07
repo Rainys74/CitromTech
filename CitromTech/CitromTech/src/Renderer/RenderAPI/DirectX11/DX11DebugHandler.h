@@ -17,10 +17,19 @@
 std::string HResultToString(HRESULT hr);
 void DXMessageBoxError(const std::string& errorMsg, const HRESULT hr, const char* file, const unsigned int line, const char* function);
 
+#ifndef CT_OPTIMIZATION
+
 #define DXCallHRNoInfo(x) hr = (x); if (FAILED(hr)) {std::string errorMsg = HResultToString(hr); DXMessageBoxError(errorMsg, hr, __FILE__, __LINE__, __func__);}
 #define DXCallHR(x) DXGIInfoManager::Get().ClearErrors(); DXCallHRNoInfo(x)
 
 #define DXCall(x) DXGIInfoManager::Get().ClearErrors(); (x); if (DXGIInfoManager::Get().GetMessages().Count() > 0) {DXMessageBoxError("", 0, __FILE__, __LINE__, __func__);}
+
+#else
+#define DXCallHRNoInfo(x) (void)(x)
+#define DXCallHR(x) DXCallHRNoInfo(x)
+
+#define DXCall(x) x
+#endif
 
 // Most of the credits for this class go to ChiliTomatoNoodle
 class DXGIInfoManager

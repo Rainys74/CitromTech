@@ -26,6 +26,8 @@ fragment Mtl_FragmentOut xlatMtlMain(
     Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
+    //SAMPLE
     output.SV_Target0 = u_Texture.sample(_u_Texture_sampler, input.TEXCOORD1.xy);
+    //RET
     return output;
 }
