@@ -1,5 +1,11 @@
 #version 440
 
+#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
+#if HLSLCC_ENABLE_UNIFORM_BUFFERS
+#define UNITY_UNIFORM
+#else
+#define UNITY_UNIFORM uniform
+#endif
 #define UNITY_SUPPORTS_UNIFORM_LOCATION 1
 #if UNITY_SUPPORTS_UNIFORM_LOCATION
 #define UNITY_LOCATION(x) layout(location = x)
@@ -12,13 +18,12 @@ precise vec4 u_xlat_precise_vec4;
 precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
-UNITY_LOCATION(0) uniform  sampler2D tex;
-layout(location = 0) in  vec2 vs_TexCoord0;
+layout(location = 1) uniform 	vec4 u_ColorData;
 layout(location = 0) out vec4 SV_Target0;
 void main()
 {
-    //SAMPLE
-    SV_Target0 = texture(tex, vs_TexCoord0.xy);
+    //MOV
+    SV_Target0 = MaterialPS.u_ColorData;
     //RET
     return;
 }

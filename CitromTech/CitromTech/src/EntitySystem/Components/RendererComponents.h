@@ -13,12 +13,13 @@ namespace Citrom
 	struct ModelComponent
 	{
 		Mesh mesh;
-		Material material;
+		//Material material;
 		
 		bool castShadows; // or use flags maybe?
 	};
 	struct CubeComponent // Box Component
 	{
-		Material material;
+		//Material material;
+		bool test;
 	};
 }

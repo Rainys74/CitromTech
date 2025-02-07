@@ -457,7 +457,7 @@ namespace Citrom
 
 		//m_Device->SetTargetFramebuffer(&fbo1);
 
-		m_Device->RCDrawIndexed(ibo.GetCount());
+		//m_Device->RCDrawIndexed(ibo.GetCount());
 
 		void* colorTexture = m_Device->GetFramebufferColorAttachment(&fbo1);
 		//Image colorImage = m_Device->GetImageDataFromTexture(colorTexture);
@@ -498,7 +498,17 @@ namespace Citrom
 		//u_ColorData.r = 0.5f;
 		////matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
 
-		//m_Device->RCDrawIndexed(ibo.GetCount());
+		struct MaterialTestBuffer
+		{
+			MATERIAL_BUFFER_CLASS(MaterialTestBuffer);
+
+			Math::ColorF32x4 u_Color;
+		};
+		Material<MaterialTestBuffer> matTest;
+		matTest.GetBufferData()->u_Color = Math::ColorF32x4(1.0f, 0.2f, 0.5f);
+		matTest.UpdateData();
+
+		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		m_Device->SetTargetFramebuffer(nullptr);
 	}

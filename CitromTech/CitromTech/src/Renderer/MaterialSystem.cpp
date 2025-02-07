@@ -7,7 +7,7 @@ namespace Citrom
 
 #define SAFE_FREE(x) if ((x) != nullptr) {Memory::Free(x); (x) = nullptr;}
 
-    Material::Material(const std::string& shaderName)
+    /*Material::Material(const std::string& shaderName)
         : m_Device(Device::Get())
     {
         ShaderDesc sd = {};
@@ -85,7 +85,7 @@ namespace Citrom
         return nullptr;
     }
 
-    constexpr size_t GetMaterialFormatSize(MaterialFormat format)
+    inline constexpr size_t GetMaterialFormatSize(MaterialFormat format)
     {
 #define FORMATSIZE_CASE(x, y, z) case (x): return sizeof(y) * (z); break
 
@@ -101,5 +101,5 @@ namespace Citrom
             default: return 0; break;
         }
         return 0;
-    }
+    }*/
 }

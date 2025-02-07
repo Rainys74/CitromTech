@@ -7,7 +7,7 @@
 
 namespace Citrom
 {
-	enum class MaterialFormat
+	/*enum class MaterialFormat
 	{
 		Float32,
 		Float32x3,
@@ -53,5 +53,51 @@ namespace Citrom
 	{
 		//Material* mat;
 		//Material values;
+	};*/
+
+#define MATERIAL_BUFFER_CLASS(NAME)
+
+	template<typename CB>
+	class Material
+	{
+	public:
+		Material(const std::string& shaderName = "Standard")
+			: m_Device(RenderAPI::Device::Get())
+		{
+			RenderAPI::ShaderDesc sd = {};
+			sd.name = shaderName;
+
+			m_Shader = m_Device->CreateShader(&sd);
+
+			RenderAPI::UniformBufferDesc ubd = {};
+			ubd.data = &m_CBData;
+			ubd.dataBytes = sizeof(CB);
+			ubd.usage = RenderAPI::Usage::Dynamic;
+
+			m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
+		}
+		~Material() = default;
+
+		void Bind()
+		{
+			m_Device->BindShader(&m_Shader);
+			m_Device->BindUniformBuffer(&m_UniformBuffer, RenderAPI::ShaderType::Vertex, 1);
+		}
+		void UpdateData()
+		{
+			Bind();
+			m_Device->SetUniformBufferData(&m_UniformBuffer, &m_CBData, sizeof(CB));
+		}
+
+		FORCE_INLINE void SetBufferData(const CB& newBuffer) { m_CBData = newBuffer; }
+		FORCE_INLINE CB* GetBufferData() { return &m_CBData; }
+		FORCE_INLINE constexpr size_t GetBufferSize() { return sizeof(CB); }
+	private:
+		CB m_CBData;
+
+		RenderAPI::Shader m_Shader;
+		RenderAPI::UniformBuffer m_UniformBuffer;
+
+		RenderAPI::Device* m_Device;
 	};
 }
