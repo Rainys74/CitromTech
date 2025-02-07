@@ -32,8 +32,9 @@ namespace Citrom
 		Material(RenderAPI::Shader& shader);
 		~Material();
 
+		void PushPropertyNoAutoPad(const std::string& name, const MaterialFormat format, const void* propertyData);
 		void PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData);
-		void UpdateData(const std::string& name, const MaterialFormat format, const void* newData);
+		void UpdateProperty(const std::string& name, const MaterialFormat format, const void* newData);
 		void Render();
 
 		void Bind();

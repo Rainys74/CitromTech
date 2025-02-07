@@ -51,6 +51,6 @@ SamplerState splr;
 float4 psmain(float2 texCoord : TexCoord) : SV_Target
 {
     //return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
-    //return tex.Sample(splr, texCoord);
-    return u_ColorData;
+    return tex.Sample(splr, texCoord);
+    //return u_ColorData;
 }

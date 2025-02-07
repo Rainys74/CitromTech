@@ -1,6 +1,8 @@
 #include "MaterialSystem.h"
 #include "CitromAssert.h"
 
+#include "Profiling/Profiler.h"
+
 namespace Citrom
 {
     using namespace RenderAPI;
@@ -28,8 +30,10 @@ namespace Citrom
     Material::~Material()
     {
     }
-    void Material::PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData)
+    void Material::PushPropertyNoAutoPad(const std::string& name, const MaterialFormat format, const void* propertyData)
     {
+        CT_PROFILE_MEMBER_FUNCTION();
+
         uint8* dataBytes = (uint8*)propertyData;
 
         m_BufferData.Reserve(GetMaterialFormatSize(format));
@@ -38,9 +42,50 @@ namespace Citrom
 
         m_Properties.PushBack(MaterialProperty{name, format, (void*)&m_BufferData[(m_BufferData.Count() - GetMaterialFormatSize(format))]});
     }
-
-    void Material::UpdateData(const std::string& name, const MaterialFormat format, const void* newData)
+//#define /*MATERIAL_*/GPU_BYTE_ALLIGNMENT (16)
+#define /*MATERIAL_*/GPU_BYTE_ALIGNMENT (16)
+    void Material::PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData)
     {
+        CT_PROFILE_MEMBER_FUNCTION();
+
+        uint8* dataBytes = (uint8*)propertyData;
+
+        /*size_t bytesLeftForSlot = GPU_BYTE_ALLIGNMENT;
+        for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
+        {
+            if (bytesLeftForSlot < GetMaterialFormatSize(format))
+            {
+                for (size_t j = 0; j < bytesLeftForSlot; j++)
+                    m_BufferData.PushBack(0x00);
+                bytesLeftForSlot = GPU_BYTE_ALLIGNMENT;
+            }
+            else
+            {
+                m_BufferData.PushBack(dataBytes[i]);
+                bytesLeftForSlot--;
+            }
+        }
+
+        m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[(m_BufferData.Count() - GetMaterialFormatSize(format))] });*/
+
+        uint32 currentOffset = m_BufferData.Count(); // Calculate current offset in the buffer
+
+        // Compute padding needed to align to 16 bytes
+        size_t padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT;
+
+        for (size_t i = 0; i < padding; i++)
+            m_BufferData.PushBack(0x00);
+
+        for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
+            m_BufferData.PushBack(dataBytes[i]);
+
+        m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[m_BufferData.Count() - GetMaterialFormatSize(format)] });
+    }
+
+    void Material::UpdateProperty(const std::string& name, const MaterialFormat format, const void* newData)
+    {
+        CT_PROFILE_MEMBER_FUNCTION();
+
         MaterialProperty* property = GetPropertyByName(name);
 
         //Memory::Free(property->data, GetMaterialFormatSize(property->propertyFormat));

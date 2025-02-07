@@ -491,11 +491,11 @@ namespace Citrom
 		//matTest.UpdateData("u_Test", MaterialFormat::Float32, &testData);
 
 		Math::Vector3 padding1;
-		matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1); // TODO: implement something in the material system to not need this
+		//matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1); // implement something in the material system to not need this. It is done.
 
 		Math::ColorF32x4 u_ColorData(1.0f, 0.2f, 0.5f);
-		matTest.PushProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
-		matTest.UpdateData	("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		matTest.PushProperty  ("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		matTest.UpdateProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
 		u_ColorData.r = 0.5f;
 		////matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
 
