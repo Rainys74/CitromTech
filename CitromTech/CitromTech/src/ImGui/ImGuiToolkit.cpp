@@ -144,9 +144,7 @@ namespace ImToolkit //ImPresets
         modified |= _DrawControlElementDragButton("X", "##X_SelectableDrag", &values[0], speed, buttonSize, ImVec4(0.8f, 0.1f, 0.15f, 1.0f), ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
 
         ImGui::SameLine();
-        modified |= ImGui::DragFloat("##X", &values[0], speed);
-        if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(0))
-            ImGui::SetKeyboardFocusHere(-1); // Set to the item before (DragFloat)
+        modified |= _DrawControlElementDragInput("##X", &values[0]);
         ImGui::PopItemWidth();
 
         // Y
@@ -154,7 +152,7 @@ namespace ImToolkit //ImPresets
         modified |= _DrawControlElementDragButton("Y", "##Y_SelectableDrag", &values[1], speed, buttonSize, ImVec4(0.2f, 0.7f, 0.2f, 1.0f), ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
 
         ImGui::SameLine();
-        modified |= ImGui::DragFloat("##Y", &values[1], speed);
+        modified |= _DrawControlElementDragInput("##Y", &values[1]);
         ImGui::PopItemWidth();
 
         // Z
@@ -162,7 +160,7 @@ namespace ImToolkit //ImPresets
         modified |= _DrawControlElementDragButton("Z", "##Z_SelectableDrag", &values[2], speed, buttonSize, ImVec4(0.1f, 0.25f, 0.8f, 1.0f), ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
 
         ImGui::SameLine();
-        modified |= ImGui::DragFloat("##Z", &values[2], speed);
+        modified |= _DrawControlElementDragInput("##Z", &values[2]);
         ImGui::PopItemWidth();
 
         ImGui::PopStyleVar();

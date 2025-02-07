@@ -18,6 +18,7 @@ float4 psmain() : SV_Target
 struct VSInput
 {
     float3 pos : Position;
+    float3 n : Normal;
     float2 tex : TexCoord1;
 };
 struct VSOut

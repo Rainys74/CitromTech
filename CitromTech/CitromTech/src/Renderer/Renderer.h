@@ -21,6 +21,7 @@ namespace Citrom
 	struct Vertex
 	{
 		Math::Vector3 position;
+		Math::Vector3 normal;
 		struct TextureCoordinate
 		{
 			float32 u, v;

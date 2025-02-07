@@ -205,9 +205,9 @@ namespace Citrom
 
 		float triangleVertices[] =
 		{
-			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
-			 0.0f,  0.5f, 0.0f,		0.5f, 1.0f,
-			 0.5f, -0.5f, 0.0f,		1.0f, 0.0f
+			-0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,		0.0f, 0.0f,
+			 0.0f,  0.5f, 0.0f,		0.0f, 0.0f, 1.0f,		0.5f, 1.0f,
+			 0.5f, -0.5f, 0.0f,		0.0f, 0.0f, 1.0f,		1.0f, 0.0f
 		};
 
 		unsigned int triangleIndices[] =
@@ -235,7 +235,7 @@ namespace Citrom
 				CT_WARN("Shape[{}].indices = {}", s, shapes[s].mesh.indices.size());
 			}
 
-			vertexes.Reserve(attrib.vertices.size() / 3);
+			/*vertexes.Reserve(attrib.vertices.size() / 3);
 			for (size_t v = 0; v < attrib.vertices.size() / 3; v++)
 				vertexes.PushBack(Vertex{});
 
@@ -244,7 +244,7 @@ namespace Citrom
 				vertexes[v].position.x = attrib.vertices[3 * v + 0];
 				vertexes[v].position.y = attrib.vertices[3 * v + 1];
 				vertexes[v].position.z = attrib.vertices[3 * v + 2];
-			}
+			}*/
 
 			/*for (size_t v = 0; v < attrib.texcoords.size() / 2; v++)
 			{
@@ -270,6 +270,14 @@ namespace Citrom
 					vert.position.y = attrib.vertices[3 * index.vertex_index + 1];
 					vert.position.z = attrib.vertices[3 * index.vertex_index + 2];
 
+					// Get the correct normal, ensuring the normal index is valid
+					if (index.normal_index >= 0)
+					{
+						vert.normal.x = attrib.normals[3 * index.normal_index + 0];
+						vert.normal.y = attrib.normals[3 * index.normal_index + 1];
+						vert.normal.z = attrib.normals[3 * index.normal_index + 2];
+					}
+
 					// Get the correct texture coordinate, ensuring the texcoord index is valid
 					if (index.texcoord_index >= 0)
 					{
@@ -293,12 +301,17 @@ namespace Citrom
 			}
 		}
 
-		CTL::DArray<float> vertices;
+		CTL::DArray<float> vertices(vertexes.Size());
+		//vertices.Reserve((sizeof(Vertex) / 4) * vertexes.Count());
 		for (const Vertex& vert : vertexes)
 		{
 			vertices.PushBack(vert.position.x);
 			vertices.PushBack(vert.position.y);
 			vertices.PushBack(vert.position.z);
+
+			vertices.PushBack(vert.normal.x);
+			vertices.PushBack(vert.normal.y);
+			vertices.PushBack(vert.normal.z);
 
 			vertices.PushBack(vert.texCoord.u);
 			vertices.PushBack(vert.texCoord.v);
@@ -383,6 +396,7 @@ namespace Citrom
 		vbld1.shader = &shader;
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);

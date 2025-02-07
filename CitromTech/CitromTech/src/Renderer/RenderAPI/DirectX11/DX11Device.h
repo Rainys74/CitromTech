@@ -17,7 +17,7 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
-		void SetTargetFramebuffer(Framebuffer* fb) override;
+		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override;
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override;
 
