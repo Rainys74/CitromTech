@@ -14,10 +14,10 @@ namespace Citrom
 		CT_VERBOSE("Thread ID: ({}); Thread Pool Working!", Thread::GetCurrentID());
 		while (true)
 		{
-			threadPool->GetMutex().Lock();
+			//threadPool->GetMutex().Lock();
 			while (threadPool->GetJobCount() == 0)
 			{
-				threadPool->GetMutex().Unlock();
+				//threadPool->GetMutex().Unlock();
 
 				// TODO: probably look into replacing with Thread's sleep function
 				Platform::Utils::Sleep(1); // Sleep for 1 up to 10 ms to reduce CPU usage
@@ -56,7 +56,7 @@ namespace Citrom
 	{
 		for (uint32 i = 0; i < maxThreads; i++)
 		{
-			m_WorkerThreads.PushBack(Thread(reinterpret_cast<Thread::StartRoutinePFN>(ThreadPoolWork), this));
+			m_WorkerThreads.PushBack(*new Thread(reinterpret_cast<Thread::StartRoutinePFN>(ThreadPoolWork), this));
 		}
 	}
 

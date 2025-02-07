@@ -21,15 +21,24 @@ namespace Citrom
 		~ThreadPool();
 
 		void Submit(void* job, void* args);
+		void Submit(void(*job)(void* args), void* args) { Submit(static_cast<void*>(job), args); }
 
-		template<typename IdxType = uint32>
-		void ForEach(IdxType* iteratorBegin, IdxType* iteratorEnd, void(*callback)(IdxType index)/*, bool shouldWait*/)
+		/*template<typename IdxType = uint32>
+		void ForEach(IdxType* iteratorBegin, IdxType* iteratorEnd, void(*callback)(IdxType index)/*, bool shouldWait*)
 		{
 			IdxType i = 0;
 			for (auto it = iteratorBegin; it != iteratorEnd; ++it)
 			{
 				i++;
 				Submit(callback, reinterpret_cast<void*>(&i));
+			}
+		}*/
+		template<typename T>
+		void ForEach(T* itBegin, T* itEnd, void(*callback)(T* iterator))
+		{
+			for (auto it = itBegin; it != itEnd; ++it)
+			{
+				Submit(callback, it);
 			}
 		}
 
