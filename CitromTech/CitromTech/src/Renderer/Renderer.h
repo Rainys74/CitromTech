@@ -47,7 +47,7 @@ namespace Citrom
 	private:
 		RenderAPI::Device* m_Device;
 
-		struct VertexUBO
+		struct alignas(16) VertexUBO
 		{
 			Math::Matrix4x4 VP; // (4*4)*4=64 bytes fits
 
@@ -56,7 +56,7 @@ namespace Citrom
 
 			//uint8 padding1[(4+6+4)]; // handled by my new juicy DX11 CB feature
 		} m_GridVertUBData;
-		struct FragmentUBO
+		struct alignas(16) FragmentUBO
 		{
 			Math::Vector3 CameraWorldPos; // 4*3=12 bytes
 			float GridSize; //4*1=4 bytes - fits into 16
@@ -79,6 +79,18 @@ namespace Citrom
 	class Renderer
 	{
 	public:
+		struct CameraData
+		{
+			CameraData() = default;
+			CameraData(Camera* cam)
+				: camera(cam) {}
+			CameraData(Camera* cam, Math::Transform* transform)
+				: camera(cam), cameraTransform(transform) {}
+
+			Camera* camera = nullptr;
+			Math::Transform* cameraTransform = nullptr;
+		};
+
 		static void Initialize(Platform::Window* window);
 
 		// Submit, BeginScene, EndScene
@@ -86,7 +98,7 @@ namespace Citrom
 		static void EndFrame();
 
 		// Main Submission
-		static void Begin();
+		static void Begin(Scene* scene);
 		static void End();
 
 		//static void Submit(void* model);
@@ -105,8 +117,15 @@ namespace Citrom
 		static RenderAPI::Device* m_Device;
 		static EventListener<WindowEvents> s_WindowEventListener;
 
-		//static Scene* s_CurrentScene;
+		static CameraData s_CurrentCamera;
+		static Scene* s_CurrentScene;
 
 		//static CTL::DArray<Model> s_ModelsToDraw;
 	};
+
+	/*class RenderPath
+	{
+	public:
+		void RenderModel(Material* material);
+	};*/
 }

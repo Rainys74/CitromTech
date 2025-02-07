@@ -19,6 +19,9 @@ namespace Citrom
 	RenderAPI::Device* Renderer::m_Device;
 	EventListener<WindowEvents> Renderer::s_WindowEventListener;
 
+	Renderer::CameraData Renderer::s_CurrentCamera;
+	Scene* Renderer::s_CurrentScene;
+
 	static EditorRenderer g_EditorRenderer;
 
 	void Renderer::Initialize(Platform::Window* window)
@@ -105,17 +108,30 @@ namespace Citrom
 
 	void Renderer::BeginFrame()
 	{
-		//m_Device->RCClearColor(1.0f, 0.5f, 0.24f, 1.0f); // Citrom Tech 2D
-		m_Device->RCClearColor(0.5f, 0.74f, 0.14f); // Citrom Tech
+		if (s_CurrentScene && s_CurrentCamera.camera)
+		{
+			Math::Color& clearColor = s_CurrentCamera.camera->clearColor;
+			m_Device->RCClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+		}
+		else
+		{
+			//m_Device->RCClearColor(1.0f, 0.5f, 0.24f, 1.0f); // Citrom Tech 2D
+			m_Device->RCClearColor(0.5f, 0.74f, 0.14f); // Citrom Tech
+		}
 	}
 
 	void Renderer::EndFrame()
 	{
 		m_Device->SwapBuffers();
+
+		s_CurrentScene = nullptr;
 	}
 
-	void Renderer::Begin()
+	void Renderer::Begin(Scene* scene)
 	{
+		s_CurrentScene = scene;
+		s_CurrentCamera.camera = &scene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+		s_CurrentCamera.cameraTransform = &scene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
 	}
 
 	void Renderer::End()
@@ -193,6 +209,9 @@ namespace Citrom
 	void Renderer::DrawTest(Camera* camera, Math::Transform* cameraTransform)
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
+
+		//Camera* camera = s_CurrentCamera.camera;
+		//Math::Transform* cameraTransform = s_CurrentCamera.cameraTransform;
 
 		g_EditorRenderer.Render(camera, cameraTransform);
 

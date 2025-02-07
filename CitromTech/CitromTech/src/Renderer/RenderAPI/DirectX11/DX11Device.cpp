@@ -78,8 +78,17 @@ namespace Citrom::RenderAPI
 
 		HRESULT hr;
 
+#define _INTERN_DEVICE_FLAGS_DEBUG (D3D11_CREATE_DEVICE_DEBUG) // | D3D11_CREATE_DEVICE_DEBUGGABLE // "This value is not supported until Direct3D 11.1."
+#define _INTERN_DEVICE_FLAGS_ALL (D3D11_CREATE_DEVICE_SINGLETHREADED) // TODO: this may cause issues someday, though improves performance at the cost of thread safety. // D3D11_CREATE_DEVICE_BGRA_SUPPORT
+
+#ifdef CT_DEBUG
+#define DEVICE_FLAGS (_INTERN_DEVICE_FLAGS_ALL | _INTERN_DEVICE_FLAGS_DEBUG) // D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS
+#else
+#define DEVICE_FLAGS _INTERN_DEVICE_FLAGS_ALL
+#endif
+
 		//inline UINT deviceFlags = 0x00000000;
-		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, D3D11_CREATE_DEVICE_DEBUG /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, &m_D3DFeatureLevel, &m_DeviceContext));
+		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, DEVICE_FLAGS /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, &m_D3DFeatureLevel, &m_DeviceContext));
 
 		// TODO: afaik this is set in initialization in vulkan and metal
 		// every time you draw call in opengl, and however you want in d3d11.

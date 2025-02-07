@@ -147,23 +147,19 @@ int SharedMain(int argc, char* argv[])
 	// TODO: eventually change the -1
 	ThreadPool::Initialize(threadCount - 1);
 
-	CTL::DArray<uint32> testIter(5);
-	for (uint32 i = 0; i < 5; i++)
-		testIter.PushBack(34);
-	//ThreadPool::Get()->ForEach<uint32>(testIter.begin(), testIter.end(), [](uint32 i) // TODO: convert IDXType to T to use foreach loops
+	//static uint32 total = 0;
+	//
+	//CTL::DArray<uint32> testIter(5);
+	//for (uint32 i = 0; i < 5; i++)
+	//	testIter.PushBack(34);
+	//ThreadPool::Get()->ForEach<uint32>(testIter.begin(), testIter.end(), [](uint32* iPtr)
 	//	{
+	//		uint32 i = *(uint32*)iPtr;
+	//
 	//		CT_ERROR("TP: {}. {}", i, 2);
 	//	});
-	static uint32 total = 0;
-	ThreadPool::Get()->Submit([](void* iPtr)
-		{
-			uint32 i = *(uint32*)iPtr;
-
-			CT_ERROR("TP: {}. {}", i, 2);
-			total += i;
-		}, &testIter[0]);
-
-	CT_ERROR("TP TOTAL: {}", total);
+	//
+	//CT_ERROR("TP TOTAL: {}", total);
 
 #if 0
 	TestOutMain(argc, argv);
@@ -352,7 +348,9 @@ void ForgeLoop()
 
 		Renderer::DrawTest(currentCamera, currentCameraTransform);
 
+		Renderer::Begin(g_CurrentScene);
 		Renderer::SubmitScene(g_CurrentScene);
+		Renderer::End();
 
 		// TODO: implement something like F11: Open/close editor UI and pause the game.
 								//Shift + F11: Open / close editor UI without pausing the game.

@@ -38,8 +38,11 @@ namespace Citrom::Profiler
 	};
 }
 
-// TODO: profiling should be disabled on optimized builds
+#ifndef CT_OPTIMIZATION
 #define _INTERN_CT_PROFILE_MACRO(NAMECSTR) auto _Intern_profileTimer ## __LINE__ = Citrom::Profiler::ScopedTimer(NAMECSTR, Citrom::Profiler::ProfileDefaultCallback)
+#else
+#define _INTERN_CT_PROFILE_MACRO(NAMECSTR)
+#endif
 
 #define CT_PROFILE_GLOBAL_FUNCTION() _INTERN_CT_PROFILE_MACRO(__func__)
 // The line: .substr(std::string(typeid(CLASS).name()).find("class ") == 0 ? 6 : (std::string(typeid(CLASS).name()).find("struct ") == 0 ? 7 : 0)) trims the prefixes to make the profiler's function names shorter

@@ -54,6 +54,26 @@
 #define CT_ERROR(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Error, x, ## __VA_ARGS__)
 #define CT_FATAL(x, ...)			Citrom::Logger::GetLogger()->Log(Citrom::Logger::LogCategory::App,	Citrom::Logger::LogLevel::Critical, x, ## __VA_ARGS__)
 
+#if defined(CT_RELEASE) || defined(CT_OPTIMIZATION)
+#define CT_CORE_TRACE(x, ...)
+#define CT_CORE_VERBOSE(x, ...)
+
+#define CT_TRACE(x, ...)
+#define CT_VERBOSE(x, ...)
+
+#if defined(CT_OPTIMIZATION)
+#define CT_CORE_INFO(x, ...)
+#define CT_CORE_WARN(x, ...)
+#define CT_CORE_ERROR(x, ...)
+#define CT_CORE_FATAL(x, ...)
+
+#define CT_INFO(x, ...)	
+#define CT_WARN(x, ...)	
+#define CT_ERROR(x, ...)
+#define CT_FATAL(x, ...)
+#endif // CT_OPTIMIZATION
+#endif
+
 namespace Citrom
 {
 	enum class LogColor
