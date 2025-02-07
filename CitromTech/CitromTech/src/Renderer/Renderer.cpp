@@ -393,7 +393,7 @@ namespace Citrom
 
 		// Vertex Buffer 1 Layout
 		VertexBufferLayoutDesc vbld1 = {};
-		vbld1.shader = &shader;
+		vbld1.shader = &shader; // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
@@ -484,30 +484,33 @@ namespace Citrom
 		//	int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
 		//}
 
-		//Material matTest;
-		////float32 testData = 0.5f;
-		////matTest.PushProperty("u_Test", MaterialFormat::Float32, &testData);
-		////matTest.UpdateData("u_Test", &testData, MaterialFormat::Float32);
-		////
-		////Math::Vector3 padding1;
-		////matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1);
+		///Material matTest;
+		Material matTest(shader);
+		float32 testData = 0.5f;
+		matTest.PushProperty("u_Test", MaterialFormat::Float32, &testData);
+		//matTest.UpdateData("u_Test", MaterialFormat::Float32, &testData);
 
-		//Math::ColorF32x4 u_ColorData(1.0f, 0.2f, 0.5f);
-		//matTest.PushProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
-		//matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
-		//u_ColorData.r = 0.5f;
+		Math::Vector3 padding1;
+		matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1); // TODO: implement something in the material system to not need this
+
+		Math::ColorF32x4 u_ColorData(1.0f, 0.2f, 0.5f);
+		matTest.PushProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		matTest.UpdateData	("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		u_ColorData.r = 0.5f;
 		////matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
 
-		struct MaterialTestBuffer
-		{
-			MATERIAL_BUFFER_CLASS(MaterialTestBuffer);
+		//struct MaterialTestBuffer
+		//{
+		//	MATERIAL_BUFFER_CLASS(MaterialTestBuffer);
+		//
+		//	Math::ColorF32x4 u_Color;
+		//};
+		//Material<MaterialTestBuffer> matTest;
+		//matTest.GetBufferData()->u_Color = Math::ColorF32x4(1.0f, 0.2f, 0.5f);
+		//matTest.UpdateData();
 
-			Math::ColorF32x4 u_Color;
-		};
-		Material<MaterialTestBuffer> matTest;
-		matTest.GetBufferData()->u_Color = Math::ColorF32x4(1.0f, 0.2f, 0.5f);
-		matTest.UpdateData();
-
+		matTest.Bind();
+		//m_Device->BindShader(&shader);
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		m_Device->SetTargetFramebuffer(nullptr);

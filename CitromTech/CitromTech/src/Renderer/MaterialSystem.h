@@ -7,7 +7,7 @@
 
 namespace Citrom
 {
-	/*enum class MaterialFormat
+	enum class MaterialFormat
 	{
 		Float32,
 		Float32x3,
@@ -28,19 +28,22 @@ namespace Citrom
 	class Material
 	{
 	public:
-		Material(const std::string& shaderName = "Standard");
+		//Material(const std::string& shaderName = "Standard");
+		Material(RenderAPI::Shader& shader);
 		~Material();
 
 		void PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData);
-		void UpdateData(const std::string& name, const void* newData, const MaterialFormat format);
+		void UpdateData(const std::string& name, const MaterialFormat format, const void* newData);
 		void Render();
+
+		void Bind();
 
 		FORCE_INLINE RenderAPI::Shader* GetShader() { return &m_Shader; };
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
 	private:
 		MaterialProperty* GetPropertyByName(const std::string& name);
 	private:
-		RenderAPI::Shader m_Shader;
+		RenderAPI::Shader& m_Shader;
 		RenderAPI::UniformBuffer m_UniformBuffer;
 
 		//CTL::StdStrHashMap<MaterialProperty> m_Properties; CTL::DArray<MaterialProperty> properties;
@@ -53,9 +56,10 @@ namespace Citrom
 	{
 		//Material* mat;
 		//Material values;
-	};*/
+	};
 
-#define MATERIAL_BUFFER_CLASS(NAME)
+/*#define MATERIAL_BUFFER_CLASS(NAME)
+//#define MATERIAL_BUFFER_VAR(VAR) VAR; void Set ## VAR(VAR TYPEvalue) {VAR = value;}
 
 	template<typename CB>
 	class Material
@@ -99,5 +103,5 @@ namespace Citrom
 		RenderAPI::UniformBuffer m_UniformBuffer;
 
 		RenderAPI::Device* m_Device;
-	};
+	};*/
 }

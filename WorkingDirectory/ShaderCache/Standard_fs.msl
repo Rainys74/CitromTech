@@ -12,6 +12,7 @@ using namespace metal;
 constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
 struct Material_Type
 {
+    float u_Test;
     float4 u_ColorData;
 };
 

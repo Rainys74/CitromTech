@@ -8,6 +8,18 @@
 */
 namespace Citrom::Platform
 {
+	// TODO: probably move this into a screen file or something
+	struct Resolution
+	{
+		uint32 width, height;
+		uint32 refreshRate;
+
+		std::string ToString()
+		{
+			return std::string();
+		}
+	};
+
 	enum class DisplayMode // ScreenMode
 	{
 		Windowed,

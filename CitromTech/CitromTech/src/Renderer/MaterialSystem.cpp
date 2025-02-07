@@ -7,14 +7,16 @@ namespace Citrom
 
 #define SAFE_FREE(x) if ((x) != nullptr) {Memory::Free(x); (x) = nullptr;}
 
-    /*Material::Material(const std::string& shaderName)
-        : m_Device(Device::Get())
+    Material::Material(Shader& shader)
+        : m_Device(Device::Get()), m_Shader(shader)
     {
+        /*
         ShaderDesc sd = {};
         sd.name = shaderName;
 
         m_Shader = m_Device->CreateShader(&sd);
-        
+        */
+
         uint8 pad[16] = {};
         UniformBufferDesc ubd = {};
         ubd.data = &pad;
@@ -37,7 +39,7 @@ namespace Citrom
         m_Properties.PushBack(MaterialProperty{name, format, (void*)&m_BufferData[(m_BufferData.Count() - GetMaterialFormatSize(format))]});
     }
 
-    void Material::UpdateData(const std::string& name, const void* newData, const MaterialFormat format)
+    void Material::UpdateData(const std::string& name, const MaterialFormat format, const void* newData)
     {
         MaterialProperty* property = GetPropertyByName(name);
 
@@ -47,9 +49,7 @@ namespace Citrom
 
         Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
 
-        m_Device->BindShader(&m_Shader);
-
-        m_Device->BindUniformBuffer(&m_UniformBuffer, ShaderType::Vertex, 1); //hard coded
+        Bind();
         m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size());
     }
 
@@ -72,6 +72,12 @@ namespace Citrom
         //m_Device->SetUniformBufferData(&m_UniformBuffer, bufferData, bufferSize);
         //
         //Memory::Free(bufferData);
+    }
+
+    void Material::Bind()
+    {
+        m_Device->BindShader(&m_Shader);
+        m_Device->BindUniformBuffer(&m_UniformBuffer, ShaderType::Fragment, 1); //hard coded
     }
 
     MaterialProperty* Material::GetPropertyByName(const std::string& name)
@@ -101,5 +107,5 @@ namespace Citrom
             default: return 0; break;
         }
         return 0;
-    }*/
+    }
 }

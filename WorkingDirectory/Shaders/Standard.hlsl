@@ -33,7 +33,7 @@ cbuffer CBuffer1
 };
 cbuffer Material : register(b1)
 {
-    //float u_Test;
+    float u_Test;
     float4 u_ColorData;
 };
 
