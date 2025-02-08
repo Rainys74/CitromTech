@@ -127,4 +127,6 @@ using uintptr = uintptr_t;
 
 #define CITROM_UNUSED(x) (void)(x)
 #define CT_ARRAY_LENGTH(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))
+
+#define STRINGIFY_TOKEN(x) #x // Converts your text to a string literal
 // -----------------------------------------

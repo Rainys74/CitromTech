@@ -56,6 +56,8 @@ namespace Citrom::Platform
 
 			MessageBoxA(NULL, text, title, uType);
 		}
+
+		bool RequestAccessToFile(const char* filePath) { return true; } // not sure if Windows needs something like this
 	}
 	namespace Info
 	{

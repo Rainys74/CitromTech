@@ -12,8 +12,8 @@ namespace Citrom::RenderAPI
 {
     GraphicsAPI GraphicsAPIManager::s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)] =
     {
-        GraphicsAPI::OpenGL,
         GraphicsAPI::DirectX11,
+        GraphicsAPI::OpenGL
     };
     GraphicsAPI& GraphicsAPIManager::s_CurrentGraphicsAPI = GraphicsAPIManager::s_GraphicsAPIList[0];
 

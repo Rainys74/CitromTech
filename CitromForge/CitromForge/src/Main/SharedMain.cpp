@@ -38,6 +38,8 @@
 #include "LayerSystem/ImGuiLayer.h"
 #include "LayerSystem/SimpleInputLayer.h"
 
+#include "JSON/Reader.h"
+
 #include "Application/EditorLayer.h"
 
 #include <iostream>
@@ -276,6 +278,11 @@ int SharedMain(int argc, char* argv[])
 	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
 
+	std::string json = R"({"name": "John", "age": 30, "enabled": true})";
+	JSON::TestClass testJson = JSON::DeserializeClass<JSON::TestClass>(json);
+
+	CT_ERROR("Name: {}, Age: {}, Enabled: {};", testJson.name, testJson.age, testJson.enabled);
+
 	using namespace Platform;
 
 	g_Window.Create(1280, 720, CTL::String("test"));
@@ -340,13 +347,13 @@ void ForgeLoop()
 		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		//Renderer::BeginFrame();
+		Renderer::BeginFrame();
 		g_LayerStack.Render();
 
 		Camera* currentCamera = (Camera*)GetCamera();
 		Math::Transform* currentCameraTransform = (Math::Transform*)GetCameraTransform();
 
-		//Renderer::DrawTest(currentCamera, currentCameraTransform);
+		Renderer::DrawTest(currentCamera, currentCameraTransform);
 
 		Renderer::Begin(g_CurrentScene);
 		Renderer::SubmitScene(g_CurrentScene);
@@ -362,7 +369,7 @@ void ForgeLoop()
 			g_ImLayer.End();
 		}
 
-		//Renderer::EndFrame();
+		Renderer::EndFrame();
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
