@@ -6,12 +6,14 @@
 #include "DirectX11/DX11Device.h"
 #endif
 
+#include "OpenGL/GLDevice.h"
+
 namespace Citrom::RenderAPI
 {
     GraphicsAPI GraphicsAPIManager::s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)] =
     {
+        GraphicsAPI::OpenGL,
         GraphicsAPI::DirectX11,
-        GraphicsAPI::OpenGL
     };
     GraphicsAPI& GraphicsAPIManager::s_CurrentGraphicsAPI = GraphicsAPIManager::s_GraphicsAPIList[0];
 
@@ -56,6 +58,15 @@ namespace Citrom::RenderAPI
             break;
             case GraphicsAPI::OpenGL:
             {
+                //GLDummyDevice dummy;
+                //return dummy.IsValid();
+                return true;
+            }
+            break;
+            default:
+            {
+                CT_CORE_ERROR("Unknown API passed into IsAPIValid()!");
+                return false;
             }
             break;
         }
@@ -71,6 +82,9 @@ namespace Citrom::RenderAPI
             case GraphicsAPI::DirectX11:
                 IF_WINDOWS(return new DX11Device());
                 CT_CORE_ASSERT(false, "DirectX11 is not supported on non-Windows desktops.");
+                break;
+            case GraphicsAPI::OpenGL:
+                return new GLDevice();
                 break;
             default:
                 CT_CORE_ASSERT(false, "Unknown Graphics API selected!");

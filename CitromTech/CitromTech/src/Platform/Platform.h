@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "CTL/String.h"
 
 namespace Citrom::Platform
 {
@@ -9,6 +10,10 @@ namespace Citrom::Platform
 		void Sleep(uint64 ms);
 		int32 GetProcessID();
 		float64 GetTime();
+
+		std::string GetWorkingDirectory();
+
+		bool RequestAccessToFile(const char* filePath); // returns whether access permission was granted
 
 		void MessageBoxError(const char* title, const char* text);
 	}

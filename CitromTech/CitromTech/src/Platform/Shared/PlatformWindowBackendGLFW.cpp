@@ -245,7 +245,6 @@ namespace Citrom::Platform
         if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
         {
             CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOpenGL((GLFWwindow*)this->GLFWTryGetWnd(), true), "Failed to Initialize ImGui GLFW implementation for OpenGL.");
-            CT_CORE_VERIFY(ImGui_ImplOpenGL3_Init("#version 410"), "Failed to Initialize ImGui OpenGL 4.1 implementation.");
         }
 #ifdef CT_PLATFORM_WINDOWS
         else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))

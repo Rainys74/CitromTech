@@ -102,6 +102,7 @@ project "ImGui"   -- Engine Library
                 "imgui/backends/imgui_impl_glfw.cpp", -- GLFW
 
                 -- Graphics
+                "imgui/backends/imgui_impl_opengl3.cpp", -- OpenGL -- TODO: do i want to support opengl on mac?
                 "imgui/backends/imgui_impl_metal.mm" -- Metal
             }
     

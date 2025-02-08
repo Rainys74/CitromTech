@@ -4,6 +4,8 @@
 #include "CTL/HashMap.h"
 #include "CTL/String.h"
 
+#include "Platform/Platform.h"
+
 #include <fstream>
 
 namespace Citrom::ArgumentHandler
@@ -15,6 +17,8 @@ namespace Citrom::ArgumentHandler
 	{
 		CTL::DArray<std::string> args;
 
+		CT_CORE_WARN("Current WORKING DIR: {}", Platform::Utils::GetWorkingDirectory());
+		CT_CORE_VERIFY(Platform::Utils::RequestAccessToFile(filePath.c_str()), "Access was denied, cannot continue!");
 		std::ifstream file(filePath);
 		CT_CORE_ASSERT(file.is_open(), "Failed to open a file for reading command line arguments!");
 

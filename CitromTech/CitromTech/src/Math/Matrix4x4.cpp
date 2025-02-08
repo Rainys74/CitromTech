@@ -5,7 +5,7 @@
 
 namespace Citrom::Math
 {
-#define FUNCTION_TO_MATRIX_TYPE(FOO, ARGS) FOO ## _LH_ZO ## ARGS // TODO: TEMPORARY!!
+#define FUNCTION_TO_MATRIX_TYPE(FOO, ARGS) FOO ## _LH_ZO ARGS // TODO: TEMPORARY!!
 
 	Matrix4x4::Matrix4x4()
 	{

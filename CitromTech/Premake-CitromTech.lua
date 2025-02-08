@@ -102,6 +102,12 @@ project "CitromTech"   -- Engine Library
         staticruntime "On"
         systemversion "15.0"
 
+        files
+        {
+            "%{prj.name}/src/**.m",
+            "%{prj.name}/src/**.mm"
+        }
+
         defines
         {
             "CT_PLATFORM_MACOS",

@@ -58,6 +58,11 @@ project "nativefiledialog-extended"   -- Engine Library
         filter "system:macosx"
             staticruntime "On"
             systemversion "15.0"
+
+            links
+            {
+                "UniformTypeIdentifiers.framework"
+            }
             
             files
             {

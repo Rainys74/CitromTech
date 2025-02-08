@@ -8,7 +8,8 @@ project "CitromForge" -- EXE
         targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
         objdir ("../bin-intermediate/" .. outputdir .. "/%{prj.name}")
 
-        debugdir "../WorkingDirectory"
+        DEBUG_WORKING_DIRECTORY = "../WorkingDirectory"
+        debugdir (DEBUG_WORKING_DIRECTORY)
 
         targetname (RUNNER_APP_NAME)
 
@@ -103,6 +104,7 @@ project "CitromForge" -- EXE
             "IOKit.framework",
             "CoreFoundation.framework",
             "QuartzCore.framework",
+            "UniformTypeIdentifiers.framework"
         }
 
         defines
@@ -113,7 +115,8 @@ project "CitromForge" -- EXE
         xcodebuildsettings 
         {
             ["GENERATE_INFOPLIST_FILE"] = "YES", -- Enable automatic generation of Info.plist
-            ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.citromstudio.citromforge"
+            ["PRODUCT_BUNDLE_IDENTIFIER"] = "com.citromstudio.citromforge",
+            ["WORKING_DIRECTORY"] = DEBUG_WORKING_DIRECTORY
         }
 
     filter "configurations:Debug"

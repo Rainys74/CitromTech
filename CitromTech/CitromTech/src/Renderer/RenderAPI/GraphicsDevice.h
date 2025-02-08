@@ -18,7 +18,7 @@ namespace Citrom::RenderAPI
 		static bool IsGraphicsAPI(GraphicsAPI graphicsAPI);
 
 		static void ForceGraphicsAPI(GraphicsAPI graphicsAPI);
-		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel);
+		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel = 0);
 
 		static GraphicsAPI GetGraphicsAPIAtPriority(uint8 priorityLevel);
 	public:
@@ -40,7 +40,7 @@ namespace Citrom::RenderAPI
 		{
 			if (!s_Instance)
 			{
-				s_Instance = CreateDevice();
+				s_Instance = CreateDevice(); // TODO: probably move this into a different function to make sure the device doesn't get initialized before api selection
 			}
 			return s_Instance;
 		}

@@ -40,6 +40,14 @@ namespace Citrom::Platform
 			return (float64)nowTime.QuadPart * sg_ClockFrequency;
 			//return std::chrono::duration<double>(std::chrono::high_resolution_clock::now().time_since_epoch()).count();
 		}
+		std::string GetWorkingDirectory()
+		{
+			char buffer[MAX_PATH];
+			if (GetCurrentDirectoryA(MAX_PATH, buffer)) 
+				return std::string(buffer);
+			else 
+				return "";
+		}
 
 		void MessageBoxError(const char* title, const char* text)
 		{

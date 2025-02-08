@@ -1,4 +1,4 @@
-﻿#include "SharedMain.h"
+#include "SharedMain.h"
 
 #include "Tests/TestMain.h"
 #include "CTL/String.h"
@@ -145,7 +145,7 @@ int SharedMain(int argc, char* argv[])
 	CT_INFO("Initializing Thread Pool with {} threads. Thread count is ({})", threadCount - 1, threadCount);
 
 	// TODO: eventually change the -1
-	ThreadPool::Initialize(threadCount - 1);
+	//ThreadPool::Initialize(threadCount - 1);
 
 	//static uint32 total = 0;
 	//
@@ -340,13 +340,13 @@ void ForgeLoop()
 		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		Renderer::BeginFrame();
+		//Renderer::BeginFrame();
 		g_LayerStack.Render();
 
 		Camera* currentCamera = (Camera*)GetCamera();
 		Math::Transform* currentCameraTransform = (Math::Transform*)GetCameraTransform();
 
-		Renderer::DrawTest(currentCamera, currentCameraTransform);
+		//Renderer::DrawTest(currentCamera, currentCameraTransform);
 
 		Renderer::Begin(g_CurrentScene);
 		Renderer::SubmitScene(g_CurrentScene);
@@ -362,7 +362,7 @@ void ForgeLoop()
 			g_ImLayer.End();
 		}
 
-		Renderer::EndFrame();
+		//Renderer::EndFrame();
 
 		/*Profiler::ProfileResults::IterateResultsCallback([](const char* key, const float64 time)
 		{
