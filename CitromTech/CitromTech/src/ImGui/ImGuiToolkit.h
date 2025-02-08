@@ -10,6 +10,8 @@ namespace ImToolkit //ImPresets
     bool DrawVector4Control(const char* label, float values[4], float speed = 0.25f, float resetValue = 0.0f);
     bool DrawVector2Control(const char* label, float values[2], float speed = 0.25f);
 
+    bool DrawFloatControl(const char* label, float* value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f");
+
     template<typename T, const char* (*TToString)(T)>
     bool ComboEnum(const char* label, T& currentValue, const T* values, int valuesCount, const int valuesBegin = 0)
     {

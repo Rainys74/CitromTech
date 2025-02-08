@@ -262,4 +262,20 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
+    bool DrawFloatControl(const char* label, float* value, float speed, float min, float max, const char* format)
+    {
+        bool modified = false;
+
+        ImGui::PushID(label);
+
+        _SetupLabel(label); //, false, 200.0f);
+
+        modified |= ImGui::DragFloat("##FLOAT", value, speed, min, max, format);
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return modified;
+    }
 }

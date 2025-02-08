@@ -155,15 +155,15 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             // Perspective
             ImGui::Separator();
             float32 perspectiveYFOV = Math::RadiansToDegrees(cameraComponent.camera.GetPerspectiveVerticalFOV());
-            if (ImGui::DragFloat("Vertical FOV", &perspectiveYFOV, 0.1f))
+            if (ImToolkit::DrawFloatControl("Vertical FOV", &perspectiveYFOV, 0.1f))
                 cameraComponent.camera.SetPerspectiveVerticalFOV(Math::DegreesToRadians(perspectiveYFOV));
 
             float32 perspectiveNear = cameraComponent.camera.GetPerspectiveNearClip();
-            if (ImGui::DragFloat("Near Clip", &perspectiveNear, 0.1f))
+            if (ImToolkit::DrawFloatControl("Near Clip", &perspectiveNear, 0.1f))
                 cameraComponent.camera.SetPerspectiveNearClip(perspectiveNear);
 
             float32 perspectiveFar = cameraComponent.camera.GetPerspectiveFarClip();
-            if (ImGui::DragFloat("Far Clip", &perspectiveFar, 0.1f))
+            if (ImToolkit::DrawFloatControl("Far Clip", &perspectiveFar, 0.1f))
                 cameraComponent.camera.SetPerspectiveFarClip(perspectiveFar);
 
             // Orthographic
