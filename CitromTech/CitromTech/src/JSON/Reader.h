@@ -14,17 +14,20 @@ namespace Citrom::JSON // JSON vs Json
 	
 #define JSON_READER_VERIFY(x) if (auto error = (x) != simdjson::SUCCESS) { CT_CORE_ERROR("simdjson error: {}", simdjson::error_message(error)); CT_CORE_ASSERT(false, "simdjson failed!"); }
 
-//#define JSON_READER_COPY_STRING_VIEW_TO_STRING(STR, STRVIEW) 
+#define JSON_READER_COPY_STRING_VIEW_TO_STRING(STR, STRVIEW) (STR).assign((STRVIEW).data(), (STRVIEW).size()) // = std::string(_intern_StrView_ ## __LINE__) // maybe assign is better than copying?
 
-//#define JSON_READER_BEGIN()
-//#define JSON_READER_GET_STRING(DOCKEY, STRING) std::string_view _intern_StrView_ ## __LINE__; JSON_READER_VERIFY(doc[(DOCKEY)].get(_intern_StrView_ ## __LINE__)); (STRING).assign(_intern_StrView_ ## __LINE__.data(), _intern_StrView_ ## __LINE__.size()) // = std::string(_intern_StrView_ ## __LINE__) // maybe assign is better than copying?
-//#define JSON_READER_END()
+#define JSON_READER_BEGIN()
+#define JSON_READER_GET_STRING(KEY, STRING) std::string_view _intern_StrView_ ## __LINE__; JSON_READER_VERIFY(doc[(KEY)].get(_intern_StrView_ ## __LINE__)); JSON_READER_COPY_STRING_VIEW_TO_STRING(STRING, _intern_StrView_ ## __LINE__);
+#define JSON_READER_GET_VALUE(KEY, VALUE) doc[(KEY)].get(VALUE);
+#define JSON_READER_GET_INT64(KEY, INT) JSON_READER_GET_VALUE(INT)
+#define JSON_READER_GET_BOOL(KEY, BOOL) JSON_READER_GET_VALUE(BOOL)
+#define JSON_READER_END()
 
-#define JSON_READER_BEGIN() for (auto field : doc) { simdjson::ondemand::raw_json_string key; JSON_READER_VERIFY(field.key().get(key)); if (false) {}
-#define JSON_READER_GET_STRING(DOCKEY, STRING) else if (key == (DOCKEY)) { /*std::string_view strView;*/ field.value().get_string(STRING); /*(STRING) = std::string(strView);*/ }
-#define JSON_READER_GET_INT64(KEY, INT) else if (key == (KEY)) {JSON_READER_VERIFY(field.value().get(INT));}
-#define JSON_READER_GET_BOOL(KEY, BOOL) else if (key == (KEY)) {JSON_READER_VERIFY(field.value().get(BOOL));}
-#define JSON_READER_END() }
+#define JSON_READER_ODM_BEGIN() for (auto field : doc) { simdjson::ondemand::raw_json_string key; JSON_READER_VERIFY(field.key().get(key)); if (false) {}
+#define JSON_READER_ODM_GET_STRING(KEY, STRING) else if (key == (KEY)) { field.value().get_string(STRING); }
+#define JSON_READER_ODM_GET_INT64(KEY, INT) else if (key == (KEY)) {field.value().get(INT);}
+#define JSON_READER_ODM_GET_BOOL(KEY, BOOL) else if (key == (KEY)) {field.value().get(BOOL);}
+#define JSON_READER_ODM_END() }
 
 	struct TestClass
 	{
@@ -32,7 +35,21 @@ namespace Citrom::JSON // JSON vs Json
 		int64 age;
 		bool enabled;
 
-		static TestClass DeserializeJson(simdjson::ondemand::object doc)
+		static TestClass DeserializeJsonOnDemand(simdjson::ondemand::object doc)
+		{
+			TestClass testClass;
+			
+			JSON_READER_ODM_BEGIN()
+
+			JSON_READER_ODM_GET_STRING("name", testClass.name)
+			JSON_READER_ODM_GET_INT64("age", testClass.age)
+			JSON_READER_ODM_GET_BOOL("enabled", testClass.enabled)
+
+			JSON_READER_ODM_END();
+
+			return testClass;
+		}
+		static TestClass DeserializeJson(const simdjson::dom::element& doc)
 		{
 			TestClass testClass;
 
@@ -42,12 +59,12 @@ namespace Citrom::JSON // JSON vs Json
 			//std::string_view nameView;
 			//doc["name"].get(nameView);
 			//testClass.name = std::string(nameView);
-			
+
 			JSON_READER_BEGIN()
 
 			JSON_READER_GET_STRING("name", testClass.name)
-			JSON_READER_GET_INT64("age", testClass.age)
-			JSON_READER_GET_BOOL("enabled", testClass.enabled)
+			JSON_READER_GET_VALUE("age", testClass.age)
+			JSON_READER_GET_VALUE("enabled", testClass.enabled)
 
 			JSON_READER_END();
 
@@ -56,7 +73,7 @@ namespace Citrom::JSON // JSON vs Json
 	};
 
 	template<typename T>
-	T DeserializeClass(const std::string& jsonString) // object?
+	T DeserializeObjectOnDemand(const std::string& jsonString)
 	{
 		CT_PROFILE_GLOBAL_FUNCTION();
 
@@ -75,7 +92,21 @@ namespace Citrom::JSON // JSON vs Json
 
 		simdjson::ondemand::object obj;
 		JSON_READER_VERIFY(doc.get_object().get(obj));
-		return T::DeserializeJson(obj);
+
+		return T::DeserializeJsonOnDemand(obj);
+	}
+
+	//static thread_local simdjson::dom::parser parser; // TODO: is something like this valid? doesn't global/static get cold and become slower to access?.. also static in header. (pretty sure works correctly inside a function)
+
+	template<typename T>
+	T DeserializeObject(const std::string& jsonString)
+	{
+		CT_PROFILE_GLOBAL_FUNCTION();
+
+		simdjson::dom::parser parser; // reallocates memory
+		simdjson::dom::element doc;
+		JSON_READER_VERIFY(parser.parse(jsonString).get(doc));
+		return T::DeserializeJson(doc);
 	}
 
 	template<typename T>

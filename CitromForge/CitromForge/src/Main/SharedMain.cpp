@@ -279,7 +279,7 @@ int SharedMain(int argc, char* argv[])
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
 
 	std::string json = R"({"name": "John", "age": 30, "enabled": true})";
-	JSON::TestClass testJson = JSON::DeserializeClass<JSON::TestClass>(json);
+	JSON::TestClass testJson = JSON::DeserializeObject<JSON::TestClass>(json);
 
 	CT_ERROR("Name: {}, Age: {}, Enabled: {};", testJson.name, testJson.age, testJson.enabled);
 
