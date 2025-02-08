@@ -34,7 +34,7 @@ namespace Citrom
 			int result = glslcc_exec(argc, argv);
 			CT_CORE_ASSERT(!result, "glslcc_exec main function failed!");
 		}
-		static void TranspileGLSLCC(const std::string paths[], const uint32 pathCount, const std::string& outPath)
+		static void TranspileGLSLCC(const std::string paths[], const uint32 pathCount, const std::string& outPath, RenderAPI::ShaderLanguage affectedLanguages = RenderAPI::ShaderLanguage::All)
 		{
 			CT_PROFILE_GLOBAL_FUNCTION();
 
@@ -79,23 +79,31 @@ namespace Citrom
 
 						// TODO: maybe use thread pool for this?
 						// HLSL
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-
+						if (HAS_FLAG(affectedLanguages, RenderAPI::ShaderLanguage::HLSL))
+						{
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 						// GLSL
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
-						arguments[4] = "--lang=" "glsl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
+						if (HAS_FLAG(affectedLanguages, RenderAPI::ShaderLanguage::GLSL))
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
+							arguments[4] = "--lang=" "glsl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
 
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 
 						// MSL (Metal)
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
-						arguments[4] = "--lang=" "msl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
+						if (HAS_FLAG(affectedLanguages, RenderAPI::ShaderLanguage::MSL))
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
+							arguments[4] = "--lang=" "msl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
 
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 					}
 					else if (entry.path().extension() == ".vert")
 					{
@@ -115,23 +123,29 @@ namespace Citrom
 
 						// TODO: maybe use thread pool for this?
 						// HLSL
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						{
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 
 						// GLSL
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
-						arguments[4] = "--lang=" "glsl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
+							arguments[4] = "--lang=" "glsl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
 
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 
 						// MSL (Metal)
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
-						arguments[4] = "--lang=" "msl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
+							arguments[4] = "--lang=" "msl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
 
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
 					}
 					else if (entry.path().extension() == ".frag")
 					{
@@ -179,7 +193,7 @@ namespace Citrom
 				}
 			}
 		}
-		static void TranspileHLSLcc(const std::string paths[], const uint32 pathCount, const std::string& outPath)
+		static void TranspileHLSLcc(const std::string paths[], const uint32 pathCount, const std::string& outPath, RenderAPI::ShaderLanguage affectedLanguages = RenderAPI::ShaderLanguage::All)
 		{
 			CT_PROFILE_GLOBAL_FUNCTION();
 
@@ -209,6 +223,7 @@ namespace Citrom
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_METAL, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &metalResult);
 
 						// GLSL
+						if (HAS_FLAG(affectedLanguages, RenderAPI::ShaderLanguage::GLSL))
 						{
 							std::ofstream outFile(outPath + entry.path().stem().string() + ".glsl", std::ios::out);
 							CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing GLSL source code!");
@@ -221,6 +236,7 @@ namespace Citrom
 						}
 
 						// Metal Shading Language
+						if (HAS_FLAG(affectedLanguages, RenderAPI::ShaderLanguage::MSL))
 						{
 							std::ofstream outFile(outPath + entry.path().stem().string() + ".msl", std::ios::out);
 							CT_CORE_ASSERT(outFile.is_open(), "Failed to open file for writing MSL source code!");

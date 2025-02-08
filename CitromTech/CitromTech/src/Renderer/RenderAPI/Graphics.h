@@ -40,19 +40,19 @@ namespace Citrom::RenderAPI
 	};
 	enum class ShaderLanguage
 	{
-		HLSL = 0,
-		GLSL = BIT(0),
-		MSL = BIT(1),
+		HLSL = BIT(0),
+		GLSL = BIT(1),
+		MSL = BIT(2),
 
 		// Compiled
-		DXBC = BIT(2), // HLSL5
-		//SPIRV = BIT(3),
+		DXBC = BIT(3), // HLSL5
+		//SPIRV = BIT(4),
 
 		// Defaults
 		Text = HLSL | GLSL | MSL,
 		Compiled = DXBC,
 
-		All = HLSL | GLSL | MSL | DXBC
+		All = Text | Compiled
 	};
 
 	enum class Format
