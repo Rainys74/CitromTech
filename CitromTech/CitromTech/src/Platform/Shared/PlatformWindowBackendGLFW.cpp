@@ -29,7 +29,7 @@
 #ifdef CT_PLATFORM_WINDOWS
 #include "backends/imgui_impl_dx11.h"
 #elif defined(CT_PLATFORM_MACOS)
-//#include "backends/imgui_impl_metal.h"
+#include "Platform/MacOS/PlatformImGuiMetal.h"
 #endif
 
 #endif
@@ -252,6 +252,12 @@ namespace Citrom::Platform
             CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOther((GLFWwindow*)this->GLFWTryGetWnd(), true), "Failed to initialize ImGui GLFW implementation.");
         }
 #endif
+#ifdef CT_PLATFORM_MACOS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::Metal))
+        {
+            CT_CORE_VERIFY(ImGui_ImplGlfw_InitForOther((GLFWwindow*)this->GLFWTryGetWnd(), true), "Failed to initialize ImGui GLFW implementation.");
+        }
+#endif
     }
     void WindowBackendGLFW::ImGuiTerminate()
     {
@@ -263,6 +269,12 @@ namespace Citrom::Platform
         else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
         {
             ImGui_ImplDX11_Shutdown();
+        }
+#endif
+#ifdef CT_PLATFORM_MACOS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::Metal))
+        {
+            Metal::ImGuiTerminateGLFW();
         }
 #endif
 
@@ -278,6 +290,12 @@ namespace Citrom::Platform
         else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
         {
             ImGui_ImplDX11_NewFrame();
+        }
+#endif
+#ifdef CT_PLATFORM_MACOS
+        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::Metal))
+        {
+            Renderer::ImGuiNewFrame();
         }
 #endif
     }

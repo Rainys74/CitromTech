@@ -26,9 +26,10 @@ namespace Citrom
 
 	void Renderer::Initialize(Platform::Window* window)
 	{
-		GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
+		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 		//GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI::DirectX11);
+        GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
 
 		if (ArgumentHandler::HasArgument("-force-d3d11"))
 			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
@@ -101,8 +102,8 @@ namespace Citrom
 
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
-		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		//ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
+		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		g_EditorRenderer.Initialize();
 	}
@@ -542,6 +543,10 @@ namespace Citrom
 	{
 		m_Device->ImGuiInitGraphicsAPI();
 	}
+    void Renderer::ImGuiNewFrame()
+    {
+        m_Device->ImGuiNewFrame();
+    }
 	void Renderer::ImGuiRenderDrawData(void* imDrawData)
 	{
 		m_Device->ImGuiRenderDrawData(imDrawData);

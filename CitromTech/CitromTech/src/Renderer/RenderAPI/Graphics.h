@@ -10,6 +10,7 @@ namespace Citrom::RenderAPI
 	{
 		DirectX11,
 		OpenGL, // Someday
+        Metal,
 		//Vulkan, // hopefully someday
 
 		Count

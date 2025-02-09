@@ -6,12 +6,17 @@
 #include "DirectX11/DX11Device.h"
 #endif
 
+#ifdef CT_PLATFORM_MACOS
+#include "GraphicsDeviceMetal.h"
+#endif
+
 #include "OpenGL/GLDevice.h"
 
 namespace Citrom::RenderAPI
 {
     GraphicsAPI GraphicsAPIManager::s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)] =
     {
+        GraphicsAPI::Metal,
         GraphicsAPI::DirectX11,
         GraphicsAPI::OpenGL
     };
@@ -63,6 +68,15 @@ namespace Citrom::RenderAPI
                 return true;
             }
             break;
+            case GraphicsAPI::Metal:
+            {
+                #ifndef CT_PLATFORM_MACOS
+                return false;
+                #else
+                return GetMetalDummyResult();
+                #endif
+            }
+            break;
             default:
             {
                 CT_CORE_ERROR("Unknown API passed into IsAPIValid()!");
@@ -85,6 +99,10 @@ namespace Citrom::RenderAPI
                 break;
             case GraphicsAPI::OpenGL:
                 return new GLDevice();
+                break;
+            case GraphicsAPI::Metal:
+                IF_MACOS(return (Device*)AllocateNewMetalDevice());
+                CT_CORE_ASSERT(false, "Metal is not supported on non-Apple devices.");
                 break;
             default:
                 CT_CORE_ASSERT(false, "Unknown Graphics API selected!");

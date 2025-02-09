@@ -42,19 +42,37 @@ function BuildCMakeStaticProject(cmakeDir, buildDir, installDir, libName)
     -- Find the output library
     fileName = string.format("%s%s%s", prefix, libName, suffix)
 
-    local outputLib = path.join(buildDir, "src/Release", fileName) -- Adjust as needed
-    local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
+    if os.target() == "windows" then
+        local outputLib = path.join(buildDir, "src/Release", fileName) -- Adjust as needed
+        local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
 
-    -- Move library to install directory
-    print("Moving " .. outputLib .. " library to " .. targetLib)
-    os.copyfile(outputLib, targetLib)
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
 
-    local outputLib = path.join(buildDir, "src/Debug", fileName) -- Adjust as needed
-    local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
+        local outputLib = path.join(buildDir, "src/Debug", fileName) -- Adjust as needed
+        local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
 
-    -- Move library to install directory
-    print("Moving " .. outputLib .. " library to " .. targetLib)
-    os.copyfile(outputLib, targetLib)
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+    else
+        local outputLib = path.join(buildDir, "src", fileName) -- Adjust as needed
+
+        -- DEBUG
+        local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
+
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+
+        -- RELEASE
+        local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
+        
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+    end
 end
 function BuildCMakeSharedProject(cmakeDir, buildDir, installDir, libName)
     -- Ensure directories exist
@@ -100,19 +118,37 @@ function BuildCMakeSharedProject(cmakeDir, buildDir, installDir, libName)
     -- Find the output library
     fileName = string.format("%s%s%s", prefix, libName, suffix)
 
-    local outputLib = path.join(buildDir, "src/Release", fileName) -- Adjust as needed
-    local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
+    if os.target() == "windows" then
+        local outputLib = path.join(buildDir, "src/Release", fileName) -- Adjust as needed
+        local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
 
-    -- Move library to install directory
-    print("Moving " .. outputLib .. " library to " .. targetLib)
-    os.copyfile(outputLib, targetLib)
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
 
-    local outputLib = path.join(buildDir, "src/Debug", fileName) -- Adjust as needed
-    local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
+        local outputLib = path.join(buildDir, "src/Debug", fileName) -- Adjust as needed
+        local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
 
-    -- Move library to install directory
-    print("Moving " .. outputLib .. " library to " .. targetLib)
-    os.copyfile(outputLib, targetLib)
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+    else
+        local outputLib = path.join(buildDir, "src", fileName) -- Adjust as needed
+
+        -- DEBUG
+        local targetLib = path.join(installDir, "Debug", fileName) -- Adjust as needed
+
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+
+        -- RELEASE
+        local targetLib = path.join(installDir, "Release", fileName) -- Adjust as needed
+        
+        -- Move library to install directory
+        print("Moving " .. outputLib .. " library to " .. targetLib)
+        os.copyfile(outputLib, targetLib)
+    end
 end
 
 if shouldBuild == "true" then

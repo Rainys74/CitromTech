@@ -108,7 +108,8 @@ namespace Citrom
 		static void DrawTest(Camera* camera, Math::Transform* cameraTransform);
 
 		// ImGui
-		static void ImGuiInit();
+        static void ImGuiInit();
+		static void ImGuiNewFrame();
 		static void ImGuiRenderDrawData(void* imDrawData);
 	private:
 		// RenderMesh

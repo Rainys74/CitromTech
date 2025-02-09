@@ -22,7 +22,7 @@
 
 #define GLSLCC_EXIT(ERRORCODE) return ERRORCODE // exit(ERRORCODE)
 
-#define PRINTF(...) printf("[glslcc]: "__VA_ARGS__)
+#define PRINTF(fmt, ...) printf("[glslcc]: " fmt, __VA_ARGS__)
 
 //#define SX_SNPRINTF(...) sx_snprintf(__VA_ARGS__)
 #define SX_SNPRINTF sx_snprintf

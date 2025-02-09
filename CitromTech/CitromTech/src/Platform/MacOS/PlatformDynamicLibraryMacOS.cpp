@@ -25,7 +25,10 @@ namespace Citrom::Platform
     DynamicLibrary::~DynamicLibrary()
     {
         if (m_Handle)
-            CT_CORE_VERIFY(dlclose(m_Handle), "Failed to free dynamic library!");
+        {
+            //DL_VERIFY(dlclose(m_Handle));
+            dlclose(m_Handle);
+        }
     }
 
     void DynamicLibrary::Load(const char* libraryName)

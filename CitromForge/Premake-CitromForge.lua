@@ -105,7 +105,8 @@ project "CitromForge" -- EXE
             "IOKit.framework",
             "CoreFoundation.framework",
             "QuartzCore.framework",
-            "UniformTypeIdentifiers.framework"
+            "UniformTypeIdentifiers.framework",
+            "Metal.framework"
         }
 
         defines

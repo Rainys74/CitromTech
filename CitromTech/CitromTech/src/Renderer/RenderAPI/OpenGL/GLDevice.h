@@ -59,6 +59,7 @@ namespace Citrom::RenderAPI
 
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
+        void ImGuiNewFrame() override {}
 		void ImGuiRenderDrawData(void* imDrawData) override;
 	public:
 /*
