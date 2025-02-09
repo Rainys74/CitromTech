@@ -39,6 +39,7 @@
 #include "LayerSystem/SimpleInputLayer.h"
 
 #include "JSON/Reader.h"
+#include "JSON/Writer.h"
 
 #include "Application/EditorLayer.h"
 
@@ -278,10 +279,96 @@ int SharedMain(int argc, char* argv[])
 	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
 
-	std::string json = R"({"name": "John", "age": 30, "enabled": true})";
-	JSON::TestClass testJson = JSON::DeserializeObject<JSON::TestClass>(json);
+	struct TestClass
+	{
+		std::string name;
+		int64 age;
+		bool enabled;
 
-	CT_ERROR("Name: {}, Age: {}, Enabled: {};", testJson.name, testJson.age, testJson.enabled);
+		static TestClass DeserializeJsonOnDemand(simdjson::ondemand::object doc)
+		{
+			TestClass testClass;
+
+			JSON_READER_ODM_BEGIN()
+
+			JSON_READER_ODM_GET_STRING("name", testClass.name)
+			JSON_READER_ODM_GET_INT64("age", testClass.age)
+			JSON_READER_ODM_GET_BOOL("enabled", testClass.enabled)
+
+			JSON_READER_ODM_END();
+
+			return testClass;
+		}
+		static TestClass DeserializeJson(const simdjson::dom::element& doc)
+		{
+			TestClass testClass;
+
+			//doc["name"].get(testClass.name);
+			//doc["age"].get(testClass.age);
+			//doc["enabled"].get(testClass.enabled);
+			//std::string_view nameView;
+			//doc["name"].get(nameView);
+			//testClass.name = std::string(nameView);
+
+			JSON_READER_BEGIN()
+
+			JSON_READER_GET_STRING("name", testClass.name)
+			JSON_READER_GET_INT64("age", testClass.age)
+			JSON_READER_GET_BOOL("enabled", testClass.enabled)
+
+			JSON_READER_END();
+
+			return testClass;
+		}
+
+		void SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) const
+		{
+			//doc.AddMember("name", rapidjson::Value(this->name.c_str(), allocator), allocator);
+			//doc.AddMember("age", this->age, allocator);
+			//doc.AddMember("enabled", this->enabled, allocator);
+
+			//rapidjson::Value videoOptions(rapidjson::kObjectType);
+
+			JSON_WRITER_SET_STRING("name", this->name);
+			JSON_WRITER_SET_INT64("age", this->age);
+			JSON_WRITER_SET_BOOL("enabled", this->enabled);
+
+			//doc.AddMember("VIDEO_OPTIONS", videoOptions, allocator);
+		}
+	};
+
+	{
+		std::string json = R"({"name": "John", "age": 30, "enabled": true})";
+		TestClass testJson = JSON::DeserializeObject<TestClass>(json);
+
+		CT_ERROR("Name: {}, Age: {}, Enabled: {};", testJson.name, testJson.age, testJson.enabled);
+
+		std::string jsonString = JSON::SerializeObject<TestClass>(testJson, JSON::SerializerOptions(true));
+
+		CT_WARN("JSON: \n{}", jsonString);
+	}
+	//{
+	//	JSON::BuilderWriter out;
+	//	out.Key("CameraComponent").BeginMap();
+	//
+	//	out.Key("Camera").BeginMap();
+	//	out.Key("ProjectionType").Value((int64)1);
+	//	out.Key("PerspectiveFOV").Value(60.0f);
+	//	out.Key("PerspectiveNear").Value(0.1f);
+	//	out.Key("PerspectiveFar").Value(1000.0f);
+	//	out.Key("OrthographicSize").Value(10.0f);
+	//	out.Key("OrthographicNear").Value(0.01f);
+	//	out.Key("OrthographicFar").Value(100.0f);
+	//	out.EndMap();  // Camera
+	//
+	//	out.Key("Primary").Value(true);
+	//	out.Key("FixedAspectRatio").Value(false);
+	//	out.EndMap();  // CameraComponent
+	//
+	//	std::string jsonString = out.GetString();
+	//
+	//	CT_WARN("JSON BUILDER STRING: \n{}", jsonString);
+	//}
 
 	using namespace Platform;
 

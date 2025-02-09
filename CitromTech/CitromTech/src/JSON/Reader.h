@@ -19,8 +19,8 @@ namespace Citrom::JSON // JSON vs Json
 #define JSON_READER_BEGIN()
 #define JSON_READER_GET_STRING(KEY, STRING) std::string_view _intern_StrView_ ## __LINE__; JSON_READER_VERIFY(doc[(KEY)].get(_intern_StrView_ ## __LINE__)); JSON_READER_COPY_STRING_VIEW_TO_STRING(STRING, _intern_StrView_ ## __LINE__);
 #define JSON_READER_GET_VALUE(KEY, VALUE) doc[(KEY)].get(VALUE);
-#define JSON_READER_GET_INT64(KEY, INT) JSON_READER_GET_VALUE(INT)
-#define JSON_READER_GET_BOOL(KEY, BOOL) JSON_READER_GET_VALUE(BOOL)
+#define JSON_READER_GET_INT64(KEY, INT) JSON_READER_GET_VALUE(KEY, INT)
+#define JSON_READER_GET_BOOL(KEY, BOOL) JSON_READER_GET_VALUE(KEY, BOOL)
 #define JSON_READER_END()
 
 #define JSON_READER_ODM_BEGIN() for (auto field : doc) { simdjson::ondemand::raw_json_string key; JSON_READER_VERIFY(field.key().get(key)); if (false) {}
@@ -28,49 +28,6 @@ namespace Citrom::JSON // JSON vs Json
 #define JSON_READER_ODM_GET_INT64(KEY, INT) else if (key == (KEY)) {field.value().get(INT);}
 #define JSON_READER_ODM_GET_BOOL(KEY, BOOL) else if (key == (KEY)) {field.value().get(BOOL);}
 #define JSON_READER_ODM_END() }
-
-	struct TestClass
-	{
-		std::string name;
-		int64 age;
-		bool enabled;
-
-		static TestClass DeserializeJsonOnDemand(simdjson::ondemand::object doc)
-		{
-			TestClass testClass;
-			
-			JSON_READER_ODM_BEGIN()
-
-			JSON_READER_ODM_GET_STRING("name", testClass.name)
-			JSON_READER_ODM_GET_INT64("age", testClass.age)
-			JSON_READER_ODM_GET_BOOL("enabled", testClass.enabled)
-
-			JSON_READER_ODM_END();
-
-			return testClass;
-		}
-		static TestClass DeserializeJson(const simdjson::dom::element& doc)
-		{
-			TestClass testClass;
-
-			//doc["name"].get(testClass.name);
-			//doc["age"].get(testClass.age);
-			//doc["enabled"].get(testClass.enabled);
-			//std::string_view nameView;
-			//doc["name"].get(nameView);
-			//testClass.name = std::string(nameView);
-
-			JSON_READER_BEGIN()
-
-			JSON_READER_GET_STRING("name", testClass.name)
-			JSON_READER_GET_VALUE("age", testClass.age)
-			JSON_READER_GET_VALUE("enabled", testClass.enabled)
-
-			JSON_READER_END();
-
-			return testClass;
-		}
-	};
 
 	template<typename T>
 	T DeserializeObjectOnDemand(const std::string& jsonString)
