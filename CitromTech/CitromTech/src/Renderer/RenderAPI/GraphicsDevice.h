@@ -21,11 +21,25 @@ namespace Citrom::RenderAPI
 		static void PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel = 0);
 
 		static GraphicsAPI GetGraphicsAPIAtPriority(uint8 priorityLevel);
+		static constexpr const char* ToString(GraphicsAPI api)
+		{
+			switch (api)
+			{
+				case GraphicsAPI::DirectX11: return "DirectX11"; break;
+				case GraphicsAPI::OpenGL: return "OpenGL"; break;
+				case GraphicsAPI::Metal: return "Metal"; break;
+				//case GraphicsAPI::Vulkan: return "Vulkan"; break;
+
+				default: return "Unknown"; break;
+			}
+			return "Unknown";
+		}
 	public:
 		static bool IsAPIValid(GraphicsAPI api);
 	private:
 		static GraphicsAPI s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)];
 		static GraphicsAPI& s_CurrentGraphicsAPI;
+		static bool s_APIDecided;
 	};
 
 	// Device is a singleton class to better support OpenGL's single device implementation

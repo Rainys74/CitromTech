@@ -38,8 +38,7 @@ namespace Citrom
 	class EditorRenderer
 	{
 	public:
-		EditorRenderer()
-			: m_Device(RenderAPI::Device::Get()) {}
+		EditorRenderer() = default;
 		~EditorRenderer() = default;
 
 		void Initialize();

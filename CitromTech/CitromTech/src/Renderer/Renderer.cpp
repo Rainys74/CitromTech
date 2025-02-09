@@ -29,15 +29,15 @@ namespace Citrom
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 		//GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI::DirectX11);
-        GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
+        //GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
 
 		if (ArgumentHandler::HasArgument("-force-d3d11"))
 			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		
-		CT_TRACE("CURRENT API: {}", (size_t)GraphicsAPIManager::GetGraphicsAPI());
+		CT_TRACE("CURRENT API: {} ({})", GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPI()), (size_t)GraphicsAPIManager::GetGraphicsAPI());
 		for (size_t i = 0; i < (size_t)GraphicsAPI::Count; i++)
 		{
-			CT_TRACE("{}. {}", i, (size_t)GraphicsAPIManager::GetGraphicsAPIAtPriority(i));
+			CT_TRACE("{}. {} ({})", i, GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPIAtPriority(i)), (size_t)GraphicsAPIManager::GetGraphicsAPIAtPriority(i));
 		}
 
 		//m_Device = CTL::CreateScopedPtr<RenderAPI::Device>();
@@ -603,6 +603,8 @@ namespace Citrom
 
 	void EditorRenderer::Initialize()
 	{
+		m_Device = RenderAPI::Device::Get();
+
 		m_GridVertUBData.VP = Math::Matrix4x4::Identity();
 		m_GridVertUBData.GridSize = 100.0f;
 		m_GridVertUBData.CameraWorldPos = Math::Vector3::Zero();

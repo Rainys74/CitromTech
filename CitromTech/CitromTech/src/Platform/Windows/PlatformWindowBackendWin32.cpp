@@ -515,11 +515,12 @@ namespace Citrom::Platform
 #ifdef CT_EDITOR_ENABLED
 	void WindowBackendWin32::ImGuiInitialize()
 	{
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		RenderAPI::GraphicsAPI graphicsAPI = RenderAPI::GraphicsAPIManager::GetGraphicsAPI();
+		if (graphicsAPI == RenderAPI::GraphicsAPI::DirectX11)
 		{
 			CT_CORE_VERIFY(ImGui_ImplWin32_Init(this->Win32TryGetHWnd()), "Failed to initialize ImGui Win32 implementation.");
 		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		else if (graphicsAPI == RenderAPI::GraphicsAPI::OpenGL)
 		{
 			// if win32 & opengl
 			CT_CORE_VERIFY(ImGui_ImplWin32_InitForOpenGL(this->Win32TryGetHWnd()), "Failed to Initialize ImGui Win32 implementation for OpenGL.");
@@ -528,11 +529,12 @@ namespace Citrom::Platform
 	}
 	void WindowBackendWin32::ImGuiTerminate()
 	{
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		RenderAPI::GraphicsAPI graphicsAPI = RenderAPI::GraphicsAPIManager::GetGraphicsAPI();
+		if (graphicsAPI == RenderAPI::GraphicsAPI::DirectX11)
 		{
 			ImGui_ImplDX11_Shutdown();
 		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		else if (graphicsAPI == RenderAPI::GraphicsAPI::OpenGL)
 		{
 			ImGui_ImplOpenGL3_Shutdown();
 		}
@@ -541,11 +543,12 @@ namespace Citrom::Platform
 	}
 	void WindowBackendWin32::ImGuiNewFrame()
 	{
-		if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
+		RenderAPI::GraphicsAPI graphicsAPI = RenderAPI::GraphicsAPIManager::GetGraphicsAPI();
+		if (graphicsAPI == RenderAPI::GraphicsAPI::DirectX11)
 		{
 			ImGui_ImplDX11_NewFrame();
 		}
-		else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
+		else if (graphicsAPI == RenderAPI::GraphicsAPI::OpenGL)
 		{
 			ImGui_ImplOpenGL3_NewFrame();
 			//ImGui_ImplOpenGL3_RenderDrawData(::ImGui::GetDrawData());

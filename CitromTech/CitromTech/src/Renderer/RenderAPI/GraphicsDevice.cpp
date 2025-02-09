@@ -14,31 +14,63 @@
 
 namespace Citrom::RenderAPI
 {
+    static constexpr const char* GraphicsAPIToString(GraphicsAPI api)
+    {
+        return GraphicsAPIManager::ToString(api);
+    }
+
     GraphicsAPI GraphicsAPIManager::s_GraphicsAPIList[static_cast<size_t>(GraphicsAPI::Count)] =
     {
-        GraphicsAPI::Metal,
         GraphicsAPI::DirectX11,
+        GraphicsAPI::Metal,
         GraphicsAPI::OpenGL
     };
     GraphicsAPI& GraphicsAPIManager::s_CurrentGraphicsAPI = GraphicsAPIManager::s_GraphicsAPIList[0];
 
+    bool GraphicsAPIManager::s_APIDecided = false;
+
     GraphicsAPI GraphicsAPIManager::GetGraphicsAPI()
     {
+        if (!s_APIDecided)
+        {
+            for (size_t i = 0; i < CT_ARRAY_LENGTH(s_GraphicsAPIList); i++)
+            {
+                if (IsAPIValid(s_GraphicsAPIList[i]))
+                {
+                    s_CurrentGraphicsAPI = s_GraphicsAPIList[i];
+                    s_APIDecided = true;
+                    //ForceGraphicsAPI(s_GraphicsAPIList[i]);
+                    break;
+                }
+                CT_CORE_VERBOSE("Graphics API {} at priority level ({}) is invalid, continuing.", GraphicsAPIToString(s_GraphicsAPIList[i]), i);
+            }
+#ifndef CT_OPTIMIZATION
+            if (!s_APIDecided)
+                CT_CORE_ERROR("No Valid API was found! This is undefined behaviour.");
+            else
+                CT_CORE_TRACE("Graphics API {} has been decided.", GraphicsAPIToString(s_CurrentGraphicsAPI));
+#endif
+        }
+
         return s_CurrentGraphicsAPI;
     }
 
     bool GraphicsAPIManager::IsGraphicsAPI(GraphicsAPI graphicsAPI)
     {
+        CT_CORE_ASSERT_WARN(s_APIDecided, "Graphics API has not been decided yet!");
         return graphicsAPI == s_CurrentGraphicsAPI;
     }
 
     void GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI graphicsAPI)
     {
+        CT_CORE_ASSERT_WARN(!s_APIDecided, "Graphics API is already selected!");
         s_CurrentGraphicsAPI = graphicsAPI;
+        s_APIDecided = true;
     }
 
     void GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel)
     {
+        CT_CORE_ASSERT_WARN(!s_APIDecided, "Graphics API is already selected!");
         s_GraphicsAPIList[priorityLevel] = graphicsAPI;
     }
 
