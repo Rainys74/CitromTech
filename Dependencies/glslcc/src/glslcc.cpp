@@ -72,7 +72,7 @@
 #define sjson_free(user, ptr) sx_free((const sx_alloc*)user, ptr)
 #define sjson_realloc(user, ptr, size) sx_realloc((const sx_alloc*)user, ptr, size)
 #define sjson_assert(e) sx_assert(e);
-#define sjson_snprintf sx_snprintf
+#define sjson_snprintf SX_SNPRINTF
 #define sjson_strcpy(dst, n, src) sx_strcpy(dst, n, src)
 #define SJSON_IMPLEMENTATION
 #include "../3rdparty/sjson/sjson.h"
@@ -323,7 +323,7 @@ struct cmd_args {
 
 static void print_version()
 {
-    printf("glslcc v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_SUB);
+    PRINTF("glslcc v%d.%d.%d\n", VERSION_MAJOR, VERSION_MINOR, VERSION_SUB);
     puts("http://www.github.com/septag/glslcc");
 }
 
@@ -415,13 +415,13 @@ static sx_mem_block* compile_binary(const char* code, const char* filename,
     char target[32];
     switch (stage) {
     case EShLangVertex:
-        sx_snprintf(target, sizeof(target), "vs_%d_%d", major_ver, minor_ver);
+        SX_SNPRINTF(target, sizeof(target), "vs_%d_%d", major_ver, minor_ver);
         break;
     case EShLangFragment:
-        sx_snprintf(target, sizeof(target), "ps_%d_%d", major_ver, minor_ver);
+        SX_SNPRINTF(target, sizeof(target), "ps_%d_%d", major_ver, minor_ver);
         break;
     case EShLangCompute:
-        sx_snprintf(target, sizeof(target), "cs_%d_%d", major_ver, minor_ver);
+        SX_SNPRINTF(target, sizeof(target), "cs_%d_%d", major_ver, minor_ver);
         break;
     }
 
@@ -524,7 +524,7 @@ static void add_defines(glslang::TShader* shader, const cmd_args& args, std::str
         def += std::string("\n");
 
         char process[256];
-        sx_snprintf(process, sizeof(process), "D%s", d.def);
+        SX_SNPRINTF(process, sizeof(process), "D%s", d.def);
         processes.push_back(process);
     }
 
@@ -1050,7 +1050,7 @@ static bool write_file(const char* filepath, const char* data, const char* cvar,
         if (!append) {
             // file header
             char header[512];
-            sx_snprintf(header, sizeof(header),
+            SX_SNPRINTF(header, sizeof(header),
                 "// This file is automatically created by glslcc v%d.%d.%d\n"
                 "// http://www.github.com/septag/glslcc\n"
                 "// \n"
@@ -1084,18 +1084,18 @@ static bool write_file(const char* filepath, const char* data, const char* cvar,
         }
         const char* aligned_ptr = (const char*)aligned_data;
 
-        sx_snprintf(var, sizeof(var), "static const unsigned int %s_size = %d;\n", cvar, len);
+        SX_SNPRINTF(var, sizeof(var), "static const unsigned int %s_size = %d;\n", cvar, len);
         sx_file_write_text(&writer, var);
-        sx_snprintf(var, sizeof(var), "static const unsigned int %s_data[%d/4] = {\n\t", cvar, aligned_len);
+        SX_SNPRINTF(var, sizeof(var), "static const unsigned int %s_data[%d/4] = {\n\t", cvar, aligned_len);
         sx_file_write_text(&writer, var);
 
         sx_assert(aligned_len % sizeof(uint32_t) == 0);
         int uint_count = aligned_len / 4;
         for (int i = 0; i < uint_count; i++) {
             if (i != uint_count - 1) {
-                sx_snprintf(hex, sizeof(hex), "0x%08x, ", *aligned_data);
+                SX_SNPRINTF(hex, sizeof(hex), "0x%08x, ", *aligned_data);
             } else {
-                sx_snprintf(hex, sizeof(hex), "0x%08x };\n", *aligned_data);
+                SX_SNPRINTF(hex, sizeof(hex), "0x%08x };\n", *aligned_data);
             }
             sx_file_write_text(&writer, hex);
 
@@ -1236,7 +1236,7 @@ static int cross_compile(const cmd_args& args, std::vector<uint32_t>& spirv,
                 sx_mem_block* mem = compile_binary(code.c_str(), args.out_filepath, args.profile_ver,
                     stage, args.debug_bin);
                 if (!mem) {
-                    printf("Bytecode compilation of '%s' failed\n", args.out_filepath);
+                    PRINTF("Bytecode compilation of '%s' failed\n", args.out_filepath);
                     return -1;
                 }
 
@@ -1288,12 +1288,12 @@ static int cross_compile(const cmd_args& args, std::vector<uint32_t>& spirv,
                 sx_mem_block* mem = compile_binary(code.c_str(), filepath.c_str(), args.profile_ver,
                     stage, args.debug_bin);
                 if (!mem) {
-                    printf("Bytecode compilation of '%s' failed\n", filepath.c_str());
+                    PRINTF("Bytecode compilation of '%s' failed\n", filepath.c_str());
                     return -1;
                 }
 
                 if (!write_file(filepath.c_str(), (const char*)mem->data, cvar_code.c_str(), append, mem->size)) {
-                    printf("Writing to '%s' failed\n", filepath.c_str());
+                    PRINTF("Writing to '%s' failed\n", filepath.c_str());
                     return -1;
                 }
 
@@ -1302,7 +1302,7 @@ static int cross_compile(const cmd_args& args, std::vector<uint32_t>& spirv,
             } else {
                 // output code file
                 if (!write_file(filepath.c_str(), code.c_str(), cvar_code.c_str(), append)) {
-                    printf("Writing to '%s' failed\n", filepath.c_str());
+                    PRINTF("Writing to '%s' failed\n", filepath.c_str());
                     return -1;
                 }
             }
@@ -1342,7 +1342,7 @@ static int cross_compile(const cmd_args& args, std::vector<uint32_t>& spirv,
 
                 std::string cvar_refl = !cvar_code.empty() ? (cvar_code + "_refl") : "";
                 if (!write_file(reflect_filepath.c_str(), json_str.c_str(), cvar_refl.c_str(), append)) {
-                    printf("Writing to '%s' failed", reflect_filepath.c_str());
+                    PRINTF("Writing to '%s' failed", reflect_filepath.c_str());
                     return -1;
                 }
             }
@@ -1352,7 +1352,7 @@ static int cross_compile(const cmd_args& args, std::vector<uint32_t>& spirv,
             puts(filename); // SUCCESS
         return 0;
     } catch (const std::exception& e) {
-        printf("SPIRV-cross: %s\n", e.what());
+        PRINTF("SPIRV-cross: %s\n", e.what());
         return -1;
     }
 }
@@ -1511,7 +1511,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
         // open the file and check for special tags
         sx_mem_block* mem = sx_file_load_text(g_alloc, args.vs_filepath);
         if (!mem) {
-            printf("opening file '%s' failed\n", args.vs_filepath);
+            PRINTF("opening file '%s' failed\n", args.vs_filepath);
             return -1;
         }
 
@@ -1525,7 +1525,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
                     text += (text[4]=='\r'&&text[5]=='\n') ? 6 : 5;
                     const char* end_block = find_end_block(text);
                     if (!end_block) {
-                        printf("no matching //@end found with //@begin: %s\n", args.vs_filepath);
+                        PRINTF("no matching //@end found with //@begin: %s\n", args.vs_filepath);
                         return -1;
                     }
 
@@ -1542,7 +1542,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
                     text += (text[4]=='\r'&&text[5]=='\n') ? 6 : 5;
                     const char* end_block = find_end_block(text);
                     if (!end_block) {
-                        printf("no matching //@end found with //@begin: %s\n", args.fs_filepath);
+                        PRINTF("no matching //@end found with //@begin: %s\n", args.fs_filepath);
                         return -1;
                     }
                     compile_file_desc d = {
@@ -1555,7 +1555,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
 
                     text = end_block + 6;
                 } else {
-                    printf("invalid @begin tag in '%s'\n", args.vs_filepath);
+                    PRINTF("invalid @begin tag in '%s'\n", args.vs_filepath);
                 }
             } 
             const char* next_text = sx_skip_whitespace(text);
@@ -1570,7 +1570,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
         // the offsets should not have any conflict with each other
         for (int i = 0; i < sx_array_count(files) - 1; i++) {
             if (files[i].offset + files[i].size > files[i+1].offset) {
-                printf("invalid @begin @end shader blocks: %s\n", args.vs_filepath);
+                PRINTF("invalid @begin @end shader blocks: %s\n", args.vs_filepath);
                 return -1;
             }
         }
@@ -1603,14 +1603,14 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
     std::string semantics_def;
     for (int i = 0; i < VERTEX_ATTRIB_COUNT; i++) {
         char sem_line[128];
-        sx_snprintf(sem_line, sizeof(sem_line), "#define %s %d\n", k_attrib_names[i], i);
+        SX_SNPRINTF(sem_line, sizeof(sem_line), "#define %s %d\n", k_attrib_names[i], i);
         semantics_def += std::string(sem_line);
     }
 
     // Add SV_Target semantics for more HLSL compatibility
     for (int i = 0; i < 8; i++) {
         char sv_target_line[128];
-        sx_snprintf(sv_target_line, sizeof(sv_target_line), "#define SV_Target%d %d\n", i, i);
+        SX_SNPRINTF(sv_target_line, sizeof(sv_target_line), "#define SV_Target%d %d\n", i, i);
         semantics_def += std::string(sv_target_line);
     }
 
@@ -1626,7 +1626,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
         // Read target file
         sx_mem_block* mem = sx_file_load_bin(g_alloc, files[i].filename);
         if (!mem) {
-            printf("opening file '%s' failed\n", files[i].filename);
+            PRINTF("opening file '%s' failed\n", files[i].filename);
             compile_files_ret(-1);
         }
 
@@ -1674,7 +1674,7 @@ static int compile_files(cmd_args& args, const TBuiltInResource& limits_conf)
             if (shader->preprocess(&limits_conf, default_version, ENoProfile, false, false, messages, &prep_str, includer)) {
                 if (args.preprocess) {
                     puts("-------------------");
-                    printf("%s:\n", files[i].filename);
+                    PRINTF("%s:\n", files[i].filename);
                     puts("-------------------");
                     puts(prep_str.c_str());
                     puts("");
@@ -1805,11 +1805,11 @@ int glslcc_exec(int argc, char* argv[])
             detect_input_file(&args, arg);
             break;
         case '?':
-            printf("Unknown argument: %s\n", arg);
+            PRINTF("Unknown argument: %s\n", arg);
             GLSLCC_EXIT(-1);
             break;
         case '!':
-            printf("Invalid use of argument: %s\n", arg);
+            PRINTF("Invalid use of argument: %s\n", arg);
             GLSLCC_EXIT(-1);
             break;
         case 'v':
@@ -1958,7 +1958,7 @@ int glslcc_exec(int argc, char* argv[])
 
     if (g_sgs) {
         if (r == 0 && !sgs_commit(g_sgs)) {
-            printf("Writing SGS file '%s' failed\n", args.out_filepath);
+            PRINTF("Writing SGS file '%s' failed\n", args.out_filepath);
         }
         sgs_destroy_file(g_sgs);
     }

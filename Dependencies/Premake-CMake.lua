@@ -6,8 +6,14 @@ function BuildCMakeStaticProject(cmakeDir, buildDir, installDir, libName)
     os.mkdir(buildDir)
     os.mkdir(installDir)
 
+    -- Set the architecture for macOS if on ARM (Apple Silicon)
+    local architectureFlag = ""
+    if os.target() == "macosx" then
+        architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=arm64" -- Force ARM architecture -- TODO: would this work? architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64"  -- Build Universal Binary
+    end
+
     -- Generate CMake files
-    local generateCmd = string.format("cmake -S %s/ -B %s", cmakeDir, buildDir)
+    local generateCmd = string.format("cmake -S %s/ -B %s %s", cmakeDir, buildDir, architectureFlag)
     print("Running: " .. generateCmd)
     if os.execute(generateCmd) ~= 0 then
         --error("CMake generation failed!")
@@ -55,8 +61,14 @@ function BuildCMakeSharedProject(cmakeDir, buildDir, installDir, libName)
     os.mkdir(buildDir)
     os.mkdir(installDir)
 
+    -- Set the architecture for macOS if on ARM (Apple Silicon)
+    local architectureFlag = ""
+    if os.target() == "macosx" then
+        architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=arm64" -- Force ARM architecture
+    end
+
     -- Generate CMake files
-    local generateCmd = string.format("cmake -S %s/ -B %s", cmakeDir, buildDir)
+    local generateCmd = string.format("cmake -S %s/ -B %s %s", cmakeDir, buildDir, architectureFlag)
     print("Running: " .. generateCmd)
     if os.execute(generateCmd) ~= 0 then
         --error("CMake generation failed!")
