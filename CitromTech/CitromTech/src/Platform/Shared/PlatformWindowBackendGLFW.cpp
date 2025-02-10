@@ -280,28 +280,8 @@ namespace Citrom::Platform
 
         ImGui_ImplGlfw_Shutdown();
     }
-    void WindowBackendGLFW::ImGuiNewFrame()
-    {
-        if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::OpenGL))
-        {
-            ImGui_ImplOpenGL3_NewFrame();
-        }
-#ifdef CT_PLATFORM_WINDOWS
-        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::DirectX11))
-        {
-            ImGui_ImplDX11_NewFrame();
-        }
-#endif
-#ifdef CT_PLATFORM_MACOS
-        else if (RenderAPI::GraphicsAPIManager::IsGraphicsAPI(RenderAPI::GraphicsAPI::Metal))
-        {
-            Renderer::ImGuiNewFrame();
-        }
-#endif
-    }
     #else
     void WindowBackendGLFW::ImGuiInitialize() {}
     void WindowBackendGLFW::ImGuiTerminate() {}
-    void WindowBackendGLFW::ImGuiNewFrame() {}
     #endif
 }

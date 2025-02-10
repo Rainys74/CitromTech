@@ -122,7 +122,7 @@ namespace Citrom
 
 	void ImGuiLayer::Begin()
 	{
-		Platform::ImGui::NewFrame();
+		Renderer::ImGuiNewFrame();
 		ImGui::NewFrame();
 		ImGuizmo::BeginFrame();
 	}

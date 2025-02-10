@@ -27,8 +27,6 @@ namespace Citrom::Platform
         virtual void ImGuiInitialize() override;
         virtual void ImGuiTerminate() override;
 
-        virtual void ImGuiNewFrame() override;
-
         virtual const char* GetName() override { return "GLFW"; }
     private:
         bool m_WindowShouldClose;

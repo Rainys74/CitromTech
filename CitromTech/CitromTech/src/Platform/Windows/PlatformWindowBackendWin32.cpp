@@ -541,23 +541,9 @@ namespace Citrom::Platform
 
 		ImGui_ImplWin32_Shutdown();
 	}
-	void WindowBackendWin32::ImGuiNewFrame()
-	{
-		RenderAPI::GraphicsAPI graphicsAPI = RenderAPI::GraphicsAPIManager::GetGraphicsAPI();
-		if (graphicsAPI == RenderAPI::GraphicsAPI::DirectX11)
-		{
-			ImGui_ImplDX11_NewFrame();
-		}
-		else if (graphicsAPI == RenderAPI::GraphicsAPI::OpenGL)
-		{
-			ImGui_ImplOpenGL3_NewFrame();
-			//ImGui_ImplOpenGL3_RenderDrawData(::ImGui::GetDrawData());
-		}
-	}
 #else
 	void WindowBackendWin32::ImGuiInitialize() {}
 	void WindowBackendWin32::ImGuiTerminate() {}
-	void WindowBackendWin32::ImGuiNewFrame() {}
 #endif
 }
 #endif

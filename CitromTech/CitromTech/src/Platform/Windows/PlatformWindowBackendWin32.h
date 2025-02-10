@@ -28,8 +28,6 @@ namespace Citrom::Platform
         virtual void ImGuiInitialize() override;
         virtual void ImGuiTerminate() override;
 
-        virtual void ImGuiNewFrame() override;
-
         virtual const char* GetName() override { return "Win32"; }
     private:
         bool m_WindowShouldClose;

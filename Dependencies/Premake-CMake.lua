@@ -9,7 +9,7 @@ function BuildCMakeStaticProject(cmakeDir, buildDir, installDir, libName)
     -- Set the architecture for macOS if on ARM (Apple Silicon)
     local architectureFlag = ""
     if os.target() == "macosx" then
-        architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=arm64" -- Force ARM architecture -- TODO: would this work? architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64"  -- Build Universal Binary
+        architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64" -- Build Universal Binary  -- architectureFlag = "-DCMAKE_OSX_ARCHITECTURES=arm64" -- Force ARM architecture
     end
 
     -- Generate CMake files

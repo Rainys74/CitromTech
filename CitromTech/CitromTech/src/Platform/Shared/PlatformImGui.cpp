@@ -25,9 +25,4 @@ namespace Citrom::Platform
 	{
 		m_Window->GetBackend()->ImGuiTerminate();
 	}
-
-	void ImGui::NewFrame()
-	{
-		m_Window->GetBackend()->ImGuiNewFrame();
-	}
 }
