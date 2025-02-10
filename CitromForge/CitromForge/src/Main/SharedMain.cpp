@@ -434,11 +434,11 @@ void ForgeLoop()
 		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		Renderer::BeginFrame(g_CurrentScene);
-		g_LayerStack.Render();
-
 		Camera* currentCamera = (Camera*)GetCamera();
 		Math::Transform* currentCameraTransform = (Math::Transform*)GetCameraTransform();
+
+		Renderer::BeginFrame(g_CurrentScene, currentCamera, currentCameraTransform);
+		g_LayerStack.Render();
 
 		Renderer::DrawTest(currentCamera, currentCameraTransform);
 

@@ -108,8 +108,9 @@ namespace Citrom
 		g_EditorRenderer.Initialize();
 	}
 
-	void Renderer::BeginFrame(Scene* scene)
+	void Renderer::BeginFrame(Scene* scene, Camera* camera, Math::Transform* cameraTransform)
 	{
+		s_CurrentCamera = CameraData(camera, cameraTransform);
 		if (s_CurrentScene && s_CurrentCamera.camera)
 		{
 			Math::Color& clearColor = s_CurrentCamera.camera->clearColor;
@@ -147,22 +148,22 @@ namespace Citrom
 		auto view = scene->GetAllEntitiesWith<CubeComponent>();
 		for (auto cube : view)
 		{
-			//auto& transformComponent = view.get<TransformComponent>(cube);
-			//auto& cubeComponent = view.get<CubeComponent>(cube);
+			auto& transformComponent = Entity(cube, scene).GetComponent<TransformComponent>();
+			auto& cubeComponent = view.get<CubeComponent>(cube);
 
 			static constexpr float32 positions[] =
 			{
 				// Front face
-				-0.5f, -0.5f,  0.5f, // Bottom-left
-				 0.5f, -0.5f,  0.5f, // Bottom-right
-				 0.5f,  0.5f,  0.5f, // Top-right
-				-0.5f,  0.5f,  0.5f, // Top-left
+				-0.5f, -0.5f,  0.5f,		0.0f, 0.0f, 1.0f,		0.0f, 0.0f, // Bottom-left
+				 0.5f, -0.5f,  0.5f,		0.0f, 0.0f, 1.0f,		1.0f, 0.0f, // Bottom-right
+				 0.5f,  0.5f,  0.5f,		0.0f, 0.0f, 1.0f,		1.0f, 1.0f, // Top-right
+				-0.5f,  0.5f,  0.5f,		0.0f, 0.0f, 1.0f,		0.0f, 1.0f, // Top-left
 
 				// Back face
-				-0.5f, -0.5f, -0.5f, // Bottom-left
-				 0.5f, -0.5f, -0.5f, // Bottom-right
-				 0.5f,  0.5f, -0.5f, // Top-right
-				-0.5f,  0.5f, -0.5f, // Top-left
+				-0.5f, -0.5f, -0.5f,		0.0f, 0.0f, -1.0f,		0.0f, 0.0f, // Bottom-left
+				 0.5f, -0.5f, -0.5f,		0.0f, 0.0f, -1.0f,		1.0f, 0.0f, // Bottom-right
+				 0.5f,  0.5f, -0.5f,		0.0f, 0.0f, -1.0f,		1.0f, 1.0f, // Top-right
+				-0.5f,  0.5f, -0.5f,		0.0f, 0.0f, -1.0f,		0.0f, 1.0f, // Top-left
 			};
 			static constexpr uint32 indices[] =
 			{
@@ -193,10 +194,12 @@ namespace Citrom
 
 			Mesh cubeMesh;
 
-			for (size_t i = 0; i < CT_ARRAY_LENGTH(positions) / 3; i++)
+			for (size_t i = 0; i < CT_ARRAY_LENGTH(positions) / 8; i++)
 			{
 				Vertex v;
-				v.position = Math::Vector3({ positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2] });
+				v.position = Math::Vector3(positions[i * 8 + 0], positions[i * 8 + 1], positions[i * 8 + 2]);
+				v.normal = Math::Vector3(positions[i * 8 + 3], positions[i * 8 + 4], positions[i * 8 + 5]);
+				v.texCoord = { positions[i * 8 + 6], positions[i * 8 + 7] };
 
 				cubeMesh.vertices.PushBack(v);
 			}
@@ -204,7 +207,31 @@ namespace Citrom
 			for (size_t i = 0; i < CT_ARRAY_LENGTH(indices); i++)
 				cubeMesh.indices.PushBack(indices[i]);
 
-			RenderMesh(cubeMesh);
+			struct ConstantBufferTest
+			{
+				Math::Matrix4x4 transform;
+			};
+			ConstantBufferTest cbt = {};
+
+			Math::Matrix4x4 projection = s_CurrentCamera.camera->GetProjection();
+			Math::Matrix4x4 view = s_CurrentCamera.cameraTransform->GetCameraViewFromTransform();
+			Math::Matrix4x4 model = transformComponent.transform.GetTransformMatrix();
+			cbt.transform = projection * view * model;
+			cbt.transform.Transpose();
+
+			UniformBufferDesc ubd = {};
+			ubd.data = &cbt;
+			ubd.dataBytes = sizeof(cbt);
+			ubd.usage = Usage::Dynamic;
+
+			UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
+			m_Device->BindUniformBuffer(&ub);
+
+			ShaderDesc sd = { "Standard" };
+			Shader shader = m_Device->CreateShader(&sd);
+
+			Material defaultMaterialTest(shader);
+			RenderMeshWithMaterial(cubeMesh, defaultMaterialTest);
 		}
 	}
 
@@ -555,6 +582,56 @@ namespace Citrom
 	void Renderer::RenderMesh(const Mesh& mesh)
 	{
 
+	}
+	void Renderer::RenderMeshWithMaterial(Mesh& mesh, Material& material)
+	{
+		// TODO: maybe not recreate all these objects every frame?
+		material.Bind();
+		
+		CTL::DArray<float32> vertices(mesh.vertices.Size());
+		for (const Vertex& vert : mesh.vertices)
+		{
+			vertices.PushBack(vert.position.x);
+			vertices.PushBack(vert.position.y);
+			vertices.PushBack(vert.position.z);
+
+			vertices.PushBack(vert.normal.x);
+			vertices.PushBack(vert.normal.y);
+			vertices.PushBack(vert.normal.z);
+
+			vertices.PushBack(vert.texCoord.u);
+			vertices.PushBack(vert.texCoord.v);
+		}
+
+		// Index Buffer
+		IndexBufferDesc ibd = {};
+		ibd.data = mesh.indices.Data();
+		ibd.count = mesh.indices.Count();
+
+		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
+		m_Device->BindIndexBuffer(&ibo);
+
+		VertexBufferLayoutDesc vbld1 = {};
+		vbld1.shader = material.GetShader();
+
+		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
+
+		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
+		m_Device->BindVertexBufferLayout(&vbLayout1);
+
+		// Vertex Buffer 1
+		VertexBufferDesc vbd1 = {};
+		vbd1.data = vertices.Data();
+		vbd1.size = vertices.Size();
+		vbd1.usage = Usage::Static;
+		vbd1.vbLayoutDesc = &vbld1;
+
+		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
+		m_Device->BindVertexBuffer(&vbo1);
+
+		m_Device->RCDrawIndexed(ibd.count);
 	}
 
 		/*struct VertexUBO

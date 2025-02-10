@@ -3,6 +3,7 @@
 #include "Core.h"
 
 #include "ShaderCompiler.h"
+#include "MaterialSystem.h"
 #include "Camera.h"
 #include "RenderAPI/GraphicsDevice.h"
 #include "Math/Vector.h"
@@ -93,7 +94,7 @@ namespace Citrom
 		static void Initialize(Platform::Window* window);
 
 		// Submit, BeginScene, EndScene
-		static void BeginFrame(Scene* scene);
+		static void BeginFrame(Scene* scene, Camera* camera, Math::Transform* cameraTransform); // TODO: decide how many of these arguments are needed
 		static void EndFrame();
 
 		//static void Submit(void* model);
@@ -109,6 +110,7 @@ namespace Citrom
 	private:
 		// RenderMesh
 		static void RenderMesh(const Mesh& mesh);
+		static void RenderMeshWithMaterial(Mesh& mesh, Material& material);
 	private:
 		static RenderAPI::Device* m_Device;
 		static EventListener<WindowEvents> s_WindowEventListener;
