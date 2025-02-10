@@ -55,11 +55,10 @@ namespace Citrom::Math
 		Transform operator*(const Transform& trans2) const
 		{
 			Transform transform;
-			transform.position.x = this->position.x + trans2.position.x;
-			transform.position.y = this->position.y + trans2.position.y;
-			transform.position.z = this->position.z + trans2.position.z;
+			transform.position = this->position + trans2.position;
 
-			// TODO: multiply rotation quaternions
+			transform.rotation = this->rotation * trans2.rotation;
+			//transform.eulerAnglesHint = this->eulerAnglesHint + trans2.eulerAnglesHint;
 
 			transform.scale = this->scale * trans2.scale;
 

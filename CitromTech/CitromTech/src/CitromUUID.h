@@ -2,6 +2,8 @@
 
 #include "Core.h"
 
+#include "CTL/HashMap.h"
+
 namespace Citrom
 {
 	class UUID
@@ -22,5 +24,19 @@ namespace Citrom
 		FORCE_INLINE bool operator!=(const uint64 other) const { return m_ID != other; }
 	private:
 		uint64 m_ID = 0;
+	};
+}
+
+// CTL Hash Map Specialization Specification
+namespace CTL
+{
+	template<>
+	class XXHash<Citrom::UUID>
+	{
+	public:
+		size_t operator()(const Citrom::UUID& uuid) const
+		{
+			return XXHash<uint64>()(static_cast<uint64>(uuid));
+		}
 	};
 }

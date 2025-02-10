@@ -66,6 +66,7 @@ namespace Citrom::RenderAPI
         CT_CORE_ASSERT_WARN(!s_APIDecided, "Graphics API is already selected!");
         s_CurrentGraphicsAPI = graphicsAPI;
         s_APIDecided = true;
+        CT_CORE_TRACE("Graphics API {} has been forced.", GraphicsAPIToString(s_CurrentGraphicsAPI));
     }
 
     void GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI graphicsAPI, uint8 priorityLevel)

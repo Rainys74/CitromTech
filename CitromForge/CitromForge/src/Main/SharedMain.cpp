@@ -434,7 +434,7 @@ void ForgeLoop()
 		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		Renderer::BeginFrame();
+		Renderer::BeginFrame(g_CurrentScene);
 		g_LayerStack.Render();
 
 		Camera* currentCamera = (Camera*)GetCamera();
@@ -442,9 +442,7 @@ void ForgeLoop()
 
 		Renderer::DrawTest(currentCamera, currentCameraTransform);
 
-		Renderer::Begin(g_CurrentScene);
 		Renderer::SubmitScene(g_CurrentScene);
-		Renderer::End();
 
 		// TODO: implement something like F11: Open/close editor UI and pause the game.
 								//Shift + F11: Open / close editor UI without pausing the game.

@@ -126,13 +126,32 @@ static void DrawHierarchy(Scene* scene)
         }
 
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
-        if (ImGui::Selectable(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
+        //if (ImGui::TreeNode(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str()))
         {
-            CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
-            SetSelectedEntity(entity);
-
-            //g_SelectedEntity = Entity(g_SelectedEntt, scene);
+            if (ImGui::Selectable(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), isSelected /*true /*weird not seeing which entity is selected*/))
+            {
+                CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
+                SetSelectedEntity(entity);
+        
+                //g_SelectedEntity = Entity(g_SelectedEntt, scene);
+            }
+        
+            //ImGui::TreePop();
         }
+        //{
+        //    ImGuiTreeNodeFlags flags = (isSelected ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+        //    if (ImGui::TreeNodeEx(std::string(nameComponent.name).append("##").append(std::to_string(uuidComponent.id)).c_str(), flags))
+        //    {
+        //        ImGui::TreePop();
+        //    }
+        //    if (ImGui::IsItemClicked())
+        //    {
+        //        CT_WARN("Entity selected: {}", (uint64)uuidComponent.id); // Log the selection
+        //        SetSelectedEntity(entity);
+        //
+        //        //g_SelectedEntity = Entity(g_SelectedEntt, scene);
+        //    }
+        //}
 
         if (!activeComponent.active) 
             ImGui::PopStyleColor();

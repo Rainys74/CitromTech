@@ -35,6 +35,15 @@ namespace Citrom::Platform
 				// -------------------------------
 			}
 
+			/*	// use this for seeding random generators.. maybe. if it even works.
+				uint64_t integer_part = static_cast<uint64_t>(seconds);
+				uint64_t fractional_part = static_cast<uint64_t>((seconds - integer_part) * 1e9); // Scale fractional part to preserve precision (1e6 (1*10^6 = 1'000'000) for microseconds)
+				return integer_part + fractional_part;
+
+				// Combine them with safe bit shifts if necessary
+				//return (integer_part << 32) | (fractional_part & 0xFFFFFFFF); // use 20 instead of 32 for microseconds and 5 hex bytes instead of 8
+			*/
+
 			LARGE_INTEGER nowTime;
 			QueryPerformanceCounter(&nowTime);
 			return (float64)nowTime.QuadPart * sg_ClockFrequency;

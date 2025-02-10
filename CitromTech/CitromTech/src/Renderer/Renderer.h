@@ -93,12 +93,8 @@ namespace Citrom
 		static void Initialize(Platform::Window* window);
 
 		// Submit, BeginScene, EndScene
-		static void BeginFrame();
+		static void BeginFrame(Scene* scene);
 		static void EndFrame();
-
-		// Main Submission
-		static void Begin(Scene* scene);
-		static void End();
 
 		//static void Submit(void* model);
 		static void SubmitScene(Scene* scene);

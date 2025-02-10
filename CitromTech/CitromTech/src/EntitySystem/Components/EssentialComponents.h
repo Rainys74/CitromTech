@@ -30,6 +30,13 @@ namespace Citrom
 		ActiveComponent() = default;
 		ActiveComponent(const ActiveComponent&) = default;
 	};
+	struct HierarchyComponent
+	{
+		UUID parentID = UUID(0);
+
+		HierarchyComponent() = default;
+		HierarchyComponent(const HierarchyComponent&) = default;
+	};
 
 	struct TransformComponent
 	{

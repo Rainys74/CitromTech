@@ -108,7 +108,7 @@ namespace Citrom
 		g_EditorRenderer.Initialize();
 	}
 
-	void Renderer::BeginFrame()
+	void Renderer::BeginFrame(Scene* scene)
 	{
 		if (s_CurrentScene && s_CurrentCamera.camera)
 		{
@@ -129,16 +129,16 @@ namespace Citrom
 		s_CurrentScene = nullptr;
 	}
 
-	void Renderer::Begin(Scene* scene)
-	{
-		s_CurrentScene = scene;
-		s_CurrentCamera.camera = &scene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
-		s_CurrentCamera.cameraTransform = &scene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
-	}
-
-	void Renderer::End()
-	{
-	}
+	//void Renderer::Begin(Scene* scene)
+	//{
+	//	s_CurrentScene = scene;
+	//	s_CurrentCamera.camera = &scene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+	//	s_CurrentCamera.cameraTransform = &scene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
+	//}
+	//
+	//void Renderer::End()
+	//{
+	//}
 
 	void Renderer::SubmitScene(Scene* scene)
 	{
