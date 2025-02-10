@@ -63,6 +63,8 @@ namespace Citrom::RenderAPI
 		// it's not my job to pick the GPU for the user, basically Gets the Current Adapter's information
 		virtual GPUInfo GetCurrentGPUInfo() = 0;
 
+		virtual void WaitForGPU() = 0;
+
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
 		virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0;
@@ -110,7 +112,7 @@ namespace Citrom::RenderAPI
 		virtual void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) = 0;
 
 		// Render Commands
-		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0;
+		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
 		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
 

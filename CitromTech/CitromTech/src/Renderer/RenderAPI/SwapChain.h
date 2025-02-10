@@ -31,7 +31,8 @@ namespace Citrom::RenderAPI
 	enum class RenderTargetWriteMask : uint8fast
 	{
 		None = 0,
-		Red = 1,
+
+		Red = BIT(0),
 		Green = BIT(1),
 		Blue = BIT(2),
 		Alpha = BIT(3),
@@ -59,8 +60,8 @@ namespace Citrom::RenderAPI
 
 	enum class FillMode
 	{
-		Solid,
-		Wireframe
+		Solid, // Fill
+		Wireframe // Line
 	};
 	enum class CullMode
 	{
@@ -74,5 +75,28 @@ namespace Citrom::RenderAPI
 		CullMode cullMode = CullMode::Back;
 
 		bool frontCounterClockwise = false;
+	};
+
+	// TODO: move to pipelines since they're much more modern and hold up better with api's like vulkan and metal, also easier to performantly implement for me ;)
+	struct PipelineDesc
+	{
+		const Shader* vertexShader;
+		const Shader* fragmentShader;
+		//const ComputeShader* computeShader;
+
+		//const BlendState* blendState;
+		//const RasterizerState* rasterizerState;
+		//const DepthStencilState* dsState;
+
+		//const VertexBufferLayout* inputLayout;
+		
+		//PrimitiveTopology primitiveType;
+		// Sample Mask?
+	};
+
+	struct Pipeline
+	{
+		PipelineDesc descriptor;
+		CTL::Ref<void> internal;
 	};
 }

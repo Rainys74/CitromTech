@@ -14,7 +14,7 @@ namespace Citrom::RenderAPI
 		HRESULT hr;
 
 		// Gain access to texture subresource in swap chain (back buffer)
-		WRL::ComPtr<ID3D11Resource> backBuffer;
+		WRL::ComPtr<ID3D11Resource> backBuffer; // TODO: do i need a GetBackBuffer() function that returns a RenderAPI::Texture of the back buffer?
 		DXCallHR(m_SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &backBuffer)); // or IID_PPV_ARGS(&backBuffer)
 
 		DXCallHR(m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_RenderTarget));

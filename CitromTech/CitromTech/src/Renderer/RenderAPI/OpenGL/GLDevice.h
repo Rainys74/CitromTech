@@ -14,6 +14,8 @@ namespace Citrom::RenderAPI
 
 		GPUInfo GetCurrentGPUInfo() override;
 
+		void WaitForGPU() override;
+
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override {return Framebuffer();}
 		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) override{}

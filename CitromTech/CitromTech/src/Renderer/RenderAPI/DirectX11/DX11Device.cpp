@@ -101,6 +101,23 @@ namespace Citrom::RenderAPI
 		m_DeviceContext->Release();
 	}
 
+	void DX11Device::WaitForGPU()
+	{
+		DXCall(m_DeviceContext->Flush());
+
+		D3D11_QUERY_DESC qd;
+		qd.MiscFlags = 0;
+		qd.Query = D3D11_QUERY_EVENT;
+
+		HRESULT hr;
+		WRL::ComPtr<ID3D11Query> query;
+		DXCallHR(m_Device->CreateQuery(&qd, &query));
+		DXCall(m_DeviceContext->End(query.Get()));
+		BOOL result;
+		while (m_DeviceContext->GetData(query.Get(), &result, sizeof(result), 0) == S_FALSE); // TODO: sleep for 1 ms to avoid aggressive polling
+		//CT_CORE_ASSERT(result == TRUE);
+	}
+
 	GPUInfo DX11Device::GetCurrentGPUInfo()
 	{
 		HRESULT hr;

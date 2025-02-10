@@ -562,6 +562,8 @@ namespace Citrom
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		m_Device->SetTargetFramebuffer(nullptr);
+
+		//m_Device->WaitForGPU();
 	}
 
 	
