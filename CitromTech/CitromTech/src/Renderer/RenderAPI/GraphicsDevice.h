@@ -116,6 +116,14 @@ namespace Citrom::RenderAPI
 		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
 
+		// Debug (Name setting)
+		virtual void SetName(VertexBuffer* resource, const char* name) = 0;
+		virtual void SetName(VertexBufferLayout* resource, const char* name) = 0;
+		virtual void SetName(IndexBuffer* resource, const char* name) = 0;
+		virtual void SetName(UniformBuffer* resource, const char* name) = 0;
+		virtual void SetName(Texture2D* resource, const char* name) = 0;
+		virtual void SetName(Shader* resource, const char* name) = 0;
+
 		// ImGui
 		virtual void ImGuiInitGraphicsAPI() = 0;
         virtual void ImGuiNewFrame() = 0;
@@ -132,6 +140,14 @@ namespace Citrom::RenderAPI
 	protected:
 		uint32 m_Width, m_Height;
 	};
+
+	#define DEVICE (Citrom::RenderAPI::Device::Get())
+
+	#ifdef CT_DEBUG
+	#define Device_SetDebugName(RESOURCE, NAME) DEVICE->SetName(RESOURCE, NAME)
+	#else
+	#define Device_SetDebugName(...)
+	#endif
 
 	// Device for checking the validity of the API, do not use directly! only used for inheritance.
 	class DummyDevice

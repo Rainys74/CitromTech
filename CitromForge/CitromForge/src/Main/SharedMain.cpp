@@ -442,7 +442,7 @@ void ForgeLoop()
 
 		Renderer::DrawTest(currentCamera, currentCameraTransform);
 
-		Renderer::SubmitScene(g_CurrentScene);
+		//Renderer::SubmitScene(g_CurrentScene);
 
 		// TODO: implement something like F11: Open/close editor UI and pause the game.
 								//Shift + F11: Open / close editor UI without pausing the game.

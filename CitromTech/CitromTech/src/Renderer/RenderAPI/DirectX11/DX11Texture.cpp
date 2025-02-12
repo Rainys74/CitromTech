@@ -77,5 +77,14 @@ namespace Citrom::RenderAPI
 		DXCall(m_DeviceContext->PSSetShaderResources(startSlot, tex2D->descriptor.arraySize, internalData->textureView.GetAddressOf()));
 		DXCall(m_DeviceContext->PSSetSamplers(startSlot, tex2D->descriptor.arraySize, internalData->sampler.GetAddressOf()));
 	}
+
+	// TODO: is this ok?
+	void DX11Device::SetName(Texture2D* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(Texture2DDX11, resource, internalData);
+		TSetResourceNameDX11(internalData->texture.Get(), name);
+		TSetResourceNameDX11(internalData->textureView.Get(), name);
+		TSetResourceNameDX11(internalData->sampler.Get(), name);
+	}
 }
 #endif

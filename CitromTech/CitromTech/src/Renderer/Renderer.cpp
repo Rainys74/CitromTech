@@ -372,6 +372,7 @@ namespace Citrom
 
 		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
 		m_Device->BindIndexBuffer(&ibo);
+		Device_SetDebugName(&ibo, "Renderer::DrawTest() Main Index Buffer (ibo)");
 
 		// Shader
 		ShaderDesc sd = {};

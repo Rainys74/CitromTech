@@ -60,6 +60,14 @@ namespace Citrom::RenderAPI
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
+		// Debug
+		void SetName(VertexBuffer* resource, const char* name) override;
+		void SetName(VertexBufferLayout* resource, const char* name) override;
+		void SetName(IndexBuffer* resource, const char* name) override;
+		void SetName(UniformBuffer* resource, const char* name) override;
+		void SetName(Texture2D* resource, const char* name) override;
+		void SetName(Shader* resource, const char* name) override;
+
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
 		void ImGuiNewFrame() override;
@@ -87,6 +95,12 @@ namespace Citrom::RenderAPI
 		// Rasterizer
 		D3D11_FILL_MODE FillModeToD3D11FillMode(FillMode fillMode);
 		D3D11_CULL_MODE CullModeToD3D11CullMode(CullMode cullMode);
+
+		template<typename T>
+		FORCE_INLINE void TSetResourceNameDX11(T* d3d11Resource, const char* name)
+		{
+			d3d11Resource->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)std::strlen(name), name);
+		}
 	private:
 		// Helper Functions
 		void CreateRenderTarget();

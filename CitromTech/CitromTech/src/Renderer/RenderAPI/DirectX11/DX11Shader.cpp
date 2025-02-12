@@ -59,13 +59,19 @@ namespace Citrom::RenderAPI
 	}
 	void DX11Device::BindShader(Shader* shader)
 	{
-		auto internalData = static_cast<ShaderDX11*>(shader->internal.get());
+		GET_BUFFER_INTERNAL(ShaderDX11, shader, internalData);
 
 		// Bind Vertex Shader
 		DXCall(m_DeviceContext->VSSetShader(internalData->vertexShader.Get(), 0, 0));
 
 		// Bind Fragment Shader
 		DXCall(m_DeviceContext->PSSetShader(internalData->pixelShader.Get(), 0, 0));
+	}
+
+	// TODO: how to handle setting shaders?
+	void DX11Device::SetName(Shader* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(ShaderDX11, resource, internalData);
 	}
 
 	WRL::ComPtr<ID3DBlob> DX11Device::DX11GetVertexShaderBlob(const Shader* shader)

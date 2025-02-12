@@ -59,6 +59,14 @@ namespace Citrom::RenderAPI
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override{}
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
+		// Debug
+		void SetName(VertexBuffer* resource, const char* name) override {}
+		void SetName(VertexBufferLayout* resource, const char* name) override {}
+		void SetName(IndexBuffer* resource, const char* name) override {}
+		void SetName(UniformBuffer* resource, const char* name) override {}
+		void SetName(Texture2D* resource, const char* name) override {}
+		void SetName(Shader* resource, const char* name) override {}
+
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
 		void ImGuiNewFrame() override;

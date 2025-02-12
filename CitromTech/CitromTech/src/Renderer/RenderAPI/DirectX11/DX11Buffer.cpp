@@ -202,5 +202,26 @@ namespace Citrom::RenderAPI
 
 		DXCall(m_DeviceContext->Unmap(internalData->buffer.Get(), 0));
 	}
+
+	void DX11Device::SetName(VertexBuffer* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(VertexBufferDX11, resource, internalData);
+		TSetResourceNameDX11(internalData->buffer.Get(), name);
+	}
+	void DX11Device::SetName(VertexBufferLayout* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(VertexBufferLayoutDX11, resource, internalData);
+		TSetResourceNameDX11(internalData->inputLayout.Get(), name);
+	}
+	void DX11Device::SetName(IndexBuffer* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(IndexBufferDX11, resource, internalData);
+		TSetResourceNameDX11(internalData->buffer.Get(), name);
+	}
+	void DX11Device::SetName(UniformBuffer* resource, const char* name)
+	{
+		GET_BUFFER_INTERNAL(UniformBufferDX11, resource, internalData);
+		internalData->buffer->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)std::strlen(name), name);
+	}
 }
 #endif
