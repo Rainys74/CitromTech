@@ -71,6 +71,39 @@ namespace Citrom::RenderAPI
 		bool frontCounterClockwise = false;
 	};
 
+	enum class DepthStencilComparisonFunc
+	{
+		Less
+	};
+
+	struct StencilOpDesc
+	{
+		DepthStencilComparisonFunc stencilFunc;
+	};
+
+	struct DepthStencilStateDesc
+	{
+		bool depthEnabled = true;
+		bool depthWriteEnabled = true;
+		DepthStencilComparisonFunc depthFunc = DepthStencilComparisonFunc::Less;
+
+		bool stencilEnabled;
+		//uint8 stencilReadMask;
+		//uint8 stencilWriteMask;
+		//StencilOpDesc stencilFrontFaceOp;
+		//StencilOpDesc stencilBackFaceOp;
+	};
+
+	// Triangle fans? Patch Lists?
+	enum class PrimitiveTopology
+	{
+		Triangles,
+		TriangleStrips,
+		Points,
+		Lines,
+		LineStrips,
+	};
+
 	// TODO: move to pipelines since they're much more modern and hold up better with api's like vulkan and metal, also easier to performantly implement for me ;)
 	struct PipelineStateDesc
 	{
@@ -78,13 +111,13 @@ namespace Citrom::RenderAPI
 		const Shader* fragmentShader;
 		//const ComputeShader* computeShader;
 
-		//const BlendState* blendState;
-		//const RasterizerState* rasterizerState;
-		//const DepthStencilState* dsState;
+		const BlendStateDesc* blendState;
+		const RasterizerStateDesc* rasterizerState;
+		const DepthStencilStateDesc* dsState;
 
 		//const VertexBufferLayout* inputLayout;
 
-		//PrimitiveTopology primitiveType;
+		PrimitiveTopology primitiveType; // = PrimitiveTopology::Triangles;
 		// Sample Mask?
 	};
 

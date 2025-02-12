@@ -32,7 +32,7 @@ namespace Citrom::RenderAPI
 		VSyncMode GetVSync() override;
 
 		void Resize(uint32 width, uint32 height) override;
-		void ResizeViewport(uint32 width, uint32 height, int32 xPos = 0, int32 yPos = 0) override;
+		void ResizeViewport(float32 width, float32 height, int32 xPos = 0, int32 yPos = 0) override;
 
 		// Buffer
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;
@@ -100,6 +100,8 @@ namespace Citrom::RenderAPI
 		// Rasterizer
 		D3D11_FILL_MODE FillModeToD3D11FillMode(FillMode fillMode);
 		D3D11_CULL_MODE CullModeToD3D11CullMode(CullMode cullMode);
+
+		D3D_PRIMITIVE_TOPOLOGY PrimitiveTopologyToD3D(PrimitiveTopology primitives);
 
 		template<typename T>
 		FORCE_INLINE void TSetResourceNameDX11(T* d3d11Resource, const char* name)

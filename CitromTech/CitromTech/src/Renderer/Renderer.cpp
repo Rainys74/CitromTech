@@ -59,8 +59,23 @@ namespace Citrom
 		rsd.cullMode = CullMode::Back;
 		rsd.frontCounterClockwise = false;
 
+		DepthStencilStateDesc dsd;
+		dsd.depthEnabled = true;
+		dsd.depthWriteEnabled = true;
+		dsd.depthFunc = DepthStencilComparisonFunc::Less;
+
+		PipelineStateDesc psd;
+		psd.blendState = &bsd;
+		psd.rasterizerState = &rsd;
+		psd.dsState = &dsd;
+		psd.primitiveType = PrimitiveTopology::Triangles;
+
 		m_Device->SetVSync(VSyncMode::On);
-		m_Device->MakeSwapChain(&scd, &bsd, &rsd);
+		m_Device->MakeSwapChain(&scd);
+
+		// TODO: you're gonna have to remake the entire renderer to use shaders with pipelines lol
+		PipelineState pipeline = m_Device->CreatePipelineState(&psd);
+		m_Device->BindPipelineState(&pipeline);
 
 		// On Resize Callback
 		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)

@@ -21,18 +21,6 @@ namespace Citrom::RenderAPI
 
 		// Depth Stencil View
 		{
-			// TODO: move this part of code to pipelines
-			D3D11_DEPTH_STENCIL_DESC dsd = {};
-			dsd.DepthEnable = true;
-			dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-			dsd.DepthFunc = D3D11_COMPARISON_LESS;
-
-			WRL::ComPtr<ID3D11DepthStencilState> dsState;
-			DXCallHR(m_Device->CreateDepthStencilState(&dsd, &dsState));
-
-			DXCall(m_DeviceContext->OMSetDepthStencilState(dsState.Get(), 1u));
-			// -----------------------------------------
-
 			// Depth Stencil Texture
 			WRL::ComPtr<ID3D11Texture2D> depthStencilTex;
 			D3D11_TEXTURE2D_DESC td = {};
@@ -185,11 +173,11 @@ namespace Citrom::RenderAPI
 		vp.TopLeftY = 0; // yPos
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
-	void DX11Device::ResizeViewport(uint32 width, uint32 height, int32 xPos, int32 yPos)
+	void DX11Device::ResizeViewport(float32 width, float32 height, int32 xPos, int32 yPos)
 	{
 		D3D11_VIEWPORT vp;
-		vp.Width = width;
-		vp.Height = height;
+		vp.Width = width * (float32)m_Width;
+		vp.Height = height * (float32)m_Height;
 		vp.MinDepth = 0;
 		vp.MaxDepth = 1;
 		vp.TopLeftX = xPos; // TODO: i think OpenGL uses this inverted
