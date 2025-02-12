@@ -23,7 +23,7 @@ namespace Citrom::RenderAPI
 		} sampler;
 	};
 
-	// TODO: combined samplers or separated?
+	// TODO: combined samplers or separated? thinking about making a SamplerDesc for use for framebuffers and textures, however samplers would be created in framebuffer or texture code and not separately..
 	struct Texture2D
 	{
 		Texture2DDesc descriptor;

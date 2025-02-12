@@ -22,6 +22,7 @@ namespace Citrom::RenderAPI
 		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override;
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override;
+		// TODO: Begin/End RenderPass, Begin uses the last assigned clear color of RCClearColor() for modern apis
 
 		Image GetImageDataFromTexture(void* texture) override;
 
@@ -54,6 +55,10 @@ namespace Citrom::RenderAPI
 		// Textures
 		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override;
 		void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) override;
+
+		// Pipeline
+		PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override;
+		void BindPipelineState(PipelineState* ps) override;
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;

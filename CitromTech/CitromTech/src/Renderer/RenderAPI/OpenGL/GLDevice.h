@@ -54,6 +54,10 @@ namespace Citrom::RenderAPI
 		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override{return Texture2D();}
 		void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) override{}
 
+		// Pipeline
+		PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override { return PipelineState(); }
+		void BindPipelineState(PipelineState* ps) override{}
+
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override{}
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override{}

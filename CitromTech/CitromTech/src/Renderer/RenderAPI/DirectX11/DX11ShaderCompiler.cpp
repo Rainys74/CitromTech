@@ -129,7 +129,7 @@ namespace Citrom::ShaderCompiler::DX11
 				}
 			}
 
-			// DXBC - DirectX Byte-Code; CSO - Compiled Shader Object; DXIL - DirectX Intermediate Language;
+			// DXBC - DirectX Byte-Code (HLSL5); CSO - Compiled Shader Object; DXIL - DirectX Intermediate Language (HLSL6);
 			std::ofstream file(outPath + shaderObj.name + shaderTypePrefix + ".dxbc", std::ios::binary);
 			CT_CORE_ASSERT(file.is_open(), "Could not open file stream!");
 

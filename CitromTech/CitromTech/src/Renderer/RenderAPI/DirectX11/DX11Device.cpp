@@ -114,7 +114,7 @@ namespace Citrom::RenderAPI
 		DXCallHR(m_Device->CreateQuery(&qd, &query));
 		DXCall(m_DeviceContext->End(query.Get()));
 		BOOL result;
-		while (m_DeviceContext->GetData(query.Get(), &result, sizeof(result), 0) == S_FALSE); // TODO: sleep for 1 ms to avoid aggressive polling
+		while (m_DeviceContext->GetData(query.Get(), &result, sizeof(result), 0) == S_FALSE); // TODO: sleep for 1 ms to avoid aggressive polling (should i? in a 100 fps case, a max amount of 1 ms overhead causes the fps to drop to 90.91..)
 		//CT_CORE_ASSERT(result == TRUE);
 	}
 

@@ -85,4 +85,9 @@ namespace Citrom::RenderAPI
 		FramebufferDesc descriptor;
 		CTL::Ref<void> internal;
 	};
+
+	struct RenderPassDesc
+	{
+		Framebuffer* targetFramebuffer;
+	};
 }

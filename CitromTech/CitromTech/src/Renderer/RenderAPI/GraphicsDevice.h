@@ -7,6 +7,7 @@
 #include "Shader.h"
 #include "SwapChain.h"
 #include "Texture.h"
+#include "PipelineState.h"
 
 // Also referred to as the Render Hardware Interface (RHI) in engines such as Unreal Engine and O3DE
 namespace Citrom::RenderAPI
@@ -89,7 +90,6 @@ namespace Citrom::RenderAPI
 		virtual void ResizeViewport(uint32 width, uint32 height, int32 xPos = 0, int32 yPos = 0) = 0;
 
 		// Vertex Buffer
-		// TODO: figure out whether to return or set using pointers
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
 		virtual void BindVertexBuffer(VertexBuffer* vb) = 0;
 
@@ -110,6 +110,10 @@ namespace Citrom::RenderAPI
 		// Textures
 		virtual Texture2D CreateTexture2D(Texture2DDesc* descriptor) = 0;
 		virtual void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) = 0;
+
+		// Pipeline
+		virtual PipelineState CreatePipelineState(PipelineStateDesc* descriptor) = 0;
+		virtual void BindPipelineState(PipelineState* ps) = 0;
 
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
