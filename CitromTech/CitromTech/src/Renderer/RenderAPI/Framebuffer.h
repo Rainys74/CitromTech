@@ -90,4 +90,9 @@ namespace Citrom::RenderAPI
 	{
 		Framebuffer* targetFramebuffer;
 	};
+	struct RenderPass
+	{
+		RenderPassDesc descriptor;
+		CTL::Ref<void> internal;
+	};
 }

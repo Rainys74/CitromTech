@@ -24,13 +24,13 @@ namespace Citrom::RenderAPI
 
 		Image GetImageDataFromTexture(void* texture) override{return Image();}
 
-		void MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec = nullptr, RasterizerStateDesc* rasterDesc = nullptr) override{}
+		void MakeSwapChain(SwapChainDesc* descriptor) override{}
 		void SwapBuffers() override{}
 		void SetVSync(VSyncMode vSync) override{}
 		VSyncMode GetVSync() override{return VSyncMode::On;}
 
 		void Resize(uint32 width, uint32 height) override{}
-		void ResizeViewport(float32 width, float32 height, int32 xPos = 0, int32 yPos = 0) override{}
+		void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) override{}
 
 		// Buffer
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override{return VertexBuffer();}

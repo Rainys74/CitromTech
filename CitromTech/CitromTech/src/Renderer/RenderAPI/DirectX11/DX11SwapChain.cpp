@@ -56,7 +56,7 @@ namespace Citrom::RenderAPI
 		}
 	}
 
-	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec, RasterizerStateDesc* rasterDesc)
+	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor)
 	{
 		m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
 		m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
@@ -86,37 +86,6 @@ namespace Citrom::RenderAPI
 
 		CreateRenderTarget();
 		Resize(m_Width, m_Height); // Create viewport to not depend on Win32's resize call on UpdateWindow
-
-		if (blendSpec)
-		{
-			D3D11_BLEND_DESC bd = {};
-			bd.RenderTarget[0].BlendEnable = true;
-			bd.RenderTarget[0].SrcBlend = BlendFactorToD3D11Blend(blendSpec->srcBlend);
-			bd.RenderTarget[0].DestBlend = BlendFactorToD3D11Blend(blendSpec->destBlend);
-			bd.RenderTarget[0].BlendOp = BlendOpToD3D11BlendOp(blendSpec->blendOperation);
-			bd.RenderTarget[0].SrcBlendAlpha = BlendFactorToD3D11Blend(blendSpec->srcBlendAlpha); // TODO: figure these alpha males out and their differences from beta
-			bd.RenderTarget[0].DestBlendAlpha = BlendFactorToD3D11Blend(blendSpec->destBlendAlpha);
-			bd.RenderTarget[0].BlendOpAlpha = BlendOpToD3D11BlendOp(blendSpec->blendOperationAlpha);
-			bd.RenderTarget[0].RenderTargetWriteMask = RenderTargetWriteMaskToD3D11(blendSpec->renderTargetWriteMask);
-
-			WRL::ComPtr<ID3D11BlendState> blendState; // TODO: do i need to store this?
-
-			DXCallHR(m_Device->CreateBlendState(&bd, &blendState));
-
-			DXCall(m_DeviceContext->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF));
-		}
-		if (rasterDesc)
-		{
-			D3D11_RASTERIZER_DESC rd = {};
-			rd.FillMode = FillModeToD3D11FillMode(rasterDesc->fillMode);
-			rd.CullMode = CullModeToD3D11CullMode(rasterDesc->cullMode);
-			rd.FrontCounterClockwise = rasterDesc->frontCounterClockwise;
-
-			WRL::ComPtr<ID3D11RasterizerState> rasterizerState; // TODO: do i need to store this?
-			DXCallHR(m_Device->CreateRasterizerState(&rd, &rasterizerState));
-
-			DXCall(m_DeviceContext->RSSetState(rasterizerState.Get()));
-		}
 	}
 	void DX11Device::SwapBuffers()
 	{
@@ -173,15 +142,15 @@ namespace Citrom::RenderAPI
 		vp.TopLeftY = 0; // yPos
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
-	void DX11Device::ResizeViewport(float32 width, float32 height, int32 xPos, int32 yPos)
+	void DX11Device::ResizeViewport(float32 width, float32 height, float32 xPos, float32 yPos)
 	{
 		D3D11_VIEWPORT vp;
 		vp.Width = width * (float32)m_Width;
 		vp.Height = height * (float32)m_Height;
 		vp.MinDepth = 0;
 		vp.MaxDepth = 1;
-		vp.TopLeftX = xPos; // TODO: i think OpenGL uses this inverted
-		vp.TopLeftY = yPos;
+		vp.TopLeftX = xPos * (float32)m_Width; // TODO: i think OpenGL uses this inverted
+		vp.TopLeftY = yPos * (float32)m_Height;
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
 }

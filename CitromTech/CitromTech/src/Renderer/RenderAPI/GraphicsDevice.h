@@ -59,7 +59,7 @@ namespace Citrom::RenderAPI
 			}
 			return s_Instance;
 		}
-		
+
 		// Because of OpenGL's lack of an Adapter system: i decided
 		// it's not my job to pick the GPU for the user, basically Gets the Current Adapter's information
 		virtual GPUInfo GetCurrentGPUInfo() = 0;
@@ -68,9 +68,13 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
-		virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0;
+		virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0; // TODO: comment this out. and move to member func in dx11
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) = 0;
 		virtual void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) = 0;
+
+		virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) {}
+		virtual void RCBeginRenderPass(RenderPass* pass) {}
+		virtual void RCEndRenderPass(RenderPass* pass) {}
 
 		virtual Image GetImageDataFromTexture(void* texture) = 0;
 
@@ -81,27 +85,27 @@ namespace Citrom::RenderAPI
 		// maybe Device should be responsible for that and to listen to the event?
 		// e.g. Torque3D holds an internal swap-chain and RTV's inside D3D11's Gfx (This)
 		// Wicked Engine holds an internal swap-chain and RTV's inside a SwapChain class and it's internal ref
-		virtual void MakeSwapChain(SwapChainDesc* descriptor, BlendStateDesc* blendSpec = nullptr, RasterizerStateDesc* rasterDesc = nullptr) = 0; // TODO: Create pipeline for states to simulate Vulkan/Metal
+		virtual void MakeSwapChain(SwapChainDesc* descriptor) = 0;
 		virtual void SwapBuffers() = 0; // implemented in device for better error checking on DX11
 		virtual void SetVSync(VSyncMode vSync) = 0; // implemented in device for better error checking on DX11
 		virtual VSyncMode GetVSync() = 0;
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
-		virtual void ResizeViewport(float32 width, float32 height, int32 xPos = 0, int32 yPos = 0) = 0; // width and height is a multiplier of the screen size
+		virtual void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) = 0; // width and height is a multiplier of the screen size, so is position
 
 		// Vertex Buffer
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
-		virtual void BindVertexBuffer(VertexBuffer* vb) = 0;
+		virtual void BindVertexBuffer(VertexBuffer* vb) = 0; // TODO: how to separate render commands and command list/encoder/queue/buffer functions? Probably make Render Commands hold a default command list pointer as nullptr which uses immediate mode CB's/CL's/CE's/CQ's
 
 		virtual VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) = 0;
-		virtual void BindVertexBufferLayout(VertexBufferLayout* vbLayout) = 0;
+		virtual void BindVertexBufferLayout(VertexBufferLayout* vbLayout) = 0; // TODO: comment out and move to private helper function in dx11
 
 		virtual IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) = 0;
 		virtual void BindIndexBuffer(IndexBuffer* ib) = 0;
 
 		// Shader
 		virtual Shader CreateShader(ShaderDesc* descriptor) = 0;
-		virtual void BindShader(Shader* shader) = 0;
+		virtual void BindShader(Shader* shader) = 0; // TODO: comment out and move to private helper function in dx11
 
 		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
 		virtual void BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0) = 0;
@@ -118,7 +122,7 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
 		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) = 0;
-		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0;
+		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0; // TODO: move to render pass as a value, or keep 
 
 		// Debug (Name setting)
 		virtual void SetName(VertexBuffer* resource, const char* name) = 0;
