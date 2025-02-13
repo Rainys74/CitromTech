@@ -72,9 +72,9 @@ namespace Citrom::RenderAPI
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) = 0;
 		virtual void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) = 0;
 
-		virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) {}
-		virtual void RCBeginRenderPass(RenderPass* pass) {}
-		virtual void RCEndRenderPass(RenderPass* pass) {}
+		virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) { return RenderPass(); }
+		virtual void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) {}
+		virtual void RCEndRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) {}
 
 		virtual Image GetImageDataFromTexture(void* texture) = 0;
 
@@ -119,7 +119,15 @@ namespace Citrom::RenderAPI
 		virtual PipelineState CreatePipelineState(PipelineStateDesc* descriptor) = 0;
 		virtual void BindPipelineState(PipelineState* ps) = 0;
 
+		// Command Buffers (also known as Command Lists, Command Encoders and sometimes Command Queues)
+		virtual CommandBuffer CreateCommandBuffer() { return CommandBuffer(); }
+		virtual void BeginCommandBuffer(CommandBuffer* cmd) {} // or should this be combined with Create? Probably not.
+		virtual void SubmitCommandBuffer(CommandBuffer* cmd) {}
+		virtual void ResetCommandBuffer(CommandBuffer* cmd) {}
+
 		// Render Commands
+		virtual void RCBegin() {}
+		virtual void RCEnd() {}
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
 		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0; // TODO: move to render pass as a value, or keep 

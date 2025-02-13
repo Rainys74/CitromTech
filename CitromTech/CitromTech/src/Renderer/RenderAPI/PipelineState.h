@@ -59,6 +59,7 @@ namespace Citrom::RenderAPI
 	};
 	enum class CullMode
 	{
+		None,
 		Back,
 		Front
 	};
@@ -107,15 +108,14 @@ namespace Citrom::RenderAPI
 	// TODO: move to pipelines since they're much more modern and hold up better with api's like vulkan and metal, also easier to performantly implement for me ;)
 	struct PipelineStateDesc
 	{
-		const Shader* vertexShader;
-		const Shader* fragmentShader;
+		const Shader* shader;
 		//const ComputeShader* computeShader;
 
 		const BlendStateDesc* blendState;
 		const RasterizerStateDesc* rasterizerState;
 		const DepthStencilStateDesc* dsState;
 
-		//const VertexBufferLayout* inputLayout;
+		const VertexBufferLayout* inputLayout;
 
 		PrimitiveTopology primitiveType; // = PrimitiveTopology::Triangles;
 		// Sample Mask?

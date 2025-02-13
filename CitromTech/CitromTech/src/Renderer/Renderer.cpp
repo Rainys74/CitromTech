@@ -729,6 +729,39 @@ namespace Citrom
 		grsd.name = "InfiniteGrid";
 
 		m_GridShader = m_Device->CreateShader(&grsd);
+
+		// Pipeline State Object
+		VertexBufferLayoutDesc vbild = {}; // Grid shader does not require any input
+		vbild.shader = &m_GridShader;
+		VertexBufferLayout il = m_Device->CreateVertexBufferLayout(&vbild);
+
+		BlendStateDesc bsd;
+		bsd.srcBlend = BlendFactor::SrcAlpha;
+		bsd.destBlend = BlendFactor::OneMinusSrcAlpha;
+		bsd.blendOperation = BlendOp::Add;
+
+		bsd.renderTargetWriteMask = RenderTargetWriteMask::All;
+
+		RasterizerStateDesc rsd;
+		rsd.fillMode = FillMode::Solid;
+		rsd.cullMode = CullMode::None;
+		rsd.frontCounterClockwise = false;
+
+		DepthStencilStateDesc dsd;
+		dsd.depthEnabled = true;
+		dsd.depthWriteEnabled = true;
+		dsd.depthFunc = DepthStencilComparisonFunc::Less;
+
+		PipelineStateDesc psd = {};
+		psd.blendState = &bsd;
+		psd.rasterizerState = &rsd;
+		psd.dsState = &dsd;
+		psd.primitiveType = PrimitiveTopology::Triangles;
+
+		psd.shader = &m_GridShader;
+		psd.inputLayout = &il;
+
+		m_GridPipeline = m_Device->CreatePipelineState(&psd); // TODO: why isn't the grid as transparent as it should be?
 	}
 	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform)
 	{
@@ -743,7 +776,8 @@ namespace Citrom
 		m_Device->SetUniformBufferData(&m_GridVertUB, &m_GridVertUBData, sizeof(m_GridVertUBData));
 		m_Device->SetUniformBufferData(&m_GridFragUB, &m_GridFragUBData, sizeof(m_GridFragUBData));
 
-		m_Device->BindShader(&m_GridShader);
+		m_Device->BindPipelineState(&m_GridPipeline);
+		m_Device->BindShader(&m_GridShader); // TODO: comment out as soon as Pipelines are ready
 
 		m_Device->RCDraw(6);
 	}

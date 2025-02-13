@@ -91,4 +91,13 @@ namespace Citrom::RenderAPI
 		UniformBufferDesc descriptor;
 		CTL::Ref<void> internal;
 	};
+
+	struct CommandX
+	{
+		CTL::Ref<void> internal;
+	};
+	using CommandBuffer = CommandX;
+	using CommandList = CommandX;
+	using CommandEncoder = CommandX;
+	using CommandQueue = CommandX;
 }

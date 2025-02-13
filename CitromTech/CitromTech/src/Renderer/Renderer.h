@@ -72,6 +72,8 @@ namespace Citrom
 		RenderAPI::Shader m_GridShader;
 		RenderAPI::UniformBuffer m_GridVertUB;
 		RenderAPI::UniformBuffer m_GridFragUB;
+
+		RenderAPI::PipelineState m_GridPipeline;
 	};
 
 	// TODO: create a modular render path system with

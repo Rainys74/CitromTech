@@ -89,6 +89,7 @@ namespace Citrom::RenderAPI
 	struct RenderPassDesc
 	{
 		Framebuffer* targetFramebuffer;
+		float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 	};
 	struct RenderPass
 	{
