@@ -140,6 +140,9 @@ namespace Citrom::RenderAPI
 		virtual void SetName(Texture2D* resource, const char* name) = 0;
 		virtual void SetName(Shader* resource, const char* name) = 0;
 
+		virtual void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) {} // Begin Event/Push Debug Event/Push Debug Group
+		virtual void RCPopDebugGroup(CommandBuffer* cmd = nullptr) {}
+
 		// ImGui
 		virtual void ImGuiInitGraphicsAPI() = 0;
         virtual void ImGuiNewFrame() = 0;
@@ -161,8 +164,15 @@ namespace Citrom::RenderAPI
 
 	#ifdef CT_DEBUG
 	#define Device_SetDebugName(RESOURCE, NAME) DEVICE->SetName(RESOURCE, NAME)
+
+	// TODO: does this work?
+	#define Device_PushDebugGroup(NAME, ...) DEVICE->RCPushDebugGroup(NAME, ##__VA_ARGS__)
+	#define Device_PopDebugGroup(...) // __VA_ARGS__
 	#else
 	#define Device_SetDebugName(...)
+
+	#define Device_PushDebugGroup(...)
+	#define Device_PopDebugGroup(...)
 	#endif
 
 	// Device for checking the validity of the API, do not use directly! only used for inheritance.
