@@ -5,7 +5,7 @@
 
 namespace Citrom::RenderAPI
 {
-	CommandBuffer DX11Device::s_RenderCommandBuffer;
+	/*CommandBuffer DX11Device::s_RenderCommandBuffer;
 
 	void DX11Device::RCBegin()
 	{
@@ -15,7 +15,7 @@ namespace Citrom::RenderAPI
 	{
 		SubmitCommandBuffer(&s_RenderCommandBuffer);
 		ResetCommandBuffer(&s_RenderCommandBuffer); // TODO: is this needed?
-	}
+	}*/
 
 	void DX11Device::RCClearColor(float32 r, float32 g, float32 b, float32 a)
 	{

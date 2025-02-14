@@ -73,9 +73,6 @@ namespace Citrom::RenderAPI
 	{
 		GET_BUFFER_INTERNAL(PipelineStateDX11, ps, internalData);
 
-		if (cmd == nullptr)
-			cmd = &s_RenderCommandBuffer;
-
 		// TODO: do if checks slow down the program?
 		DXCall(m_DeviceContext->OMSetBlendState(internalData->blendState.Get(), nullptr, 0xFFFFFFFF));
 		DXCall(m_DeviceContext->RSSetState(internalData->rasterizerState.Get()));
