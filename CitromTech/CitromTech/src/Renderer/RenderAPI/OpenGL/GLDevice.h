@@ -34,33 +34,31 @@ namespace Citrom::RenderAPI
 
 		// Buffer
 		VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override{return VertexBuffer();}
-		void BindVertexBuffer(VertexBuffer* vb) override{}
+		void RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd = nullptr) override{}
 
 		VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) override{return VertexBufferLayout();}
-		void BindVertexBufferLayout(VertexBufferLayout* vbLayout) override{}
 
 		IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override{return IndexBuffer();}
-		void BindIndexBuffer(IndexBuffer* ib) override{}
+		void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) override{}
 
 		// Shader
 		Shader CreateShader(ShaderDesc* descriptor) override{return Shader();}
-		void BindShader(Shader* shader) override{}
 
 		UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) override{return UniformBuffer();}
-		void BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0) override{}
+		void RCBindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override{}
 		void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override{}
 
 		// Textures
 		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override{return Texture2D();}
-		void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) override{}
+		void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override{}
 
 		// Pipeline
 		PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override { return PipelineState(); }
 		void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override{}
 
 		// Render Commands
-		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override{}
-		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override{}
+		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
+		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
 		// Debug
@@ -100,6 +98,8 @@ namespace Citrom::RenderAPI
 		// Function Overloading To convert buffers to internal buffers
 		// hmm no can't do because internal structs are declared in .cpp files.. unless static?*/
 	private:
+		void BindVertexBufferLayout(VertexBufferLayout* vbLayout) {}
+		void BindShader(Shader* shader) {}
 	};
 
 	class GLDummyDevice : public DummyDevice

@@ -121,8 +121,8 @@ namespace Citrom
 
     void Material::Bind()
     {
-        m_Device->BindShader(&m_Shader);
-        m_Device->BindUniformBuffer(&m_UniformBuffer, ShaderType::Fragment, 1); //hard coded
+        //m_Device->BindShader(&m_Shader);
+        m_Device->RCBindUniformBuffer(&m_UniformBuffer, ShaderType::Fragment, 1); //hard coded
     }
 
     MaterialProperty* Material::GetPropertyByName(const std::string& name)

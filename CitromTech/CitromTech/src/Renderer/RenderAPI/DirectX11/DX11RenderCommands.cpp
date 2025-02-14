@@ -24,7 +24,7 @@ namespace Citrom::RenderAPI
 		// TODO: is this ok here?
 		DXCall(m_DeviceContext->ClearDepthStencilView(m_DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
 	}
-	void DX11Device::RCDrawIndexed(uint32 indexCount, uint32 startIndex, int32 baseVertexLocation)
+	void DX11Device::RCDrawIndexed(uint32 indexCount, uint32 startIndex, int32 baseVertexLocation, CommandBuffer* cmd)
 	{
 		//glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)), baseVertex);
 		// or
@@ -41,7 +41,7 @@ namespace Citrom::RenderAPI
 		*/
 		DXCall(m_DeviceContext->DrawIndexed(indexCount, startIndex, baseVertexLocation));
 	}
-	void DX11Device::RCDraw(uint32 vertexCount, uint32 startVertexLocation)
+	void DX11Device::RCDraw(uint32 vertexCount, uint32 startVertexLocation, CommandBuffer* cmd)
 	{
 		//glDrawArrays(GL_TRIANGLES, 0 /*first*/, vertex_count);
 		m_DeviceContext->Draw(vertexCount, startVertexLocation);

@@ -70,7 +70,7 @@ namespace Citrom::RenderAPI
 
 		return tex2D;
 	}
-	void DX11Device::BindTexture2D(Texture2D* tex2D, uint32 startSlot)
+	void DX11Device::RCBindTexture2D(Texture2D* tex2D, uint32 startSlot, CommandBuffer* cmd)
 	{
 		GET_BUFFER_INTERNAL(Texture2DDX11, tex2D, internalData);
 

@@ -240,7 +240,7 @@ namespace Citrom
 			ubd.usage = Usage::Dynamic;
 
 			UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
-			m_Device->BindUniformBuffer(&ub);
+			m_Device->RCBindUniformBuffer(&ub);
 
 			ShaderDesc sd = { "Standard" };
 			Shader shader = m_Device->CreateShader(&sd);
@@ -388,7 +388,7 @@ namespace Citrom
 		ibd.count = indices.Count();
 
 		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
-		m_Device->BindIndexBuffer(&ibo);
+		m_Device->RCBindIndexBuffer(&ibo);
 		Device_SetDebugName(&ibo, "Renderer::DrawTest() Main Index Buffer (ibo)");
 
 		// Shader
@@ -450,7 +450,7 @@ namespace Citrom
 		ubd.usage = Usage::Dynamic;
 
 		UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
-		m_Device->BindUniformBuffer(&ub);
+		m_Device->RCBindUniformBuffer(&ub);
 
 		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
 		//m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));
@@ -509,7 +509,7 @@ namespace Citrom
 		vbd1.vbLayoutDesc = &vbld1;
 
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
-		m_Device->BindVertexBuffer(&vbo1);
+		m_Device->RCBindVertexBuffer(&vbo1);
 
 		// Texture
 		if (!tex2D.internal)
@@ -525,12 +525,12 @@ namespace Citrom
 			td.usage = Usage::Static;
 
 			tex2D = m_Device->CreateTexture2D(&td);
-			m_Device->BindTexture2D(&tex2D);
+			m_Device->RCBindTexture2D(&tex2D);
 
 			stbi_image_free(td.data);
 		}
 
-		m_Device->BindTexture2D(&tex2D);
+		m_Device->RCBindTexture2D(&tex2D);
 
 		/*FramebufferAttachments fba1; fba1 =
 		{
@@ -664,7 +664,7 @@ namespace Citrom
 		ibd.count = mesh.indices.Count();
 
 		IndexBuffer ibo = m_Device->CreateIndexBuffer(&ibd);
-		m_Device->BindIndexBuffer(&ibo);
+		m_Device->RCBindIndexBuffer(&ibo);
 
 		VertexBufferLayoutDesc vbld1 = {};
 		vbld1.shader = material.GetShader();
@@ -674,7 +674,7 @@ namespace Citrom
 		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
-		m_Device->BindVertexBufferLayout(&vbLayout1);
+		//m_Device->BindVertexBufferLayout(&vbLayout1);
 
 		// Vertex Buffer 1
 		VertexBufferDesc vbd1 = {};
@@ -684,7 +684,7 @@ namespace Citrom
 		vbd1.vbLayoutDesc = &vbld1;
 
 		VertexBuffer vbo1 = m_Device->CreateVertexBuffer(&vbd1);
-		m_Device->BindVertexBuffer(&vbo1);
+		m_Device->RCBindVertexBuffer(&vbo1);
 
 		m_Device->RCDrawIndexed(ibd.count);
 	}
@@ -804,8 +804,8 @@ namespace Citrom
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
-		m_Device->BindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
-		m_Device->BindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
+		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
+		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
 
 		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
 		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;

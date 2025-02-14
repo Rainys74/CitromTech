@@ -39,7 +39,7 @@ namespace Citrom::RenderAPI
 
 		return vb;
 	}
-	void DX11Device::BindVertexBuffer(VertexBuffer* vb)
+	void DX11Device::RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd)
 	{
 		// // TODO: remove this since vertex buffer needs layout information to get bound, so it will most likely get bound in BindVertexBufferLayout
 		auto internalData = static_cast<VertexBufferDX11*>(vb->internal.get());
@@ -140,7 +140,7 @@ namespace Citrom::RenderAPI
 
 		return ib;
 	}
-	void DX11Device::BindIndexBuffer(IndexBuffer* ib)
+	void DX11Device::RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd)
 	{
 		auto internalData = static_cast<IndexBufferDX11*>(ib->internal.get());
 
@@ -175,7 +175,7 @@ namespace Citrom::RenderAPI
 
 		return ub;
 	}
-	void DX11Device::BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage, uint32 startSlot)
+	void DX11Device::RCBindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage, uint32 startSlot, CommandBuffer* cmd)
 	{
 		GET_BUFFER_INTERNAL(UniformBufferDX11, ub, internalData);
 

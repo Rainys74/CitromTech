@@ -95,25 +95,25 @@ namespace Citrom::RenderAPI
 
 		// Vertex Buffer
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
-		virtual void BindVertexBuffer(VertexBuffer* vb) = 0; // TODO: how to separate render commands and command list/encoder/queue/buffer functions? Probably make Render Commands hold a default command list pointer as nullptr which uses immediate mode CB's/CL's/CE's/CQ's
+		virtual void RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd = nullptr) = 0; // TODO: how to separate render commands and command list/encoder/queue/buffer functions? Probably make Render Commands hold a default command list pointer as nullptr which uses immediate mode CB's/CL's/CE's/CQ's
 
 		virtual VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) = 0;
-		virtual void BindVertexBufferLayout(VertexBufferLayout* vbLayout) = 0; // TODO: comment out and move to private helper function in dx11
+		//virtual void BindVertexBufferLayout(VertexBufferLayout* vbLayout) = 0; // TODO: comment out and move to private helper function in dx11
 
 		virtual IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) = 0;
-		virtual void BindIndexBuffer(IndexBuffer* ib) = 0;
+		virtual void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) = 0;
 
 		// Shader
 		virtual Shader CreateShader(ShaderDesc* descriptor) = 0;
-		virtual void BindShader(Shader* shader) = 0; // TODO: comment out and move to private helper function in dx11
+		//virtual void BindShader(Shader* shader) = 0; // TODO: comment out and move to private helper function in dx11
 
 		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
-		virtual void BindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0) = 0;
+		virtual void RCBindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) = 0; // TODO: i'm pretty sure other api's don't require separate shader stages...
 		virtual void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) = 0;
 
 		// Textures
 		virtual Texture2D CreateTexture2D(Texture2DDesc* descriptor) = 0;
-		virtual void BindTexture2D(Texture2D* tex2D, uint32 startSlot = 0) = 0;
+		virtual void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) = 0;
 
 		// Pipeline
 		virtual PipelineState CreatePipelineState(PipelineStateDesc* descriptor) = 0;
@@ -128,8 +128,8 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		virtual void RCBegin() {}
 		virtual void RCEnd() {}
-		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
-		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) = 0;
+		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
+		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) = 0;
 		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0; // TODO: move to render pass as a value, or keep 
 
 		// Debug (Name setting)
