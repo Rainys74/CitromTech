@@ -89,6 +89,8 @@ namespace Citrom::RenderAPI
 
 		//inline UINT deviceFlags = 0x00000000;
 		DXCallHR(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE /*D3D_DRIVER_TYPE_UNKNOWN*/, nullptr, DEVICE_FLAGS /*swapflagslvalue |= D3D11_CREATE_DEVICE_DEBUG*/, nullptr, 0, D3D11_SDK_VERSION, &m_Device, &m_D3DFeatureLevel, &m_DeviceContext));
+
+		s_RenderCommandBuffer = CreateCommandBuffer();
 	}
 	DX11Device::~DX11Device()
 	{

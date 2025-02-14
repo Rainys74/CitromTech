@@ -75,7 +75,7 @@ namespace Citrom
 
 		// TODO: you're gonna have to remake the entire renderer to use shaders with pipelines lol
 		PipelineState pipeline = m_Device->CreatePipelineState(&psd);
-		m_Device->BindPipelineState(&pipeline);
+		//m_Device->BindPipelineState(&pipeline);
 
 		// On Resize Callback
 		s_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
@@ -380,6 +380,8 @@ namespace Citrom
 			vertices.PushBack(vert.texCoord.v);
 		}
 
+		m_Device->RCBegin();
+
 		// Index Buffer
 		IndexBufferDesc ibd = {};
 		ibd.data = indices.Data();
@@ -394,7 +396,7 @@ namespace Citrom
 		sd.name = "Standard";
 
 		Shader shader = m_Device->CreateShader(&sd);
-		m_Device->BindShader(&shader);
+		//m_Device->BindShader(&shader); // in pipeline
 
 		// Shader Constant Buffer
 		struct ConstantBufferTest
@@ -464,7 +466,40 @@ namespace Citrom
 		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
-		m_Device->BindVertexBufferLayout(&vbLayout1);
+		//m_Device->BindVertexBufferLayout(&vbLayout1); // in pipeline
+
+		// Pipeline // TODO: on anything other than DX11/OGL, this is probably slow as shit, optimize.
+		PipelineState pipeline;
+		{
+			BlendStateDesc bsd;
+			bsd.srcBlend = BlendFactor::SrcAlpha;
+			bsd.destBlend = BlendFactor::OneMinusSrcAlpha;
+			bsd.blendOperation = BlendOp::Add;
+
+			bsd.renderTargetWriteMask = RenderTargetWriteMask::All;
+
+			RasterizerStateDesc rsd;
+			rsd.fillMode = FillMode::Solid;
+			rsd.cullMode = CullMode::Back;
+			rsd.frontCounterClockwise = false;
+
+			DepthStencilStateDesc dsd;
+			dsd.depthEnabled = true;
+			dsd.depthWriteEnabled = true;
+			dsd.depthFunc = DepthStencilComparisonFunc::Less;
+
+			PipelineStateDesc psd = {};
+			psd.blendState = &bsd;
+			psd.rasterizerState = &rsd;
+			psd.dsState = &dsd;
+			psd.primitiveType = PrimitiveTopology::Triangles;
+
+			psd.shader = &shader;
+			psd.inputLayout = &vbLayout1;
+
+			pipeline = m_Device->CreatePipelineState(&psd);
+			m_Device->RCBindPipelineState(&pipeline);
+		}
 
 		// Vertex Buffer 1
 		VertexBufferDesc vbd1 = {};
@@ -578,6 +613,8 @@ namespace Citrom
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		m_Device->SetTargetFramebuffer(nullptr);
+
+		m_Device->RCEnd();
 
 		//m_Device->WaitForGPU();
 	}
@@ -733,7 +770,7 @@ namespace Citrom
 		// Pipeline State Object
 		VertexBufferLayoutDesc vbild = {}; // Grid shader does not require any input
 		vbild.shader = &m_GridShader;
-		VertexBufferLayout il = m_Device->CreateVertexBufferLayout(&vbild);
+		static VertexBufferLayout il = m_Device->CreateVertexBufferLayout(&vbild);
 
 		BlendStateDesc bsd;
 		bsd.srcBlend = BlendFactor::SrcAlpha;
@@ -776,8 +813,7 @@ namespace Citrom
 		m_Device->SetUniformBufferData(&m_GridVertUB, &m_GridVertUBData, sizeof(m_GridVertUBData));
 		m_Device->SetUniformBufferData(&m_GridFragUB, &m_GridFragUBData, sizeof(m_GridFragUBData));
 
-		m_Device->BindPipelineState(&m_GridPipeline);
-		m_Device->BindShader(&m_GridShader); // TODO: comment out as soon as Pipelines are ready
+		m_Device->RCBindPipelineState(&m_GridPipeline);
 
 		m_Device->RCDraw(6);
 	}

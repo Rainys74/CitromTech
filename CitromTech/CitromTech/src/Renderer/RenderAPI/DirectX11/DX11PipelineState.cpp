@@ -69,14 +69,20 @@ namespace Citrom::RenderAPI
 
 		return pipeline;
 	}
-	void DX11Device::BindPipelineState(PipelineState* ps)
+	void DX11Device::RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd)
 	{
 		GET_BUFFER_INTERNAL(PipelineStateDX11, ps, internalData);
+
+		if (cmd == nullptr)
+			cmd = &s_RenderCommandBuffer;
 
 		// TODO: do if checks slow down the program?
 		DXCall(m_DeviceContext->OMSetBlendState(internalData->blendState.Get(), nullptr, 0xFFFFFFFF));
 		DXCall(m_DeviceContext->RSSetState(internalData->rasterizerState.Get()));
 		DXCall(m_DeviceContext->OMSetDepthStencilState(internalData->dsState.Get(), 1u));
+
+		BindShader(const_cast<Shader*>(ps->descriptor.shader));
+		BindVertexBufferLayout(const_cast<VertexBufferLayout*>(ps->descriptor.inputLayout));
 	}
 
 	D3D11_BLEND DX11Device::BlendFactorToD3D11Blend(BlendFactor factor)

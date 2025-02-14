@@ -58,9 +58,12 @@ namespace Citrom::RenderAPI
 
 		// Pipeline
 		PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override;
-		void BindPipelineState(PipelineState* ps) override;
+		void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override;
 
 		// Render Commands
+		void RCBegin() override;
+		void RCEnd() override;
+
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override;
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0) override;
 		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
@@ -108,6 +111,8 @@ namespace Citrom::RenderAPI
 		{
 			d3d11Resource->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)std::strlen(name), name);
 		}
+	protected:
+		static CommandBuffer s_RenderCommandBuffer;
 	private:
 		// Helper Functions
 		void CreateRenderTarget();

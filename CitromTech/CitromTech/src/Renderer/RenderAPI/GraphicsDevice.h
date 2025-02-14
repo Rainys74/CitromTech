@@ -117,7 +117,7 @@ namespace Citrom::RenderAPI
 
 		// Pipeline
 		virtual PipelineState CreatePipelineState(PipelineStateDesc* descriptor) = 0;
-		virtual void BindPipelineState(PipelineState* ps) = 0;
+		virtual void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) = 0;
 
 		// Command Buffers (also known as Command Lists, Command Encoders and sometimes Command Queues)
 		virtual CommandBuffer CreateCommandBuffer() { return CommandBuffer(); }

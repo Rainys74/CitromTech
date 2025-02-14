@@ -56,7 +56,7 @@ namespace Citrom::RenderAPI
 
 		// Pipeline
 		PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override { return PipelineState(); }
-		void BindPipelineState(PipelineState* ps) override{}
+		void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override{}
 
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0) override{}
