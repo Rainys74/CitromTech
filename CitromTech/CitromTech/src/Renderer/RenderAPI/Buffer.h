@@ -92,12 +92,11 @@ namespace Citrom::RenderAPI
 		CTL::Ref<void> internal;
 	};
 
-	struct CommandX
+	struct CommandBuffer
 	{
 		CTL::Ref<void> internal;
 	};
-	using CommandBuffer = CommandX;
-	using CommandList = CommandX;
-	using CommandEncoder = CommandX;
-	using CommandQueue = CommandX;
+	using CommandList = CommandBuffer;
+	using CommandEncoder = CommandBuffer;
+	using CommandQueue = CommandBuffer;
 }

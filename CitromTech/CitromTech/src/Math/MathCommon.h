@@ -23,6 +23,8 @@ namespace Citrom::Math
 
 	#define IS_BETWEEN(value, min, max) ((value) >= (min) && (value) <= (max))
 
+	#define SQUARED(x) ((x) * (x))
+
 	// Rotation
 	#define RADIANS_TO_DEGREES(RADIANS, SUFFIX) ((RADIANS) * (180.0 ## SUFFIX / PI_MACRO(SUFFIX)))
 	#define DEGREES_TO_RADIANS(DEGREES, SUFFIX) ((DEGREES) * (PI_MACRO(SUFFIX) / 180.0 ## SUFFIX))
@@ -33,20 +35,20 @@ namespace Citrom::Math
 	constexpr uint32 UInt32Max() { return 0xFFFFFFFF; }
 	constexpr uint64 UInt64Max() { return 0xFFFFFFFFFFFFFFFF; }
 
-	constexpr int8	 Int8Max  () { return 0x7F; }
-	constexpr int16  Int16Max () { return 0x7FFF; }
-	constexpr int32  Int32Max () { return 0x7FFFFFFF; }
-	constexpr int64  Int64Max () { return 0x7FFFFFFFFFFFFFFF; }
+	constexpr int8	 Int8Max  () { return SCast<int8>(0x7F); }
+	constexpr int16  Int16Max () { return SCast<int16>(0x7FFF); }
+	constexpr int32  Int32Max () { return SCast<int32>(0x7FFFFFFF); }
+	constexpr int64  Int64Max () { return SCast<int64>(0x7FFFFFFFFFFFFFFF); }
 
 	constexpr uint8	 UInt8Min () { return 0x00; }
 	constexpr uint16 UInt16Min() { return 0x0000; }
 	constexpr uint32 UInt32Min() { return 0x00000000; }
 	constexpr uint64 UInt64Min() { return 0x0000000000000000; }
 
-	constexpr int8   Int8Min  () { return static_cast<int8>(0x80); }
-	constexpr int16  Int16Min () { return static_cast<int16>(0x8000); }
-	constexpr int32  Int32Min () { return 0x80000000; }
-	constexpr int64  Int64Min () { return 0x8000000000000000; }
+	constexpr int8   Int8Min  () { return SCast<int8>(0x80); }
+	constexpr int16  Int16Min () { return SCast<int16>(0x8000); }
+	constexpr int32  Int32Min () { return SCast<int32>(0x80000000); }
+	constexpr int64  Int64Min () { return SCast<int64>(0x8000000000000000); }
 
 	constexpr float32 UInt8ToFloatNormalized(uint8 value) { return value / (float32)UInt8Max(); }
 	constexpr uint8 FloatToUInt8Normalized(float32 value) { return (uint8)value * UInt8Max(); }

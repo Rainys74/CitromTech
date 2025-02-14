@@ -143,7 +143,7 @@ namespace Citrom::Math
     }
     inline ColorU8x4 HexCodeToColorU8x4(uint32 hexCode)
     {
-        uint8 r = (hexCode >> 24) & 0xFF;
+        uint8 r = (hexCode >> 24) & 0xFF; // TODO: shouldn't all this be reversed?
         uint8 g = (hexCode >> 16) & 0xFF;
         uint8 b = (hexCode >> 8) & 0xFF;
         uint8 a = hexCode & 0xFF;

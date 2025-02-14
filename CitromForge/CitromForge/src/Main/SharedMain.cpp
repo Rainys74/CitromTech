@@ -51,14 +51,14 @@ using namespace Citrom;
 Platform::Window g_Window;
 
 LayerStack g_LayerStack;
-ImGuiLayer g_ImLayer;
+IF_EDITOR(ImGuiLayer g_ImLayer);
 
 Scene* g_CurrentScene;
 
 float64 g_DeltaTime; // Frame Time
 
 // Layers
-EditorLayer g_EditorLayer;
+IF_EDITOR(EditorLayer g_EditorLayer);
 
 float64 MainDeltaTime()
 {
@@ -377,16 +377,16 @@ int SharedMain(int argc, char* argv[])
 	// TODO: temporary
 	Renderer::Initialize(&g_Window);
 
-	g_ImLayer.OnAttach();
-	g_ImLayer.Initialize(&g_Window);
+	IF_EDITOR(g_ImLayer.OnAttach());
+	IF_EDITOR(g_ImLayer.Initialize(&g_Window));
 
 	// Push Layers
-	g_LayerStack.Push(&g_EditorLayer);
+	IF_EDITOR(g_LayerStack.Push(&g_EditorLayer));
 	SimpleInputLayer inputLayer; g_LayerStack.Push(&inputLayer);
 
 	::ForgeLoop();
 
-	g_ImLayer.OnDetach();
+	IF_EDITOR(g_ImLayer.OnDetach());
 
 	//g_Window.~Window(); // Somehow throws an assertion during "delete m_Backend;" the assertion being because m_Backend gets deleted twice...
 
@@ -447,12 +447,14 @@ void ForgeLoop()
 		// TODO: implement something like F11: Open/close editor UI and pause the game.
 								//Shift + F11: Open / close editor UI without pausing the game.
 										//F12: Toggle free - camera mode(detached from the player)
+#ifdef CT_EDITOR_ENABLED
 		{
 			CT_PROFILE_SCOPE("ImGui Render");
 			g_ImLayer.Begin();
 			g_LayerStack.ImGuiRender();
 			g_ImLayer.End();
 		}
+#endif
 
 		Renderer::EndFrame();
 

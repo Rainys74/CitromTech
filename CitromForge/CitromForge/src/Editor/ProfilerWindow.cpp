@@ -51,7 +51,12 @@ namespace EditorImGui
                 {
                     // TODO: maybe make it so if time is < 1.0 it shows up as ms, but if >=1.0 shows up as seconds
                     //ImGui::Text("%s = %f ms", key, Profiler::ProfileResults::GetResults()[key] * 1000);
-                    ImGui::Text("%s = %f ms (%.2f%%)", key, Profiler::ProfileResults::GetResults()[key] * 1000, (Profiler::ProfileResults::GetResults()[key] / MainDeltaTime()) * 100);
+                    //ImGui::Text("%s = %f ms (%.2f%%)", key, Profiler::ProfileResults::GetResults()[key] * 1000, (Profiler::ProfileResults::GetResults()[key] / MainDeltaTime()) * 100);
+
+                    float64 fpsWithoutFunction = 1.0 / (MainDeltaTime() - Profiler::ProfileResults::GetResults()[key]);
+
+                    //ImGui::Text("%s = %f ms (%.1f FPS)", key, Profiler::ProfileResults::GetResults()[key] * 1000, MainFPS() - fpsWithoutFunction);
+                    ImGui::Text("%s = %f ms (%.2f%%) | Impact: (%.1f FPS)", key, Profiler::ProfileResults::GetResults()[key] * 1000, (Profiler::ProfileResults::GetResults()[key] / MainDeltaTime()) * 100, MainFPS() - fpsWithoutFunction);
                 }
 
                 /*static std::unordered_map<std::string, std::vector<float>> history;
