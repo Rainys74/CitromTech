@@ -19,10 +19,12 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
-		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override;
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override;
-		// TODO: Begin/End RenderPass, Begin uses the last assigned clear color of RCClearColor() for modern apis
+
+		RenderPass CreateRenderPass(RenderPassDesc* descriptor) override;
+		void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) override;
+		void RCEndRenderPass(CommandBuffer* cmd = nullptr) override;
 
 		Image GetImageDataFromTexture(void* texture) override;
 
@@ -106,6 +108,8 @@ namespace Citrom::RenderAPI
 		{
 			d3d11Resource->SetPrivateData(WKPDID_D3DDebugObjectName, (UINT)std::strlen(name), name);
 		}
+
+		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0);
 
 		void BindVertexBufferLayout(VertexBufferLayout* vbLayout);
 		void BindShader(Shader* shader);

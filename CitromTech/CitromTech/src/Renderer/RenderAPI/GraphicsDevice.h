@@ -68,13 +68,13 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
-		virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0; // TODO: comment this out. and move to member func in dx11
+		//virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0;
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) = 0;
 		virtual void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) = 0;
 
 		virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) { return RenderPass(); }
 		virtual void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) {}
-		virtual void RCEndRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) {}
+		virtual void RCEndRenderPass(CommandBuffer* cmd = nullptr) {}
 
 		virtual Image GetImageDataFromTexture(void* texture) = 0;
 

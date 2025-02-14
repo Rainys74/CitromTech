@@ -126,7 +126,8 @@ namespace Citrom
 	void Renderer::BeginFrame(Scene* scene, Camera* camera, Math::Transform* cameraTransform)
 	{
 		s_CurrentCamera = CameraData(camera, cameraTransform);
-		if (s_CurrentScene && s_CurrentCamera.camera)
+
+		/*if (s_CurrentScene && s_CurrentCamera.camera)
 		{
 			Math::Color& clearColor = s_CurrentCamera.camera->clearColor;
 			m_Device->RCClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
@@ -135,11 +136,20 @@ namespace Citrom
 		{
 			//m_Device->RCClearColor(1.0f, 0.5f, 0.24f, 1.0f); // Citrom Tech 2D
 			m_Device->RCClearColor(0.5f, 0.74f, 0.14f); // Citrom Tech
-		}
+		}*/
+
+		RenderPassDesc rpd = {};
+		rpd.targetFramebuffer = nullptr;
+		rpd.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
+
+		RenderPass pass = m_Device->CreateRenderPass(&rpd);
+		m_Device->RCBeginRenderPass(&pass);
 	}
 
 	void Renderer::EndFrame()
 	{
+		m_Device->RCEndRenderPass();
+
 		m_Device->SwapBuffers();
 
 		s_CurrentScene = nullptr;
@@ -554,7 +564,12 @@ namespace Citrom
 		//fbd1.attachments.attachments.PushBack(FramebufferAttachment{FramebufferAttachmentType::DepthStencil, FramebufferFormat::Depth});
 		Framebuffer fbo1 = m_Device->CreateFramebuffer(&fbd1);
 
-		//m_Device->SetTargetFramebuffer(&fbo1);
+		//RenderPassDesc rpd1 = {};
+		//rpd1.targetFramebuffer = &fbo1;
+		//rpd1.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
+		//
+		//RenderPass pass1 = m_Device->CreateRenderPass(&rpd1);
+		//m_Device->RCBeginRenderPass(&pass1); //m_Device->SetTargetFramebuffer(&fbo1);
 
 		//m_Device->RCDrawIndexed(ibo.GetCount());
 
@@ -612,7 +627,7 @@ namespace Citrom
 		//m_Device->BindShader(&shader);
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
-		m_Device->SetTargetFramebuffer(nullptr);
+		//m_Device->RCEndRenderPass(); //m_Device->SetTargetFramebuffer(nullptr);
 
 		m_Device->RCEnd();
 

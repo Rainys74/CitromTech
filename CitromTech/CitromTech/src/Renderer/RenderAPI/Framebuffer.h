@@ -89,7 +89,19 @@ namespace Citrom::RenderAPI
 	struct RenderPassDesc
 	{
 		Framebuffer* targetFramebuffer;
-		float clearColor[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+		struct ClearColorValues
+		{
+			float32 clearColor[4];
+
+			ClearColorValues() = default;
+			ClearColorValues(std::initializer_list<float> list)
+			{
+				std::copy(list.begin(), list.end(), clearColor);
+			}
+
+			FORCE_INLINE float32& operator[](size_t index) { return *(float32*)(&clearColor[0] + index); }
+			FORCE_INLINE const float32& operator[](size_t index) const { return *(float32*)(&clearColor[0] + index); }
+		} clearColor;
 	};
 	struct RenderPass
 	{

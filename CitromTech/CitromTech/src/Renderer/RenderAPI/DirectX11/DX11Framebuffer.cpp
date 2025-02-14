@@ -114,6 +114,11 @@ namespace Citrom::RenderAPI
 
 			ID3D11RenderTargetView* renderTargets[2] = { internalData->renderTargets[colorIndex].Get(), m_RenderTarget};
 			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
+			
+			const float clearColors[] = { 0.0f, 0.0f, 0.0f, 0.0f }; // TODO: add the option to color, or move this to render passes since they have access to framebuffers.
+			for (uint32 i = 0; i < internalData->renderTargets.Count(); i++) {
+				DXCall(m_DeviceContext->ClearRenderTargetView(internalData->renderTargets[i].Get(), clearColors));
+			}
 
 			if (internalData->hasDepthStencil) {
 				DXCall(m_DeviceContext->ClearDepthStencilView(internalData->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
@@ -134,6 +139,24 @@ namespace Citrom::RenderAPI
 		GET_BUFFER_INTERNAL(FramebufferDX11, fb, internalData);
 
 		return internalData->depthStencilTex.Get();
+	}
+
+	RenderPass DX11Device::CreateRenderPass(RenderPassDesc* descriptor)
+	{
+		RenderPass pass = {};
+		pass.descriptor = *descriptor;
+		return pass;
+	}
+	void DX11Device::RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd)
+	{
+		const RenderPassDesc* desc = &pass->descriptor;
+
+		SetTargetFramebuffer(desc->targetFramebuffer);
+		RCClearColor(desc->clearColor[0], desc->clearColor[1], desc->clearColor[2], desc->clearColor[3]); // TODO: this doesn't affect framebuffers!
+	}
+	void DX11Device::RCEndRenderPass(CommandBuffer* cmd)
+	{
+		SetTargetFramebuffer(nullptr); // is this even required?
 	}
 
 	//TODO: is this a good/useful function and is it worth putting it here?

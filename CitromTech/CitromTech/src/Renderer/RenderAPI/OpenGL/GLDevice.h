@@ -18,9 +18,12 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override {return Framebuffer();}
-		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) override{}
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override{return nullptr;}
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override{return nullptr;}
+
+		RenderPass CreateRenderPass(RenderPassDesc* descriptor) override { return RenderPass(); }
+		void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) override {}
+		void RCEndRenderPass(CommandBuffer* cmd = nullptr) override {}
 
 		Image GetImageDataFromTexture(void* texture) override{return Image();}
 
@@ -98,6 +101,8 @@ namespace Citrom::RenderAPI
 		// Function Overloading To convert buffers to internal buffers
 		// hmm no can't do because internal structs are declared in .cpp files.. unless static?*/
 	private:
+		void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) {}
+
 		void BindVertexBufferLayout(VertexBufferLayout* vbLayout) {}
 		void BindShader(Shader* shader) {}
 	};
