@@ -416,10 +416,10 @@ namespace Citrom
 		// Shader Constant Buffer
 		struct ConstantBufferTest
 		{
-			Math::Matrix4x4 transform;
+			Math::Matrix4x4 viewProj;
+			Math::Matrix4x4 model;
 		};
 		ConstantBufferTest cbt = {};
-		cbt.transform = Math::Matrix4x4::Identity();
 		Math::Matrix4x4 projection;
 		//projection.Orthographic(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 		//projection.Orthographic(-2.67f, 2.67f, -1.5f, 1.5f, -1.0f, 1.0f);
@@ -431,10 +431,11 @@ namespace Citrom
 		//view = rotationView * translationView; // The most correct right now.
 		//view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
 		view = cameraTransform->GetCameraViewFromTransform();
-		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
-		cbt.transform = projection * view * model;
+		cbt.model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
+		cbt.viewProj = projection * view;
 		//cbt.transform = model * view * projection; // INCORRECT!
-		cbt.transform.Transpose(); // TODO: what to do to not need this? because without it some weird looking artifacts appear. About ~0.002 ms worth of overhead
+		cbt.viewProj.Transpose();
+		cbt.model.Transpose();
 
 		/*
 		CT_ERROR("PROJECTION!");
