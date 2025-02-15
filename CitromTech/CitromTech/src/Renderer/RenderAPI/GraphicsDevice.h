@@ -165,7 +165,6 @@ namespace Citrom::RenderAPI
 	#ifdef CT_DEBUG
 	#define Device_SetDebugName(RESOURCE, NAME) DEVICE->SetName(RESOURCE, NAME)
 
-	// TODO: does this work?
 	#define Device_PushDebugGroup(NAME, ...) DEVICE->RCPushDebugGroup(NAME, ##__VA_ARGS__)
 	#define Device_PopDebugGroup(...) DEVICE->RCPopDebugGroup(__VA_ARGS__);
 	#else

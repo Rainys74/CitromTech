@@ -45,7 +45,7 @@ namespace Citrom
 
 		SwapChainDesc scd;
 		scd.windowPtr = window;
-		scd.renderFormat = Format::B8G8R8A8_U2FNORM;
+		scd.renderFormat = Format::R8G8B8A8_U2FNORM;
 
 		BlendStateDesc bsd;
 		bsd.srcBlend = BlendFactor::SrcAlpha;
@@ -89,7 +89,7 @@ namespace Citrom
 		EventBus::GetDispatcher<WindowEvents>()->AddListener(&s_WindowEventListener);
 
 		GPUInfo gpuInfo = m_Device->GetCurrentGPUInfo();
-		CT_CORE_INFO("Graphics Adapter Info:");
+		CT_CORE_INFO("{} Adapter Info:", GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPI()));
 		CT_CORE_INFO("\tVendor: {}", gpuInfo.vendor);
 		CT_CORE_INFO("\tRenderer: {}", gpuInfo.renderer);
 		CT_CORE_INFO("\tVersion: {}", gpuInfo.version);
@@ -143,12 +143,17 @@ namespace Citrom
 		rpd.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
 
 		RenderPass pass = m_Device->CreateRenderPass(&rpd);
+
+		m_Device->RCBegin();
 		m_Device->RCBeginRenderPass(&pass);
 	}
 
 	void Renderer::EndFrame()
 	{
 		m_Device->RCEndRenderPass();
+		m_Device->RCEnd();
+
+		//m_Device->WaitForGPU();
 
 		m_Device->SwapBuffers();
 
@@ -390,8 +395,6 @@ namespace Citrom
 			vertices.PushBack(vert.texCoord.v);
 		}
 
-		m_Device->RCBegin();
-
 		// Index Buffer
 		IndexBufferDesc ibd = {};
 		ibd.data = indices.Data();
@@ -628,10 +631,6 @@ namespace Citrom
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
 		//m_Device->RCEndRenderPass(); //m_Device->SetTargetFramebuffer(nullptr);
-
-		m_Device->RCEnd();
-
-		//m_Device->WaitForGPU();
 	}
 
 	
