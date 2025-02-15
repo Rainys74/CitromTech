@@ -33,6 +33,8 @@ namespace Citrom
 
 		if (ArgumentHandler::HasArgument("-force-d3d11"))
 			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
+        else if (ArgumentHandler::HasArgument("-force-metal"))
+            GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
 		
 		CT_TRACE("CURRENT API: {} ({})", GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPI()), (size_t)GraphicsAPIManager::GetGraphicsAPI());
 		for (size_t i = 0; i < (size_t)GraphicsAPI::Count; i++)
@@ -89,12 +91,12 @@ namespace Citrom
 		EventBus::GetDispatcher<WindowEvents>()->AddListener(&s_WindowEventListener);
 
 		GPUInfo gpuInfo = m_Device->GetCurrentGPUInfo();
-		CT_CORE_INFO("{} Adapter Info:", GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPI()));
-		CT_CORE_INFO("\tVendor: {}", gpuInfo.vendor);
-		CT_CORE_INFO("\tRenderer: {}", gpuInfo.renderer);
-		CT_CORE_INFO("\tVersion: {}", gpuInfo.version);
-		CT_CORE_INFO("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
-		CT_CORE_INFO("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6 (10 ^ +6 = 1'000'000)
+		CT_CORE_ERROR("{} Adapter Info:", GraphicsAPIManager::ToString(GraphicsAPIManager::GetGraphicsAPI()));
+        CT_CORE_ERROR("\tVendor: {}", gpuInfo.vendor);
+        CT_CORE_ERROR("\tRenderer: {}", gpuInfo.renderer);
+        CT_CORE_ERROR("\tVersion: {}", gpuInfo.version);
+        CT_CORE_ERROR("\tShading Language Version: {}", gpuInfo.shadingLanguageVersion);
+        CT_CORE_ERROR("\tTotal VRAM: {} MB", gpuInfo.videoMemory / (1 << 20)); // 1024 * 1024, 1 << 20, 1e+6 (10 ^ +6 = 1'000'000)
 
 		/*constexpr const char* shaderPath = "Shaders/";
 		constexpr const char* shaderCachePath = "ShaderCache/";

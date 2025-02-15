@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define RESET   "\033[0m"
-#define RED     "\033[31m"
+#define RED     "\033[31m" // "\033[1;31m"
 #define GREEN   "\033[32m"
 #define YELLOW  "\033[33m"
 #define BLUE    "\033[34m"
@@ -20,6 +20,11 @@ namespace Citrom::Platform::Console
 
     static std::FILE* GetStdStreamHandle(Stream stream)
 	{
+        //#ifdef CT_PLATFORM_MACOS
+        //// Hacky workaround since XCode's console only shows stderr output logs
+        //return stderr;
+        //#endif
+        
 		switch (stream)
 		{
 		default:
@@ -36,28 +41,33 @@ namespace Citrom::Platform::Console
 
     void SetTextColor(TextColor textColor)
     {
+#ifdef CT_PLATFORM_MACOS
+#define PRINTCOLOR(x) std::fprintf(stdout, x)
+#else
+#define PRINTCOLOR(x) std::printf(x)
+#endif
         switch (textColor)
 		{
 			default:
-                std::printf(RESET);
+                PRINTCOLOR(RESET);
 				break;
 			case TextColor::Reset:
-				std::printf(RESET);
+                PRINTCOLOR(RESET);
 				break;
 			case TextColor::Red:
-				std::printf(RED);
+                PRINTCOLOR(RED);
 				break;
 			case TextColor::Green:
-				std::printf(GREEN);
+                PRINTCOLOR(GREEN);
 				break;
 			case TextColor::Yellow:
-				std::printf(YELLOW);
+                PRINTCOLOR(YELLOW);
 				break;
 			case TextColor::Blue:
-				std::printf(BLUE);
+                PRINTCOLOR(BLUE);
 				break;
 			case TextColor::Purple:
-				std::printf(PURPLE);
+                PRINTCOLOR(PURPLE);
 				break;
 		}
     }

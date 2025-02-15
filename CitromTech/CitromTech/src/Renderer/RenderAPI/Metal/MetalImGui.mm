@@ -40,5 +40,7 @@ namespace Citrom::RenderAPI
 	void MetalDevice::ImGuiRenderDrawData(void* imDrawData)
 	{
         ImGui_ImplMetal_RenderDrawData((ImDrawData*)imDrawData, m_CommandBuffer, m_CommandEncoder);
+        
+        [m_CommandEncoder endEncoding];
 	}
 }
