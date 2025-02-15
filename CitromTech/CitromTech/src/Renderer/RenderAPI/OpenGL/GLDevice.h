@@ -72,6 +72,9 @@ namespace Citrom::RenderAPI
 		void SetName(Texture2D* resource, const char* name) override {}
 		void SetName(Shader* resource, const char* name) override {}
 
+		void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) override {}
+		void RCPopDebugGroup(CommandBuffer* cmd = nullptr) override {}
+
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
 		void ImGuiNewFrame() override;

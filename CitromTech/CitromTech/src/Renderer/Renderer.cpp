@@ -819,6 +819,8 @@ namespace Citrom
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
+		Device_PushDebugGroup("Editor Grid Render");
+
 		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
 		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
 
@@ -831,5 +833,7 @@ namespace Citrom
 		m_Device->RCBindPipelineState(&m_GridPipeline);
 
 		m_Device->RCDraw(6);
+
+		Device_PopDebugGroup();
 	}
 }

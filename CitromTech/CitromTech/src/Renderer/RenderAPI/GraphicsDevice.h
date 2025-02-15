@@ -140,8 +140,8 @@ namespace Citrom::RenderAPI
 		virtual void SetName(Texture2D* resource, const char* name) = 0;
 		virtual void SetName(Shader* resource, const char* name) = 0;
 
-		virtual void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) {} // Begin Event/Push Debug Event/Push Debug Group
-		virtual void RCPopDebugGroup(CommandBuffer* cmd = nullptr) {}
+		virtual void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) = 0; // Begin Event/Push Debug Event/Push Debug Group
+		virtual void RCPopDebugGroup(CommandBuffer* cmd = nullptr) = 0;
 
 		// ImGui
 		virtual void ImGuiInitGraphicsAPI() = 0;
@@ -167,7 +167,7 @@ namespace Citrom::RenderAPI
 
 	// TODO: does this work?
 	#define Device_PushDebugGroup(NAME, ...) DEVICE->RCPushDebugGroup(NAME, ##__VA_ARGS__)
-	#define Device_PopDebugGroup(...) // __VA_ARGS__
+	#define Device_PopDebugGroup(...) DEVICE->RCPopDebugGroup(__VA_ARGS__);
 	#else
 	#define Device_SetDebugName(...)
 
