@@ -14,5 +14,14 @@ float64 MainFPS();
 
 void* GetCurrentScene();
 
-void* GetCamera();
-void* GetCameraTransform();
+namespace Citrom
+{
+	struct Camera;
+	namespace Math
+	{
+		struct Transform;
+	}
+}
+
+Citrom::Camera* GetCamera();
+Citrom::Math::Transform* GetCameraTransform();

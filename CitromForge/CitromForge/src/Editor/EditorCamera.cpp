@@ -11,6 +11,7 @@ static constexpr float boostSpeed = 10.0f;
 EditorCamera::EditorCamera()
 {
 	m_Camera.SetPerspective(DegreesToRadians(70.0f), 0.01f, 1000.0f);
+	m_Camera.clearColor = Math::ColorF32x4(0.5f, 0.74f, 0.14f, 0.0f);
 }
 
 void EditorCamera::Update(float deltaTime)

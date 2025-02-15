@@ -75,13 +75,43 @@ void* GetCurrentScene()
 	return g_CurrentScene;
 }
 
-void* GetCamera()
+static Camera g_NullCamera;
+static Math::Transform g_NullCameraTransform;
+
+Camera* GetCamera()
 {
-	return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetCamera() : &g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+	//return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetCamera() : &g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+	if (EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetCamera())
+	{
+		return EditorCamera::Get()->GetCamera();
+	}
+	else
+	{
+		if (g_CurrentScene->GetMainCameraEntity())
+		{
+			return &g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
+		}
+		else
+		{
+			g_NullCamera.clearColor = Math::ColorF32x4(1.0f, 0.0f, 1.0f);
+			return &g_NullCamera;
+		}
+	}
 }
-void* GetCameraTransform()
+Math::Transform* GetCameraTransform()
 {
-	return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetTransform() : &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
+	//return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetTransform() : &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
+	if (EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetTransform())
+	{
+		return EditorCamera::Get()->GetTransform();
+	}
+	else
+	{
+		if (g_CurrentScene->GetMainCameraEntity())
+			return &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
+		else
+			return &g_NullCameraTransform;
+	}
 }
 
 int SharedMain(int argc, char* argv[])
@@ -434,8 +464,8 @@ void ForgeLoop()
 		// while (accumulated time >= fixed time step) probably
 
 		// Render
-		Camera* currentCamera = (Camera*)GetCamera();
-		Math::Transform* currentCameraTransform = (Math::Transform*)GetCameraTransform();
+		Camera* currentCamera = GetCamera();
+		Math::Transform* currentCameraTransform = GetCameraTransform();
 
 		Renderer::BeginFrame(g_CurrentScene, currentCamera, currentCameraTransform);
 		g_LayerStack.Render();

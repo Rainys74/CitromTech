@@ -12,6 +12,8 @@
 
 #include "Math/Vector.h"
 
+#define INCREMENT_DRAW_CALL()
+
 namespace Citrom
 {
 	using namespace RenderAPI;
@@ -24,12 +26,16 @@ namespace Citrom
 
 	static EditorRenderer g_EditorRenderer;
 
+	//static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
+
 	void Renderer::Initialize(Platform::Window* window)
 	{
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
 		//GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::OpenGL);
 		//GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI::DirectX11);
         //GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
+
+		// TODO: load some files to prioritize api's or something
 
 		if (ArgumentHandler::HasArgument("-force-d3d11"))
 			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);
@@ -142,7 +148,11 @@ namespace Citrom
 
 		RenderPassDesc rpd = {};
 		rpd.targetFramebuffer = nullptr;
-		rpd.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
+
+		if (s_CurrentCamera.camera)
+			rpd.clearColor = { s_CurrentCamera.camera->clearColor.r, s_CurrentCamera.camera->clearColor.g, s_CurrentCamera.camera->clearColor.b, s_CurrentCamera.camera->clearColor.a};
+		else
+			rpd.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
 
 		RenderPass pass = m_Device->CreateRenderPass(&rpd);
 
