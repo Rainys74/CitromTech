@@ -28,6 +28,10 @@ namespace Citrom::Platform
             m_Backend->PollEvents();
         }
         
+        void* Window::CocoaTryGetNSWnd()
+        {
+            return m_Backend->CocoaTryGetNSWnd();
+        }
         void* Window::GLFWTryGetWnd()
         {
             return m_Backend->GLFWTryGetWnd();

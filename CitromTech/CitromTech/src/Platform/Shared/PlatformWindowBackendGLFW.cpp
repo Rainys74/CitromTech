@@ -15,6 +15,11 @@
 #include <GLFW/glfw3native.h>
 #endif
 
+#ifdef CT_PLATFORM_MACOS
+#define GLFW_EXPOSE_NATIVE_COCOA
+#include "GLFW/glfw3native.h"
+#endif
+
 // ImGui
 #ifdef CT_EDITOR_ENABLED
 #include "CitromAssert.h"
@@ -235,6 +240,16 @@ namespace Citrom::Platform
     void* WindowBackendGLFW::Win32TryGetHWnd()
     {
         return static_cast<void*>(glfwGetWin32Window(m_Window));
+    }
+    #endif
+    #ifdef CT_PLATFORM_MACOS
+    void* WindowBackendGLFW::CocoaTryGetNSWnd()
+    {
+        return static_cast<void*>(glfwGetCocoaWindow(m_Window));
+    }
+    void* WindowBackendGLFW::CocoaTryGetNSView()
+    {
+        return static_cast<void*>(glfwGetCocoaView(m_Window));
     }
     #endif
 

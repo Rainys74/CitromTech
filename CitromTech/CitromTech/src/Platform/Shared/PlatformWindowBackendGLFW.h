@@ -22,6 +22,8 @@ namespace Citrom::Platform
         virtual void* GLFWTryGetWnd() override;
         
         IF_WINDOWS(virtual void* Win32TryGetHWnd() override);
+        IF_MACOS(virtual void* CocoaTryGetNSWnd() override);
+        IF_MACOS(virtual void* CocoaTryGetNSView() override);
 
         // ImGui
         virtual void ImGuiInitialize() override;

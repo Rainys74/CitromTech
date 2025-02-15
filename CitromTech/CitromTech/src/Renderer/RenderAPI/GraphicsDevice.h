@@ -72,9 +72,9 @@ namespace Citrom::RenderAPI
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) = 0;
 		virtual void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) = 0;
 
-		virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) { return RenderPass(); }
-		virtual void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) {}
-		virtual void RCEndRenderPass(CommandBuffer* cmd = nullptr) {}
+        virtual RenderPass CreateRenderPass(RenderPassDesc* descriptor) = 0;
+        virtual void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) = 0;
+        virtual void RCEndRenderPass(CommandBuffer* cmd = nullptr) = 0;
 
 		virtual Image GetImageDataFromTexture(void* texture) = 0;
 

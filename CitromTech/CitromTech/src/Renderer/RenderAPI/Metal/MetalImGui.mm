@@ -17,21 +17,20 @@ namespace Citrom::RenderAPI
     {
         MTLRenderPassDescriptor* renderPassDescriptor = [MTLRenderPassDescriptor new];
         
-        id <MTLCommandQueue> commandQueue = [m_Device newCommandQueue];
-        
         float clear_color[4] = {0.45f, 0.55f, 0.60f, 1.00f};
         
-        CAMetalLayer* layer = [CAMetalLayer layer];
-        layer.device = m_Device;
-        layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+        //CAMetalLayer* layer = [CAMetalLayer layer];
+        //layer.device = m_Device;
+        //layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
         
-        layer.drawableSize = CGSizeMake(m_Width, m_Height);
-        id<CAMetalDrawable> drawable = [layer nextDrawable];
+        //layer.drawableSize = CGSizeMake(m_Width, m_Height);
+        //id<CAMetalDrawable> drawable = [layer nextDrawable];
+        //id<CAMetalDrawable> drawable = [m_MTKView currentDrawable];
         
-        m_CommandBuffer = [commandQueue commandBuffer];
+        m_CommandBuffer = [m_CommandQueue commandBuffer];
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(clear_color[0] * clear_color[3], clear_color[1] * clear_color[3], clear_color[2] * clear_color[3], clear_color[3]);
-        renderPassDescriptor.colorAttachments[0].texture = drawable.texture;
-        renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionClear;
+        renderPassDescriptor.colorAttachments[0].texture = m_Drawable.texture;
+        renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad; //MTLLoadActionClear; //or MTLLoadActionLoad
         renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
         m_CommandEncoder = [m_CommandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         
@@ -42,5 +41,6 @@ namespace Citrom::RenderAPI
         ImGui_ImplMetal_RenderDrawData((ImDrawData*)imDrawData, m_CommandBuffer, m_CommandEncoder);
         
         [m_CommandEncoder endEncoding];
+        [m_CommandBuffer commit];
 	}
 }

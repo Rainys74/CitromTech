@@ -4,6 +4,8 @@
 
 #ifdef CT_PLATFORM_MACOS
 #import <Metal/Metal.h>
+#import <QuartzCore/CAMetalLayer.h>
+#import <MetalKit/MetalKit.h>
 
 namespace Citrom::RenderAPI
 {
@@ -18,22 +20,49 @@ namespace Citrom::RenderAPI
         void WaitForGPU() override {}
 
 		// Frame Buffer (Render Target View)
-		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override {return Framebuffer();}
+        Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override{return nullptr;}
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override{return nullptr;}
 
+        RenderPass CreateRenderPass(RenderPassDesc* descriptor) override;
+        void RCBeginRenderPass(RenderPass* pass, CommandBuffer* cmd = nullptr) override;
+        void RCEndRenderPass(CommandBuffer* cmd = nullptr) override;
+        
 		Image GetImageDataFromTexture(void* texture) override{return Image();}
 
         void MakeSwapChain(SwapChainDesc* descriptor) override
         {
             m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
             m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
+            
+            NSView* cocoaView = (NSView*)descriptor->windowPtr->GetBackend()->CocoaTryGetNSView();
+            
+            if (![cocoaView.layer isKindOfClass:[CAMetalLayer class]])
+                cocoaView.layer = [CAMetalLayer layer];
+            
+            if ([cocoaView.layer isKindOfClass:[CAMetalLayer class]])
+                m_MTLLayer = (CAMetalLayer*)cocoaView.layer;
+                
+            m_MTLLayer.device = m_Device;
+            m_MTLLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+            m_MTLLayer.drawableSize = CGSizeMake(m_Width, m_Height);
+            
+            //m_Drawable = [m_MTLLayer nextDrawable];
+            
+            //m_MTKView = [[MTKView alloc] initWithFrame:cocoaView.bounds device:m_Device]; // do i need to clear this?
+            //[cocoaView addSubview:m_MTKView];
         }
 		void SwapBuffers() override{}
 		void SetVSync(VSyncMode vSync) override{}
 		VSyncMode GetVSync() override{return VSyncMode::On;}
 
-        void Resize(uint32 width, uint32 height) override{}
+        void Resize(uint32 width, uint32 height) override
+        {
+            m_Width = width;
+            m_Height = height;
+            
+            m_MTLLayer.drawableSize = CGSizeMake(m_Width, m_Height);
+        }
         void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) override{}
 
         // Buffer
@@ -59,10 +88,18 @@ namespace Citrom::RenderAPI
         // Pipeline
         PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override { return PipelineState(); }
         void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override{}
+        
+        // Command Buffers
+        CommandBuffer CreateCommandBuffer() override;
+        void BeginCommandBuffer(CommandBuffer* cmd) override;
+        void SubmitCommandBuffer(CommandBuffer* cmd) override;
+        void ResetCommandBuffer(CommandBuffer* cmd) override {}
 
         // Render Commands
+        void RCBegin() override;
+        void RCEnd() override;
         void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
-        void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
+        void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override;
         void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
         // Debug
@@ -108,6 +145,10 @@ namespace Citrom::RenderAPI
         static CommandBuffer s_RenderCommandBuffer;
 	private:
         id<MTLDevice> m_Device;
+        id<MTLCommandQueue> m_CommandQueue;
+        
+        CAMetalLayer* m_MTLLayer;
+        id<CAMetalDrawable> m_Drawable;
         
         id<MTLCommandBuffer> m_CommandBuffer;
         id<MTLRenderCommandEncoder> m_CommandEncoder;
@@ -123,5 +164,11 @@ namespace Citrom::RenderAPI
             m_Valid = (device != nil);
 		}
 	};
+
+    struct CommandBufferMTL
+    {
+        id<MTLCommandBuffer> commandBuffer;
+        id<MTLRenderCommandEncoder> commandEncoder;
+    };
 }
 #endif

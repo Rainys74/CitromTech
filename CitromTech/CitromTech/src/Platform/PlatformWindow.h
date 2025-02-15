@@ -45,6 +45,8 @@ namespace Citrom::Platform
 		virtual int GetHeight() = 0;
 
 		virtual void* Win32TryGetHWnd() { return nullptr; }
+        virtual void* CocoaTryGetNSWnd() { return nullptr; }
+        virtual void* CocoaTryGetNSView() { return nullptr; }
 		
 		virtual void* GLFWTryGetWnd() { return nullptr; }
 
@@ -69,6 +71,7 @@ namespace Citrom::Platform
 		void PollEvents();
 
 		void* Win32TryGetHWnd();
+        void* CocoaTryGetNSWnd();
 
 		void* GLFWTryGetWnd();
 

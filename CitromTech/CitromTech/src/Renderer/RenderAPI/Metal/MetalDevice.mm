@@ -2,17 +2,17 @@
 
 namespace Citrom::RenderAPI
 {
-    CommandBuffer MetalDevice::s_RenderCommandBuffer;
-
     MetalDevice::MetalDevice()
     {
         m_Device = MTLCreateSystemDefaultDevice();
+        m_CommandQueue = [m_Device newCommandQueue];
         
         s_RenderCommandBuffer = CreateCommandBuffer();
     }
     MetalDevice::~MetalDevice()
     {
-        //[m_Device release];
+        [m_CommandQueue release];
+        [m_Device release];
     }
 
     /*static void queryVRAMandModelMac(uint64_t& vram, std::string& manufacturer, std::string& model)
