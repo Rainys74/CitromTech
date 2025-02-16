@@ -130,8 +130,8 @@ namespace Citrom::RenderAPI
 
 		// ImGui
         void ImGuiInitGraphicsAPI() override;
-		void ImGuiNewFrame() override;
-		void ImGuiRenderDrawData(void* imDrawData) override;
+		void ImGuiNewFrame(CommandBuffer* cmd = nullptr) override;
+		void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) override;
 	public:
 /*
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
@@ -167,7 +167,7 @@ namespace Citrom::RenderAPI
         
         id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis?
         
-        id<MTLCommandBuffer> m_ImCommandBuffer;
+        //id<MTLCommandBuffer> m_ImCommandBuffer;
         id<MTLRenderCommandEncoder> m_ImCommandEncoder;
 	};
 

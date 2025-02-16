@@ -14,12 +14,12 @@ namespace Citrom::RenderAPI
 	{
 		CT_CORE_VERIFY(ImGui_ImplDX11_Init(m_Device, m_DeviceContext), "Failed to initialize ImGui DirectX11 implementation.");
 	}
-	void DX11Device::ImGuiNewFrame()
+	void DX11Device::ImGuiNewFrame(CommandBuffer* cmd)
 	{
 		Device_PushDebugGroup("ImGui Render");
 		ImGui_ImplDX11_NewFrame();
 	}
-	void DX11Device::ImGuiRenderDrawData(void* imDrawData)
+	void DX11Device::ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd)
 	{
 		ImGui_ImplDX11_RenderDrawData((ImDrawData*)imDrawData);
 		Device_PopDebugGroup();

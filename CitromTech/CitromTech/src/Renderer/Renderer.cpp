@@ -146,7 +146,7 @@ namespace Citrom
 			m_Device->RCClearColor(0.5f, 0.74f, 0.14f); // Citrom Tech
 		}*/
 
-		RenderPassDesc rpd = {};
+		/*RenderPassDesc rpd = {};
 		rpd.targetFramebuffer = nullptr;
 
 		if (s_CurrentCamera.camera)
@@ -157,12 +157,15 @@ namespace Citrom
 		RenderPass pass = m_Device->CreateRenderPass(&rpd);
 
 		m_Device->RCBegin();
-		m_Device->RCBeginRenderPass(&pass);
+		m_Device->RCBeginRenderPass(&pass);*/
+        // Render passes are NOT the job for begin/end frame!
+        
+        m_Device->RCBegin();
 	}
 
 	void Renderer::EndFrame()
 	{
-		m_Device->RCEndRenderPass();
+		//m_Device->RCEndRenderPass();
 		m_Device->RCEnd();
 
 		//m_Device->WaitForGPU();
@@ -284,7 +287,20 @@ namespace Citrom
 		//Camera* camera = s_CurrentCamera.camera;
 		//Math::Transform* cameraTransform = s_CurrentCamera.cameraTransform;
 
+        RenderPassDesc rpd = {};
+        rpd.targetFramebuffer = nullptr;
+
+        if (s_CurrentCamera.camera)
+            rpd.clearColor = { s_CurrentCamera.camera->clearColor.r, s_CurrentCamera.camera->clearColor.g, s_CurrentCamera.camera->clearColor.b, s_CurrentCamera.camera->clearColor.a};
+        else
+            rpd.clearColor = { 0.5f, 0.74f, 0.14f, 0.0f };
+
+        RenderPass pass = m_Device->CreateRenderPass(&rpd);
+
+        m_Device->RCBeginRenderPass(&pass);
+        
 		g_EditorRenderer.Render(camera, cameraTransform);
+        m_Device->RCEndRenderPass(); // End render pass before returning!
         return;
 
 		//static CTL::DArray<float> vertices;
@@ -644,7 +660,7 @@ namespace Citrom
 		//m_Device->BindShader(&shader);
 		m_Device->RCDrawIndexed(ibo.GetCount());
 
-		//m_Device->RCEndRenderPass(); //m_Device->SetTargetFramebuffer(nullptr);
+		m_Device->RCEndRenderPass(); //m_Device->SetTargetFramebuffer(nullptr);
 	}
 
 	

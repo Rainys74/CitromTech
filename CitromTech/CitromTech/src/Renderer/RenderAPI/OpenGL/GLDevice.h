@@ -77,8 +77,8 @@ namespace Citrom::RenderAPI
 
 		// ImGui
 		void ImGuiInitGraphicsAPI() override;
-		void ImGuiNewFrame() override;
-		void ImGuiRenderDrawData(void* imDrawData) override;
+		void ImGuiNewFrame(CommandBuffer* cmd = nullptr) override;
+		void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) override;
 	public:
 /*
 		DXGI_FORMAT FormatToDXGIFormat(Format format);

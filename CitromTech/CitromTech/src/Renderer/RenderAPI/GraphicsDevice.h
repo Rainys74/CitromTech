@@ -145,8 +145,8 @@ namespace Citrom::RenderAPI
 
 		// ImGui
 		virtual void ImGuiInitGraphicsAPI() = 0;
-        virtual void ImGuiNewFrame() = 0;
-		virtual void ImGuiRenderDrawData(void* imDrawData) = 0;
+        virtual void ImGuiNewFrame(CommandBuffer* cmd = nullptr) = 0;
+		virtual void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) = 0;
 	private:
 		// Device Factory
 		static Device* CreateDevice();
