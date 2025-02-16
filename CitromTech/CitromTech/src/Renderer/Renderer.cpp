@@ -82,7 +82,7 @@ namespace Citrom
 		m_Device->MakeSwapChain(&scd);
 
 		// TODO: you're gonna have to remake the entire renderer to use shaders with pipelines lol
-		PipelineState pipeline = m_Device->CreatePipelineState(&psd);
+		//PipelineState pipeline = m_Device->CreatePipelineState(&psd);
 		//m_Device->BindPipelineState(&pipeline);
 
 		// On Resize Callback

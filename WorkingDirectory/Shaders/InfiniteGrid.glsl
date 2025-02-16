@@ -67,7 +67,7 @@ layout(binding = 1) uniform UBO {
     vec4 GridColorThick;
 };
 
-float log10(float x) 
+float gllog10(float x) // renamed to not cause ambiguity between MSL's log10
 {
     return log(x) / log(10.0);
 }
@@ -97,7 +97,7 @@ void main()
     vec2 dudv = vec2(lx, ly);
     float l = length(dudv);
 
-    float LOD = max(0.0, log10(l * GridMinPixelsBetweenCells / GridCellSize) + 1.0);
+    float LOD = max(0.0, gllog10(l * GridMinPixelsBetweenCells / GridCellSize) + 1.0);
 
     float GridCellSizeLod0 = GridCellSize * pow(10.0, floor(LOD));
     float GridCellSizeLod1 = GridCellSizeLod0 * 10.0;

@@ -22,7 +22,7 @@ namespace Citrom::RenderAPI
     {
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
         
-        //[internalData->commandEncoder endEncoding];
+        //[internalData->commandEncoder endEncoding]; // in render pass
         
         [internalData->commandBuffer presentDrawable:m_Drawable]; //[internalData->commandBuffer presentDrawable:[view currentDrawable]];
         [internalData->commandBuffer commit];

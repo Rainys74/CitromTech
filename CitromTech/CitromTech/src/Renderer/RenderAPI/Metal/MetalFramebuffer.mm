@@ -29,10 +29,9 @@ namespace Citrom::RenderAPI
         
         const auto* fbDesc = &pass->descriptor.targetFramebuffer->descriptor;
         
-        MTLRenderPassDescriptor* rpd; //= [MTLRenderPassDescriptor renderPassDescriptor]; // view->currentRendersPassDescriptor() if fb nullptr
+        MTLRenderPassDescriptor* rpd = [MTLRenderPassDescriptor renderPassDescriptor]; // view->currentRendersPassDescriptor() if fb nullptr
         if (pass->descriptor.targetFramebuffer == nullptr)
         {
-            rpd = [MTLRenderPassDescriptor renderPassDescriptor];
             rpd.colorAttachments[0].texture = m_Drawable.texture;
             rpd.colorAttachments[0].clearColor = MTLClearColorMake(0.45, 0.55, 0.60, 1.0); // Clear color
             rpd.colorAttachments[0].loadAction = MTLLoadActionClear; // Clear the texture

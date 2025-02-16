@@ -53,8 +53,23 @@ namespace Citrom::RenderAPI
             //[cocoaView addSubview:m_MTKView];
         }
 		void SwapBuffers() override{}
-		void SetVSync(VSyncMode vSync) override{}
-		VSyncMode GetVSync() override{return VSyncMode::On;}
+		void SetVSync(VSyncMode vSync) override
+        {
+            switch (vSync)
+            {
+                default:
+                case VSyncMode::On:
+                    m_MTLLayer.displaySyncEnabled = YES;
+                    break;
+                case VSyncMode::Off:
+                    m_MTLLayer.displaySyncEnabled = NO;
+                    break;
+            }
+        }
+		VSyncMode GetVSync() override
+        {
+            return m_MTLLayer.displaySyncEnabled ? VSyncMode::On : VSyncMode::Off;
+        }
 
         void Resize(uint32 width, uint32 height) override
         {
@@ -75,19 +90,19 @@ namespace Citrom::RenderAPI
         void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) override{}
 
         // Shader
-        Shader CreateShader(ShaderDesc* descriptor) override{return Shader();}
+        Shader CreateShader(ShaderDesc* descriptor) override;
 
-        UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) override{return UniformBuffer();}
-        void RCBindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override{}
-        void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override{}
+        UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) override;
+        void RCBindUniformBuffer(UniformBuffer* ub, ShaderType shaderStage = ShaderType::Vertex, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override;
+        void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override;
 
         // Textures
         Texture2D CreateTexture2D(Texture2DDesc* descriptor) override{return Texture2D();}
         void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override{}
 
         // Pipeline
-        PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override { return PipelineState(); }
-        void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override{}
+        PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override;
+        void RCBindPipelineState(PipelineState* ps, CommandBuffer* cmd = nullptr) override;
         
         // Command Buffers
         CommandBuffer CreateCommandBuffer() override;
@@ -150,8 +165,8 @@ namespace Citrom::RenderAPI
         CAMetalLayer* m_MTLLayer;
         id<CAMetalDrawable> m_Drawable;
         
-        id<MTLCommandBuffer> m_CommandBuffer;
-        id<MTLRenderCommandEncoder> m_CommandEncoder;
+        id<MTLCommandBuffer> m_ImCommandBuffer;
+        id<MTLRenderCommandEncoder> m_ImCommandEncoder;
 	};
 
 	class MetalDummyDevice : public DummyDevice
@@ -169,6 +184,24 @@ namespace Citrom::RenderAPI
     {
         id<MTLCommandBuffer> commandBuffer;
         id<MTLRenderCommandEncoder> commandEncoder;
+        
+        ~CommandBufferMTL()
+        {
+            [commandEncoder release];
+            [commandBuffer release];
+        }
+    };
+
+    struct ShaderMTL
+    {
+        id<MTLFunction> vertexFunction;
+        id<MTLFunction> fragmentFunction;
+        
+        ~ShaderMTL()
+        {
+            [vertexFunction release];
+            [fragmentFunction release];
+        }
     };
 }
 #endif

@@ -470,7 +470,7 @@ void ForgeLoop()
 		Renderer::BeginFrame(g_CurrentScene, currentCamera, currentCameraTransform);
 		g_LayerStack.Render();
 
-		Renderer::DrawTest(currentCamera, currentCameraTransform);
+		//Renderer::DrawTest(currentCamera, currentCameraTransform);
 
 		//Renderer::SubmitScene(g_CurrentScene);
 

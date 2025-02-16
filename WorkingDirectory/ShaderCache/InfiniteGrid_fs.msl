@@ -33,7 +33,7 @@ inline Tx mod(Tx x, Ty y)
 }
 
 static inline __attribute__((always_inline))
-float log10(thread const float& x)
+float gllog10(thread const float& x)
 {
     return log(x) / 2.302585124969482421875;
 }
@@ -66,7 +66,7 @@ fragment main0_out main0(main0_in in [[stage_in]], constant UBO& _92 [[buffer(0)
     float2 dudv = float2(lx, ly);
     float l = length(dudv);
     float param = (l * _92.GridMinPixelsBetweenCells) / _92.GridCellSize;
-    float LOD = fast::max(0.0, log10(param) + 1.0);
+    float LOD = fast::max(0.0, gllog10(param) + 1.0);
     float GridCellSizeLod0 = _92.GridCellSize * pow(10.0, floor(LOD));
     float GridCellSizeLod1 = GridCellSizeLod0 * 10.0;
     float GridCellSizeLod2 = GridCellSizeLod1 * 10.0;

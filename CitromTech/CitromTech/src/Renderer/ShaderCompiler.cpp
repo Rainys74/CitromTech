@@ -215,6 +215,20 @@ namespace Citrom
 
 						HLSLccSamplerPrecisionInfo samplerPrecision = {};
 						HLSLccReflection reflectionCallback = {};
+                        
+                        //static std::string metalEntryPointName;
+                        //class MetalReflection : public HLSLccReflection
+                        //{
+                        //    void OnVertexProgramOutput(const std::string& name, const std::string& semantic, int semanticIndex) override
+                        //    {
+                        //        //std::cout << "Vertex function: " << name << std::endl;
+                        //        metalEntryPointName = name;
+                        //    }
+                        //    void OnFragmentOutputDeclaration(int numComponents, int outputIndex) override
+                        //    {
+                        //        //std::cout << "Fragment function index: " << outputIndex << std::endl;
+                        //    }
+                        //} metalReflectionCallback;
 
 						// HLSL
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_GL_LAST, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &glResult);
