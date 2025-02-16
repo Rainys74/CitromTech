@@ -102,6 +102,12 @@ namespace Citrom::RenderAPI
 			FORCE_INLINE float32& operator[](size_t index) { return *(float32*)(&clearColor[0] + index); }
 			FORCE_INLINE const float32& operator[](size_t index) const { return *(float32*)(&clearColor[0] + index); }
 		} clearColor;
+		enum class LoadOp
+		{
+			Clear,
+			Load
+			// DontCare
+		} loadOp;
 	};
 	struct RenderPass
 	{
