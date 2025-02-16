@@ -33,7 +33,7 @@ namespace Citrom::RenderAPI
         if (pass->descriptor.targetFramebuffer == nullptr)
         {
             rpd.colorAttachments[0].texture = m_Drawable.texture;
-            rpd.colorAttachments[0].clearColor = MTLClearColorMake(0.45, 0.55, 0.60, 1.0); // Clear color
+            rpd.colorAttachments[0].clearColor = MTLClearColorMake(pass->descriptor.clearColor[0], pass->descriptor.clearColor[1], pass->descriptor.clearColor[2], pass->descriptor.clearColor[3]);
             rpd.colorAttachments[0].loadAction = MTLLoadActionClear; // Clear the texture
             rpd.colorAttachments[0].storeAction = MTLStoreActionStore; // Store the texture for display
         }
@@ -42,7 +42,9 @@ namespace Citrom::RenderAPI
             GET_BUFFER_INTERNAL(FramebufferMTL, pass->descriptor.targetFramebuffer, internalFB);
         }
         
-        //internalCmd->commandEncoder = [internalCmd->commandBuffer renderCommandEncoderWithDescriptor:rpd]; // TODO: uncomment these 2 when ready
+        internalCmd->commandEncoder = [internalCmd->commandBuffer renderCommandEncoderWithDescriptor:rpd]; // TODO: uncomment these 2 when ready
+        
+        [rpd release];
     }
     void MetalDevice::RCEndRenderPass(CommandBuffer* cmd)
     {
@@ -51,6 +53,6 @@ namespace Citrom::RenderAPI
         
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalCmd);
         
-        //[internalCmd->commandEncoder endEncoding];
+        [internalCmd->commandEncoder endEncoding];
     }
 }

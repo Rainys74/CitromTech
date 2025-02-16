@@ -285,6 +285,7 @@ namespace Citrom
 		//Math::Transform* cameraTransform = s_CurrentCamera.cameraTransform;
 
 		g_EditorRenderer.Render(camera, cameraTransform);
+        return;
 
 		//static CTL::DArray<float> vertices;
 		static CTL::DArray<Vertex> vertexes;
@@ -834,7 +835,7 @@ namespace Citrom
 		Device_PushDebugGroup("Editor Grid Render");
 
 		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
-		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1);
+		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 0);
 
 		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
 		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;
@@ -844,6 +845,12 @@ namespace Citrom
 
 		m_Device->RCBindPipelineState(&m_GridPipeline);
 
+        //VertexBufferDesc vbd;
+        //uint8 emptyData[96];
+        //vbd.data = &emptyData;
+        //vbd.size = sizeof(emptyData);
+        //VertexBuffer emptyBuffer = m_Device->CreateVertexBuffer(&vbd);
+        //m_Device->RCBindVertexBuffer(&emptyBuffer);
 		m_Device->RCDraw(6);
 
 		Device_PopDebugGroup();

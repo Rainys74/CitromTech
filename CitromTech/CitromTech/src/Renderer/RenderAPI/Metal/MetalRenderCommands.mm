@@ -14,6 +14,7 @@ namespace Citrom::RenderAPI
     {
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
         
+        [internalData->commandBuffer release];
         internalData->commandBuffer = [m_CommandQueue commandBuffer]; // recreate to overrides
         
         m_Drawable = [m_MTLLayer nextDrawable];
@@ -39,6 +40,37 @@ namespace Citrom::RenderAPI
     {
         SubmitCommandBuffer(&s_RenderCommandBuffer);
         ResetCommandBuffer(&s_RenderCommandBuffer); // TODO: is this needed?
+    }
+
+    void MetalDevice::RCDrawIndexed(uint32 indexCount, uint32 startIndex, int32 baseVertexLocation, CommandBuffer* cmd)
+    {
+        //glDrawElementsBaseVertex(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)), baseVertex);
+        // or
+        //glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(startIndex * sizeof(GLuint)));
+        //vkCmdDrawIndexed(commandBuffer, indexCount, 1, startIndex, baseVertex, instanceOffset);
+        /*
+        * [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                   indexCount:indexCount
+                    indexType:MTLIndexTypeUInt32
+                  indexBuffer:indexBuffer
+            indexBufferOffset:startIndex * sizeof(uint32_t)
+                    instanceCount:1
+                   baseVertex:baseVertex];
+        */
+        //DXCall(m_DeviceContext->DrawIndexed(indexCount, startIndex, baseVertexLocation));
+        if (cmd == nullptr)
+            cmd = &s_RenderCommandBuffer;
+        
+        GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
+        
+        [internalData->commandEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+                                                 indexCount:indexCount
+                                                  indexType:MTLIndexTypeUInt32
+                                                indexBuffer:*m_CurrentIndexBuffer
+                                          indexBufferOffset:startIndex * sizeof(uint32)
+                                              instanceCount:1
+                                                 baseVertex:baseVertexLocation
+                                               baseInstance:0];
     }
 
     void MetalDevice::RCDraw(uint32 vertexCount, uint32 startVertexLocation, CommandBuffer* cmd)

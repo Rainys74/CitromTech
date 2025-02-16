@@ -27,20 +27,25 @@ namespace Citrom::RenderAPI
         //id<CAMetalDrawable> drawable = [layer nextDrawable];
         //id<CAMetalDrawable> drawable = [m_MTKView currentDrawable];
         
+        [m_ImCommandBuffer release];
         m_ImCommandBuffer = [m_CommandQueue commandBuffer];
         renderPassDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(clear_color[0] * clear_color[3], clear_color[1] * clear_color[3], clear_color[2] * clear_color[3], clear_color[3]);
         renderPassDescriptor.colorAttachments[0].texture = m_Drawable.texture;
         renderPassDescriptor.colorAttachments[0].loadAction = MTLLoadActionLoad; //MTLLoadActionClear; //or MTLLoadActionLoad
         renderPassDescriptor.colorAttachments[0].storeAction = MTLStoreActionStore;
+        [m_ImCommandEncoder release];
         m_ImCommandEncoder = [m_ImCommandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         
         ImGui_ImplMetal_NewFrame(renderPassDescriptor);
+        
+        [renderPassDescriptor release];
     }
 	void MetalDevice::ImGuiRenderDrawData(void* imDrawData)
 	{
         ImGui_ImplMetal_RenderDrawData((ImDrawData*)imDrawData, m_ImCommandBuffer, m_ImCommandEncoder);
         
         [m_ImCommandEncoder endEncoding];
+        [m_ImCommandBuffer presentDrawable:m_Drawable]; // gets overwritten
         [m_ImCommandBuffer commit];
 	}
 }

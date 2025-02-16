@@ -10,6 +10,11 @@ namespace Citrom::RenderAPI
         //WRL::ComPtr<ID3D11DepthStencilState> dsState;
         
         id<MTLRenderPipelineState> pipeline;
+        
+        ~PipelineStateMTL()
+        {
+            [pipeline release];
+        }
     };
 
     PipelineState MetalDevice::CreatePipelineState(PipelineStateDesc* descriptor)

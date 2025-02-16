@@ -81,13 +81,13 @@ namespace Citrom::RenderAPI
         void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) override{}
 
         // Buffer
-        VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override{return VertexBuffer();}
-        void RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd = nullptr) override{}
+        VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;
+        void RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd = nullptr) override;
 
         VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) override{return VertexBufferLayout();}
 
-        IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override{return IndexBuffer();}
-        void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) override{}
+        IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
+        void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) override;
 
         // Shader
         Shader CreateShader(ShaderDesc* descriptor) override;
@@ -113,7 +113,7 @@ namespace Citrom::RenderAPI
         // Render Commands
         void RCBegin() override;
         void RCEnd() override;
-        void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
+        void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override;
         void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override;
         void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
@@ -164,6 +164,8 @@ namespace Citrom::RenderAPI
         
         CAMetalLayer* m_MTLLayer;
         id<CAMetalDrawable> m_Drawable;
+        
+        id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis?
         
         id<MTLCommandBuffer> m_ImCommandBuffer;
         id<MTLRenderCommandEncoder> m_ImCommandEncoder;
