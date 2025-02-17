@@ -65,7 +65,7 @@ namespace Citrom::RenderAPI
 			//DXCall(m_DeviceContext->OMSetDepthStencilState(internalData->dsState.Get(), 1u));
 		}
 
-		DXCall(m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+		DXCall(m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)); // TODO: make dynamic, also should probably be set on bind, not create.
 
 		return pipeline;
 	}

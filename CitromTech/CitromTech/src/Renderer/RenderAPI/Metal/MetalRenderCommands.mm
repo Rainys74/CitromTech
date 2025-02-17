@@ -63,7 +63,7 @@ namespace Citrom::RenderAPI
         
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
         
-        [internalData->commandEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle
+        [internalData->commandEncoder drawIndexedPrimitives:m_CurrentPrimitiveType
                                                  indexCount:indexCount
                                                   indexType:MTLIndexTypeUInt32
                                                 indexBuffer:*m_CurrentIndexBuffer
@@ -80,6 +80,6 @@ namespace Citrom::RenderAPI
         
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
         
-        [internalData->commandEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:(NSUInteger)startVertexLocation vertexCount:(NSUInteger)vertexCount];
+        [internalData->commandEncoder drawPrimitives:m_CurrentPrimitiveType vertexStart:(NSUInteger)startVertexLocation vertexCount:(NSUInteger)vertexCount];
     }
 }

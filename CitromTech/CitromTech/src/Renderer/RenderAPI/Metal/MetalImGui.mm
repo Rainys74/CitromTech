@@ -41,6 +41,10 @@ namespace Citrom::RenderAPI
         [m_ImCommandEncoder release];
         m_ImCommandEncoder = [internalCmd->commandBuffer renderCommandEncoderWithDescriptor:renderPassDescriptor];
         
+        CGFloat retinaScale = [NSScreen mainScreen].backingScaleFactor;
+        ImGui::GetIO().DisplayFramebufferScale = ImVec2(retinaScale, retinaScale);
+        //ImGui::GetIO().DisplaySize = ImVec2(m_Width * retinaScale, m_Height * retinaScale);
+        
         ImGui_ImplMetal_NewFrame(renderPassDescriptor);
         
         [renderPassDescriptor release];

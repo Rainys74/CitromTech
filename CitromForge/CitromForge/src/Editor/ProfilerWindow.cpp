@@ -23,6 +23,9 @@ namespace EditorImGui
         //ImGui::Text("FPS: %2.f", MainFPS());
         ImGui::Text("FPS: %.2f", MainFPS());
         ImGui::Text("DrawCalls: 69");
+        
+        //ImGui::Text("FB Scale: (%f, %f)", ImGui::GetIO().DisplayFramebufferScale.x, ImGui::GetIO().DisplayFramebufferScale.y); // MacOS Retina debugging
+        //ImGui::Text("Display Size: (%f, %f)", ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
         ImGui::End();
     }

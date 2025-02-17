@@ -32,8 +32,10 @@ namespace Citrom::RenderAPI
 
         void MakeSwapChain(SwapChainDesc* descriptor) override
         {
-            m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
-            m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
+            CGFloat retinaScale = [NSScreen mainScreen].backingScaleFactor;
+            
+            m_Width = descriptor->windowPtr->GetBackend()->GetWidth() * retinaScale;
+            m_Height = descriptor->windowPtr->GetBackend()->GetHeight() * retinaScale;
             
             NSView* cocoaView = (NSView*)descriptor->windowPtr->GetBackend()->CocoaTryGetNSView();
             
@@ -44,7 +46,7 @@ namespace Citrom::RenderAPI
                 m_MTLLayer = (CAMetalLayer*)cocoaView.layer;
                 
             m_MTLLayer.device = m_Device;
-            m_MTLLayer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+            m_MTLLayer.pixelFormat = MTLPixelFormatBGRA8Unorm; // TODO: set to descriptor->format
             m_MTLLayer.drawableSize = CGSizeMake(m_Width, m_Height);
             
             //m_Drawable = [m_MTLLayer nextDrawable];
@@ -73,10 +75,21 @@ namespace Citrom::RenderAPI
 
         void Resize(uint32 width, uint32 height) override
         {
-            m_Width = width;
-            m_Height = height;
+            CGFloat scale = [NSScreen mainScreen].backingScaleFactor; // Retina scale
+            m_Width = width * scale;
+            m_Height = height * scale;
             
             m_MTLLayer.drawableSize = CGSizeMake(m_Width, m_Height);
+            
+            // Configure viewport
+            MTLViewport vp;
+            vp.width = width;
+            vp.height = height;
+            vp.znear = 0;
+            vp.zfar = 1;
+            vp.originX = 0; // xPos
+            vp.originY = 0; // yPos
+            // TODO: requires command encoder/buffer, or move to ResizeViewport and make that require a CB
         }
         void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) override{}
 
@@ -133,6 +146,17 @@ namespace Citrom::RenderAPI
 		void ImGuiNewFrame(CommandBuffer* cmd = nullptr) override;
 		void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) override;
 	public:
+        
+    // Blending
+    MTLBlendFactor BlendFactorToMTLBlendFactor(BlendFactor factor);
+    MTLBlendOperation BlendOpToMTLBlendOp(BlendOp blendOp);
+    MTLColorWriteMask RenderTargetWriteMaskToMTLColor(RenderTargetWriteMask mask);
+    
+    // Rasterizer
+    MTLTriangleFillMode FillModeToMTLTriangleFillMode(FillMode fillMode);
+    MTLCullMode CullModeToMTLCullMode(CullMode cullMode);
+        
+    MTLPrimitiveType PrimitiveTopologyToMTLType(PrimitiveTopology primitives);
 /*
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);
@@ -165,6 +189,7 @@ namespace Citrom::RenderAPI
         CAMetalLayer* m_MTLLayer;
         id<CAMetalDrawable> m_Drawable;
         
+        MTLPrimitiveType m_CurrentPrimitiveType = MTLPrimitiveTypeTriangle;
         id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis?
         
         //id<MTLCommandBuffer> m_ImCommandBuffer;
@@ -179,6 +204,7 @@ namespace Citrom::RenderAPI
 			// IsMetalValid
             id<MTLDevice> device = MTLCreateSystemDefaultDevice();
             m_Valid = (device != nil);
+            [device release];
 		}
 	};
 
