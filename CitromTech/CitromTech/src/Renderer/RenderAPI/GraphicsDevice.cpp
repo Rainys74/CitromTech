@@ -96,9 +96,8 @@ namespace Citrom::RenderAPI
             break;
             case GraphicsAPI::OpenGL:
             {
-                //GLDummyDevice dummy;
-                //return dummy.IsValid();
-                return true;
+                GLDummyDevice dummy;
+                return dummy.IsValid();
             }
             break;
             case GraphicsAPI::Metal:

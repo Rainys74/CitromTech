@@ -14,7 +14,7 @@ namespace Citrom::RenderAPI
 		Usage usage;
 		Format format = Format::R8G8B8A8_U2FNORM;
 
-		uint32 arraySize = 1;
+		uint32 arraySize = 1; // if it weren't for backwards-compatibility, this should be named as arrayCount or arrayLength.
 		uint32 mipLevels = 1;
 
 		struct SamplerDesc

@@ -46,7 +46,7 @@ namespace Citrom::RenderAPI
                 m_MTLLayer = (CAMetalLayer*)cocoaView.layer;
                 
             m_MTLLayer.device = m_Device;
-            m_MTLLayer.pixelFormat = MTLPixelFormatBGRA8Unorm; // TODO: set to descriptor->format
+            m_MTLLayer.pixelFormat = FormatToMTLPixelFormat(descriptor->renderFormat);
             m_MTLLayer.drawableSize = CGSizeMake(m_Width, m_Height);
             
             //m_Drawable = [m_MTLLayer nextDrawable];
@@ -110,8 +110,8 @@ namespace Citrom::RenderAPI
         void SetUniformBufferData(UniformBuffer* ub, const void* data, const size_t size) override;
 
         // Textures
-        Texture2D CreateTexture2D(Texture2DDesc* descriptor) override{return Texture2D();}
-        void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override{}
+        Texture2D CreateTexture2D(Texture2DDesc* descriptor) override;
+        void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override;
 
         // Pipeline
         PipelineState CreatePipelineState(PipelineStateDesc* descriptor) override;
@@ -131,15 +131,15 @@ namespace Citrom::RenderAPI
         void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
         // Debug
-        void SetName(VertexBuffer* resource, const char* name) override {}
+        void SetName(VertexBuffer* resource, const char* name) override;
         void SetName(VertexBufferLayout* resource, const char* name) override {}
-        void SetName(IndexBuffer* resource, const char* name) override {}
-        void SetName(UniformBuffer* resource, const char* name) override {}
+        void SetName(IndexBuffer* resource, const char* name) override;
+        void SetName(UniformBuffer* resource, const char* name) override;
         void SetName(Texture2D* resource, const char* name) override {}
         void SetName(Shader* resource, const char* name) override {}
 
-        void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) override {}
-        void RCPopDebugGroup(CommandBuffer* cmd = nullptr) override {}
+        void RCPushDebugGroup(const char* name, CommandBuffer* cmd = nullptr) override;
+        void RCPopDebugGroup(CommandBuffer* cmd = nullptr) override;
 
 		// ImGui
         void ImGuiInitGraphicsAPI() override;
@@ -159,6 +159,12 @@ namespace Citrom::RenderAPI
         MTLCullMode CullModeToMTLCullMode(CullMode cullMode);
             
         MTLPrimitiveType PrimitiveTopologyToMTLType(PrimitiveTopology primitives);
+        
+        template<typename T>
+        FORCE_INLINE void TSetResourceNameMTL(T& mtlResource, const char* name)
+        {
+            [mtlResource setLabel:[NSString stringWithCString:name encoding:NSUTF8StringEncoding]];
+        }
 /*
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);

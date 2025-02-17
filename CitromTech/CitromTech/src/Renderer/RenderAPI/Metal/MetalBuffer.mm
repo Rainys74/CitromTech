@@ -210,4 +210,25 @@ namespace Citrom::RenderAPI
         memcpy(internalData->buffer.contents, data, size);
         //[internalData->buffer didModifyRange:<#(NSRange)#>];
     }
+
+    void MetalDevice::SetName(VertexBuffer* resource, const char* name)
+    {
+        GET_BUFFER_INTERNAL(VertexBufferMTL, resource, internalData);
+        TSetResourceNameMTL(internalData->buffer, name);
+    }
+    //void MetalDevice::SetName(VertexBufferLayout* resource, const char* name)
+    //{
+    //    GET_BUFFER_INTERNAL(VertexBufferLayoutMTL, resource, internalData);
+    //    TSetResourceNameMTL(internalData->vd, name);
+    //}
+    void MetalDevice::SetName(IndexBuffer* resource, const char* name)
+    {
+        GET_BUFFER_INTERNAL(IndexBufferMTL, resource, internalData);
+        TSetResourceNameMTL(internalData->buffer, name);
+    }
+    void MetalDevice::SetName(UniformBuffer* resource, const char* name)
+    {
+        GET_BUFFER_INTERNAL(UniformBufferMTL, resource, internalData);
+        TSetResourceNameMTL(internalData->buffer, name);
+    }
 }

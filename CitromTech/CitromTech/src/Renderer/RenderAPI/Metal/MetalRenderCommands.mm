@@ -82,4 +82,24 @@ namespace Citrom::RenderAPI
         
         [internalData->commandEncoder drawPrimitives:m_CurrentPrimitiveType vertexStart:(NSUInteger)startVertexLocation vertexCount:(NSUInteger)vertexCount];
     }
+
+    // Debug
+    void MetalDevice::RCPushDebugGroup(const char* name, CommandBuffer* cmd)
+    {
+        if (cmd == nullptr)
+            cmd = &s_RenderCommandBuffer;
+        
+        GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
+        
+        [internalData->commandBuffer pushDebugGroup:[NSString stringWithCString:name encoding:NSUTF8StringEncoding]];
+    }
+    void MetalDevice::RCPopDebugGroup(CommandBuffer* cmd)
+    {
+        if (cmd == nullptr)
+            cmd = &s_RenderCommandBuffer;
+        
+        GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalData);
+        
+        [internalData->commandBuffer popDebugGroup]; // Uses CB's instead of CE's since those are created on every render pass
+    }
 }
