@@ -21,11 +21,14 @@ namespace Citrom::RenderAPI
     {
         CREATE_BUFFER_INTERNAL(PipelineState, PipelineStateMTL, pipeline, internalData);
         GET_BUFFER_INTERNAL(ShaderMTL, descriptor->shader, internalShader);
+        GET_BUFFER_INTERNAL(VertexBufferLayoutMTL, descriptor->inputLayout, internalVBLayout);
         
         MTLRenderPipelineDescriptor* pd = [[MTLRenderPipelineDescriptor alloc] init];
         pd.vertexFunction = internalShader->vertexFunction;
         pd.fragmentFunction = internalShader->fragmentFunction;
         pd.colorAttachments[0].pixelFormat = m_MTLLayer.pixelFormat;
+        
+        [pd setVertexDescriptor:internalVBLayout->vd];
         
         if (descriptor->blendState)
         {

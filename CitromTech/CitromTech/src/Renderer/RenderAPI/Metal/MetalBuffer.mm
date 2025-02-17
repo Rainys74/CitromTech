@@ -32,6 +32,108 @@ namespace Citrom::RenderAPI
         
         [internalCmd->commandEncoder setVertexBuffer:internalData->buffer offset:0 atIndex:0];
     }
+    VertexBufferLayout MetalDevice::CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor)
+    {
+        CREATE_BUFFER_INTERNAL_NO_DESC(VertexBufferLayout, VertexBufferLayoutMTL, vbLayout, internalData); // should probably be called an Input Layout, or not.
+        
+        //// input (vertex) layout
+        //CTL::DArray<D3D11_INPUT_ELEMENT_DESC> ieds;
+        //UINT offset = 0; // also known as pointer in OpenGL
+        //for (auto& element : descriptor->layoutElements)
+        //{
+        //    D3D11_INPUT_ELEMENT_DESC ied = {};
+        //    ied.SemanticName = element.elementName.c_str();
+        //    ied.SemanticIndex = element.elementID;
+        //    ied.Format = FormatToDXGIFormat(element.elementFormat);
+        //    ied.InputSlot = 0; // not important
+        //    ied.AlignedByteOffset = offset; // offset between the first item and the current in bytes
+//
+        //    offset += GetFormatSize(element.elementFormat);
+//
+        //    // Instancing stuff (not important)
+        //    ied.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        //    ied.InstanceDataStepRate = 0;
+//
+        //    ieds.PushBack(ied);
+        //}
+        
+        const auto* attributes = [internalData->vd attributes];
+        
+        // input (vertex) layout
+        uint32 i = 0, offset = 0; // also known as pointer in OpenGL
+        for (auto& element : descriptor->layoutElements)
+        {
+            const auto* ied = attributes[i];
+            
+            [ied setBufferIndex:0]; //i]; //element.elementID];
+            [ied setFormat:FormatToMTLVertexFormat(element.elementFormat)];
+            [ied setOffset:offset]; // offset between the first item and the current in bytes
+            
+            //ied.SemanticName = element.elementName.c_str();
+            //ied.SemanticIndex = element.elementID;
+            //ied.Format = FormatToDXGIFormat(element.elementFormat);
+            //ied.InputSlot = 0; // not important
+            //ied.AlignedByteOffset = offset; // offset between the first item and the current in bytes
+
+            offset += GetFormatSize(element.elementFormat);
+            i++;
+        }
+        
+        // TODO: is this correct?
+        const auto* layoutDescriptor = [internalData->vd layouts][0];
+        [layoutDescriptor setStride:offset];
+        //[layoutDescriptor setStepRate:0];
+        
+        //for (auto& element : descriptor->layoutElements)
+        /*for (int j = 0; j < i; j++)
+        {
+            const auto* layoutDescriptor = [internalData->vd layouts][j];//[element.elementID];
+            [layoutDescriptor setStride:offset];
+            //[layoutDescriptor setStepRate:0];
+        }*/
+        
+        // input (vertex) layout
+        /*NSUInteger i = 0, offset = 0; // also known as pointer in OpenGL
+        for (auto& element : descriptor->layoutElements)
+        {
+            MTLVertexAttributeDescriptor* vad = [MTLVertexAttributeDescriptor new];
+            
+            vad.bufferIndex = element.elementID;
+            vad.format = FormatToMTLVertexFormat(element.elementFormat);
+            vad.offset = offset;
+            
+            //ied.SemanticName = element.elementName.c_str();
+            //ied.SemanticIndex = element.elementID;
+            //ied.Format = FormatToDXGIFormat(element.elementFormat);
+            //ied.InputSlot = 0; // not important
+            //ied.AlignedByteOffset = offset; // offset between the first item and the current in bytes
+
+            offset += GetFormatSize(element.elementFormat);
+            i++;
+        }*/
+        
+        return vbLayout;
+    }
+
+    MTLVertexFormat MetalDevice::FormatToMTLVertexFormat(Format format)
+    {
+    #define FORMAT_TOMTLVERTEXCASE(x, y) case (x): return (y); break
+        switch (format)
+        {
+            default: return MTLVertexFormatFloat3; break;
+
+            FORMAT_TOMTLVERTEXCASE(Format::Unknown, MTLVertexFormatFloat3);
+            FORMAT_TOMTLVERTEXCASE(Format::R32_FLOAT, MTLVertexFormatFloat);
+            FORMAT_TOMTLVERTEXCASE(Format::R32G32_FLOAT, MTLVertexFormatFloat2);
+            FORMAT_TOMTLVERTEXCASE(Format::R32G32B32_FLOAT, MTLVertexFormatFloat3);
+            FORMAT_TOMTLVERTEXCASE(Format::R32G32B32A32_FLOAT, MTLVertexFormatFloat4);
+
+            FORMAT_TOMTLVERTEXCASE(Format::R8_U2FNORM, MTLVertexFormatUCharNormalized);
+            FORMAT_TOMTLVERTEXCASE(Format::R8G8_U2FNORM, MTLVertexFormatUChar2Normalized);
+            FORMAT_TOMTLVERTEXCASE(Format::R8G8B8A8_U2FNORM, MTLVertexFormatUChar3Normalized);
+            FORMAT_TOMTLVERTEXCASE(Format::B8G8R8A8_U2FNORM, MTLVertexFormatUChar4Normalized);
+        }
+    }
 
     struct IndexBufferMTL
     {

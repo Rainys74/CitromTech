@@ -300,8 +300,8 @@ namespace Citrom
         m_Device->RCBeginRenderPass(&pass);
         
 		g_EditorRenderer.Render(camera, cameraTransform);
-        m_Device->RCEndRenderPass(); // End render pass before returning!
-        return;
+        //m_Device->RCEndRenderPass(); // End render pass before returning!
+        //return;
 
 		//static CTL::DArray<float> vertices;
 		static CTL::DArray<Vertex> vertexes;

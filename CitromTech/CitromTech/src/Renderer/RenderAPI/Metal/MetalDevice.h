@@ -97,7 +97,7 @@ namespace Citrom::RenderAPI
         VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;
         void RCBindVertexBuffer(VertexBuffer* vb, CommandBuffer* cmd = nullptr) override;
 
-        VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) override{return VertexBufferLayout();}
+        VertexBufferLayout CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor) override;
 
         IndexBuffer CreateIndexBuffer(IndexBufferDesc* descriptor) override;
         void RCBindIndexBuffer(IndexBuffer* ib, CommandBuffer* cmd = nullptr) override;
@@ -146,17 +146,19 @@ namespace Citrom::RenderAPI
 		void ImGuiNewFrame(CommandBuffer* cmd = nullptr) override;
 		void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) override;
 	public:
+        MTLPixelFormat FormatToMTLPixelFormat(Format format);
+        MTLVertexFormat FormatToMTLVertexFormat(Format format);
         
-    // Blending
-    MTLBlendFactor BlendFactorToMTLBlendFactor(BlendFactor factor);
-    MTLBlendOperation BlendOpToMTLBlendOp(BlendOp blendOp);
-    MTLColorWriteMask RenderTargetWriteMaskToMTLColor(RenderTargetWriteMask mask);
-    
-    // Rasterizer
-    MTLTriangleFillMode FillModeToMTLTriangleFillMode(FillMode fillMode);
-    MTLCullMode CullModeToMTLCullMode(CullMode cullMode);
+        // Blending
+        MTLBlendFactor BlendFactorToMTLBlendFactor(BlendFactor factor);
+        MTLBlendOperation BlendOpToMTLBlendOp(BlendOp blendOp);
+        MTLColorWriteMask RenderTargetWriteMaskToMTLColor(RenderTargetWriteMask mask);
         
-    MTLPrimitiveType PrimitiveTopologyToMTLType(PrimitiveTopology primitives);
+        // Rasterizer
+        MTLTriangleFillMode FillModeToMTLTriangleFillMode(FillMode fillMode);
+        MTLCullMode CullModeToMTLCullMode(CullMode cullMode);
+            
+        MTLPrimitiveType PrimitiveTopologyToMTLType(PrimitiveTopology primitives);
 /*
 		DXGI_FORMAT FormatToDXGIFormat(Format format);
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);
@@ -164,15 +166,6 @@ namespace Citrom::RenderAPI
 
 		// Framebuffer
 		DXGI_FORMAT FBFormatToDXGIFormat(FramebufferFormat format);
-
-		// Blending
-		D3D11_BLEND BlendFactorToD3D11Blend(BlendFactor factor);
-		D3D11_BLEND_OP BlendOpToD3D11BlendOp(BlendOp blendOp);
-		UINT RenderTargetWriteMaskToD3D11(RenderTargetWriteMask mask);
-		
-		// Rasterizer
-		D3D11_FILL_MODE FillModeToD3D11FillMode(FillMode fillMode);
-		D3D11_CULL_MODE CullModeToD3D11CullMode(CullMode cullMode);
 	private:
 		// Helper Functions
 		void CreateRenderTarget();
@@ -190,7 +183,7 @@ namespace Citrom::RenderAPI
         id<CAMetalDrawable> m_Drawable;
         
         MTLPrimitiveType m_CurrentPrimitiveType = MTLPrimitiveTypeTriangle;
-        id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis?
+        id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis? as in the GPU copies your data?
         
         //id<MTLCommandBuffer> m_ImCommandBuffer;
         id<MTLRenderCommandEncoder> m_ImCommandEncoder;
@@ -229,6 +222,16 @@ namespace Citrom::RenderAPI
         {
             [vertexFunction release];
             [fragmentFunction release];
+        }
+    };
+
+    struct VertexBufferLayoutMTL
+    {
+        MTLVertexDescriptor* vd = [[MTLVertexDescriptor alloc] init];
+        
+        ~VertexBufferLayoutMTL()
+        {
+            [vd release];
         }
     };
 }
