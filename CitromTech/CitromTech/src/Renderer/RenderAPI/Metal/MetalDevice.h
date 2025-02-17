@@ -146,6 +146,9 @@ namespace Citrom::RenderAPI
 		void ImGuiNewFrame(CommandBuffer* cmd = nullptr) override;
 		void ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd = nullptr) override;
 	public:
+        // Metal Special
+        id<MTLDevice>& MTLGetDevice() { return m_Device; }
+        
         MTLPixelFormat FormatToMTLPixelFormat(Format format);
         MTLVertexFormat FormatToMTLVertexFormat(Format format);
         
@@ -190,10 +193,16 @@ namespace Citrom::RenderAPI
         
         MTLPrimitiveType m_CurrentPrimitiveType = MTLPrimitiveTypeTriangle;
         id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis? as in the GPU copies your data?
+        id<MTLBuffer>* m_CurrentVertexBuffer = nullptr; // required to know whether a VB is bound for UB's
         
         //id<MTLCommandBuffer> m_ImCommandBuffer;
         id<MTLRenderCommandEncoder> m_ImCommandEncoder;
+        
+        friend class VertexBufferMTL;
 	};
+
+    #define METAL static_cast<MetalDevice*>(DEVICE)
+    #define METALDEVICE (METAL->MTLGetDevice())
 
 	class MetalDummyDevice : public DummyDevice
 	{

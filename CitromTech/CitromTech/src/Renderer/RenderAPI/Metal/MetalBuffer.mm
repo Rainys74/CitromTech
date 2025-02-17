@@ -8,6 +8,9 @@ namespace Citrom::RenderAPI
         
         ~VertexBufferMTL()
         {
+            if (METAL->m_CurrentVertexBuffer == &buffer)
+                METAL->m_CurrentVertexBuffer = nullptr;
+            
             [buffer release];
         }
     };
@@ -31,6 +34,8 @@ namespace Citrom::RenderAPI
         GET_BUFFER_INTERNAL(VertexBufferMTL, vb, internalData);
         
         [internalCmd->commandEncoder setVertexBuffer:internalData->buffer offset:0 atIndex:0];
+        
+        m_CurrentVertexBuffer = &internalData->buffer;
     }
     VertexBufferLayout MetalDevice::CreateVertexBufferLayout(VertexBufferLayoutDesc* descriptor)
     {
@@ -174,12 +179,14 @@ namespace Citrom::RenderAPI
             [buffer release];
         }
     };
+#define GPU_BYTE_ALIGNMENT (16)
+#define GPU_ALLIGNED_SIZE(x) ((x) + (GPU_BYTE_ALIGNMENT - ((x) % GPU_BYTE_ALIGNMENT)))
 
     UniformBuffer MetalDevice::CreateUniformBuffer(UniformBufferDesc* descriptor)
     {
         CREATE_BUFFER_INTERNAL(UniformBuffer, UniformBufferMTL, ub, internalData);
         
-        internalData->buffer = [m_Device newBufferWithLength:static_cast<NSUInteger>(descriptor->dataBytes + (16 - (descriptor->dataBytes % 16))) options:MTLResourceStorageModeShared]; // NSUInteger alignedSize = (descriptor->dataBytes + 15) & ~15; // TODO: with bytes
+        internalData->buffer = [m_Device newBufferWithLength:static_cast<NSUInteger>(GPU_ALLIGNED_SIZE(descriptor->dataBytes)) options:MTLResourceStorageModeManaged]; // NSUInteger alignedSize = (descriptor->dataBytes + 15) & ~15; // TODO: with bytes // MTLResourceStorageModeShared
         //[internalData->buffer didModifyRange:<#(NSRange)#>];
         
         return ub;
@@ -196,7 +203,9 @@ namespace Citrom::RenderAPI
         {
             default:
             case ShaderType::Vertex:
-                [internalCmd->commandEncoder setVertexBuffer:internalData->buffer offset:0 atIndex:startSlot];
+                [internalCmd->commandEncoder setVertexBuffer:internalData->buffer
+                                                      offset:0
+                                                     atIndex: (m_CurrentVertexBuffer == nullptr) ? startSlot : startSlot + 1];
                 break;
             case ShaderType::Fragment:
                 [internalCmd->commandEncoder setFragmentBuffer:internalData->buffer offset:0 atIndex:startSlot];
@@ -207,8 +216,8 @@ namespace Citrom::RenderAPI
     {
         GET_BUFFER_INTERNAL(UniformBufferMTL, ub, internalData);
 
-        memcpy(internalData->buffer.contents, data, size);
-        //[internalData->buffer didModifyRange:<#(NSRange)#>];
+        memcpy(internalData->buffer.contents, data, GPU_ALLIGNED_SIZE(size));
+        [internalData->buffer didModifyRange:NSMakeRange(0, GPU_ALLIGNED_SIZE(size))];
     }
 
     void MetalDevice::SetName(VertexBuffer* resource, const char* name)

@@ -95,7 +95,7 @@ namespace Citrom
         Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
 
         Bind();
-        m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size());
+        //m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size()); // Causes errors!!
     }
 
     void Material::Render()

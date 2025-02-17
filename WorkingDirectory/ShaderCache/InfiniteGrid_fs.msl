@@ -31,7 +31,7 @@ struct Mtl_FragmentOut
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
-    constant UBO_Type& UBO [[ buffer(0) ]],
+    constant UBO_Type& UBO [[ buffer(0) ]], // dumb cheaty workaround
     Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
@@ -152,6 +152,7 @@ fragment Mtl_FragmentOut xlatMtlMain(
     output.SV_Target0.w = u_xlat0.w * u_xlat1.x;
     //MOV
     output.SV_Target0.xyz = u_xlat0.xyz;
+    //output.SV_Target0 = float4(1, 0, 0, 1);
     //RET
     return output;
 }

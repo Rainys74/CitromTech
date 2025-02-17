@@ -14,7 +14,8 @@ struct CBuffer1_Type
 struct Mtl_VertexIn
 {
     float3 Position0 [[ attribute(0) ]] ;
-    float2 TexCoord1 [[ attribute(1) ]] ;
+    float3 Normal1 [[ attribute(1) ]] ; // dumb ass workaround before fixing this shit
+    float2 TexCoord2 [[ attribute(2) ]] ;
 };
 
 struct Mtl_VertexOut
@@ -32,7 +33,7 @@ vertex Mtl_VertexOut xlatMtlMain(
     float4 u_xlat0;
     //--- End Early Main ---
     //MOV
-    output.TexCoord0.xy = input.TexCoord1.xy;
+    output.TexCoord0.xy = input.TexCoord2.xy;
     //MOV
     u_xlat0.xyz = input.Position0.xyz;
     //MOV

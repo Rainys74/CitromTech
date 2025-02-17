@@ -27,7 +27,7 @@ fragment Mtl_FragmentOut xlatMtlMain(
 {
     Mtl_FragmentOut output;
     //SAMPLE
-    output.SV_Target0 = tex.sample(splr, input.TexCoord0.xy);
+    output.SV_Target0 = tex.sample(samplersplr, input.TexCoord0.xy); // dumbass workaround for the time ebeing
     //RET
     return output;
 }

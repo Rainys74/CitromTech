@@ -503,7 +503,7 @@ namespace Citrom
 		vbld1.shader = &shader; // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
-		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT); // TODO: separate to Metal'ize api
 		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
@@ -849,10 +849,12 @@ namespace Citrom
 		Device_PushDebugGroup("Editor Grid Render");
 
 		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
-		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1); // HAS to be 1 for DX 11
+		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 0); // HAS to be 1 for DX 11, but for some reason dumb glslcc sets the frag buffer to slot 0...
 
 		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
 		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;
+        //m_GridFragUBData.padding1[0] = 69;
+        //m_GridFragUBData.padding1[7] = 69;
 
 		m_Device->SetUniformBufferData(&m_GridVertUB, &m_GridVertUBData, sizeof(m_GridVertUBData));
 		m_Device->SetUniformBufferData(&m_GridFragUB, &m_GridFragUBData, sizeof(m_GridFragUBData));
