@@ -65,7 +65,7 @@ namespace Citrom::RenderAPI
 			//DXCall(m_DeviceContext->OMSetDepthStencilState(internalData->dsState.Get(), 1u));
 		}
 
-		DXCall(m_DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)); // TODO: make dynamic, also should probably be set on bind, not create.
+		DXCall(m_DeviceContext->IASetPrimitiveTopology(PrimitiveTopologyToD3D(descriptor->primitiveType)));
 
 		return pipeline;
 	}
@@ -73,10 +73,12 @@ namespace Citrom::RenderAPI
 	{
 		GET_BUFFER_INTERNAL(PipelineStateDX11, ps, internalData);
 
-		// TODO: do if checks slow down the program?
+		// TODO: do if checks slow down the program? Add if checks to not try to bind invalid stuff
 		DXCall(m_DeviceContext->OMSetBlendState(internalData->blendState.Get(), nullptr, 0xFFFFFFFF));
 		DXCall(m_DeviceContext->RSSetState(internalData->rasterizerState.Get()));
 		DXCall(m_DeviceContext->OMSetDepthStencilState(internalData->dsState.Get(), 1u));
+
+		DXCall(m_DeviceContext->IASetPrimitiveTopology(PrimitiveTopologyToD3D(ps->descriptor.primitiveType)));
 
 		BindShader(const_cast<Shader*>(ps->descriptor.shader));
 		BindVertexBufferLayout(const_cast<VertexBufferLayout*>(ps->descriptor.inputLayout));

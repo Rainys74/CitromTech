@@ -42,7 +42,7 @@ float4 mod(float4 x, float4 y)
     return x - y * floor(x / y);
 }
 
-float log10(float x)
+float gllog10(float x)
 {
     return log(x) / 2.302585124969482421875f;
 }
@@ -71,7 +71,7 @@ void frag_main()
     float2 dudv = float2(lx, ly);
     float l = length(dudv);
     float param = (l * _92_GridMinPixelsBetweenCells) / _92_GridCellSize;
-    float LOD = max(0.0f, log10(param) + 1.0f);
+    float LOD = max(0.0f, gllog10(param) + 1.0f);
     float GridCellSizeLod0 = _92_GridCellSize * pow(10.0f, floor(LOD));
     float GridCellSizeLod1 = GridCellSizeLod0 * 10.0f;
     float GridCellSizeLod2 = GridCellSizeLod1 * 10.0f;

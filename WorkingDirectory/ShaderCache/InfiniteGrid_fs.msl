@@ -1,112 +1,157 @@
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-
 #include <metal_stdlib>
-#include <simd/simd.h>
-
+#include <metal_texture>
 using namespace metal;
 
-struct UBO
+#if !(__HAVE_FMA__)
+#define fma(a,b,c) ((a) * (b) + (c))
+#endif
+
+#ifndef XLT_REMAP_O
+	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
+#endif
+constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
+struct UBO_Type
 {
-    packed_float3 CameraWorldPos;
-    float GridSize;
-    float GridMinPixelsBetweenCells;
-    float GridCellSize;
-    float4 GridColorThin;
-    float4 GridColorThick;
+    float3 _92_CameraWorldPos;
+    float _92_GridSize;
+    float _92_GridMinPixelsBetweenCells;
+    float _92_GridCellSize;
+    float4 _92_GridColorThin;
+    float4 _92_GridColorThick;
 };
 
-struct main0_out
+struct Mtl_FragmentIn
 {
-    float4 FragColor [[color(0)]];
+    float3 TEXCOORD1 [[ user(TEXCOORD1) ]] ;
 };
 
-struct main0_in
+struct Mtl_FragmentOut
 {
-    float3 WorldPos [[user(locn1)]];
+    float4 SV_Target0 [[ color(xlt_remap_o[0]) ]];
 };
 
-// Implementation of the GLSL mod() function, which is slightly different than Metal fmod()
-template<typename Tx, typename Ty>
-inline Tx mod(Tx x, Ty y)
+fragment Mtl_FragmentOut xlatMtlMain(
+    constant UBO_Type& UBO [[ buffer(0) ]],
+    Mtl_FragmentIn input [[ stage_in ]])
 {
-    return x - y * floor(x / y);
+    Mtl_FragmentOut output;
+    //--- Start Early Main ---
+    float4 u_xlat0;
+    bool3 u_xlatb0;
+    float4 u_xlat1;
+    float4 u_xlat2;
+    float4 u_xlat3;
+    float4 u_xlat4;
+    float2 u_xlat5;
+    float2 u_xlat10;
+    //--- End Early Main ---
+    //DERIV_RTX
+    u_xlat0.xy = dfdx(input.TEXCOORD1.xz);
+    //DERIV_RTY
+    u_xlat0.zw = dfdy(input.TEXCOORD1.xz);
+    //DP2
+    u_xlat0.x = dot(u_xlat0.xz, u_xlat0.xz);
+    //DP2
+    u_xlat0.y = dot(u_xlat0.yw, u_xlat0.yw);
+    //SQRT
+    u_xlat1 = sqrt(u_xlat0.xyxy);
+    //DP2
+    u_xlat0.x = dot(u_xlat1.zw, u_xlat1.zw);
+    //MUL
+    u_xlat1 = u_xlat1 * float4(4.0, 4.0, 4.0, 4.0);
+    //SQRT
+    u_xlat0.x = sqrt(u_xlat0.x);
+    //MUL
+    u_xlat0.x = u_xlat0.x * UBO._92_GridMinPixelsBetweenCells;
+    //DIV
+    u_xlat0.x = u_xlat0.x / UBO._92_GridCellSize;
+    //LOG
+    u_xlat0.x = log2(u_xlat0.x);
+    //MAD
+    u_xlat0.x = fma(u_xlat0.x, 0.30102998, 1.0);
+    //MAX
+    u_xlat0.x = max(u_xlat0.x, 0.0);
+    //ROUND_NI
+    u_xlat5.x = floor(u_xlat0.x);
+    //FRC
+    u_xlat0.x = fract(u_xlat0.x);
+    //MUL
+    u_xlat5.x = u_xlat5.x * 3.32192802;
+    //EXP
+    u_xlat5.x = exp2(u_xlat5.x);
+    //MUL
+    u_xlat5.x = u_xlat5.x * UBO._92_GridCellSize;
+    //DIV
+    u_xlat10.xy = input.TEXCOORD1.xz / u_xlat5.xx;
+    //ROUND_NI
+    u_xlat10.xy = floor(u_xlat10.xy);
+    //MAD
+    u_xlat10.xy = fma((-u_xlat5.xx), u_xlat10.xy, input.TEXCOORD1.xz);
+    //MUL
+    u_xlat2 = u_xlat5.xxxx * float4(10.0, 10.0, 100.0, 100.0);
+    //DIV
+    u_xlat5.xy = u_xlat10.xy / u_xlat1.xy;
+    u_xlat5.xy = clamp(u_xlat5.xy, 0.0f, 1.0f);
+    //MAD
+    u_xlat5.xy = fma(u_xlat5.xy, float2(2.0, 2.0), float2(-1.0, -1.0));
+    //ADD
+    u_xlat5.xy = -abs(u_xlat5.xy) + float2(1.0, 1.0);
+    //MAX
+    u_xlat5.x = max(u_xlat5.y, u_xlat5.x);
+    //ADD
+    u_xlat10.x = (-u_xlat0.x) + 1.0;
+    //MUL
+    u_xlat5.x = u_xlat10.x * u_xlat5.x;
+    //MUL
+    u_xlat3.w = u_xlat5.x * UBO._92_GridColorThin.w;
+    //DIV
+    u_xlat4 = input.TEXCOORD1.xzxz / u_xlat2.yyww;
+    //ROUND_NI
+    u_xlat4 = floor(u_xlat4);
+    //MAD
+    u_xlat2 = fma((-u_xlat2), u_xlat4, input.TEXCOORD1.xzxz);
+    //DIV
+    u_xlat1 = u_xlat2 / u_xlat1;
+    u_xlat1 = clamp(u_xlat1, 0.0f, 1.0f);
+    //MAD
+    u_xlat1 = fma(u_xlat1, float4(2.0, 2.0, 2.0, 2.0), float4(-1.0, -1.0, -1.0, -1.0));
+    //ADD
+    u_xlat1 = -abs(u_xlat1) + float4(1.0, 1.0, 1.0, 1.0);
+    //MAX
+    u_xlat5.xy = max(u_xlat1.wy, u_xlat1.zx);
+    //ADD
+    u_xlat1 = UBO._92_GridColorThin + (-UBO._92_GridColorThick);
+    //MAD
+    u_xlat1 = fma(u_xlat0.xxxx, u_xlat1, UBO._92_GridColorThick);
+    //MUL
+    u_xlat1.w = u_xlat5.y * u_xlat1.w;
+    //LT
+    u_xlatb0.xz = (float2(0.0, 0.0)<u_xlat5.xy);
+    //MUL
+    u_xlat2.w = u_xlat5.x * UBO._92_GridColorThick.w;
+    //MOV
+    u_xlat3.xyz = UBO._92_GridColorThin.xyz;
+    //MOVC
+    u_xlat1 = (u_xlatb0.z) ? u_xlat1 : u_xlat3;
+    //MOV
+    u_xlat2.xyz = UBO._92_GridColorThick.xyz;
+    //MOVC
+    u_xlat0 = (u_xlatb0.x) ? u_xlat2 : u_xlat1;
+    //ADD
+    u_xlat1.xy = input.TEXCOORD1.xz + (-UBO._92_CameraWorldPos.xyzx.xz);
+    //DP2
+    u_xlat1.x = dot(u_xlat1.xy, u_xlat1.xy);
+    //SQRT
+    u_xlat1.x = sqrt(u_xlat1.x);
+    //DIV
+    u_xlat1.x = u_xlat1.x / UBO._92_GridSize;
+    u_xlat1.x = clamp(u_xlat1.x, 0.0f, 1.0f);
+    //ADD
+    u_xlat1.x = (-u_xlat1.x) + 1.0;
+    //MUL
+    output.SV_Target0.w = u_xlat0.w * u_xlat1.x;
+    //MOV
+    output.SV_Target0.xyz = u_xlat0.xyz;
+    //RET
+    return output;
 }
-
-static inline __attribute__((always_inline))
-float gllog10(thread const float& x)
-{
-    return log(x) / 2.302585124969482421875;
-}
-
-static inline __attribute__((always_inline))
-float2 satv(thread const float2& x)
-{
-    return fast::clamp(x, float2(0.0), float2(1.0));
-}
-
-static inline __attribute__((always_inline))
-float max2(thread const float2& v)
-{
-    return fast::max(v.x, v.y);
-}
-
-static inline __attribute__((always_inline))
-float satf(thread const float& x)
-{
-    return fast::clamp(x, 0.0, 1.0);
-}
-
-fragment main0_out main0(main0_in in [[stage_in]], constant UBO& _92 [[buffer(0)]])
-{
-    main0_out out = {};
-    float2 dvx = float2(dfdx(in.WorldPos.x), dfdy(in.WorldPos.x));
-    float2 dvy = float2(dfdx(in.WorldPos.z), dfdy(in.WorldPos.z));
-    float lx = length(dvx);
-    float ly = length(dvy);
-    float2 dudv = float2(lx, ly);
-    float l = length(dudv);
-    float param = (l * _92.GridMinPixelsBetweenCells) / _92.GridCellSize;
-    float LOD = fast::max(0.0, gllog10(param) + 1.0);
-    float GridCellSizeLod0 = _92.GridCellSize * pow(10.0, floor(LOD));
-    float GridCellSizeLod1 = GridCellSizeLod0 * 10.0;
-    float GridCellSizeLod2 = GridCellSizeLod1 * 10.0;
-    dudv *= 4.0;
-    float2 mod_div_dudv = mod(in.WorldPos.xz, float2(GridCellSizeLod0)) / dudv;
-    float2 param_1 = mod_div_dudv;
-    float2 param_2 = float2(1.0) - abs((satv(param_1) * 2.0) - float2(1.0));
-    float Lod0a = max2(param_2);
-    mod_div_dudv = mod(in.WorldPos.xz, float2(GridCellSizeLod1)) / dudv;
-    float2 param_3 = mod_div_dudv;
-    float2 param_4 = float2(1.0) - abs((satv(param_3) * 2.0) - float2(1.0));
-    float Lod1a = max2(param_4);
-    mod_div_dudv = mod(in.WorldPos.xz, float2(GridCellSizeLod2)) / dudv;
-    float2 param_5 = mod_div_dudv;
-    float2 param_6 = float2(1.0) - abs((satv(param_5) * 2.0) - float2(1.0));
-    float Lod2a = max2(param_6);
-    float LOD_fade = fract(LOD);
-    float4 Color;
-    if (Lod2a > 0.0)
-    {
-        Color = _92.GridColorThick;
-        Color.w *= Lod2a;
-    }
-    else
-    {
-        if (Lod1a > 0.0)
-        {
-            Color = mix(_92.GridColorThick, _92.GridColorThin, float4(LOD_fade));
-            Color.w *= Lod1a;
-        }
-        else
-        {
-            Color = _92.GridColorThin;
-            Color.w *= (Lod0a * (1.0 - LOD_fade));
-        }
-    }
-    float param_7 = length(in.WorldPos.xz - float2(_92.CameraWorldPos[0], _92.CameraWorldPos[2])) / _92.GridSize;
-    float OpacityFalloff = 1.0 - satf(param_7);
-    Color.w *= OpacityFalloff;
-    out.FragColor = Color;
-    return out;
-}
-

@@ -1,75 +1,66 @@
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-#pragma clang diagnostic ignored "-Wmissing-braces"
-
 #include <metal_stdlib>
-#include <simd/simd.h>
-
+#include <metal_texture>
 using namespace metal;
 
-template<typename T, size_t Num>
-struct spvUnsafeArray
+#if !(__HAVE_FMA__)
+#define fma(a,b,c) ((a) * (b) + (c))
+#endif
+
+constant float4 ImmCB_0[6] =
 {
-    T elements[Num ? Num : 1];
-    
-    thread T& operator [] (size_t pos) thread
-    {
-        return elements[pos];
-    }
-    constexpr const thread T& operator [] (size_t pos) const thread
-    {
-        return elements[pos];
-    }
-    
-    device T& operator [] (size_t pos) device
-    {
-        return elements[pos];
-    }
-    constexpr const device T& operator [] (size_t pos) const device
-    {
-        return elements[pos];
-    }
-    
-    constexpr const constant T& operator [] (size_t pos) const constant
-    {
-        return elements[pos];
-    }
-    
-    threadgroup T& operator [] (size_t pos) threadgroup
-    {
-        return elements[pos];
-    }
-    constexpr const threadgroup T& operator [] (size_t pos) const threadgroup
-    {
-        return elements[pos];
-    }
+	float4(0.0, -1.0, 0.0, -1.0),
+	float4(2.80259693e-45, 1.0, 0.0, -1.0),
+	float4(1.40129846e-45, 1.0, 0.0, 1.0),
+	float4(2.80259693e-45, -1.0, 0.0, 1.0),
+	float4(0.0, 0.0, 0.0, 0.0),
+	float4(4.20389539e-45, 0.0, 0.0, 0.0)
+};
+struct UBO_Type
+{
+    float4x4 _47_VP;
+    float _47_GridSize;
+    float3 _47_CameraWorldPos;
 };
 
-struct UBO
+struct Mtl_VertexOut
 {
-    float4x4 VP;
-    float GridSize;
-    float3 CameraWorldPos;
+    float3 TEXCOORD1 [[ user(TEXCOORD1) ]];
+    float4 mtl_Position [[ position ]];
 };
 
-constant spvUnsafeArray<int, 6> _16 = spvUnsafeArray<int, 6>({ 0, 2, 1, 2, 0, 3 });
-constant spvUnsafeArray<float3, 4> _37 = spvUnsafeArray<float3, 4>({ float3(-1.0, 0.0, -1.0), float3(1.0, 0.0, -1.0), float3(1.0, 0.0, 1.0), float3(-1.0, 0.0, 1.0) });
-
-struct main0_out
+vertex Mtl_VertexOut xlatMtlMain(
+    constant UBO_Type& UBO [[ buffer(0) ]],
+    uint mtl_VertexID [[ vertex_id ]],
+    uint mtl_BaseVertex [[ base_vertex ]])
 {
-    float3 WorldPos [[user(locn1)]];
-    float4 gl_Position [[position]];
-};
-
-vertex main0_out main0(constant UBO& _47 [[buffer(0)]], uint gl_VertexIndex [[vertex_id]])
-{
-    main0_out out = {};
-    int Index = _16[int(gl_VertexIndex)];
-    float3 vPos3 = _37[Index] * _47.GridSize;
-    vPos3.x += _47.CameraWorldPos.x;
-    vPos3.z += _47.CameraWorldPos.z;
-    float4 vPos4 = float4(vPos3, 1.0);
-    out.gl_Position = _47.VP * vPos4;
-    out.WorldPos = vPos3;
-    return out;
+#if !UNITY_SUPPORT_INDIRECT_BUFFERS
+    mtl_BaseVertex = 0;
+#endif
+    mtl_VertexID = mtl_VertexID - mtl_BaseVertex;
+    Mtl_VertexOut output;
+    //--- Start Early Main ---
+    float4 u_xlat0;
+    uint u_xlatu0;
+    float4 u_xlat1;
+    //--- End Early Main ---
+    //MOV
+    u_xlatu0 = mtl_VertexID;
+    //MOV
+    u_xlat0.x = ImmCB_0[int(u_xlatu0)].x;
+    //MOV
+    u_xlat0.xy = ImmCB_0[as_type<int>(u_xlat0.x)].yw;
+    //MAD
+    u_xlat0.xy = fma(u_xlat0.xy, float2(UBO._47_GridSize), UBO._47_CameraWorldPos.xyzx.xz);
+    //MOV
+    output.TEXCOORD1.xz = u_xlat0.xy;
+    //MOV
+    output.TEXCOORD1.y = 0.0;
+    //MUL
+    u_xlat1 = u_xlat0.yyyy * UBO._47_VP[2];
+    //MAD
+    u_xlat0 = fma(u_xlat0.xxxx, UBO._47_VP[0], u_xlat1);
+    //ADD
+    output.mtl_Position = u_xlat0 + UBO._47_VP[3];
+    //RET
+    return output;
 }
-

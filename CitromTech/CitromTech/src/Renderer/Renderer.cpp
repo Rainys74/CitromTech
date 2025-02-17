@@ -441,10 +441,9 @@ namespace Citrom
 		//m_Device->BindShader(&shader); // in pipeline
 
 		// Shader Constant Buffer
-		struct ConstantBufferTest
+		struct alignas(16) ConstantBufferTest
 		{
-			Math::Matrix4x4 viewProj;
-			Math::Matrix4x4 model;
+			Math::Matrix4x4 transform;
 		};
 		ConstantBufferTest cbt = {};
 		Math::Matrix4x4 projection;
@@ -458,11 +457,10 @@ namespace Citrom
 		//view = rotationView * translationView; // The most correct right now.
 		//view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
 		view = cameraTransform->GetCameraViewFromTransform();
-		cbt.model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
-		cbt.viewProj = projection * view;
+		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
+		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!
-		cbt.viewProj.Transpose();
-		cbt.model.Transpose();
+		cbt.transform.Transpose();
 
 		/*
 		CT_ERROR("PROJECTION!");
@@ -830,7 +828,7 @@ namespace Citrom
 
 		DepthStencilStateDesc dsd;
 		dsd.depthEnabled = true;
-		dsd.depthWriteEnabled = true;
+		dsd.depthWriteEnabled = true; // false; // stops clipping. at a cost..
 		dsd.depthFunc = DepthStencilComparisonFunc::Less;
 
 		PipelineStateDesc psd = {};
@@ -842,7 +840,7 @@ namespace Citrom
 		psd.shader = &m_GridShader;
 		psd.inputLayout = &il;
 
-		m_GridPipeline = m_Device->CreatePipelineState(&psd); // TODO: why isn't the grid as transparent as it should be?
+		m_GridPipeline = m_Device->CreatePipelineState(&psd); // TODO: why isn't the grid as transparent as it should be? probably because transparent objects need to be rendered last...
 	}
 	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform)
 	{
@@ -851,7 +849,7 @@ namespace Citrom
 		Device_PushDebugGroup("Editor Grid Render");
 
 		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
-		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 0);
+		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 1); // HAS to be 1 for DX 11
 
 		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
 		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;

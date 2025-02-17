@@ -27,7 +27,7 @@ fragment Mtl_FragmentOut xlatMtlMain(
 {
     Mtl_FragmentOut output;
     //SAMPLE
-    output.SV_Target0 = tex.sample(samplersplr, input.TexCoord0.xy); // TODO: this is a very simple hacky way to fix a problem that will be present right as soon as i enable shader generation!!!! 
+    output.SV_Target0 = tex.sample(splr, input.TexCoord0.xy);
     //RET
     return output;
 }

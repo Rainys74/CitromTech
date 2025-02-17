@@ -29,8 +29,7 @@ struct VSOut
 
 cbuffer CBuffer1
 {
-    matrix viewProjection;
-    matrix modelMatrix;
+    matrix transform;
 };
 cbuffer Material : register(b1)
 {
@@ -41,7 +40,7 @@ cbuffer Material : register(b1)
 VSOut vsmain(VSInput input)
 {
     VSOut vso;
-    vso.pos = mul(float4(input.pos, 1.0f), viewProjection * modelMatrix);
+    vso.pos = mul(float4(input.pos, 1.0f), transform); //mul(mul(float4(input.pos, 1.0f), viewProjection), modelMatrix); //mul(mul(float4(input.pos, 1.0f), modelMatrix), viewProjection);
     vso.tex = input.tex;
     return vso;
 }
