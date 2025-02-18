@@ -125,8 +125,8 @@ namespace Citrom
 
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
-		//ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
+		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		g_EditorRenderer.Initialize();
 	}
@@ -503,8 +503,8 @@ namespace Citrom
 		vbld1.shader = &shader; // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
-		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT); // TODO: separate to Metal'ize api
-		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
+		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
+		vbld1.PushLayout("TexCoord", 0, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		//m_Device->BindVertexBufferLayout(&vbLayout1); // in pipeline
@@ -564,6 +564,7 @@ namespace Citrom
 			}
 			td.format = Format::R8G8B8A8_U2FNORM;
 			td.usage = Usage::Static;
+			//td.mipLevels = 1; // TODO: cannot auto-generate mips in DX11!
 
 			tex2D = m_Device->CreateTexture2D(&td);
 			m_Device->RCBindTexture2D(&tex2D);
@@ -713,7 +714,7 @@ namespace Citrom
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
-		vbld1.PushLayout("TexCoord", 1, Format::R32G32_FLOAT);
+		vbld1.PushLayout("TexCoord", 0, Format::R32G32_FLOAT);
 
 		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		//m_Device->BindVertexBufferLayout(&vbLayout1);

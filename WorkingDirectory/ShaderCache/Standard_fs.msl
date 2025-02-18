@@ -21,13 +21,13 @@ struct Mtl_FragmentOut
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
-    sampler samplersplr [[ sampler (0) ]],
+    sampler samplerTex [[ sampler (0) ]],
     texture2d<float, access::sample > tex [[ texture(0) ]] ,
     Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
     //SAMPLE
-    output.SV_Target0 = tex.sample(samplersplr, input.TexCoord0.xy); // dumbass workaround for the time ebeing
+    output.SV_Target0 = tex.sample(samplerTex, input.TexCoord0.xy);
     //RET
     return output;
 }

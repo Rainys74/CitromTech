@@ -33,6 +33,15 @@ namespace Citrom::RenderAPI
 			td.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
 		td.MiscFlags = 0;
 
+		//if (descriptor->mipLevels == 0)
+		//	td.MipLevels = static_cast<UINT>(log2(max(descriptor->width, descriptor->height))) + 1;
+
+		if (descriptor->mipLevels != 1)
+		{
+			td.BindFlags |= D3D11_BIND_RENDER_TARGET;
+			td.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS; // should only happen for 0 mipmaps, i think.
+		}
+
 		D3D11_SUBRESOURCE_DATA tsd = {};
 		tsd.pSysMem = descriptor->data;
 		tsd.SysMemPitch = static_cast<UINT>(descriptor->width * GetFormatSize(descriptor->format));
@@ -58,13 +67,17 @@ namespace Citrom::RenderAPI
 		}
 
 		DXCallHR(m_Device->CreateShaderResourceView(internalData->texture.Get(), &srvd, &internalData->textureView));
+		//DXCall(m_DeviceContext->UpdateSubresource(internalData->texture.Get(), 0, 0, tsd.pSysMem, tsd.SysMemPitch, 0));
+		if (descriptor->mipLevels != 1 && HAS_FLAG(td.MiscFlags, D3D11_RESOURCE_MISC_GENERATE_MIPS)) {
+			DXCall(m_DeviceContext->GenerateMips(internalData->textureView.Get())); // 0 or -1?? will generate log2(std::max(pTexture->desc.Width, pTexture->desc.Height)) + 1
+		}
 
 		// Sampler
 		D3D11_SAMPLER_DESC sd = {};
-		sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sd.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; // for translating 3 separate filters to this, create some sort of hash map that uses a struct of 3 agnostic filters to look-up d3d11 equivalent or something.
+		sd.AddressU = TextureAddressModeToD3D11(descriptor->sampler.addressU);
+		sd.AddressV = TextureAddressModeToD3D11(descriptor->sampler.addressV);
+		sd.AddressW = TextureAddressModeToD3D11(descriptor->sampler.addressW);
 
 		DXCallHR(m_Device->CreateSamplerState(&sd, &internalData->sampler));
 
@@ -85,6 +98,15 @@ namespace Citrom::RenderAPI
 		TSetResourceNameDX11(internalData->texture.Get(), name);
 		TSetResourceNameDX11(internalData->textureView.Get(), name);
 		TSetResourceNameDX11(internalData->sampler.Get(), name);
+	}
+
+	D3D11_TEXTURE_ADDRESS_MODE DX11Device::TextureAddressModeToD3D11(TextureAddressMode mode)
+	{
+	#define TEXOPT_TOD3D11CASE(x, y) case (x): return (y); break
+		switch (mode)
+		{
+			default: return D3D11_TEXTURE_ADDRESS_WRAP; break;
+		}
 	}
 }
 #endif

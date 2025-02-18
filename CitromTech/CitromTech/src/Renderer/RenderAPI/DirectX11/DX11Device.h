@@ -92,6 +92,9 @@ namespace Citrom::RenderAPI
 		//Format DXGIFormatToFormat(DXGI_FORMAT dxgiFormat);
 		D3D11_USAGE UsageToD3D11Usage(Usage usage);
 
+		// Texture
+		D3D11_TEXTURE_ADDRESS_MODE TextureAddressModeToD3D11(TextureAddressMode mode);
+
 		// Framebuffer
 		DXGI_FORMAT FBFormatToDXGIFormat(FramebufferFormat format);
 

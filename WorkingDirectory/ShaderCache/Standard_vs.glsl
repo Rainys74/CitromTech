@@ -20,13 +20,15 @@ precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
 layout(location = 0) uniform 	mat4x4 transform;
 layout(location = 0) in  vec3 in_Position0;
-layout(location = 1) in  vec2 in_TexCoord1;
+layout(location = 1) in  vec3 in_Normal0;
+layout(location = 2) in  vec2 in_TexCoord0;
 layout(location = 0) out vec2 vs_TexCoord0;
+layout(location = 1) out vec3 vs_Normal0;
 vec4 u_xlat0;
 void main()
 {
     //MOV
-    vs_TexCoord0.xy = in_TexCoord1.xy;
+    vs_TexCoord0.xy = in_TexCoord0.xy;
     //MOV
     u_xlat0.xyz = in_Position0.xyz;
     //MOV
@@ -39,6 +41,8 @@ void main()
     gl_Position.z = dot(u_xlat0, CBuffer1VS.transform[2]);
     //DP4
     gl_Position.w = dot(u_xlat0, CBuffer1VS.transform[3]);
+    //MOV
+    vs_Normal0.xyz = in_Normal0.xyz;
     //RET
     return;
 }

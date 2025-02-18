@@ -41,6 +41,8 @@ namespace Citrom::RenderAPI
 	};
 	enum class ShaderLanguage
 	{
+		None = 0,
+
 		HLSL = BIT(0),
 		GLSL = BIT(1),
 		MSL = BIT(2),

@@ -18,7 +18,7 @@ precise vec4 u_xlat_precise_vec4;
 precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
-layout(location = 1) uniform 	vec3 _92_CameraWorldPos;
+layout(location = 0) uniform 	vec3 _92_CameraWorldPos;
 uniform 	float _92_GridSize;
 uniform 	float _92_GridMinPixelsBetweenCells;
 uniform 	float _92_GridCellSize;

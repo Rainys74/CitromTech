@@ -65,7 +65,7 @@ namespace Citrom::RenderAPI
 	// Index Buffer
 	struct IndexBufferDesc
 	{
-		const uint32* data;
+		const uint32* data; // TODO: support different formats (R16_UINT and R32_UINT)
 		uint32 count;
 		Usage usage;
 	};

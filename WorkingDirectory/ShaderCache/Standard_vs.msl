@@ -14,18 +14,19 @@ struct CBuffer1_Type
 struct Mtl_VertexIn
 {
     float3 Position0 [[ attribute(0) ]] ;
-    float3 Normal1 [[ attribute(1) ]] ; // dumb ass workaround before fixing this shit
-    float2 TexCoord2 [[ attribute(2) ]] ;
+    float3 Normal0 [[ attribute(1) ]] ;
+    float2 TexCoord0 [[ attribute(2) ]] ;
 };
 
 struct Mtl_VertexOut
 {
     float2 TexCoord0 [[ user(TexCoord0) ]];
     float4 mtl_Position [[ position ]];
+    float3 Normal0 [[ user(Normal0) ]];
 };
 
 vertex Mtl_VertexOut xlatMtlMain(
-    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]], // ass workaround
+    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
@@ -33,7 +34,7 @@ vertex Mtl_VertexOut xlatMtlMain(
     float4 u_xlat0;
     //--- End Early Main ---
     //MOV
-    output.TexCoord0.xy = input.TexCoord2.xy;
+    output.TexCoord0.xy = input.TexCoord0.xy;
     //MOV
     u_xlat0.xyz = input.Position0.xyz;
     //MOV
@@ -46,6 +47,8 @@ vertex Mtl_VertexOut xlatMtlMain(
     output.mtl_Position.z = dot(u_xlat0, CBuffer1.transform[2]);
     //DP4
     output.mtl_Position.w = dot(u_xlat0, CBuffer1.transform[3]);
+    //MOV
+    output.Normal0.xyz = input.Normal0.xyz;
     //RET
     return output;
 }

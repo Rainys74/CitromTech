@@ -1,4 +1,4 @@
-cbuffer UBO : register(b1)
+cbuffer UBO : register(b0)
 {
     float3 _92_CameraWorldPos : packoffset(c0);
     float _92_GridSize : packoffset(c0.w);

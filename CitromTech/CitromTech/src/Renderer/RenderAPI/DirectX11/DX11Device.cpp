@@ -79,7 +79,7 @@ namespace Citrom::RenderAPI
 		HRESULT hr;
 
 #define _INTERN_DEVICE_FLAGS_DEBUG (D3D11_CREATE_DEVICE_DEBUG) // | D3D11_CREATE_DEVICE_DEBUGGABLE // "This value is not supported until Direct3D 11.1."
-#define _INTERN_DEVICE_FLAGS_ALL (D3D11_CREATE_DEVICE_SINGLETHREADED) // TODO: this may cause issues someday, though improves performance at the cost of thread safety. // D3D11_CREATE_DEVICE_BGRA_SUPPORT
+#define _INTERN_DEVICE_FLAGS_ALL 0//(D3D11_CREATE_DEVICE_SINGLETHREADED) // TODO: this may cause issues someday, though improves performance at the cost of thread safety. // D3D11_CREATE_DEVICE_BGRA_SUPPORT
 
 #ifdef CT_DEBUG
 #define DEVICE_FLAGS (_INTERN_DEVICE_FLAGS_ALL | _INTERN_DEVICE_FLAGS_DEBUG) // D3D11_CREATE_DEVICE_PREVENT_INTERNAL_THREADING_OPTIMIZATIONS

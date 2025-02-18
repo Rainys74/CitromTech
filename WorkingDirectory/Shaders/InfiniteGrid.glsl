@@ -58,7 +58,7 @@ void main()
 layout(location = 1) in vec3 WorldPos;
 layout(location = 0) out vec4 FragColor;
 
-layout(binding = 1) uniform UBO {
+layout(binding = 0) uniform UBO {
     vec3 CameraWorldPos;
     float GridSize;
     float GridMinPixelsBetweenCells;

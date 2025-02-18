@@ -19,12 +19,13 @@ struct VSInput
 {
     float3 pos : Position;
     float3 n : Normal;
-    float2 tex : TexCoord1;
+    float2 tex : TexCoord;
 };
 struct VSOut
 {
     float2 tex : TexCoord;
     float4 pos : SV_Position;
+    float3 normal : Normal;
 };
 
 cbuffer CBuffer1
@@ -41,16 +42,17 @@ VSOut vsmain(VSInput input)
 {
     VSOut vso;
     vso.pos = mul(float4(input.pos, 1.0f), transform); //mul(mul(float4(input.pos, 1.0f), viewProjection), modelMatrix); //mul(mul(float4(input.pos, 1.0f), modelMatrix), viewProjection);
+    vso.normal = input.n;
     vso.tex = input.tex;
     return vso;
 }
 
 Texture2D tex;
-SamplerState splr;
+SamplerState samplerTex;
 
 float4 psmain(float2 texCoord : TexCoord) : SV_Target
 {
     //return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
-    return tex.Sample(splr, texCoord);
+    return tex.Sample(samplerTex, texCoord);
     //return u_ColorData;
 }
