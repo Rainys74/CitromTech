@@ -564,7 +564,7 @@ namespace Citrom
 			}
 			td.format = Format::R8G8B8A8_U2FNORM;
 			td.usage = Usage::Static;
-			//td.mipLevels = 1; // TODO: cannot auto-generate mips in DX11!
+			td.mipLevels = MIP_LEVELS_MAX;
 
 			tex2D = m_Device->CreateTexture2D(&td);
 			m_Device->RCBindTexture2D(&tex2D);

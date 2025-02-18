@@ -44,6 +44,9 @@ namespace Citrom::RenderAPI
 		};
 	};
 
+#define MIP_LEVELS_NONE (1)
+#define MIP_LEVELS_MAX (0) // ANY
+
 	struct Texture2DDesc
 	{
 		uint8* data;
@@ -53,7 +56,7 @@ namespace Citrom::RenderAPI
 		Format format = Format::R8G8B8A8_U2FNORM;
 
 		uint32 arraySize = 1; // if it weren't for backwards-compatibility, this should be named as arrayCount or arrayLength.
-		uint32 mipLevels = 1;
+		uint32 mipLevels = MIP_LEVELS_NONE;
 
 		SamplerDesc sampler;
 	};
