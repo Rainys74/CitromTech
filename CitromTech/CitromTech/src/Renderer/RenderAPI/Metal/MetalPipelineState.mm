@@ -63,7 +63,7 @@ namespace Citrom::RenderAPI
         {
             const auto* dsDesc = descriptor->dsState;
             
-            MTLDepthStencilDescriptor* dsd = [[MTLDepthStencilDescriptor alloc] init];
+            MTLDepthStencilDescriptor* dsd = [[MTLDepthStencilDescriptor alloc] init]; // TODO: do an if depthEnabled check here so you don't assign these settings here if you don't want depth testing
             dsd.depthWriteEnabled = dsDesc->depthWriteEnabled;
             dsd.depthCompareFunction = MTLCompareFunctionLess;
             

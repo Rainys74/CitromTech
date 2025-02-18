@@ -81,7 +81,7 @@ static Math::Transform g_NullCameraTransform;
 Camera* GetCamera()
 {
 	//return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetCamera() : &g_CurrentScene->GetMainCameraEntity().GetComponent<CameraComponent>().camera;
-	if (EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetCamera())
+	if (IF_EDITOR(true) IF_NEDITOR(false) && EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetCamera())
 	{
 		return EditorCamera::Get()->GetCamera();
 	}
@@ -101,7 +101,7 @@ Camera* GetCamera()
 Math::Transform* GetCameraTransform()
 {
 	//return EditorCamera::Get()->IsActive() ? EditorCamera::Get()->GetTransform() : &g_CurrentScene->GetMainCameraEntity().GetComponent<TransformComponent>().transform;
-	if (EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetTransform())
+	if (IF_EDITOR(true) IF_NEDITOR(false) && EditorCamera::Get()->IsActive() && EditorCamera::Get()->GetTransform())
 	{
 		return EditorCamera::Get()->GetTransform();
 	}
@@ -210,8 +210,8 @@ int SharedMain(int argc, char* argv[])
 		CT_TRACE("KeyCode String: {} ({})", Input::KeyCodeToString(transformedEvent.keyCode), (uint32)transformedEvent.keyCode);
 	};
 
-	EventListener<WindowEvents> windowEventListener;
-	windowEventListener.OnEvent = [](const Event<WindowEvents>& event) {
+	EventListener<WindowEvents> windowEventListenerTest;
+	windowEventListenerTest.OnEvent = [](const Event<WindowEvents>& event) {
 		CT_ERROR("Window Event!: {}", (int)event.GetEventType());
 
 		CT_VERBOSE("Event Category Name: {}", event.GetEventCategoryName());
@@ -255,7 +255,7 @@ int SharedMain(int argc, char* argv[])
 	//clip.looping = true;
 	//Audio::PlayAudioClip(&clip);
 
-	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);
+	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListenerTest);
 	EventBus::GetDispatcher<MouseEvents>()->AddListener(&mouseEventListener);
 	EventBus::GetDispatcher<KeyEvents>()->AddListener(&keyEventListener);
 
@@ -297,6 +297,19 @@ int SharedMain(int argc, char* argv[])
 	testMat.Transpose();
 	CT_WARN("\n{}", testMat.ToString());
 
+	// Camera Resize System
+	EventListener<WindowEvents> windowEventListener;
+	windowEventListener.OnEvent = [](const Event<WindowEvents>& event) 
+	{
+		if (event.GetEventType() == WindowEvents::WindowResize)
+		{
+			const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+			
+			GetCamera()->SetProjectionType(GetCamera()->GetProjectionType()); // Current workaround for resizing
+		}
+	};
+	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListener);
+
 	Scene scene; g_CurrentScene = &scene;
 
 	Entity cube1 = g_CurrentScene->CreateEntity();
@@ -306,6 +319,10 @@ int SharedMain(int argc, char* argv[])
 	Entity camera = g_CurrentScene->CreateEntity();
 	camera.GetComponent<NameComponent>().name = "Main Camera";
 	camera.GetComponent<TransformComponent>().transform.position.z = -0.5f;
+
+	// is this a valid workaround? No it's not.
+	//CameraViewport::Get()->SetViewport(g_Window.GetBackend()->GetWidth(), g_Window.GetBackend()->GetHeight());
+
 	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
 

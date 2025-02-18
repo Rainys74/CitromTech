@@ -187,9 +187,9 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::Separator();
             ImGui::DragFloat4("CCRotation2", &camTransform->rotation[0]);
 
-            cameraComponent.camera.SetOrthographicSize(orthoSize);
-            cameraComponent.camera.SetOrthographicNearClip(orthoNear);
-            cameraComponent.camera.SetOrthographicFarClip(orthoFar);
+            //cameraComponent.camera.SetOrthographicSize(orthoSize);
+            //cameraComponent.camera.SetOrthographicNearClip(orthoNear);
+            //cameraComponent.camera.SetOrthographicFarClip(orthoFar);
         }
         ImGui::Separator();
         ImGui::Spacing();

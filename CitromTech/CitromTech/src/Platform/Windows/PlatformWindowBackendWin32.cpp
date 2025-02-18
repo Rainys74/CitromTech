@@ -414,7 +414,11 @@ namespace Citrom::Platform
 
     void WindowBackendWin32::Create(const int width, const int height, const CTL::String& title)
     {
-        //CT_TRACE("Test: {}, {}, {}", width, height, title.CStr());
+        CT_TRACE("Test: {}, {}, {}", width, height, title.CStr());
+		//WindowResizeEvent initialResize;
+		//initialResize.width = width;
+		//initialResize.height = height;
+		//EventBus::GetDispatcher<WindowEvents>()->Dispatch(initialResize);
 
 		//m_ClassName = (TCHAR*)TEXT("Class Name");
 		//m_HInstance = GetModuleHandle(NULL); // supposedly shouldn't be ran in DLL

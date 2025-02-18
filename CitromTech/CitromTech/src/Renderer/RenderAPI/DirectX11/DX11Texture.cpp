@@ -55,9 +55,13 @@ namespace Citrom::RenderAPI
 		// Create Texture View
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
 		srvd.Format = td.Format;
-		srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+
+		// Also TODO: implement cube-maps, they're probably gonna be useful.
+		// TODO: replace these 2 zeros with Multi-samples count or something like that
 		if (descriptor->arraySize > 1)
 		{
+			srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY : D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+
 			srvd.Texture2DArray.ArraySize = descriptor->arraySize;
 			srvd.Texture2DArray.MostDetailedMip = 0;
 			srvd.Texture2DArray.MipLevels = descriptor->mipLevels;
@@ -65,6 +69,8 @@ namespace Citrom::RenderAPI
 		}
 		else
 		{
+			srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
+
 			srvd.Texture2D.MostDetailedMip = 0;
 			srvd.Texture2D.MipLevels = (descriptor->mipLevels == MIP_LEVELS_MAX) ? -1 : descriptor->mipLevels; // descriptor->mipLevels - 1
 		}

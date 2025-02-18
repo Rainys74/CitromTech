@@ -69,6 +69,7 @@ namespace Citrom::RenderAPI
 		// Frame Buffer (Render Target View)
 		virtual Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) = 0;
 		//virtual void SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex = 0) = 0;
+		virtual void ResizeFramebuffer(Framebuffer* fb, uint32 width = 0, uint32 height = 0) = 0; // 0 will use the screen size
 		virtual void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) = 0;
 		virtual void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) = 0;
 

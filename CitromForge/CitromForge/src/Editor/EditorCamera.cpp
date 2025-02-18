@@ -17,7 +17,15 @@ EditorCamera::EditorCamera()
 void EditorCamera::Update(float deltaTime)
 {
 	if (Input::SimpleInput::GetKeyDown(Input::KeyCode::F9))
+	{
 		m_Active = !m_Active;
+
+		// Work-around for when you switch cameras, not the cleanest way of going about this, but what do i care?
+		WindowResizeEvent freshResize;
+		freshResize.width = CameraViewport::Get()->GetViewportWidth();
+		freshResize.height = CameraViewport::Get()->GetViewportHeight();
+		EventBus::GetDispatcher<WindowEvents>()->Dispatch(freshResize);
+	}
 
 	if (!m_Active)
 		return;

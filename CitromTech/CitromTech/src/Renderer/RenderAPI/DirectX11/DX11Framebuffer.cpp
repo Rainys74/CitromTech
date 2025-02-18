@@ -100,6 +100,10 @@ namespace Citrom::RenderAPI
 
 		return fb;
 	}
+	void DX11Device::ResizeFramebuffer(Framebuffer* fb, uint32 width, uint32 height)
+	{
+
+	}
 	void DX11Device::SetTargetFramebuffer(Framebuffer* fb, uint32 colorIndex)
 	{
 		if (fb == nullptr)

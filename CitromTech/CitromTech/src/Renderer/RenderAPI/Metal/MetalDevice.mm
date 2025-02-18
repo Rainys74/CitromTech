@@ -120,6 +120,29 @@ namespace Citrom::RenderAPI
         vram = maxVramTotal;
     }*/
 
+    /*
+    // TODO: test out
+    void MetalDevice::WaitForGPU()
+    {
+        @autoreleasepool {
+            id<MTLCommandQueue> queue = mtlDevice.commandQueue; 
+            id<MTLCommandBuffer> commandBuffer = [queue commandBuffer];
+            dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+
+            [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+                dispatch_semaphore_signal(semaphore);
+            }];
+        
+            [commandBuffer commit];
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        }
+        /// Or maybe you can use this? will this work then?
+        //id<MTLCommandBuffer> commandBuffer = [commandQueue commandBuffer];
+        //[commandBuffer commit];
+        //[commandBuffer waitUntilCompleted];
+    }
+    */
+
     GPUInfo MetalDevice::GetCurrentGPUInfo()
     {
         GPUInfo info;

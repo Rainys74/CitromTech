@@ -92,6 +92,7 @@ namespace Citrom
 			{
 				const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
 				Device::Get()->Resize(transformedEvent.width, transformedEvent.height);
+				// TODO: Resize Framebuffers
 			}
 		};
 		EventBus::GetDispatcher<WindowEvents>()->AddListener(&s_WindowEventListener);

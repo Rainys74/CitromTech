@@ -74,11 +74,34 @@ namespace Citrom::RenderAPI
 
 	enum class DepthStencilComparisonFunc
 	{
-		Less
+		Never,			// 0
+
+		Equal,			// ==
+		NotEqual,		// !=
+		Less,			// <
+		LessEqual,		// <=
+		Greater,		// >
+		GreaterEqual,	// >=
+
+		Always			// 1
 	};
 
-	struct StencilOpDesc
+	enum class StencilOp
 	{
+		Keep,
+		Zero,
+		Replace,
+		IncrementAndClamp,
+		DecrementAndClamp,
+		Invert,
+		IncrementAndWrap,
+		DecrementAndWrap
+	};
+	struct StencilOpListDesc
+	{
+		StencilOp stencilDepthFailOp;
+		StencilOp stencilPassDepthFailOp;
+		StencilOp stencilDepthPassOp;
 		DepthStencilComparisonFunc stencilFunc;
 	};
 
@@ -88,11 +111,11 @@ namespace Citrom::RenderAPI
 		bool depthWriteEnabled = true;
 		DepthStencilComparisonFunc depthFunc = DepthStencilComparisonFunc::Less;
 
-		bool stencilEnabled;
-		//uint8 stencilReadMask;
-		//uint8 stencilWriteMask;
-		//StencilOpDesc stencilFrontFaceOp;
-		//StencilOpDesc stencilBackFaceOp;
+		bool stencilEnabled = false;
+		//uint8 stencilReadMask; // stencilTestMask // pretty sure OpenGL does not support this.
+		uint8 stencilWriteMask;
+		StencilOpListDesc stencilFrontFaceCase;
+		StencilOpListDesc stencilBackFaceCase;
 	};
 
 	// Triangle fans? Patch Lists?

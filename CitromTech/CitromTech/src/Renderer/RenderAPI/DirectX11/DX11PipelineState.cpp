@@ -58,7 +58,23 @@ namespace Citrom::RenderAPI
 			D3D11_DEPTH_STENCIL_DESC dsd = {};
 			dsd.DepthEnable = dsDesc->depthEnabled;
 			dsd.DepthWriteMask = dsDesc->depthWriteEnabled ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-			dsd.DepthFunc = D3D11_COMPARISON_LESS;
+			dsd.DepthFunc = DepthStencilComparisonFuncToD3D11(dsDesc->depthFunc);
+			if (dsDesc->stencilEnabled)
+			{
+				dsd.StencilEnable = dsDesc->stencilEnabled;
+				dsd.StencilReadMask = 0xFF;
+				dsd.StencilWriteMask = dsDesc->stencilWriteMask;
+
+				dsd.FrontFace.StencilFailOp = StencilOpToD3D11(dsDesc->stencilFrontFaceCase.stencilDepthFailOp);
+				dsd.FrontFace.StencilDepthFailOp = StencilOpToD3D11(dsDesc->stencilFrontFaceCase.stencilPassDepthFailOp);
+				dsd.FrontFace.StencilPassOp = StencilOpToD3D11(dsDesc->stencilFrontFaceCase.stencilDepthPassOp);
+				dsd.FrontFace.StencilFunc = DepthStencilComparisonFuncToD3D11(dsDesc->stencilFrontFaceCase.stencilFunc);
+
+				dsd.BackFace.StencilFunc = DepthStencilComparisonFuncToD3D11(dsDesc->stencilBackFaceCase.stencilFunc);
+				dsd.BackFace.StencilFailOp = StencilOpToD3D11(dsDesc->stencilBackFaceCase.stencilDepthFailOp);
+				dsd.BackFace.StencilDepthFailOp = StencilOpToD3D11(dsDesc->stencilBackFaceCase.stencilPassDepthFailOp);
+				dsd.BackFace.StencilPassOp = StencilOpToD3D11(dsDesc->stencilBackFaceCase.stencilDepthPassOp);
+			}
 
 			DXCallHR(m_Device->CreateDepthStencilState(&dsd, &internalData->dsState));
 
@@ -166,6 +182,42 @@ namespace Citrom::RenderAPI
 			PRIMOPT_TOD3DCASE(PrimitiveTopology::LineStrips, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 		}
 		return D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+	}
+
+	D3D11_COMPARISON_FUNC DX11Device::DepthStencilComparisonFuncToD3D11(DepthStencilComparisonFunc func)
+	{
+#define COMPFUNC_TOD3D11CASE(x, y) PRIMOPT_TOD3DCASE(x, y)
+		switch (func)
+		{
+			default: return D3D11_COMPARISON_LESS; break;
+
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::Never, D3D11_COMPARISON_NEVER);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::Equal, D3D11_COMPARISON_EQUAL);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::NotEqual, D3D11_COMPARISON_NOT_EQUAL);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::Less, D3D11_COMPARISON_LESS);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::LessEqual, D3D11_COMPARISON_LESS_EQUAL);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::Greater, D3D11_COMPARISON_GREATER);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::GreaterEqual, D3D11_COMPARISON_GREATER_EQUAL);
+			COMPFUNC_TOD3D11CASE(DepthStencilComparisonFunc::Always, D3D11_COMPARISON_ALWAYS);
+		}
+	}
+
+	D3D11_STENCIL_OP DX11Device::StencilOpToD3D11(StencilOp op)
+	{
+#define STENCILOP_TOD3D11CASE(x, y) COMPFUNC_TOD3D11CASE(x, y)
+		switch (op)
+		{
+			default: return D3D11_STENCIL_OP_KEEP; break;
+
+			STENCILOP_TOD3D11CASE(StencilOp::Keep, D3D11_STENCIL_OP_KEEP);
+			STENCILOP_TOD3D11CASE(StencilOp::Zero, D3D11_STENCIL_OP_ZERO);
+			STENCILOP_TOD3D11CASE(StencilOp::Replace, D3D11_STENCIL_OP_REPLACE);
+			STENCILOP_TOD3D11CASE(StencilOp::IncrementAndClamp, D3D11_STENCIL_OP_INCR_SAT);
+			STENCILOP_TOD3D11CASE(StencilOp::DecrementAndClamp, D3D11_STENCIL_OP_DECR_SAT);
+			STENCILOP_TOD3D11CASE(StencilOp::Invert, D3D11_STENCIL_OP_INVERT);
+			STENCILOP_TOD3D11CASE(StencilOp::IncrementAndWrap, D3D11_STENCIL_OP_INCR);
+			STENCILOP_TOD3D11CASE(StencilOp::DecrementAndWrap, D3D11_STENCIL_OP_DECR);
+		}
 	}
 }
 #endif

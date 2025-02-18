@@ -22,6 +22,9 @@ namespace Citrom
 		{
 			m_Width = width;
 			m_Height = height;
+
+			//for (auto& pCamDirty : m_PCameraDirtyMap)
+			//	m_PCameraDirtyMap[pCamDirty.first] = true;
 		}
 		FORCE_INLINE uint32 GetViewportWidth() const
 		{
@@ -31,9 +34,35 @@ namespace Citrom
 		{
 			return m_Height;
 		}
+
+		/*FORCE_INLINE bool IsDirty(Camera* pCamera)
+		{
+			bool state = m_PCameraDirtyMap[pCamera];
+			if (state)
+				m_PCameraDirtyMap[pCamera] = false;
+			return state;
+		}
+		inline void SetDirty(Camera* pCamera, bool state = true)
+		{
+			m_PCameraDirtyMap[pCamera] = state;
+		}
+		inline void InsertCameraPtr(Camera* pCamera)
+		{
+			m_PCameraDirtyMap[pCamera] = false;
+		}
+		inline void EraseCameraPtr(Camera* pCamera)
+		{
+			m_PCameraDirtyMap.erase(pCamera);
+		}*/
+		// That exact moment when you work on a feature for so long that you think
+		// might fix a problem you're having, until you realize that all you're doing
+		// is just implementing something that doesn't fix the issue in any way and
+		// should not even exist... Literally me.
 	private:
 		uint32 m_Width;
 		uint32 m_Height;
+
+		//CTL::HashMap<Camera*, bool> m_PCameraDirtyMap;
 	};
 
 	class Camera
@@ -59,10 +88,14 @@ namespace Citrom
 					}
 				};
 			EventBus::GetDispatcher<WindowEvents>()->AddListener(&m_WindowEventListener);
+
+			//CameraViewport::Get()->InsertCameraPtr(this);
 		}
 		~Camera()
 		{
 			EventBus::GetDispatcher<WindowEvents>()->RemoveListener(&m_WindowEventListener);
+
+			//CameraViewport::Get()->EraseCameraPtr(this);
 		}
 
 		void SetPerspective(float32 verticalFOV, float32 nearClip, float32 farClip)
@@ -134,9 +167,9 @@ namespace Citrom
 	private:
 		EventListener<WindowEvents> m_WindowEventListener;
 
-		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
+		ProjectionType m_ProjectionType = ProjectionType::Perspective;
 
-		float32 m_PerspectiveFOV = Math::DegreesToRadians(45.0f); // Vertical FOV as Radians
+		float32 m_PerspectiveFOV = Math::DegreesToRadians(70.0f); // Vertical FOV as Radians
 		float32 m_PerspectiveNear = 0.01f, m_PerspectiveFar = 1000.0f;
 
 		float32 m_OrthographicSize = 10.0f;

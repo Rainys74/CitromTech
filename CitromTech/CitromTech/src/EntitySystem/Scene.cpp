@@ -43,8 +43,6 @@ namespace Citrom
     }
     Entity Scene::GetMainCameraEntity()
     {
-        // TODO: not exactly sure if this is the best place, but
-        // maybe look into returning Editor's Camera here? instead maybe in the renderer? or maybe SharedMain?
         auto view = m_SceneRegistry.view<CameraComponent>();
         for (auto entity : view)
         {

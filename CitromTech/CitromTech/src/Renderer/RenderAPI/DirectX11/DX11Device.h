@@ -19,6 +19,7 @@ namespace Citrom::RenderAPI
 
 		// Frame Buffer (Render Target View)
 		Framebuffer CreateFramebuffer(FramebufferDesc* descriptor) override;
+		void ResizeFramebuffer(Framebuffer* fb, uint32 width = 0, uint32 height = 0) override;
 		void* GetFramebufferColorAttachment(Framebuffer* fb, uint32 index = 0) override;
 		void* GetFramebufferDepthStencilAttachment(Framebuffer* fb) override;
 
@@ -108,6 +109,10 @@ namespace Citrom::RenderAPI
 		D3D11_CULL_MODE CullModeToD3D11CullMode(CullMode cullMode);
 
 		D3D_PRIMITIVE_TOPOLOGY PrimitiveTopologyToD3D(PrimitiveTopology primitives);
+
+		// Pipeline
+		D3D11_COMPARISON_FUNC DepthStencilComparisonFuncToD3D11(DepthStencilComparisonFunc func);
+		D3D11_STENCIL_OP StencilOpToD3D11(StencilOp op);
 
 		template<typename T>
 		FORCE_INLINE void TSetResourceNameDX11(T* d3d11Resource, const char* name)
