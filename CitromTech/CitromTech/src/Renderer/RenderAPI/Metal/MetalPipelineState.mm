@@ -10,10 +10,12 @@ namespace Citrom::RenderAPI
         //WRL::ComPtr<ID3D11DepthStencilState> dsState;
         
         id<MTLRenderPipelineState> pipeline;
+        id<MTLDepthStencilState> dsState;
         
         ~PipelineStateMTL()
         {
             [pipeline release];
+            [dsState release];
         }
     };
 
@@ -44,20 +46,39 @@ namespace Citrom::RenderAPI
             blendState.alphaBlendOperation = BlendOpToMTLBlendOp(blendDesc->blendOperationAlpha);
             blendState.writeMask = RenderTargetWriteMaskToMTLColor(blendDesc->renderTargetWriteMask); // does this do what i expect?
         }
-        if (descriptor->rasterizerState)
-        {
-            const auto* rasterDesc = descriptor->rasterizerState;
-            
-            //D3D11_RASTERIZER_DESC rd = {};
-            //rd.FillMode = FillModeToD3D11FillMode(rasterDesc->fillMode);
-            //rd.CullMode = CullModeToD3D11CullMode(rasterDesc->cullMode);
-            //rd.FrontCounterClockwise = rasterDesc->frontCounterClockwise;
-//
-            //DXCallHR(m_Device->CreateRasterizerState(&rd, &internalData->rasterizerState));
-        }
+        //if (descriptor->rasterizerState) // In binding!
+        //{
+        //    const auto* rasterDesc = descriptor->rasterizerState;
+        //
+        //
+        //    //D3D11_RASTERIZER_DESC rd = {};
+        //    //rd.FillMode = FillModeToD3D11FillMode(rasterDesc->fillMode);
+        //    //rd.CullMode = CullModeToD3D11CullMode(rasterDesc->cullMode);
+        //    //rd.FrontCounterClockwise = rasterDesc->frontCounterClockwise;
+///
+        //    //DXCallHR(m_Device->CreateRasterizerState(&rd, &internalData->rasterizerState));
+        //}
         // TODO: depth stencil state
+        if (descriptor->dsState)
+        {
+            const auto* dsDesc = descriptor->dsState;
+            
+            MTLDepthStencilDescriptor* dsd = [[MTLDepthStencilDescriptor alloc] init];
+            dsd.depthWriteEnabled = dsDesc->depthWriteEnabled;
+            dsd.depthCompareFunction = MTLCompareFunctionLess;
+            
+            internalData->dsState = [m_Device newDepthStencilStateWithDescriptor:dsd];
+            [dsd release];
+            
+            //D3D11_DEPTH_STENCIL_DESC dsd = {};
+            //dsd.DepthEnable = dsDesc->depthEnabled;
+            //dsd.DepthWriteMask = dsDesc->depthWriteEnabled ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+            //dsd.DepthFunc = D3D11_COMPARISON_LESS;
+            
+            //DXCallHR(m_Device->CreateDepthStencilState(&dsd, &internalData->dsState));
+        }
         
-        m_CurrentPrimitiveType = PrimitiveTopologyToMTLType(descriptor->primitiveType); // TODO: should this be set on bind as well?
+        m_CurrentPrimitiveType = PrimitiveTopologyToMTLType(descriptor->primitiveType);
         
         NSError* error = nil;
         internalData->pipeline = [m_Device newRenderPipelineStateWithDescriptor:pd error:&error];
@@ -74,6 +95,21 @@ namespace Citrom::RenderAPI
         
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalCmd);
         GET_BUFFER_INTERNAL(PipelineStateMTL, ps, internalData);
+        
+        if (ps->descriptor.rasterizerState)
+        {
+            const RasterizerStateDesc* rasterDesc = ps->descriptor.rasterizerState;
+            
+            [internalCmd->commandEncoder setTriangleFillMode:FillModeToMTLTriangleFillMode(rasterDesc->fillMode)];
+            [internalCmd->commandEncoder setCullMode:CullModeToMTLCullMode(rasterDesc->cullMode)];
+            [internalCmd->commandEncoder setFrontFacingWinding:rasterDesc->frontCounterClockwise ? MTLWindingCounterClockwise : MTLWindingClockwise];
+        }
+        if (internalData->dsState && ps->descriptor.dsState && ps->descriptor.dsState->depthEnabled)
+        {
+            //[internalCmd->commandEncoder setDepthStencilState:internalData->dsState];
+        }
+        
+        m_CurrentPrimitiveType = PrimitiveTopologyToMTLType(ps->descriptor.primitiveType);
         
         [internalCmd->commandEncoder setRenderPipelineState:internalData->pipeline];
     }

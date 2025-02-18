@@ -491,10 +491,10 @@ namespace Citrom
 		ubd.usage = Usage::Dynamic;
 
 		UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
-		m_Device->RCBindUniformBuffer(&ub);
+        m_Device->RCBindUniformBuffer(&ub, ShaderType::Vertex, 0); //TODO: Temp Metal
 
 		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
-		//m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));
+		m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));
 		//cbt.transform = Math::Matrix4x4::Identity();
 		//m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));
 

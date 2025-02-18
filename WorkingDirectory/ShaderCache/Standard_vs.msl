@@ -25,7 +25,7 @@ struct Mtl_VertexOut
 };
 
 vertex Mtl_VertexOut xlatMtlMain(
-    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
+    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]], // ass workaround
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;

@@ -36,6 +36,8 @@ namespace Citrom::RenderAPI
             rpd.colorAttachments[0].clearColor = MTLClearColorMake(pass->descriptor.clearColor[0], pass->descriptor.clearColor[1], pass->descriptor.clearColor[2], pass->descriptor.clearColor[3]);
             rpd.colorAttachments[0].loadAction = MTLLoadActionClear; // Clear the texture
             rpd.colorAttachments[0].storeAction = MTLStoreActionStore; // Store the texture for display
+            
+            //rpd.depthAttachment.texture = m_DepthStencilTexture;
         }
         else
         {

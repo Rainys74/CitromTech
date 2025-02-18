@@ -190,6 +190,7 @@ namespace Citrom::RenderAPI
         
         CAMetalLayer* m_MTLLayer;
         id<CAMetalDrawable> m_Drawable;
+        id<MTLTexture> m_DepthStencilTexture;
         
         MTLPrimitiveType m_CurrentPrimitiveType = MTLPrimitiveTypeTriangle;
         id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis? as in the GPU copies your data?
