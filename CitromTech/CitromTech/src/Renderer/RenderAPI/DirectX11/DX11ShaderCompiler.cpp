@@ -42,9 +42,11 @@ namespace Citrom::ShaderCompiler::DX11
 
 					ShaderObj vertexShaderObject;
 					ShaderObj pixelShaderObject;
+					ShaderObj computeShaderObject;
 
 					vertexShaderObject.type = RenderAPI::ShaderType::Vertex;
 					pixelShaderObject.type = RenderAPI::ShaderType::Fragment;
+					computeShaderObject.type = RenderAPI::ShaderType::Compute;
 
 					HRESULT hr;
 
@@ -64,6 +66,13 @@ namespace Citrom::ShaderCompiler::DX11
 
 						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "main", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob));
 					}
+					else if (entry.path().stem().string().find("_cs") != std::string::npos)
+					{
+						computeShaderObject.name = entry.path().stem().string();
+						CT_CORE_TRACE("Found HLSL Compute Shader {}", computeShaderObject.name);
+
+						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "main", "cs_5_0", NULL, NULL, &computeShaderObject.shaderBlob, &errorBlob));
+					}
 					else
 					{
 						vertexShaderObject.name = pixelShaderObject.name = entry.path().stem().string();
@@ -82,6 +91,11 @@ namespace Citrom::ShaderCompiler::DX11
 					{
 						CT_CORE_INFO("Successfully Compiled DX11 Pixel Shader {}", pixelShaderObject.name);
 						shaderObjects.PushBack(pixelShaderObject);
+					}
+					if (computeShaderObject.shaderBlob)
+					{
+						CT_CORE_INFO("Successfully Compiled DX11 Compute Shader {}", computeShaderObject.name);
+						shaderObjects.PushBack(computeShaderObject);
 					}
 
 					/*ShaderObj vertexShaderObject;
@@ -115,7 +129,7 @@ namespace Citrom::ShaderCompiler::DX11
 		for (const ShaderObj& shaderObj : shaderObjects)
 		{	
 			std::string shaderTypePrefix(""); //("_xx");
-			if (shaderObj.name.find("_vs") == std::string::npos && shaderObj.name.find("_fs") == std::string::npos)
+			if (shaderObj.name.find("_vs") == std::string::npos && shaderObj.name.find("_fs") == std::string::npos && shaderObj.name.find("_cs") == std::string::npos)
 			{
 				switch (shaderObj.type)
 				{
@@ -124,6 +138,9 @@ namespace Citrom::ShaderCompiler::DX11
 						break;
 					case RenderAPI::ShaderType::Fragment:
 						shaderTypePrefix = "_fs";
+						break;
+					case RenderAPI::ShaderType::Compute:
+						shaderTypePrefix = "_cs";
 						break;
 					default: CT_CORE_ASSERT(false, "Invalid Shader Type!"); break;
 				}

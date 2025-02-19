@@ -1007,7 +1007,7 @@ bool ToGLSL::Translate()
 
     for (i = 0; i < psShader->asPhases[0].psInst.size(); ++i)
     {
-        TranslateInstruction(&psShader->asPhases[0].psInst[i]);
+        TranslateInstruction(&psShader->asPhases[0].psInst[i]); // CT: for some reason when i is 5 this causes an vector subscript out of range assertion for compute shaders..
     }
 
     psContext->indent--;

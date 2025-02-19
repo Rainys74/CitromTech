@@ -6,13 +6,15 @@
 
 namespace Citrom::RenderAPI
 {
+	// TODO: maybe i should just combine FBFormat and Format into one?
 	enum class FramebufferFormat : uint8fast
 	{
 		None,
 
 		RGBA8,
-		DEPTH24STENCIL8,
+		D16N, // U2F
 		D32F,
+		DEPTH24STENCIL8, // U2F/UINT
 
 		// defaults
 		Color = RGBA8,

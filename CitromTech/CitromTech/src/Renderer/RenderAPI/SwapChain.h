@@ -9,5 +9,6 @@ namespace Citrom::RenderAPI
 	{
 		Platform::Window* windowPtr;
 		Format renderFormat;
+		//FramebufferFormat depthStencilFormat; // None/D16/D32F/DEPTH24STENCIL8 (DEPTH24NSTENCIL8U)
 	};
 }

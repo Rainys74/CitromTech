@@ -37,7 +37,8 @@ namespace Citrom::RenderAPI
 	enum class ShaderType
 	{
 		Vertex,
-		Fragment // Pixel
+		Fragment, // Pixel
+		Compute // Kernel
 	};
 	enum class ShaderLanguage
 	{

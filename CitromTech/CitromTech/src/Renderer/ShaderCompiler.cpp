@@ -58,8 +58,134 @@ namespace Citrom
 					if (!entry.is_regular_file())
 						continue; // Skip non-file entries like directories
 
+					//CT_WARN("ENTRY:PATH:FILENAME: {}", entry.path().filename().string()); // TextureShaderCode.glsl
+					//CT_WARN("ENTRY:PATH:EXTENSION: {}", entry.path().extension().string()); // .glsl
+					//CT_WARN("ENTRY:PATH:STEM: {}", entry.path().stem().string()); // TextureShaderCode
+
 					// TODO: Refactor since this looks retarted
-					if (entry.path().extension() == ".glsl")
+					if (entry.path().extension() == ".glsl" && entry.path().stem().string().ends_with("_vs"))
+					{
+						arguments[1] = std::string("--vert=").append(entry.path().string());
+						arguments[2] = std::string("0");
+
+						// HLSL
+						arguments[3] = std::string("--output=").append(outPath).append(entry.path().stem().string()).append(".hlsl");
+						arguments[4] = std::string("--lang=").append("hlsl");
+
+						// Execute GLSLcc
+						CTL::DArray<const char*> argDArray(CT_ARRAY_LENGTH(arguments));
+						for (const std::string& arg : arguments)
+						{
+							argDArray.PushBack(arg.c_str());
+						}
+
+						// TODO: maybe use thread pool for this?
+						// HLSL
+						{
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+
+						// GLSL
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
+							arguments[4] = "--lang=" "glsl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
+
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+
+						// MSL (Metal)
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
+							arguments[4] = "--lang=" "msl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
+
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+					}
+					else if (entry.path().extension() == ".glsl" && entry.path().stem().string().ends_with("_fs"))
+					{
+						arguments[1] = std::string("0");
+						arguments[2] = std::string("--frag=").append(entry.path().string());
+
+						// HLSL
+						arguments[3] = std::string("--output=").append(outPath).append(entry.path().stem().string()).append(".hlsl");
+						arguments[4] = std::string("--lang=").append("hlsl");
+
+						// Execute GLSLcc
+						CTL::DArray<const char*> argDArray(CT_ARRAY_LENGTH(arguments));
+						for (const std::string& arg : arguments)
+						{
+							argDArray.PushBack(arg.c_str());
+						}
+
+						// TODO: maybe use thread pool for this?
+						// HLSL
+						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+
+						// GLSL
+						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
+						arguments[4] = "--lang=" "glsl";
+						argDArray[3] = arguments[3].c_str();
+						argDArray[4] = arguments[4].c_str();
+
+						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+
+						// MSL (Metal)
+						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
+						arguments[4] = "--lang=" "msl";
+						argDArray[3] = arguments[3].c_str();
+						argDArray[4] = arguments[4].c_str();
+
+						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+					}
+					else if (entry.path().extension() == ".glsl" 
+						&& entry.path().stem().string().ends_with("_cs"))
+						//&& entry.path().filename().string().find("_cs") != std::string::npos)
+					{
+						arguments[1] = std::string("--compute=").append(entry.path().string());
+						arguments[2] = std::string("0");
+
+						// HLSL
+						arguments[3] = std::string("--output=").append(outPath).append(entry.path().stem().string()).append(".hlsl");
+						arguments[4] = std::string("--lang=").append("hlsl");
+
+						// Execute GLSLcc
+						CTL::DArray<const char*> argDArray(CT_ARRAY_LENGTH(arguments));
+						for (const std::string& arg : arguments)
+						{
+							argDArray.PushBack(arg.c_str());
+						}
+
+						// TODO: maybe use thread pool for this?
+						// HLSL
+						{
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+
+						// GLSL
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
+							arguments[4] = "--lang=" "glsl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
+
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+
+						// MSL (Metal)
+						{
+							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
+							arguments[4] = "--lang=" "msl";
+							argDArray[3] = arguments[3].c_str();
+							argDArray[4] = arguments[4].c_str();
+
+							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
+						}
+					}
+					else if (entry.path().extension() == ".glsl")
 					{
 						//arguments[1] = std::string("--vert=").append(entry.path().string());
 						//arguments[2] = std::string("--frag=").append(entry.path().string());
@@ -105,88 +231,6 @@ namespace Citrom
 							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
 						}
 					}
-					else if (entry.path().extension() == ".vert")
-					{
-						arguments[1] = std::string("--vert=").append(entry.path().string());
-						arguments[2] = std::string("0");
-
-						// HLSL
-						arguments[3] = std::string("--output=").append(outPath).append(entry.path().stem().string()).append(".hlsl");
-						arguments[4] = std::string("--lang=").append("hlsl");
-
-						// Execute GLSLcc
-						CTL::DArray<const char*> argDArray(CT_ARRAY_LENGTH(arguments));
-						for (const std::string& arg : arguments)
-						{
-							argDArray.PushBack(arg.c_str());
-						}
-
-						// TODO: maybe use thread pool for this?
-						// HLSL
-						{
-							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-						}
-
-						// GLSL
-						{
-							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
-							arguments[4] = "--lang=" "glsl";
-							argDArray[3] = arguments[3].c_str();
-							argDArray[4] = arguments[4].c_str();
-
-							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-						}
-
-						// MSL (Metal)
-						{
-							arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
-							arguments[4] = "--lang=" "msl";
-							argDArray[3] = arguments[3].c_str();
-							argDArray[4] = arguments[4].c_str();
-
-							ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-						}
-					}
-					else if (entry.path().extension() == ".frag")
-					{
-						arguments[1] = std::string("0");
-						arguments[2] = std::string("--frag=").append(entry.path().string());
-
-						// HLSL
-						arguments[3] = std::string("--output=").append(outPath).append(entry.path().stem().string()).append(".hlsl");
-						arguments[4] = std::string("--lang=").append("hlsl");
-
-						// Execute GLSLcc
-						CTL::DArray<const char*> argDArray(CT_ARRAY_LENGTH(arguments));
-						for (const std::string& arg : arguments)
-						{
-							argDArray.PushBack(arg.c_str());
-						}
-
-						// TODO: maybe use thread pool for this?
-						// HLSL
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-
-						// GLSL
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".glsl";
-						arguments[4] = "--lang=" "glsl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
-
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-
-						// MSL (Metal)
-						arguments[3] = "--output=" + outPath + entry.path().stem().string() + ".msl";
-						arguments[4] = "--lang=" "msl";
-						argDArray[3] = arguments[3].c_str();
-						argDArray[4] = arguments[4].c_str();
-
-						ExecuteGLSLCC(CT_ARRAY_LENGTH(arguments), const_cast<char**>(argDArray.Data()));
-					}
-					else if (entry.path().extension() == ".comp")
-					{
-
-					}
 					else continue;
 
 					// glslcc execute
@@ -230,7 +274,7 @@ namespace Citrom
                         //    }
                         //} metalReflectionCallback;
 
-						// HLSL
+						// GLSL
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_GL_LAST, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &glResult);
 
 						// Metal
