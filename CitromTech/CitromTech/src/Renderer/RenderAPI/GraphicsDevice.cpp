@@ -184,4 +184,19 @@ namespace Citrom::RenderAPI
         }
         return stridePerVertex;
     }
+
+    Format Device::FBFormatToFormat(FramebufferFormat fbFormat)
+    {
+#define FORMAT_CASE(x, y) case (x): return (y); break;
+        switch (fbFormat)
+        {
+            default: return Format::Unknown; break;
+
+            FORMAT_CASE(FramebufferFormat::None, Format::Unknown);
+            FORMAT_CASE(FramebufferFormat::RGBA8, Format::R8G8B8A8_U2FNORM);
+            FORMAT_CASE(FramebufferFormat::D16N, Format::Unknown);
+            FORMAT_CASE(FramebufferFormat::D32F, Format::Unknown);
+            FORMAT_CASE(FramebufferFormat::DEPTH24STENCIL8, Format::Unknown);
+        }
+    }
 }

@@ -124,6 +124,7 @@ using uintptr = uintptr_t;
 
 #define BIT(x) (1 << x)
 #define HAS_FLAG(x, y) (static_cast<std::underlying_type_t<decltype(y)>>(x) & static_cast<std::underlying_type_t<decltype(y)>>(y)) //((x) & (y))
+#define COMBINE_FLAGS(x, y) (static_cast<std::underlying_type_t<decltype(y)>>(x) | static_cast<std::underlying_type_t<decltype(y)>>(y)) //((x) | (y))
 
 #define CITROM_UNUSED(x) (void)(x)
 #define CT_ARRAY_LENGTH(ARRAY) (sizeof(ARRAY) / sizeof(ARRAY[0]))

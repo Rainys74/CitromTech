@@ -92,7 +92,7 @@ namespace Citrom::RenderAPI
             vp.originY = 0; // yPos
             // TODO: requires command encoder/buffer, or move to ResizeViewport and make that require a CB
         }
-        void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) override{}
+        void RCSetViewport(const ViewportSpecification& viewport, CommandBuffer* cmd = nullptr) override {}
 
         // Buffer
         VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) override;

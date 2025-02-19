@@ -70,6 +70,15 @@ namespace Citrom::RenderAPI
 			}
 			return false;
 		}
+		FramebufferFormat GetDepthAttachmentFormat()
+		{
+			for (const auto& attachment : attachments)
+			{
+				if (attachment.type == FramebufferAttachmentType::DepthStencil)
+					return attachment.format;
+			}
+			return FramebufferFormat::None;
+		}
 
 		CTL::DArray<FramebufferAttachment> attachments;
 	};

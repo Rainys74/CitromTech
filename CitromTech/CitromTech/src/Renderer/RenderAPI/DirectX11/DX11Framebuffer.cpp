@@ -48,7 +48,7 @@ namespace Citrom::RenderAPI
 			textureDesc.Height = texHeight;
 			textureDesc.MipLevels = 1; // Usually 1 for render targets
 			textureDesc.ArraySize = 1; // Single texture
-			textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; // DXGI_FORMAT_R8G8B8A8_UNORM DXGI_FORMAT_R32G32B32A32_FLOAT // Use your desired DXGI_FORMAT
+			textureDesc.Format = FBFormatToDXGIFormat(attachments[i].format); // DXGI_FORMAT_R8G8B8A8_UNORM DXGI_FORMAT_R32G32B32A32_FLOAT // Use your desired DXGI_FORMAT
 			textureDesc.SampleDesc.Count = descriptor->samples; // Multisampling count
 			textureDesc.SampleDesc.Quality = 0; // Multisampling quality
 			textureDesc.Usage = D3D11_USAGE_DEFAULT; // Default usage
@@ -82,7 +82,7 @@ namespace Citrom::RenderAPI
 			td.Height = texHeight;
 			td.MipLevels = 1;
 			td.ArraySize = 1;
-			td.Format = DXGI_FORMAT_D32_FLOAT;
+			td.Format = FBFormatToDXGIFormat(descriptor->attachments->GetDepthAttachmentFormat());
 			td.SampleDesc.Count = 1;
 			td.SampleDesc.Quality = 0;
 			td.Usage = D3D11_USAGE_DEFAULT;
@@ -91,7 +91,7 @@ namespace Citrom::RenderAPI
 
 			// Create DS View
 			D3D11_DEPTH_STENCIL_VIEW_DESC dsvd = {};
-			dsvd.Format = DXGI_FORMAT_D32_FLOAT; // or use DXGI_FORMAT_UNKNOWN to use the texture's
+			dsvd.Format = FBFormatToDXGIFormat(descriptor->attachments->GetDepthAttachmentFormat()); // or use DXGI_FORMAT_UNKNOWN to use the texture's
 			dsvd.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 			dsvd.Texture2D.MipSlice = 0;
 
@@ -118,10 +118,6 @@ namespace Citrom::RenderAPI
 
 			ID3D11RenderTargetView* renderTargets[2] = { internalData->renderTargets[colorIndex].Get(), m_RenderTarget};
 			DXCall(m_DeviceContext->OMSetRenderTargets(1, renderTargets, internalData->depthStencilView.Get()));
-
-			if (internalData->hasDepthStencil) {
-				DXCall(m_DeviceContext->ClearDepthStencilView(internalData->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
-			}
 		}
 	}
 	void* DX11Device::GetFramebufferColorAttachment(Framebuffer* fb, uint32 index)
@@ -162,6 +158,10 @@ namespace Citrom::RenderAPI
 			for (uint32 i = 0; i < internalFB->renderTargets.Count(); i++) 
 			{
 				DXCall(m_DeviceContext->ClearRenderTargetView(internalFB->renderTargets[i].Get(), &desc->clearColor[0]));
+			}
+			if (internalFB->hasDepthStencil)
+			{
+				DXCall(m_DeviceContext->ClearDepthStencilView(internalFB->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
 			}
 		}
 	}

@@ -20,6 +20,6 @@ namespace Citrom::RenderAPI
 		ShaderDesc descriptor;
 		CTL::Ref<void> internal;
 	};
-
-	// Compute Shader
+	using ComputeShader = Shader;
+	using ComputeShaderDesc = ShaderDesc;
 }

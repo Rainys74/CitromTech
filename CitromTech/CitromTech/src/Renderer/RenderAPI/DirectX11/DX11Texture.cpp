@@ -10,9 +10,18 @@ namespace Citrom::RenderAPI
 	{
 		WRL::ComPtr<ID3D11Texture2D> texture;
 		WRL::ComPtr<ID3D11ShaderResourceView> textureView;
+		WRL::ComPtr<ID3D11UnorderedAccessView> textureUAV;
 
 		WRL::ComPtr<ID3D11SamplerState> sampler;
 	};
+
+// Binds a specific flag you specify (FLAGTOBIND) if a flag you specify (FLAGTOCHECK) exists in the list of flags you specify (FLAGS)
+#define BIND_BASED_ON_FLAG(FLAGS, FLAGTOCHECK, FLAGTOBIND) ((bool)HAS_FLAG((FLAGS), (FLAGTOCHECK)) ? (FLAGTOBIND) : 0)
+
+	static FORCE_INLINE UINT BindTextureFlagsBasedOnFlag(TextureFlags flags, const TextureFlags flagToCheck, D3D11_BIND_FLAG flagToBind)
+	{
+		//return (UINT)BIND_BASED_ON_FLAG(flags, flagToCheck, flagToBind);
+	}
 
 	Texture2D DX11Device::CreateTexture2D(Texture2DDesc* descriptor)
 	{
@@ -27,7 +36,17 @@ namespace Citrom::RenderAPI
 		td.SampleDesc.Count = 1;
 		td.SampleDesc.Quality = 0;
 		td.Usage = UsageToD3D11Usage(descriptor->usage);
-		td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+		//td.BindFlags =		HAS_FLAG(descriptor->flags, TextureFlags::ShaderReadAccess) ? D3D11_BIND_SHADER_RESOURCE : 0
+		//				|	HAS_FLAG(descriptor->flags, TextureFlags::ShaderWriteAccess) ? D3D11_BIND_UNORDERED_ACCESS : 0;
+		//td.BindFlags =		BIND_BASED_ON_FLAG(descriptor->flags, TextureFlags::ShaderReadAccess, D3D11_BIND_SHADER_RESOURCE) |
+		//					BIND_BASED_ON_FLAG(descriptor->flags, TextureFlags::ShaderWriteAccess, D3D11_BIND_UNORDERED_ACCESS);
+		//td.BindFlags = BIND_BASED_ON_FLAG(descriptor->flags, TextureFlags::ShaderReadAccess, D3D11_BIND_SHADER_RESOURCE);
+		//td.BindFlags = COMBINE_FLAGS(td.BindFlags, BIND_BASED_ON_FLAG(descriptor->flags, TextureFlags::ShaderWriteAccess, D3D11_BIND_UNORDERED_ACCESS));
+		//td.BindFlags =		BindTextureFlagsBasedOnFlag(descriptor->flags, TextureFlags::ShaderReadAccess, D3D11_BIND_SHADER_RESOURCE) |
+		//					BindTextureFlagsBasedOnFlag(descriptor->flags, TextureFlags::ShaderWriteAccess, D3D11_BIND_UNORDERED_ACCESS);
+		if (HAS_FLAG(descriptor->flags, TextureFlags::ShaderReadAccess))	td.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
+		if (HAS_FLAG(descriptor->flags, TextureFlags::ShaderWriteAccess))	td.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
+
 		td.CPUAccessFlags = 0;
 		if (td.Usage == D3D11_USAGE_DYNAMIC)
 			td.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
@@ -53,31 +72,37 @@ namespace Citrom::RenderAPI
 		DXCall(m_DeviceContext->UpdateSubresource(internalData->texture.Get(), 0, nullptr, tsd.pSysMem, tsd.SysMemPitch, 0));
 
 		// Create Texture View
-		D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
-		srvd.Format = td.Format;
-
-		// Also TODO: implement cube-maps, they're probably gonna be useful.
-		// TODO: replace these 2 zeros with Multi-samples count or something like that
-		if (descriptor->arraySize > 1)
 		{
-			srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY : D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+			D3D11_SHADER_RESOURCE_VIEW_DESC srvd = {};
+			srvd.Format = td.Format;
 
-			srvd.Texture2DArray.ArraySize = descriptor->arraySize;
-			srvd.Texture2DArray.MostDetailedMip = 0;
-			srvd.Texture2DArray.MipLevels = descriptor->mipLevels;
-			srvd.Texture2DArray.FirstArraySlice = 0;
+			// Also TODO: implement cube-maps, they're probably gonna be useful.
+			// TODO: replace these 2 zeros with Multi-samples count or something like that
+			if (descriptor->arraySize > 1)
+			{
+				srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMSARRAY : D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+
+				srvd.Texture2DArray.ArraySize = descriptor->arraySize;
+				srvd.Texture2DArray.MostDetailedMip = 0;
+				srvd.Texture2DArray.MipLevels = descriptor->mipLevels;
+				srvd.Texture2DArray.FirstArraySlice = 0;
+			}
+			else
+			{
+				srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
+
+				srvd.Texture2D.MostDetailedMip = 0;
+				srvd.Texture2D.MipLevels = (descriptor->mipLevels == MIP_LEVELS_MAX) ? -1 : descriptor->mipLevels; // descriptor->mipLevels - 1
+			}
+
+			DXCallHR(m_Device->CreateShaderResourceView(internalData->texture.Get(), &srvd, &internalData->textureView));
+			if (descriptor->mipLevels != MIP_LEVELS_NONE) {
+				DXCall(m_DeviceContext->GenerateMips(internalData->textureView.Get())); // 0 or -1?? will generate log2(std::max(pTexture->desc.Width, pTexture->desc.Height)) + 1
+			}
 		}
-		else
+		// Create UAV
 		{
-			srvd.ViewDimension = (0 > 1) ? D3D11_SRV_DIMENSION_TEXTURE2DMS : D3D11_SRV_DIMENSION_TEXTURE2D;
-
-			srvd.Texture2D.MostDetailedMip = 0;
-			srvd.Texture2D.MipLevels = (descriptor->mipLevels == MIP_LEVELS_MAX) ? -1 : descriptor->mipLevels; // descriptor->mipLevels - 1
-		}
-
-		DXCallHR(m_Device->CreateShaderResourceView(internalData->texture.Get(), &srvd, &internalData->textureView));
-		if (descriptor->mipLevels != MIP_LEVELS_NONE) {
-			DXCall(m_DeviceContext->GenerateMips(internalData->textureView.Get())); // 0 or -1?? will generate log2(std::max(pTexture->desc.Width, pTexture->desc.Height)) + 1
+			
 		}
 
 		// Sampler
@@ -86,12 +111,11 @@ namespace Citrom::RenderAPI
 		sd.AddressU = TextureAddressModeToD3D11(descriptor->sampler.addressU);
 		sd.AddressV = TextureAddressModeToD3D11(descriptor->sampler.addressV);
 		sd.AddressW = TextureAddressModeToD3D11(descriptor->sampler.addressW);
-		sd.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY; // TODO: also expose this
+		sd.MaxAnisotropy = (descriptor->sampler.maxAnisotropy == MAX_ANISOTROPY) ? D3D11_REQ_MAXANISOTROPY : descriptor->sampler.maxAnisotropy;
 
-		// TODO: probably expose this
-		sd.MipLODBias = 0.0f;
-		sd.MinLOD = 0.0f;
-		sd.MaxLOD = D3D11_FLOAT32_MAX;
+		sd.MipLODBias = 0.0f; // this is not required
+		sd.MinLOD = descriptor->sampler.minLODClamp;
+		sd.MaxLOD = descriptor->sampler.maxLODClamp;
 
 		DXCallHR(m_Device->CreateSamplerState(&sd, &internalData->sampler));
 

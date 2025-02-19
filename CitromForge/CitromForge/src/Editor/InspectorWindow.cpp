@@ -176,6 +176,11 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::ColorEdit4("Clear Color", &cameraComponent.camera.clearColor[0]);
 
             ImToolkit::DrawVector2Control("Viewport Size", &cameraComponent.camera.viewportSize[0], 0.01f);
+            if (cameraComponent.camera.viewportSize.x < 0.0f) 
+                cameraComponent.camera.viewportSize.x = 0.0f;
+            if (cameraComponent.camera.viewportSize.y < 0.0f)
+                cameraComponent.camera.viewportSize.y = 0.0f;
+
             ImToolkit::DrawVector2Control("Viewport Offset", &cameraComponent.camera.viewportOffset[0], 0.01f);
 
             // TODO: temporary test!

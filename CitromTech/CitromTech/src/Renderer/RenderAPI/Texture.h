@@ -18,12 +18,15 @@ namespace Citrom::RenderAPI
 	{
 		Point,
 		Linear,
+		Anisotropic,
 
 		// Defaults
 		Nearest = Point,
 		NearestNeighbor = Point,
 		NearestNeighbour = Point
 	};
+
+#define MAX_ANISOTROPY (16)
 
 	struct SamplerDesc
 	{
@@ -42,6 +45,24 @@ namespace Citrom::RenderAPI
 				TextureAddressMode addressR;
 			};
 		};
+
+		float32 minLODClamp = 0.0f;
+		float32 maxLODClamp = FLT_MAX;
+
+		uint8 maxAnisotropy = MAX_ANISOTROPY;
+	};
+	enum class TextureFlags
+	{
+		None = 0,
+
+		ShaderReadAccess = BIT(0),
+		ShaderWriteAccess = BIT(1),
+
+		ShaderReadWriteAccess = ShaderReadAccess | ShaderWriteAccess,
+
+		// ResourceMiscBufferStructured
+
+		All = ShaderReadWriteAccess
 	};
 
 #define MIP_LEVELS_NONE (1)
@@ -54,6 +75,7 @@ namespace Citrom::RenderAPI
 
 		Usage usage;
 		Format format = Format::R8G8B8A8_U2FNORM;
+		TextureFlags flags = TextureFlags::ShaderReadAccess;
 
 		uint32 arraySize = 1; // if it weren't for backwards-compatibility, this should be named as arrayCount or arrayLength.
 		uint32 mipLevels = MIP_LEVELS_NONE;

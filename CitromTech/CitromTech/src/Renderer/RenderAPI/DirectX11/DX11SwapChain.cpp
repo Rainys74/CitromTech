@@ -142,15 +142,17 @@ namespace Citrom::RenderAPI
 		vp.TopLeftY = 0; // yPos
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
-	void DX11Device::ResizeViewport(float32 width, float32 height, float32 xPos, float32 yPos)
+	void DX11Device::RCSetViewport(const ViewportSpecification& viewport, CommandBuffer* cmd)
 	{
 		D3D11_VIEWPORT vp;
-		vp.Width = width * (float32)m_Width;
-		vp.Height = height * (float32)m_Height;
-		vp.MinDepth = 0;
-		vp.MaxDepth = 1;
-		vp.TopLeftX = xPos * (float32)m_Width; // TODO: i think OpenGL uses this inverted
-		vp.TopLeftY = yPos * (float32)m_Height;
+		vp.Width = viewport.width * (float32)m_Width;
+		vp.Height = viewport.height * (float32)m_Height;
+		vp.MinDepth = viewport.zNear;
+		vp.MaxDepth = viewport.zFar;
+		vp.TopLeftX = viewport.xPos * (float32)m_Width;
+		//vp.TopLeftY = viewport.yPos * (float32)m_Height;
+		//vp.TopLeftY = (float32)m_Height - (viewport.yPos * (float32)m_Height); // pretty sure can be represented as (1.0f - viewport.yPos) * m_Height
+		vp.TopLeftY = -viewport.yPos * (float32)m_Height; // just as simple as that...
 		DXCall(m_DeviceContext->RSSetViewports(1, &vp));
 	}
 }

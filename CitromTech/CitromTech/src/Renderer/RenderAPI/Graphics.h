@@ -97,4 +97,21 @@ namespace Citrom::RenderAPI
 		};
 		CTL::DArray<Pixel> pixels;
 	};
+
+	// width and height is a multiplier of the screen size, so is position
+	struct ViewportSpecification
+	{
+		ViewportSpecification() = default;
+		ViewportSpecification(float32 _width, float32 _height, float32 _xPos = 0.0f, float32 _yPos = 0.0f, float32 _zNear = 0.0f, float32 _zFar = 1.0f)
+			: width(_width), height(_height), xPos(_xPos), yPos(_yPos), zNear(_zNear), zFar(_zFar) {}
+
+		float32 width = 1.0f;
+		float32 height = 1.0f;
+
+		float32 xPos = 0.0f; // position starts from bottom left
+		float32 yPos = 0.0f;
+
+		float32 zNear = 0.0f;
+		float32 zFar = 1.0f;
+	};
 }

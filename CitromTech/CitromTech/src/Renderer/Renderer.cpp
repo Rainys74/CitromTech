@@ -299,6 +299,7 @@ namespace Citrom
         RenderPass pass = m_Device->CreateRenderPass(&rpd);
 
         m_Device->RCBeginRenderPass(&pass);
+		m_Device->RCSetViewport(ViewportSpecification(camera->viewportSize.x, camera->viewportSize.y, camera->viewportOffset.x, camera->viewportOffset.y));
         
 		g_EditorRenderer.Render(camera, cameraTransform);
         //m_Device->RCEndRenderPass(); // End render pass before returning!

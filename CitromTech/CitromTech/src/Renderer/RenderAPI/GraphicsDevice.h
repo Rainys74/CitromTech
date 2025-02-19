@@ -92,7 +92,7 @@ namespace Citrom::RenderAPI
 		virtual VSyncMode GetVSync() = 0;
 
 		virtual void Resize(uint32 width, uint32 height) = 0;
-		virtual void ResizeViewport(float32 width, float32 height, float32 xPos = 0.0f, float32 yPos = 0.0f) = 0; // width and height is a multiplier of the screen size, so is position
+		virtual void RCSetViewport(const ViewportSpecification& viewport, CommandBuffer* cmd = nullptr) = 0;
 
 		// Vertex Buffer
 		virtual VertexBuffer CreateVertexBuffer(VertexBufferDesc* descriptor) = 0;
@@ -106,6 +106,8 @@ namespace Citrom::RenderAPI
 
 		// Shader
 		virtual Shader CreateShader(ShaderDesc* descriptor) = 0;
+		virtual ComputeShader CreateComputeShader(ShaderDesc* descriptor) { return ComputeShader(); }
+		virtual void RCDispatchCompute(uint32 workGroupsX, uint32 workGroupsY, uint32 workGroupsZ = 1, CommandBuffer* cmd = nullptr) {}
 		//virtual void BindShader(Shader* shader) = 0; // TODO: comment out and move to private helper function in dx11
 
 		virtual UniformBuffer CreateUniformBuffer(UniformBufferDesc* descriptor) = 0;
@@ -157,6 +159,8 @@ namespace Citrom::RenderAPI
 		size_t GetFormatSize(Format format);
 		size_t GetFBFormatSize(FramebufferFormat format);
 		size_t GetLayoutStride(const VertexBufferLayoutDesc* vbLayoutSpec);
+
+		Format FBFormatToFormat(FramebufferFormat fbFormat);
 	protected:
 		uint32 m_Width, m_Height;
 	};

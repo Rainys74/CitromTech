@@ -70,6 +70,8 @@ namespace Citrom::RenderAPI
 		CullMode cullMode = CullMode::Back;
 
 		bool frontCounterClockwise = false;
+
+		//bool conservativeRasterization = false; // unsupported for DirectX 11.0
 	};
 
 	enum class DepthStencilComparisonFunc
