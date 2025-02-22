@@ -419,9 +419,9 @@ int SharedMain(int argc, char* argv[])
 
 	using namespace Platform;
 
-	g_Window.Create(1280, 720, CTL::String("test"));
+	g_Window.Create(1280, 720, CTL::String("test")); // TODO: probably create an ApplicationInfo Specification for all these things
 
-	// TODO: temporary
+	// TODO: temporary, should be in render thread.
 	Renderer::Initialize(&g_Window);
 
 	IF_EDITOR(g_ImLayer.OnAttach());

@@ -2,6 +2,24 @@
 
 namespace Citrom::RenderAPI
 {
+    void MetalDevice::RCSetViewport(const ViewportSpecification& viewport, CommandBuffer* cmd)
+    {
+        if (cmd == nullptr)
+            cmd = &s_RenderCommandBuffer;
+        
+        GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalCmd);
+        
+        // Configure viewport
+        MTLViewport vp;
+        vp.width = viewport.width * (float64)m_Width;
+        vp.height = viewport.height * (float64)m_Height; // TODO: goes from top to bottom but i believe it should be the opposite..
+        vp.znear = viewport.zNear;
+        vp.zfar = viewport.zFar;
+        vp.originX = viewport.xPos * (float64)m_Width; // xPos
+        vp.originY = -viewport.yPos * (float64)m_Height; // yPos
+        
+        [internalCmd->commandEncoder setViewport:vp];
+    }
 
     MTLPixelFormat MetalDevice::FormatToMTLPixelFormat(Format format)
     {

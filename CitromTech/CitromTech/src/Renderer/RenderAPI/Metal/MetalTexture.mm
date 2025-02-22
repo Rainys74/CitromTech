@@ -21,12 +21,18 @@ namespace Citrom::RenderAPI
         MTLTextureDescriptor* td = [MTLTextureDescriptor new];
         td.width = descriptor->width;
         td.height = descriptor->height;
-        td.mipmapLevelCount = 1; // TODO: hard-code for now.
+        td.mipmapLevelCount = (descriptor->mipLevels == MIP_LEVELS_MAX) ? CalculateMipLevels(descriptor->width, descriptor->height) : descriptor->mipLevels;
         td.arrayLength = descriptor->arraySize;
         td.pixelFormat = FormatToMTLPixelFormat(descriptor->format);
         td.sampleCount = 1;
-        td.usage = MTLTextureUsageShaderRead; // TODO: probably expose this
+        td.usage = 0;
         td.storageMode = MTLStorageModeShared; // to stop the metal debugger from bitching
+        
+        if (HAS_FLAG(descriptor->flags, TextureFlags::ShaderReadAccess))    td.usage |= MTLTextureUsageShaderRead;
+        if (HAS_FLAG(descriptor->flags, TextureFlags::ShaderWriteAccess))   td.usage |= MTLTextureUsageShaderWrite;
+        
+        if (descriptor->mipLevels != MIP_LEVELS_NONE)
+            td.usage |= MTLTextureUsageRenderTarget;
         
         if (descriptor->arraySize > 1)
             td.textureType = (0 > 1) ? MTLTextureType2DMultisampleArray : MTLTextureType2DArray; // TODO: replace 0 with samples
@@ -52,17 +58,29 @@ namespace Citrom::RenderAPI
         
         [td release];
         
+        // Mip-Maps
+        if (descriptor->mipLevels != MIP_LEVELS_NONE)
+        {
+            id<MTLCommandBuffer> commandBuffer = [m_CommandQueue commandBuffer]; // don't know if it's a good idea creating another command buffer here.
+            
+            id<MTLBlitCommandEncoder> encoder = [commandBuffer blitCommandEncoder];
+            [encoder generateMipmapsForTexture: internalData->texture];
+            [encoder endEncoding];
+            
+            [commandBuffer commit];
+        }
+            
         // Sampler
         MTLSamplerDescriptor* sd = [[MTLSamplerDescriptor alloc] init];
         sd.minFilter = MTLSamplerMinMagFilterLinear;
-        sd.magFilter = MTLSamplerMinMagFilterLinear;
-        sd.mipFilter = MTLSamplerMipFilterLinear;
+        sd.magFilter = MTLSamplerMinMagFilterLinear; // Bilinear filtering?
+        sd.mipFilter = MTLSamplerMipFilterLinear; // Trilinear filtering? (required for mip-maps?)
         sd.sAddressMode = MTLSamplerAddressModeRepeat; // U
         sd.tAddressMode = MTLSamplerAddressModeRepeat; // V
         sd.rAddressMode = MTLSamplerAddressModeRepeat; // W
-        //sd.maxAnisotropy = descriptor->sampler.maxAnisotropy;
-        //sd.lodMinClamp = descriptor->sampler.minLODClamp;
-        //sd.lodMaxClamp = descriptor->sampler.maxLODClamp;
+        sd.maxAnisotropy = (descriptor->sampler.maxAnisotropy == MAX_ANISOTROPY) ? 16 : descriptor->sampler.maxAnisotropy;
+        sd.lodMinClamp = descriptor->sampler.minLODClamp;
+        sd.lodMaxClamp = descriptor->sampler.maxLODClamp;
         
         internalData->sampler = [m_Device newSamplerStateWithDescriptor:sd];
         
@@ -77,6 +95,16 @@ namespace Citrom::RenderAPI
         
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalCmd);
         GET_BUFFER_INTERNAL(Texture2DMTL, tex2D, internalData);
+        
+        // Mip-Maps
+        //if (!internalData->mipMapsGenerated && tex2D->descriptor.mipLevels != MIP_LEVELS_NONE)
+        //{
+        //    id<MTLBlitCommandEncoder> encoder = [internalCmd->commandBuffer blitCommandEncoder];
+        //    [encoder generateMipmapsForTexture: internalData->texture];
+        //    [encoder endEncoding];
+        //
+        //    internalData->mipMapsGenerated = true;
+        //}
         
         // TODO: this shit
         if (tex2D->descriptor.arraySize > 1)
