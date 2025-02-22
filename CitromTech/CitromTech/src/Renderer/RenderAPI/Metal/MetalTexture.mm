@@ -21,7 +21,7 @@ namespace Citrom::RenderAPI
         MTLTextureDescriptor* td = [MTLTextureDescriptor new];
         td.width = descriptor->width;
         td.height = descriptor->height;
-        td.mipmapLevelCount = descriptor->mipLevels;
+        td.mipmapLevelCount = 1; // TODO: hard-code for now.
         td.arrayLength = descriptor->arraySize;
         td.pixelFormat = FormatToMTLPixelFormat(descriptor->format);
         td.sampleCount = 1;
@@ -29,9 +29,9 @@ namespace Citrom::RenderAPI
         td.storageMode = MTLStorageModeShared; // to stop the metal debugger from bitching
         
         if (descriptor->arraySize > 1)
-            td.textureType = (descriptor->mipLevels > 1) ? MTLTextureType2DMultisampleArray : MTLTextureType2DArray;
+            td.textureType = (0 > 1) ? MTLTextureType2DMultisampleArray : MTLTextureType2DArray; // TODO: replace 0 with samples
         else
-            td.textureType = (descriptor->mipLevels > 1) ? MTLTextureType2DMultisample : MTLTextureType2D;
+            td.textureType = (0 > 1) ? MTLTextureType2DMultisample : MTLTextureType2D;
         
         //td.MipLevels = descriptor->mipLevels;
         //td.ArraySize = descriptor->arraySize;
@@ -60,6 +60,9 @@ namespace Citrom::RenderAPI
         sd.sAddressMode = MTLSamplerAddressModeRepeat; // U
         sd.tAddressMode = MTLSamplerAddressModeRepeat; // V
         sd.rAddressMode = MTLSamplerAddressModeRepeat; // W
+        //sd.maxAnisotropy = descriptor->sampler.maxAnisotropy;
+        //sd.lodMinClamp = descriptor->sampler.minLODClamp;
+        //sd.lodMaxClamp = descriptor->sampler.maxLODClamp;
         
         internalData->sampler = [m_Device newSamplerStateWithDescriptor:sd];
         

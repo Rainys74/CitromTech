@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Math/MathCommon.h"
 
 #include "CTL/RefPointer.h"
 
@@ -47,7 +48,7 @@ namespace Citrom::RenderAPI
 		};
 
 		float32 minLODClamp = 0.0f;
-		float32 maxLODClamp = FLT_MAX;
+		float32 maxLODClamp = FLOAT32_MAX;
 
 		uint8 maxAnisotropy = MAX_ANISOTROPY;
 	};

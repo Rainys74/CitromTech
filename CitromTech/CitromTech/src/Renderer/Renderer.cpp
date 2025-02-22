@@ -127,7 +127,7 @@ namespace Citrom
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		g_EditorRenderer.Initialize();
 	}

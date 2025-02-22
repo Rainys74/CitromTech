@@ -29,6 +29,12 @@ namespace Citrom::Math
 	#define RADIANS_TO_DEGREES(RADIANS, SUFFIX) ((RADIANS) * (180.0 ## SUFFIX / PI_MACRO(SUFFIX)))
 	#define DEGREES_TO_RADIANS(DEGREES, SUFFIX) ((DEGREES) * (PI_MACRO(SUFFIX) / 180.0 ## SUFFIX))
 
+    #include "float.h"
+
+    #define FLOAT32_MAX (FLT_MAX)
+    #define FLOAT64_MAX (DBL_MAX)
+    #define FLOATL_MAX  (LDBL_MAX)
+
 	// TODO: MaxUInt8 vs UInt16Max
 	constexpr uint8	 UInt8Max () { return 0xFF; }
 	constexpr uint16 UInt16Max() { return 0xFFFF; }
@@ -52,6 +58,8 @@ namespace Citrom::Math
 
 	constexpr float32 UInt8ToFloatNormalized(uint8 value) { return value / (float32)UInt8Max(); }
 	constexpr uint8 FloatToUInt8Normalized(float32 value) { return (uint8)value * UInt8Max(); }
+
+    constexpr float32 Float32Max() { return FLOAT32_MAX; }
 
 	float32 SquareRoot(const float32 number);
 	float64 SquareRoot(const float64 number);

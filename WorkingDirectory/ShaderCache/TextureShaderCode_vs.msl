@@ -1,46 +1,30 @@
 #include <metal_stdlib>
-#include <metal_texture>
+#include <simd/simd.h>
+
 using namespace metal;
 
-#if !(__HAVE_FMA__)
-#define fma(a,b,c) ((a) * (b) + (c))
-#endif
-
-struct matrices_Type
+struct matrices
 {
-    float4x4 _19_u_MVP;
+    float4x4 u_MVP;
 };
 
-struct Mtl_VertexIn
+struct main0_out
 {
-    float4 POSITION0 [[ attribute(0) ]] ;
-    float2 NORMAL0 [[ attribute(1) ]] ;
+    float2 v_TexCoord [[user(locn1)]];
+    float4 gl_Position [[position]];
 };
 
-struct Mtl_VertexOut
+struct main0_in
 {
-    float2 TEXCOORD1 [[ user(TEXCOORD1) ]];
-    float4 mtl_Position [[ position ]];
+    float4 position [[attribute(0)]];
+    float2 texCoord [[attribute(1)]];
 };
 
-vertex Mtl_VertexOut xlatMtlMain(
-    constant matrices_Type& matrices [[ buffer(0) ]],
-    Mtl_VertexIn input [[ stage_in ]])
+vertex main0_out main0(main0_in in [[stage_in]], constant matrices& _19 [[buffer(0)]])
 {
-    Mtl_VertexOut output;
-    //--- Start Early Main ---
-    float4 u_xlat0;
-    //--- End Early Main ---
-    //MOV
-    output.TEXCOORD1.xy = input.NORMAL0.xy;
-    //MUL
-    u_xlat0 = input.POSITION0.yyyy * matrices._19_u_MVP[1];
-    //MAD
-    u_xlat0 = fma(input.POSITION0.xxxx, matrices._19_u_MVP[0], u_xlat0);
-    //MAD
-    u_xlat0 = fma(input.POSITION0.zzzz, matrices._19_u_MVP[2], u_xlat0);
-    //MAD
-    output.mtl_Position = fma(input.POSITION0.wwww, matrices._19_u_MVP[3], u_xlat0);
-    //RET
-    return output;
+    main0_out out = {};
+    out.gl_Position = _19.u_MVP * in.position;
+    out.v_TexCoord = in.texCoord;
+    return out;
 }
+
