@@ -97,7 +97,7 @@ namespace Citrom::RenderAPI
 
 			DXCallHR(m_Device->CreateShaderResourceView(internalData->texture.Get(), &srvd, &internalData->textureView));
 			if (descriptor->mipLevels != MIP_LEVELS_NONE) {
-				DXCall(m_DeviceContext->GenerateMips(internalData->textureView.Get())); // 0 or -1?? will generate log2(std::max(pTexture->desc.Width, pTexture->desc.Height)) + 1
+				DXCall(m_DeviceContext->GenerateMips(internalData->textureView.Get())); // 0 or -1?? will generate log2(max(pTexture->desc.Width, pTexture->desc.Height)) + 1
 			}
 		}
 		// Create UAV

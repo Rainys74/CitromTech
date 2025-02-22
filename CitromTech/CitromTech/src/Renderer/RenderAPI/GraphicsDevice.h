@@ -162,10 +162,7 @@ namespace Citrom::RenderAPI
 
 		Format FBFormatToFormat(FramebufferFormat fbFormat);
         
-        uint32 CalculateMipLevels(uint32 width, uint32 height)
-        {
-            return (uint32)log2(std::max(width, height)) + 1;
-        }
+		uint32 CalculateMipLevels(uint32 width, uint32 height);
 	protected:
 		uint32 m_Width, m_Height;
 	};

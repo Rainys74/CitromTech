@@ -12,6 +12,9 @@
 
 #include "OpenGL/GLDevice.h"
 
+#include <cmath> // log2
+#include <algorithm> // std::max
+
 namespace Citrom::RenderAPI
 {
     static constexpr const char* GraphicsAPIToString(GraphicsAPI api)
@@ -198,5 +201,10 @@ namespace Citrom::RenderAPI
             FORMAT_CASE(FramebufferFormat::D32F, Format::Unknown);
             FORMAT_CASE(FramebufferFormat::DEPTH24STENCIL8, Format::Unknown);
         }
+    }
+
+    uint32 Device::CalculateMipLevels(uint32 width, uint32 height)
+    {
+        return (uint32)log2(std::max(width, height)) + 1;
     }
 }

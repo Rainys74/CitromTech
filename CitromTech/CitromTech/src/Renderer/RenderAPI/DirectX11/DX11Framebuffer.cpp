@@ -150,18 +150,22 @@ namespace Citrom::RenderAPI
 		
 		if (desc->targetFramebuffer == nullptr)
 		{
-			RCClearColor(desc->clearColor[0], desc->clearColor[1], desc->clearColor[2], desc->clearColor[3]);
+			if (desc->loadOp == RenderPassLoadOp::Clear) // !Load (keeps the same screen: don't clear), !DontCare (does what is best for performance: in this case, don't clear.)
+				RCClearColor(desc->clearColor[0], desc->clearColor[1], desc->clearColor[2], desc->clearColor[3]);
 		}
 		else
 		{
 			GET_BUFFER_INTERNAL(FramebufferDX11, pass->descriptor.targetFramebuffer, internalFB);
-			for (uint32 i = 0; i < internalFB->renderTargets.Count(); i++) 
+			if (desc->loadOp == RenderPassLoadOp::Clear) // !Load, !NotNeeded
 			{
-				DXCall(m_DeviceContext->ClearRenderTargetView(internalFB->renderTargets[i].Get(), &desc->clearColor[0]));
-			}
-			if (internalFB->hasDepthStencil)
-			{
-				DXCall(m_DeviceContext->ClearDepthStencilView(internalFB->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
+				for (uint32 i = 0; i < internalFB->renderTargets.Count(); i++)
+				{
+					DXCall(m_DeviceContext->ClearRenderTargetView(internalFB->renderTargets[i].Get(), &desc->clearColor[0]));
+				}
+				if (internalFB->hasDepthStencil)
+				{
+					DXCall(m_DeviceContext->ClearDepthStencilView(internalFB->depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0));
+				}
 			}
 		}
 	}

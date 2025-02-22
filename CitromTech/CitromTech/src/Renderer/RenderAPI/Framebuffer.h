@@ -97,6 +97,14 @@ namespace Citrom::RenderAPI
 		CTL::Ref<void> internal;
 	};
 
+	// Render Pass
+	enum class RenderPassLoadOp
+	{
+		Clear,
+		Load,
+		NotNeeded // used for render passes you do not care about what happens to their displays, avoids the ambiguity of DontCare, also valid names: Discard, Unused, Unneeded, Any
+	};
+
 	struct RenderPassDesc
 	{
 		Framebuffer* targetFramebuffer;
@@ -113,12 +121,7 @@ namespace Citrom::RenderAPI
 			FORCE_INLINE float32& operator[](size_t index) { return *(float32*)(&clearColor[0] + index); }
 			FORCE_INLINE const float32& operator[](size_t index) const { return *(float32*)(&clearColor[0] + index); }
 		} clearColor;
-		enum class LoadOp
-		{
-			Clear,
-			Load
-			// DontCare
-		} loadOp;
+		RenderPassLoadOp loadOp = RenderPassLoadOp::Clear;
 	};
 	struct RenderPass
 	{
