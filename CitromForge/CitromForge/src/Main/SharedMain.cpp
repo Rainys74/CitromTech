@@ -119,7 +119,7 @@ int SharedMain(int argc, char* argv[])
 	CT_INFO("Command Line Arguments ({}):", argc);
 	for (int i = 0; i < argc; i++)
 	{
-		CT_INFO("\t{}: {}", i+1, argv[i]);
+		CT_INFO("\t{}: {}", i + 1, argv[i]);
 	}
 
 	// Push Command line arguments
@@ -208,7 +208,7 @@ int SharedMain(int argc, char* argv[])
 
 		const KeyEventBase& transformedEvent = (const KeyEventBase&)event;
 		CT_TRACE("KeyCode String: {} ({})", Input::KeyCodeToString(transformedEvent.keyCode), (uint32)transformedEvent.keyCode);
-	};
+		};
 
 	EventListener<WindowEvents> windowEventListenerTest;
 	windowEventListenerTest.OnEvent = [](const Event<WindowEvents>& event) {
@@ -224,7 +224,7 @@ int SharedMain(int argc, char* argv[])
 			CT_TRACE("Event Width: {}", transformedEvent.width);
 			CT_TRACE("Event Height: {}", transformedEvent.height);
 		}
-	};
+		};
 
 	EventListener<MouseEvents> mouseEventListener;
 	mouseEventListener.OnEvent = [](const Event<MouseEvents>& event) {
@@ -247,7 +247,7 @@ int SharedMain(int argc, char* argv[])
 			const MouseUpEvent& transformedEvent = (const MouseUpEvent&)event;
 			CT_TRACE("Mouse Button: {}", (int)transformedEvent.mouseButton);
 		}
-	};
+		};
 
 	//Audio::Clip clip;
 	//clip.path = FileSystem::FilePath("E:/Citrom Tech/bin/Debug-windows-x86_64/CitromForge/anothersound.wav");

@@ -82,6 +82,22 @@ namespace Citrom::Platform
 			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowMoveEvent);
 		}
 		break;
+		case WM_SETFOCUS:
+		{
+			WindowFocusEvent windowFocusEvent;
+			windowFocusEvent.state = true;
+
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowFocusEvent);
+		}
+		break;
+		case WM_KILLFOCUS:
+		{
+			WindowFocusEvent windowFocusEvent;
+			windowFocusEvent.state = false;
+
+			EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowFocusEvent);
+		}
+		break;
 		// Window Events End
 		// Mouse Events Begin
 		// Left button

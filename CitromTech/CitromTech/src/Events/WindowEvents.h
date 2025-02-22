@@ -10,7 +10,8 @@ namespace Citrom
     {
         WindowClose,
         WindowResize,
-        WindowMove
+        WindowMove,
+        WindowFocus
     };
 
     class WindowCloseEvent : public Event<WindowEvents>
@@ -62,5 +63,20 @@ namespace Citrom
     public:
         int32 x = 0;
         int32 y = 0;
+    };
+
+    class WindowFocusEvent : public Event<WindowEvents>
+    {
+    public:
+        EVENT_CLASS_TYPE(WindowEvents, WindowFocus);
+
+        CTL::String ToString() const override
+        {
+            CTL::String string("WindowFocusEvent: ");
+            string.Append(std::to_string(state).c_str());
+            return string;
+        }
+    public:
+        bool state = true; // whether focus was lost or gained
     };
 }

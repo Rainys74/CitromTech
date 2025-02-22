@@ -164,6 +164,23 @@ namespace Citrom::Platform
                 break;
             }
         });
+        // WM_SETFOCUS, WM_KILLFOCUS
+        glfwSetWindowFocusCallback(glfwWindow, [](GLFWwindow* window, int focused) 
+        {
+            WindowFocusEvent windowFocusEvent;
+            switch (focused)
+            {
+                default:
+                case GLFW_TRUE:
+                    windowFocusEvent.state = true;
+                    break;
+                case GLFW_FALSE:
+                    windowFocusEvent.state = false;
+                    break;
+            }
+
+            EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowFocusEvent);
+        });
     }
 
     WindowBackendGLFW::WindowBackendGLFW()
@@ -197,11 +214,11 @@ namespace Citrom::Platform
         CT_CORE_ASSERT(m_Window, "Failed to create a GLFW Window!");
 
         // Fire a window resize event to match Win32 // TODO: it's actually fired on the first UpdateWindow() call in win32..
-        WindowResizeEvent windowResizeEvent;
-        windowResizeEvent.width = width;
-        windowResizeEvent.height = height;
-
-        EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
+        //WindowResizeEvent windowResizeEvent;
+        //windowResizeEvent.width = width;
+        //windowResizeEvent.height = height;
+        //
+        //EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
     
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwMakeContextCurrent(m_Window);
