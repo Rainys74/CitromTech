@@ -69,7 +69,8 @@ namespace Citrom::Platform
             // TODO: figure out whether do i really need to do this, because
             // ideally it should not need to be called
             #ifdef CT_EDITOR_ENABLED
-            ImGui::GetIO().DisplaySize = ImVec2(width, height);
+            if (ImGui::GetCurrentContext() != NULL)
+                ImGui::GetIO().DisplaySize = ImVec2(width, height);
             #endif
         });
         // WM_MOVE
@@ -214,13 +215,11 @@ namespace Citrom::Platform
         CT_CORE_ASSERT(m_Window, "Failed to create a GLFW Window!");
 
         // Fire a window resize event to match Win32 // TODO: it's actually fired on the first UpdateWindow() call in win32..
-#ifndef CT_PLATFORM_WINDOWS // causes an assert on windows..
         WindowResizeEvent windowResizeEvent;
         windowResizeEvent.width = width;
         windowResizeEvent.height = height;
         
         EventBus::GetDispatcher<WindowEvents>()->Dispatch(windowResizeEvent);
-#endif
     
         // TODO: move contexts over to a different platform implementation similar to Torque3D
         glfwMakeContextCurrent(m_Window);

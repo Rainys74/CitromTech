@@ -18,6 +18,24 @@ namespace Citrom
 			return &instance;
 		}
 
+		CameraViewport()
+		{
+			// On Resize Callback
+			m_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
+			{
+				if (event.GetEventType() == WindowEvents::WindowResize)
+				{
+					const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
+					CameraViewport::Get()->SetViewport(transformedEvent.width, transformedEvent.height);
+				}
+			};
+			EventBus::GetDispatcher<WindowEvents>()->AddListener(&m_WindowEventListener);
+		}
+		~CameraViewport()
+		{
+			EventBus::GetDispatcher<WindowEvents>()->RemoveListener(&m_WindowEventListener);
+		}
+
 		inline void SetViewport(uint32 width, uint32 height)
 		{
 			m_Width = width;
@@ -63,6 +81,8 @@ namespace Citrom
 		uint32 m_Height;
 
 		//CTL::HashMap<Camera*, bool> m_PCameraDirtyMap;
+
+		EventListener<WindowEvents> m_WindowEventListener;
 	};
 
 	class Camera
@@ -78,23 +98,10 @@ namespace Citrom
 		{
 			RecalculateProjection();
 
-			// On Resize Callback
-			m_WindowEventListener.OnEvent = [](const Event<WindowEvents>& event)
-				{
-					if (event.GetEventType() == WindowEvents::WindowResize)
-					{
-						const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
-						CameraViewport::Get()->SetViewport(transformedEvent.width, transformedEvent.height);
-					}
-				};
-			EventBus::GetDispatcher<WindowEvents>()->AddListener(&m_WindowEventListener);
-
 			//CameraViewport::Get()->InsertCameraPtr(this);
 		}
 		~Camera()
 		{
-			EventBus::GetDispatcher<WindowEvents>()->RemoveListener(&m_WindowEventListener);
-
 			//CameraViewport::Get()->EraseCameraPtr(this);
 		}
 
@@ -165,8 +172,6 @@ namespace Citrom
 			}
 		}
 	private:
-		EventListener<WindowEvents> m_WindowEventListener;
-
 		ProjectionType m_ProjectionType = ProjectionType::Perspective;
 
 		float32 m_PerspectiveFOV = Math::DegreesToRadians(70.0f); // Vertical FOV as Radians

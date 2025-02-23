@@ -66,7 +66,8 @@ namespace Citrom::Platform
 			// TODO: figure out whether do i really need to do this, because
 			// ideally it should not need to be called
 			#ifdef CT_EDITOR_ENABLED
-			ImGui::GetIO().DisplaySize = ImVec2(width, height);
+			if (ImGui::GetCurrentContext() != NULL)
+				ImGui::GetIO().DisplaySize = ImVec2(width, height);
 			#endif
 		}
 		break;
@@ -521,7 +522,7 @@ namespace Citrom::Platform
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
 
 				// Adjust window size and position as desired
-				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, 1280, 720, SWP_FRAMECHANGED); // Query the width and height maybe?
+				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, 1280, 720, SWP_FRAMECHANGED);
 			}
 			break;
 			case DisplayMode::Borderless:
@@ -540,7 +541,7 @@ namespace Citrom::Platform
 				int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 				int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-				CT_CORE_ASSERT(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+				CT_CORE_VERIFY(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
 
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);

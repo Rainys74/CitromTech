@@ -263,7 +263,7 @@ int SharedMain(int argc, char* argv[])
 	//clip.looping = true;
 	//Audio::PlayAudioClip(&clip);
 
-	//EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListenerTest);
+	EventBus::GetDispatcher<WindowEvents>()->AddListener(&windowEventListenerTest);
 	EventBus::GetDispatcher<MouseEvents>()->AddListener(&mouseEventListener);
 	EventBus::GetDispatcher<KeyEvents>()->AddListener(&keyEventListener);
 
@@ -309,7 +309,6 @@ int SharedMain(int argc, char* argv[])
 	static EventListener<WindowEvents> windowEventListener;
 	windowEventListener.OnEvent = [](const Event<WindowEvents>& event)
 	{
-		windowEventListenerTest.OnEvent(event);
 		if (event.GetEventType() == WindowEvents::WindowResize)
 		{
 			const WindowResizeEvent& transformedEvent = (const WindowResizeEvent&)event;
@@ -429,7 +428,7 @@ int SharedMain(int argc, char* argv[])
 	using namespace Platform;
 
 	g_Window.Create(1280, 720, CTL::String("test")); // TODO: probably create an ApplicationInfo Specification for all these things
-	//g_Window.GetBackend()->SetDisplayMode(DisplayMode::Windowed); // TODO: on GLFW cannot set to borderless or fullscreen since it causes the ImGui context to invalidate
+	//g_Window.GetBackend()->SetDisplayMode(DisplayMode::Windowed);
 
 	// TODO: temporary, should be in render thread.
 	Renderer::Initialize(&g_Window);
