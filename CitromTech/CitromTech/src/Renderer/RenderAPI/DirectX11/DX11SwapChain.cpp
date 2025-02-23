@@ -122,6 +122,9 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::Resize(uint32 width, uint32 height)
 	{
+		width = (width <= 0) ? 1 : width;
+		height = (height <= 0) ? 1 : height;
+
 		m_Width = width;
 		m_Height = height;
 

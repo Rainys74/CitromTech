@@ -19,6 +19,9 @@ namespace Citrom::Platform
         virtual bool WindowShouldClose() const override;
         virtual void PollEvents() override;
 
+        virtual void SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate = 0) override;
+        virtual void SetResolution(const uint32 width, const uint32 height, const int xPos = 0, const int yPos = 0) override;
+
         virtual int GetWidth() override;
         virtual int GetHeight() override;
 

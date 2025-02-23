@@ -23,8 +23,8 @@ namespace Citrom::Platform
 	enum class DisplayMode // ScreenMode
 	{
 		Windowed,
-		//Borderless,
-		//Fullscreen,
+		Borderless, // BorderlessWindowed
+		Fullscreen
 		//ExclusiveFullscreen
 	};
 
@@ -40,6 +40,8 @@ namespace Citrom::Platform
 		virtual void PollEvents() = 0;
 
 		//virtual void ChangeTitle(const char* title) = 0;
+		virtual void SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate = 0) = 0;
+		virtual void SetResolution(const uint32 width, const uint32 height, const int xPos = 0, const int yPos = 0) = 0;
 
 		virtual int GetWidth() = 0;
 		virtual int GetHeight() = 0;

@@ -420,7 +420,7 @@ namespace Citrom::Platform
 	*/
 
     WindowBackendWin32::WindowBackendWin32()
-        : m_WindowShouldClose(false), m_Width(0), m_Height(0), m_ClassName((TCHAR*)TEXT("Class Name")), m_HInstance(GetModuleHandle(NULL)), m_HWnd(0)
+        : m_WindowShouldClose(false), m_Width(0), m_Height(0), m_ClassName((TCHAR*)TEXT("Citrom Tech Main Window")), m_HInstance(GetModuleHandle(NULL)), m_HWnd(0)
     {
     }
     WindowBackendWin32::~WindowBackendWin32()
@@ -509,6 +509,53 @@ namespace Citrom::Platform
 			}
 		}
     }
+
+	void WindowBackendWin32::SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate)
+	{
+		switch (displayMode)
+		{
+			default:
+			case DisplayMode::Windowed:
+			{
+				// Restore window style to overlapped window
+				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+
+				// Adjust window size and position as desired
+				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, 1280, 720, SWP_FRAMECHANGED); // Query the width and height maybe?
+			}
+			break;
+			case DisplayMode::Borderless:
+			{
+				// Retrieve the primary display device name
+				DISPLAY_DEVICE dd = { 0 };
+				dd.cb = sizeof(DISPLAY_DEVICE);
+				EnumDisplayDevices(NULL, 0, &dd, 0);
+
+				// Retrieve current display settings
+				DEVMODE dm = { 0 };
+				dm.dmSize = sizeof(DEVMODE);
+				EnumDisplaySettings(dd.DeviceName, ENUM_CURRENT_SETTINGS, &dm);
+
+				// Get monitor width and height
+				int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+				int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+				CT_CORE_ASSERT(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+
+				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
+			}
+			break;
+			case DisplayMode::Fullscreen:
+			{
+			}
+			break;
+		}
+	}
+	void WindowBackendWin32::SetResolution(const uint32 width, const uint32 height, const int xPos, const int yPos)
+	{
+	}
+
 	int WindowBackendWin32::GetWidth()
 	{
 		RECT rect;
