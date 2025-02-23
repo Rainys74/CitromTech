@@ -47,6 +47,14 @@
 
 using namespace Citrom;
 
+struct ApplicationInfoSpecification
+{
+    int32 width, height;
+    const char* defaultTitle;
+    
+    Platform::DisplayMode displayMode;
+};
+
 // Global variables
 Platform::Window g_Window;
 
@@ -298,8 +306,8 @@ int SharedMain(int argc, char* argv[])
 	CT_WARN("\n{}", testMat.ToString());
 
 	// Camera Resize System
-	EventListener<WindowEvents> windowEventListener;
-	windowEventListener.OnEvent = [](const Event<WindowEvents>& event) 
+	static EventListener<WindowEvents> windowEventListener;
+	windowEventListener.OnEvent = [](const Event<WindowEvents>& event)
 	{
 		windowEventListenerTest.OnEvent(event);
 		if (event.GetEventType() == WindowEvents::WindowResize)

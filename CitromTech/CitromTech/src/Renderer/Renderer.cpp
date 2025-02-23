@@ -439,7 +439,7 @@ namespace Citrom
 		ShaderDesc sd = {};
 		sd.name = "Standard";
 
-		Shader shader = m_Device->CreateShader(&sd);
+		/*static */Shader shader = m_Device->CreateShader(&sd);
 		//m_Device->BindShader(&shader); // in pipeline
 
 		// Shader Constant Buffer
@@ -501,37 +501,38 @@ namespace Citrom
 		//m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));
 
 		// Vertex Buffer 1 Layout
-		VertexBufferLayoutDesc vbld1 = {};
+        /*static */VertexBufferLayoutDesc vbld1 = {};
 		vbld1.shader = &shader; // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("TexCoord", 0, Format::R32G32_FLOAT);
 
-		VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
+        /*static */VertexBufferLayout vbLayout1 = m_Device->CreateVertexBufferLayout(&vbld1);
 		//m_Device->BindVertexBufferLayout(&vbLayout1); // in pipeline
 
-		// Pipeline // TODO: on anything other than DX11/OGL, this is probably slow as shit, optimize.
-		PipelineState pipeline;
+		// Pipeline
+        /*static */PipelineState pipeline;
+        //if (!pipeline.internal)
 		{
-			BlendStateDesc bsd;
+            /*static */BlendStateDesc bsd;
 			bsd.srcBlend = BlendFactor::SrcAlpha;
 			bsd.destBlend = BlendFactor::OneMinusSrcAlpha;
 			bsd.blendOperation = BlendOp::Add;
 
 			bsd.renderTargetWriteMask = RenderTargetWriteMask::All;
 
-			RasterizerStateDesc rsd;
+            /*static */RasterizerStateDesc rsd;
 			rsd.fillMode = FillMode::Solid;
 			rsd.cullMode = CullMode::Back;
 			rsd.frontCounterClockwise = false;
 
-			DepthStencilStateDesc dsd;
+            /*static */DepthStencilStateDesc dsd;
 			dsd.depthEnabled = true;
 			dsd.depthWriteEnabled = true;
 			dsd.depthFunc = DepthStencilComparisonFunc::Less;
 
-			PipelineStateDesc psd = {};
+            /*static */PipelineStateDesc psd = {};
 			psd.blendState = &bsd;
 			psd.rasterizerState = &rsd;
 			psd.dsState = &dsd;
@@ -541,8 +542,8 @@ namespace Citrom
 			psd.inputLayout = &vbLayout1;
 
 			pipeline = m_Device->CreatePipelineState(&psd);
-			m_Device->RCBindPipelineState(&pipeline);
 		}
+        m_Device->RCBindPipelineState(&pipeline);
 
 		// Vertex Buffer 1
 		VertexBufferDesc vbd1 = {};
