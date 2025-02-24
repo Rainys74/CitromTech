@@ -19,6 +19,11 @@ namespace Citrom::RenderAPI
 	{
 		ShaderDesc descriptor;
 		CTL::Ref<void> internal;
+
+		FORCE_INLINE bool IsShader(const std::string& name) const
+		{
+			return (descriptor.name == name);
+		}
 	};
 	using ComputeShader = Shader;
 	using ComputeShaderDesc = ShaderDesc;

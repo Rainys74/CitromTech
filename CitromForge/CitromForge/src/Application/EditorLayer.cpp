@@ -10,6 +10,7 @@
 #include "Editor/SceneHierarchy.h"
 #include "Editor/InspectorWindow.h"
 #include "Editor/ProjectSettingsWindow.h"
+#include "Editor/RendererWindow.h"
 
 #include "Editor/EditorCamera.h"
 #include "Editor/EditorGizmos.h"
@@ -203,6 +204,7 @@ void EditorLayer::OnImGuiRender()
     PreferenceWindow::ImGuiDraw(&preferenceWindowOpen);
 
     EditorConsole::ImGuiDraw();
+    RendererWindow::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();
 
     ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;

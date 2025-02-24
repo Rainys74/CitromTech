@@ -76,6 +76,11 @@ namespace Citrom
 		RenderAPI::PipelineState m_GridPipeline;
 	};
 
+	// Global Value access
+	//CTL::DArray<Material>* Renderer_GetMaterials();
+	//Material* Renderer_GetMaterialAt(uint32 index);
+	//Material* Renderer_GetMaterialByName(const std::string& name);
+
 	// TODO: create a modular render path system with
 	// extendable render steps
 	class Renderer

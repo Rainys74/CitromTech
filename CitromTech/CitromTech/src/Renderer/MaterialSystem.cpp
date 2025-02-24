@@ -9,6 +9,12 @@ namespace Citrom
 
 #define SAFE_FREE(x) if ((x) != nullptr) {Memory::Free(x); (x) = nullptr;}
 
+    static RenderAPI::Shader g_NullShader;
+
+    Material::Material()
+        : m_Device(Device::Get()), m_Shader(g_NullShader)
+    {
+    }
     Material::Material(Shader& shader)
         : m_Device(Device::Get()), m_Shader(shader)
     {
@@ -82,7 +88,7 @@ namespace Citrom
         m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[m_BufferData.Count() - GetMaterialFormatSize(format)] });
     }
 
-    void Material::UpdateProperty(const std::string& name, const MaterialFormat format, const void* newData)
+    void Material::SetProperty(const std::string& name, const MaterialFormat format, const void* newData)
     {
         CT_PROFILE_MEMBER_FUNCTION();
 

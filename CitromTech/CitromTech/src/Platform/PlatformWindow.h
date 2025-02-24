@@ -10,6 +10,7 @@ namespace Citrom::Platform
 {
 #define PLATFORM_DEFAULT_WIDTH (800)
 #define PLATFORM_DEFAULT_HEIGHT (600)
+#define PLATFORM_DEFAULT_NAME ("Citrom Tech")
 
 	// TODO: probably move this into a screen file or something
 	struct Resolution
@@ -72,7 +73,7 @@ namespace Citrom::Platform
 		Window();
 		~Window();
 
-		void Create(const int width, const int height, const CTL::String& title);
+		void Create(const int width = PLATFORM_DEFAULT_WIDTH, const int height = PLATFORM_DEFAULT_HEIGHT, const CTL::String& title = PLATFORM_DEFAULT_NAME);
 		bool WindowShouldClose() const;
 		void PollEvents();
 

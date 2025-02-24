@@ -25,23 +25,27 @@ namespace Citrom
 		void* dataPtr; // Ref or copy data?, right now only points to the DArray
 	};
 
+	// TODO: "macrofy" the system to allow to register properties to a member variable for easier access, also implement a texture system.
 	class Material
 	{
 	public:
 		//Material(const std::string& shaderName = "Standard");
+		Material();
 		Material(RenderAPI::Shader& shader);
 		~Material();
 
 		void PushPropertyNoAutoPad(const std::string& name, const MaterialFormat format, const void* propertyData);
 		void PushProperty(const std::string& name, const MaterialFormat format, const void* propertyData);
-		void UpdateProperty(const std::string& name, const MaterialFormat format, const void* newData);
+		void SetProperty(const std::string& name, const MaterialFormat format, const void* newData);
 		void Render();
 
 		void Bind();
 
+		//virtual void RegisterProperties() = 0;
+
 		FORCE_INLINE RenderAPI::Shader* GetShader() { return &m_Shader; };
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
-	private:
+	protected:
 		MaterialProperty* GetPropertyByName(const std::string& name);
 	private:
 		RenderAPI::Shader& m_Shader;

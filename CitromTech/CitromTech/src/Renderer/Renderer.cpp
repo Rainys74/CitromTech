@@ -12,6 +12,8 @@
 
 #include "Math/Vector.h"
 
+#include <filesystem>
+
 #define INCREMENT_DRAW_CALL()
 
 namespace Citrom
@@ -26,7 +28,8 @@ namespace Citrom
 
 	static EditorRenderer g_EditorRenderer;
 
-	//static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
+	//static CTL::DArray<Shader> g_Shaders; // probably switch to a Hash-Map or something
+	static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
 
 	void Renderer::Initialize(Platform::Window* window)
 	{
@@ -128,6 +131,30 @@ namespace Citrom
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
 		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+
+		//CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> uniqueShaderNames;
+		//for (const auto& entry : std::filesystem::directory_iterator("ShaderCache/"))
+		//{
+		//	const std::string fileName = entry.path().filename().string();
+		//
+		//	// Find the first underscore and extract the base name
+		//	size_t pos = fileName.find('_');
+		//	if (pos != std::string::npos) 
+		//	{
+		//		if (fileName.substr(pos + 1, 2) == "cs")
+		//			continue;
+		//		std::string baseName = fileName.substr(0, pos);
+		//
+		//		ShaderDesc sd;
+		//		sd.name = baseName;
+		//
+		//		uniqueShaderNames[baseName] = m_Device->CreateShader(&sd);
+		//	}
+		//}
+		//for (const auto& shaderPair : uniqueShaderNames)
+		//{
+		//	g_Shaders.PushBack(shaderPair.second);
+		//}
 
 		g_EditorRenderer.Initialize();
 	}
@@ -643,8 +670,8 @@ namespace Citrom
 		//matTest.PushProperty("padding1", MaterialFormat::Float32x3, &padding1); // implement something in the material system to not need this. It is done.
 
 		Math::ColorF32x4 u_ColorData(1.0f, 0.2f, 0.5f);
-		matTest.PushProperty  ("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
-		matTest.UpdateProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		matTest.PushProperty("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
+		matTest.SetProperty ("u_ColorData", MaterialFormat::Float32x4, &u_ColorData);
 		u_ColorData.r = 0.5f;
 		////matTest.UpdateData("u_ColorData", &u_ColorData, MaterialFormat::Float32x4);
 

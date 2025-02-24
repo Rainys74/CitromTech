@@ -432,7 +432,7 @@ int SharedMain(int argc, char* argv[])
 
 	using namespace Platform;
 
-	g_Window.Create(1280, 720, CTL::String("test")); // TODO: probably create an ApplicationInfo Specification for all these things
+	g_Window.Create(1280, 720, CTL::String(/*STRINGIFY_TOKEN(CT_APP_NAME)*/ "test")); // TODO: probably create an ApplicationInfo Specification for all these things
 	//g_Window.GetBackend()->SetDisplayMode(DisplayMode::Windowed);
 
 	// TODO: temporary, should be in render thread.
