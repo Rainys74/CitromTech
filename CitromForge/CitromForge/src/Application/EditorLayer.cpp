@@ -124,29 +124,43 @@ void EditorLayer::OnImGuiRender()
         ImGui::OpenPopup("ResolutionSetterPopup");
     if (ImGui::BeginPopup("ResolutionSetterPopup"))
     {
-        ///CT_VERBOSE("POPUP OPEN");
-        //static constexpr size_t bufferSize = 32; // 32 characters should be more than enough
-        //static char widthBuffer[bufferSize];
-        //static char heightBuffer[bufferSize];
-        //static char refreshRateBuffer[bufferSize];
-        //
-        //ImGui::InputText("Width", widthBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
-        //ImGui::InputText("Height", heightBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
-        //ImGui::InputText("Refresh Rate", refreshRateBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
-        Platform::Resolution currentResolution = GetMainWindow()->GetBackend()->GetResolution();
-        int width = currentResolution.width, height = currentResolution.height, refreshRate = currentResolution.refreshRate;
-        bool modified = false;
+        static Platform::Resolution currentResolution;
+        static int width, height, refreshRate;
+        if (openResolutionSetter)
+        {
+            currentResolution = GetMainWindow()->GetBackend()->GetResolution();
+
+            width = currentResolution.width;
+            height = currentResolution.height;
+            refreshRate = currentResolution.refreshRate;
+        }
 
         // TODO: maybe on same line do something like: (w) x (h) @ (rr)
-        if (ImGui::InputInt("Width", &width))
-            modified |= true;
-        if (ImGui::InputInt("Height", &height))
-            modified |= true;
-        if (ImGui::InputInt("Refresh Rate", &refreshRate))
-            modified |= true;
+        ImGui::InputInt("Width", &width);
+        ImGui::InputInt("Height", &height);
+        ImGui::InputInt("Refresh Rate", &refreshRate);
+        ImGui::Text("NOTE: Resolution should not be set for Borderless windows."); // neither should refresh rate, actually refresh rate doesn't even do anything on windowed windows (including borderless).
 
-        if (modified)
+        ImGui::Separator();
+
+        // TODO: maybe make this centered button function into an ImToolkit template?
+        constexpr float buttonWidth = 200.0f;
+
+        const float offsetX = (ImGui::GetContentRegionAvail().x - buttonWidth) * 0.5f;
+        if (offsetX > 0.0f)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
+
+        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0.0f)))
+        {
             GetMainWindow()->GetBackend()->SetResolution(width, height, refreshRate);
+            
+            // TODO: probably don't copy/duplicate this code
+            currentResolution = GetMainWindow()->GetBackend()->GetResolution();
+
+            width = currentResolution.width;
+            height = currentResolution.height;
+            refreshRate = currentResolution.refreshRate;
+        }
 
         ImGui::EndPopup();
     }
