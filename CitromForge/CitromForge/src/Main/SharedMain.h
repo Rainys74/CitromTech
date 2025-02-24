@@ -16,12 +16,18 @@ void* GetCurrentScene();
 
 namespace Citrom
 {
-	struct Camera;
+	struct Camera; // should be class
 	namespace Math
 	{
 		struct Transform;
+	}
+	namespace Platform
+	{
+		class Window;
 	}
 }
 
 Citrom::Camera* GetCamera();
 Citrom::Math::Transform* GetCameraTransform();
+
+Citrom::Platform::Window* GetMainWindow();

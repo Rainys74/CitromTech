@@ -16,6 +16,8 @@
 
 #include "CTL/CStringHandling.h"
 
+#include "Platform/PlatformWindow.h"
+
 #include "imgui.h"
 #include "ImGuizmo.h"
 
@@ -58,10 +60,38 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::DockSpaceOverViewport(0, ImGui::GetMainViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
 
+    bool openResolutionSetter = false;
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Edit"))
+        {
+            // This can also technically be put in "View" as well as maybe "Window"?
+            ImGui::Separator();
+            if (ImGui::BeginMenu("Set Display Mode"))
+            {
+                if (ImGui::MenuItem("Windowed"))
+                {
+                    GetMainWindow()->GetBackend()->SetDisplayMode(Platform::DisplayMode::Windowed);
+                }
+                if (ImGui::MenuItem("Borderless"))
+                {
+                    GetMainWindow()->GetBackend()->SetDisplayMode(Platform::DisplayMode::Borderless);
+                }
+                if (ImGui::MenuItem("Fullscreen"))
+                {
+                    GetMainWindow()->GetBackend()->SetDisplayMode(Platform::DisplayMode::Fullscreen);
+                }
+
+                ImGui::EndMenu();
+            }
+
+            if (ImGui::MenuItem("Set Resolution"))
+                openResolutionSetter = true;
+
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Options"))
@@ -88,6 +118,37 @@ void EditorLayer::OnImGuiRender()
         }
 
         ImGui::EndMainMenuBar();
+    }
+
+    if (openResolutionSetter)
+        ImGui::OpenPopup("ResolutionSetterPopup");
+    if (ImGui::BeginPopup("ResolutionSetterPopup"))
+    {
+        ///CT_VERBOSE("POPUP OPEN");
+        //static constexpr size_t bufferSize = 32; // 32 characters should be more than enough
+        //static char widthBuffer[bufferSize];
+        //static char heightBuffer[bufferSize];
+        //static char refreshRateBuffer[bufferSize];
+        //
+        //ImGui::InputText("Width", widthBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
+        //ImGui::InputText("Height", heightBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
+        //ImGui::InputText("Refresh Rate", refreshRateBuffer, bufferSize, ImGuiInputTextFlags_CharsDecimal);
+        Platform::Resolution currentResolution = GetMainWindow()->GetBackend()->GetResolution();
+        int width = currentResolution.width, height = currentResolution.height, refreshRate = currentResolution.refreshRate;
+        bool modified = false;
+
+        // TODO: maybe on same line do something like: (w) x (h) @ (rr)
+        if (ImGui::InputInt("Width", &width))
+            modified |= true;
+        if (ImGui::InputInt("Height", &height))
+            modified |= true;
+        if (ImGui::InputInt("Refresh Rate", &refreshRate))
+            modified |= true;
+
+        if (modified)
+            GetMainWindow()->GetBackend()->SetResolution(width, height, refreshRate);
+
+        ImGui::EndPopup();
     }
 
     if (g_ShowAboutWindow)

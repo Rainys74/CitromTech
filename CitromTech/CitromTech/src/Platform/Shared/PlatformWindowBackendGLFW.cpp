@@ -250,7 +250,7 @@ namespace Citrom::Platform
             default:
             case DisplayMode::Windowed:
             {
-                glfwSetWindowMonitor(m_Window, nullptr, 100, 100, 1280, 720, (refreshRate == 0) ? GLFW_DONT_CARE : refreshRate); // TODO: maybe center the position depending on the width/height?
+                glfwSetWindowMonitor(m_Window, nullptr, 100, 100, PLATFORM_DEFAULT_WIDTH, PLATFORM_DEFAULT_HEIGHT, (refreshRate == 0) ? GLFW_DONT_CARE : refreshRate); // TODO: maybe center the position depending on the width/height?
                 glfwSetWindowAttrib(m_Window, GLFW_DECORATED, GLFW_TRUE);
             }
             break;
@@ -259,7 +259,8 @@ namespace Citrom::Platform
                 GLFWmonitor* monitor = glfwGetPrimaryMonitor();
                 const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-                //glfwSetWindowMonitor(m_Window, nullptr, 0, 0, mode->width, mode->height, (refreshRate == 0) ? mode->refreshRate : refreshRate);
+                //glfwSetWindowMonitor(m_Window, nullptr, 0, 0, mode->width, mode->height, (refreshRate == 0) ? GLFW_DONT_CARE : refreshRate);
+                glfwSetWindowMonitor(m_Window, nullptr, 0, 0, mode->width, mode->height, (refreshRate == 0) ? mode->refreshRate : refreshRate);
                 glfwSetWindowAttrib(m_Window, GLFW_DECORATED, GLFW_FALSE);
 
                 glfwSetWindowPos(m_Window, 0, 0);
@@ -276,14 +277,14 @@ namespace Citrom::Platform
             break;
         }
     }
-    void WindowBackendGLFW::SetResolution(const uint32 width, const uint32 height, const int xPos, const int yPos)
+    void WindowBackendGLFW::SetResolution(const uint32 width, const uint32 height, const uint32 refreshRate, const int xPos, const int yPos)
     {
         if (glfwGetWindowMonitor(m_Window) != nullptr)
         {
             // Fullscreen mode
             GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
             const GLFWvidmode* mode = glfwGetVideoMode(primaryMonitor);
-            glfwSetWindowMonitor(m_Window, primaryMonitor, xPos, yPos, width, height, mode->refreshRate);
+            glfwSetWindowMonitor(m_Window, primaryMonitor, xPos, yPos, width, height, (refreshRate == 0) ? mode->refreshRate : refreshRate);
         }
         else
         {
@@ -291,6 +292,12 @@ namespace Citrom::Platform
             glfwSetWindowSize(m_Window, width, height);
             glfwSetWindowPos(m_Window, xPos, yPos);
         }
+    }
+    Resolution WindowBackendGLFW::GetResolution()
+    {
+        Resolution resolution = {};
+        glfwGetWindowSize(m_Window, (int*)&resolution.width, (int*)&resolution.height);
+        return resolution;
     }
 
     int WindowBackendGLFW::GetWidth()

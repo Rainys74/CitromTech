@@ -122,6 +122,11 @@ Math::Transform* GetCameraTransform()
 	}
 }
 
+Platform::Window* GetMainWindow()
+{
+	return &g_Window;
+}
+
 int SharedMain(int argc, char* argv[])
 {
 	CT_INFO("Command Line Arguments ({}):", argc);

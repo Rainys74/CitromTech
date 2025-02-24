@@ -8,6 +8,9 @@
 */
 namespace Citrom::Platform
 {
+#define PLATFORM_DEFAULT_WIDTH (800)
+#define PLATFORM_DEFAULT_HEIGHT (600)
+
 	// TODO: probably move this into a screen file or something
 	struct Resolution
 	{
@@ -41,7 +44,8 @@ namespace Citrom::Platform
 
 		//virtual void ChangeTitle(const char* title) = 0;
 		virtual void SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate = 0) = 0;
-		virtual void SetResolution(const uint32 width, const uint32 height, const int xPos = 0, const int yPos = 0) = 0;
+		virtual void SetResolution(const uint32 width, const uint32 height, const uint32 refreshRate = 0, const int xPos = 0, const int yPos = 0) = 0;
+		virtual Resolution GetResolution() = 0;
 
 		virtual int GetWidth() = 0;
 		virtual int GetHeight() = 0;

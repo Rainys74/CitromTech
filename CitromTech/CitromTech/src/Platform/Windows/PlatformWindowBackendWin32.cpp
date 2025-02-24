@@ -522,7 +522,7 @@ namespace Citrom::Platform
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
 
 				// Adjust window size and position as desired
-				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, 1280, 720, SWP_FRAMECHANGED);
+				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, PLATFORM_DEFAULT_WIDTH, PLATFORM_DEFAULT_HEIGHT, SWP_FRAMECHANGED);
 			}
 			break;
 			case DisplayMode::Borderless:
@@ -553,8 +553,23 @@ namespace Citrom::Platform
 			break;
 		}
 	}
-	void WindowBackendWin32::SetResolution(const uint32 width, const uint32 height, const int xPos, const int yPos)
+	void WindowBackendWin32::SetResolution(const uint32 width, const uint32 height, const uint32 refreshRate, const int xPos, const int yPos)
 	{
+	}
+	Resolution WindowBackendWin32::GetResolution()
+	{
+		if (m_WindowShouldClose)
+			return Resolution();
+
+		Resolution resolution = {};
+
+		RECT rect;
+		CT_CORE_VERIFY(GetWindowRect(m_HWnd, &rect), "Failed to get Window Rect!"); // GetWidth(), GetHeight() return the drawable area..
+
+		resolution.width = rect.right - rect.left;
+		resolution.height = rect.bottom - rect.top;
+
+		return resolution;
 	}
 
 	int WindowBackendWin32::GetWidth()

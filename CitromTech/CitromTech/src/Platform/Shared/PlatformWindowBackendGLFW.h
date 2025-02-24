@@ -17,7 +17,8 @@ namespace Citrom::Platform
         virtual void PollEvents() override;
 
         virtual void SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate = 0) override;
-        virtual void SetResolution(const uint32 width, const uint32 height, const int xPos = 0, const int yPos = 0) override;
+        virtual void SetResolution(const uint32 width, const uint32 height, const uint32 refreshRate = 0, const int xPos = 0, const int yPos = 0) override;
+        virtual Resolution GetResolution() override;
 
         virtual int GetWidth() override;
         virtual int GetHeight() override;
