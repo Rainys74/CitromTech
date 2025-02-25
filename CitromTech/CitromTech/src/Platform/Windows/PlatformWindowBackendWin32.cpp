@@ -529,11 +529,7 @@ namespace Citrom::Platform
 			default:
 			case DisplayMode::Windowed:
 			{
-				if (D3D11SWAPCHAIN)
-				{
-					HRESULT hr;
-					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(FALSE, NULL));
-				}
+				SET_DIRECTX_FULLSCREEN(FALSE);
 
 				// Restore window style to overlapped window
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
@@ -543,27 +539,23 @@ namespace Citrom::Platform
 			break;
 			case DisplayMode::Borderless:
 			{
-				if (D3D11SWAPCHAIN)
-				{
-					HRESULT hr;
-					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(FALSE, NULL));
-				}
+				SET_DIRECTX_FULLSCREEN(FALSE);
 
 				// Retrieve the primary display device name
-				DISPLAY_DEVICE dd = { 0 };
+				/*DISPLAY_DEVICE dd = {0};
 				dd.cb = sizeof(DISPLAY_DEVICE);
 				EnumDisplayDevices(NULL, 0, &dd, 0);
 
 				// Retrieve current display settings
 				DEVMODE dm = { 0 };
 				dm.dmSize = sizeof(DEVMODE);
-				EnumDisplaySettings(dd.DeviceName, ENUM_CURRENT_SETTINGS, &dm);
+				EnumDisplaySettings(dd.DeviceName, ENUM_CURRENT_SETTINGS, &dm);*/
 
 				// Get monitor width and height
 				int screenWidth = GetSystemMetrics(SM_CXSCREEN);
 				int screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-				CT_CORE_VERIFY(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+				//CT_CORE_VERIFY(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
 
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
@@ -574,6 +566,8 @@ namespace Citrom::Platform
 			break;
 			case DisplayMode::Fullscreen:
 			{
+				//SET_DIRECTX_FULLSCREEN(TRUE);
+
 				// Retrieve the primary display device name
 				DISPLAY_DEVICE dd = { 0 };
 				dd.cb = sizeof(DISPLAY_DEVICE);
@@ -621,11 +615,7 @@ namespace Citrom::Platform
 				//SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 				//SetWindowPos(m_HWnd, HWND_TOP, 0, 0, dm.dmPelsWidth, dm.dmPelsHeight, SWP_FRAMECHANGED);
 
-				if (D3D11SWAPCHAIN)
-				{
-					HRESULT hr;
-					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(TRUE, NULL));
-				}
+				SET_DIRECTX_FULLSCREEN(TRUE);
 			}
 			break;
 		}

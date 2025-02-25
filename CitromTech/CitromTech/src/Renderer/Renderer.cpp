@@ -31,9 +31,51 @@ namespace Citrom
 	static CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> g_Shaders;
 	static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
 
-	CTL::StdStrHashMap<Shader>* Renderer_GetShaders()
+	CTL::StdStrHashMap<Shader>& Renderer_GetShaders()
 	{
-		return &g_Shaders;
+		return g_Shaders;
+	}
+
+	void Renderer_RecompileShader(const std::string& shaderName)
+	{
+		ShaderDesc sd;
+		sd.name = shaderName;
+		//g_Shaders[shaderName].internal.reset();
+		g_Shaders[shaderName] = DEVICE->CreateShader(&sd);
+	}
+	void Renderer_RecompileAllShaders()
+	{
+		for (const auto& shaderPair : g_Shaders)
+			Renderer_RecompileShader(shaderPair.first);
+	}
+
+	Material* Renderer_GetMaterialAt(uint32 index)
+	{
+		return &g_Materials[index];
+	}
+	Material* Renderer_GetMaterialByName(const std::string& name)
+	{
+		for (Material& mat : g_Materials)
+		{
+			if (mat.GetName() == name)
+				return &mat;
+		}
+		return nullptr;
+	}
+	uint32 Renderer_GetMaterialIndex(const Material* mat)
+	{
+		for (uint32 i = 0; i < g_Materials.Count(); i++)
+		{
+			if (mat == &g_Materials[i])
+				return i;
+		}
+		return -1;
+	}
+	uint32 Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName)
+	{
+		Material mat(*Renderer_GetShader(shaderName), &materialName);
+		//g_Materials.PushBack(mat);
+		return g_Materials.Count() - 1;
 	}
 
 	void Renderer::Initialize(Platform::Window* window)
@@ -554,7 +596,7 @@ namespace Citrom
 
 		// Vertex Buffer 1 Layout
         /*static */VertexBufferLayoutDesc vbld1 = {};
-		vbld1.shader = &Renderer_GetShaders()->at("Standard"); // TODO: heavily sure this is the reason why my materials don't work..
+		vbld1.shader = &Renderer_GetShaders()["Standard"]; // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
@@ -590,7 +632,7 @@ namespace Citrom
 			psd.dsState = &dsd;
 			psd.primitiveType = PrimitiveTopology::Triangles;
 
-			psd.shader = &Renderer_GetShaders()->at("Standard");
+			psd.shader = &Renderer_GetShaders()["Standard"];
 			psd.inputLayout = &vbLayout1;
 
 			pipeline = m_Device->CreatePipelineState(&psd);
@@ -863,11 +905,11 @@ namespace Citrom
 		ShaderDesc grsd = {};
 		grsd.name = "InfiniteGrid";
 
-		m_GridShader = m_Device->CreateShader(&grsd);
+		m_GridShader = &Renderer_GetShaders()[grsd.name];
 
 		// Pipeline State Object
 		VertexBufferLayoutDesc vbild = {}; // Grid shader does not require any input
-		vbild.shader = &m_GridShader;
+		vbild.shader = m_GridShader;
 		static VertexBufferLayout il = m_Device->CreateVertexBufferLayout(&vbild);
 
 		BlendStateDesc bsd;
@@ -893,7 +935,7 @@ namespace Citrom
 		psd.dsState = &dsd;
 		psd.primitiveType = PrimitiveTopology::Triangles;
 
-		psd.shader = &m_GridShader;
+		psd.shader = m_GridShader;
 		psd.inputLayout = &il;
 
 		m_GridPipeline = m_Device->CreatePipelineState(&psd); // TODO: why isn't the grid as transparent as it should be? probably because transparent objects need to be rendered last...

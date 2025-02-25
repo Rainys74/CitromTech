@@ -70,7 +70,7 @@ namespace Citrom
 			Math::ColorF32x4 GridColorThick; // 4*4=16 fits
 		} m_GridFragUBData;
 
-		RenderAPI::Shader m_GridShader;
+		RenderAPI::Shader* m_GridShader;
 		RenderAPI::UniformBuffer m_GridVertUB;
 		RenderAPI::UniformBuffer m_GridFragUB;
 
@@ -79,10 +79,19 @@ namespace Citrom
 
 	// Global Value access
 	//CTL::DArray<Material>* Renderer_GetMaterials();
-	//Material* Renderer_GetMaterialAt(uint32 index);
-	//Material* Renderer_GetMaterialByName(const std::string& name);
+	Material* Renderer_GetMaterialAt(uint32 index);
+	Material* Renderer_GetMaterialByName(const std::string& name);
+	uint32 Renderer_GetMaterialIndex(const Material* mat);
+	uint32 Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName); // returns the index of the material
 
-	CTL::StdStrHashMap<RenderAPI::Shader>* Renderer_GetShaders();
+	CTL::StdStrHashMap<RenderAPI::Shader>& Renderer_GetShaders();
+	void Renderer_RecompileShader(const std::string& shaderName);
+	void Renderer_RecompileAllShaders();
+
+	inline RenderAPI::Shader* Renderer_GetShader(const std::string& shaderName)
+	{
+		return &Renderer_GetShaders()[shaderName];
+	}
 
 	// TODO: create a modular render path system with
 	// extendable render steps

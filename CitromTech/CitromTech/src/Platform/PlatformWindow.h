@@ -77,6 +77,8 @@ namespace Citrom::Platform
 		bool WindowShouldClose() const;
 		void PollEvents();
 
+		float GetBackingScaleFactor();
+
 		void* Win32TryGetHWnd();
         void* CocoaTryGetNSWnd();
 

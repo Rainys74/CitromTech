@@ -30,7 +30,17 @@ void RendererWindow::ImGuiDraw(bool* showWindow)
 
     if (ImGui::CollapsingHeader("Shaders:", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        auto& shaderMap = Renderer_GetShaders();
+        for (const auto& shaderPair : shaderMap)
+        {
+            if (ImGui::TreeNode(shaderPair.first.c_str()))
+            {
+                if (ImGui::Button("Reload Shader"))
+                    Renderer_RecompileShader(shaderPair.first);
 
+                ImGui::TreePop();
+            }
+        }
     }
     if (ImGui::CollapsingHeader("Materials:", ImGuiTreeNodeFlags_DefaultOpen))
     {

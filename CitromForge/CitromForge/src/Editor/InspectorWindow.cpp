@@ -19,6 +19,8 @@
 #include "misc/cpp/imgui_stdlib.cpp" // unity build?
 #include "Vendor/ImGuiNotify/ImGuiNotify.hpp"
 
+#include <filesystem>
+
 using namespace Citrom;
 
 static EventListener<SceneHierarchyEvents> g_HierarchyEventListener;
@@ -42,6 +44,22 @@ static void TryInitializeHierarchyEventListener()
 
         initialized = true;
     }
+}
+
+template<typename T>
+void AddComponentToEntity(Entity& entity, bool closeImGuiPopup = true)
+{
+    if (entity.HasComponent<T>())
+    {
+        ImGui::InsertNotification({ ImGuiToastType::Error, 3000, "Citrom Tech does not support multiple duplicate components per entity!"});
+        if (closeImGuiPopup)
+            ImGui::CloseCurrentPopup();
+        return;
+    }
+    entity.AddComponent<T>();
+
+    if (closeImGuiPopup)
+        ImGui::CloseCurrentPopup();
 }
 
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
@@ -196,6 +214,22 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             //cameraComponent.camera.SetOrthographicNearClip(orthoNear);
             //cameraComponent.camera.SetOrthographicFarClip(orthoFar);
         }
+        ImGui::Spacing();
+        if (frontEntity.HasComponent<ModelComponent>() && ImGui::CollapsingHeader("Model", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            auto& modelComponent = frontEntity.GetComponent<ModelComponent>();
+
+            static std::string materialPath;
+            if (ImToolkit::PathPicker("Material", &materialPath))
+            {
+                // strip material Path if enter is pressed
+                //CT_CORE_WARN("MATERIAL PATH: {}", materialPath);
+                //materialPath = "";
+
+                std::filesystem::path path(materialPath);
+                materialPath = path.filename().stem().string(); // = filename_with_ext.substr(0, filename_with_ext.find('_'));
+            }
+        }
         ImGui::Separator();
         ImGui::Spacing();
 
@@ -220,6 +254,21 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 NativeFileDialog nfd;
                 NativeFileDialogFilter filters[2] = { { "Source code", "c,cpp,cc" }, { "Headers", "h,hpp" } };
                 CT_CORE_WARN("NFD RESULT!: {}", nfd.OpenFile(filters, CT_ARRAY_LENGTH(filters)));
+            }
+
+            if (ImGui::TreeNode("Mesh"))
+            {
+                if (ImGui::Button("Model## Renderer"))
+                    AddComponentToEntity<ModelComponent>(frontEntity);
+
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Rendering"))
+            {
+                if (ImGui::Button("Camera"))
+                    AddComponentToEntity<CameraComponent>(frontEntity);
+
+                ImGui::TreePop();
             }
 
             ImGui::EndPopup();

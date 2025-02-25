@@ -15,8 +15,8 @@ namespace Citrom
         : m_Device(Device::Get()), m_Shader(g_NullShader)
     {
     }
-    Material::Material(Shader& shader)
-        : m_Device(Device::Get()), m_Shader(shader)
+    Material::Material(Shader& shader, const std::string* materialName)
+        : m_Device(Device::Get()), m_Shader(shader)//, m_Name(m_Shader.descriptor.name)
     {
         /*
         ShaderDesc sd = {};
@@ -24,6 +24,11 @@ namespace Citrom
 
         m_Shader = m_Device->CreateShader(&sd);
         */
+        
+        if (materialName)
+            m_Name = *materialName;
+        else
+            m_Name = m_Shader.descriptor.name;
 
         uint8 pad[16] = {};
         UniformBufferDesc ubd = {};

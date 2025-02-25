@@ -4,6 +4,8 @@
 #include "imgui_internal.h"
 #include "misc/cpp/imgui_stdlib.h"
 
+#include "NativeFileDialog/NativeFileDialog.h"
+
 namespace ImToolkit //ImPresets
 {
     static void _SetupColumns(int count, bool allowResizing = false, float columnSize = 100.0f)
@@ -271,6 +273,40 @@ namespace ImToolkit //ImPresets
         _SetupLabel(label); //, false, 200.0f);
 
         modified |= ImGui::DragFloat("##FLOAT", value, speed, min, max, format);
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return modified;
+    }
+    bool PathPicker(const char* label, std::string* pathOutput, Citrom::NativeFileDialogFilter* filters, size_t filterLength)
+    {
+        bool modified = false;
+
+        ImGui::PushID(label);
+
+        _SetupLabel(label); //, false, 200.0f);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // there should be 0 spacing between the button and the input
+
+        modified |= ImGui::InputText("##TEXTINPUT", pathOutput);
+
+        ImGui::SameLine();
+        ImVec2 labelSize = ImGui::CalcTextSize("[]");
+        ImVec2 size = ImGui::CalcItemSize(ImVec2(0, 0), labelSize.y + ImGui::GetStyle().FramePadding.x * 2.0f, labelSize.y + ImGui::GetStyle().FramePadding.y * 2.0f);
+        if (ImGui::Button("[]", size)) // [ ], <>, {}, ||
+        {
+            Citrom::NativeFileDialog nfd;
+            std::string result = nfd.OpenFile(filters, filterLength);
+            if (result != "")
+            {
+                *pathOutput = result;
+                modified |= true;
+            }
+        }
+
+        ImGui::PopStyleVar();
 
         ImGui::Columns(1);
 

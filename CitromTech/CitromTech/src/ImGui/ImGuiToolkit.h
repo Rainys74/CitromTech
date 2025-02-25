@@ -1,6 +1,9 @@
 #pragma once
 
 #include "imgui.h"
+#include "NativeFileDialog/NativeFileDialog.h"
+
+#include <string>
 
 #define CT_EDITOR_ENUMERABLE_DROPDOWN(NAME)
 
@@ -11,6 +14,8 @@ namespace ImToolkit //ImPresets
     bool DrawVector2Control(const char* label, float values[2], float speed = 0.25f);
 
     bool DrawFloatControl(const char* label, float* value, float speed = 1.0f, float min = 0.0f, float max = 0.0f, const char* format = "%.3f");
+
+    bool PathPicker(const char* label, std::string* pathOutput, Citrom::NativeFileDialogFilter* filters = nullptr, size_t filterLength = 0); // InputLocation? BrowseField? BrowseInput? FileSelector? LocationInput? PathPicker? InputWithBrowse? BrowseField?
 
     template<typename T, const char* (*TToString)(T)>
     bool ComboEnum(const char* label, T& currentValue, const T* values, int valuesCount, const int valuesBegin = 0)

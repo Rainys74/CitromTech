@@ -34,6 +34,21 @@ namespace Citrom::Platform
 
         m_Backend->PollEvents();
     }
+
+    float Window::GetBackingScaleFactor()
+    {
+        HWND hWnd = (HWND)m_Backend->Win32TryGetHWnd();
+
+        //HDC hdc = GetDC(hWnd);
+        //UINT dpi = GetDeviceCaps(hdc, LOGPIXELSX);
+        ////UINT dpiY = GetDeviceCaps(hdc, LOGPIXELSY);
+        //ReleaseDC(hWnd, hdc);
+        UINT dpi = GetDpiForWindow(hWnd);
+
+        float scaleFactor = dpi / CCast<float32>(USER_DEFAULT_SCREEN_DPI); // 96.0f DPI is the default DPI for 1.0 scaling
+        return scaleFactor;
+    }
+
     void* Window::Win32TryGetHWnd()
     {
         return m_Backend->Win32TryGetHWnd();

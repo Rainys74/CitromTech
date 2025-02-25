@@ -46,6 +46,9 @@ namespace Citrom
         auto view = m_SceneRegistry.view<CameraComponent>();
         for (auto entity : view)
         {
+            if (!Entity(entity, this).GetComponent<ActiveComponent>().active)
+                continue;
+
             const auto& cameraComponent = view.get<CameraComponent>(entity);
 
             return Entity(entity, this);

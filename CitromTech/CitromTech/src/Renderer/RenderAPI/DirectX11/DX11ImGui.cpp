@@ -17,6 +17,8 @@ namespace Citrom::RenderAPI
 	void DX11Device::ImGuiNewFrame(CommandBuffer* cmd)
 	{
 		Device_PushDebugGroup("ImGui Render");
+
+		ImGui::GetIO().DisplayFramebufferScale = ImVec2(m_DPIScale, m_DPIScale);
 		ImGui_ImplDX11_NewFrame();
 	}
 	void DX11Device::ImGuiRenderDrawData(void* imDrawData, CommandBuffer* cmd)

@@ -58,8 +58,9 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor)
 	{
-		m_Width = descriptor->windowPtr->GetBackend()->GetWidth();
-		m_Height = descriptor->windowPtr->GetBackend()->GetHeight();
+		m_DPIScale = descriptor->windowPtr->GetBackingScaleFactor();
+		m_Width = descriptor->windowPtr->GetBackend()->GetWidth() * m_DPIScale;
+		m_Height = descriptor->windowPtr->GetBackend()->GetHeight() * m_DPIScale;
 
 		DXGI_SWAP_CHAIN_DESC scd = {};
 		scd.BufferDesc.Width = 0;
@@ -129,8 +130,8 @@ namespace Citrom::RenderAPI
 		width = (width <= 0) ? 1 : width;
 		height = (height <= 0) ? 1 : height;
 
-		m_Width = width;
-		m_Height = height;
+		m_Width = width * m_DPIScale;
+		m_Height = height * m_DPIScale;
 
 		DestroyRenderTarget();
 

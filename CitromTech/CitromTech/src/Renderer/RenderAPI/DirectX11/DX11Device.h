@@ -143,6 +143,8 @@ namespace Citrom::RenderAPI
 		WRL::ComPtr<IDXGISwapChain> m_SwapChain;
 		UINT m_VSyncInterval = 1;
 
+		float32 m_DPIScale = 1.0f;
+
 		ID3D11RenderTargetView* m_RenderTarget;
 		WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
 	};

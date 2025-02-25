@@ -27,6 +27,12 @@ namespace Citrom::Platform
         {
             m_Backend->PollEvents();
         }
+
+        float Window::GetBackingScaleFactor()
+        {
+            return 0.0f;
+            //CGFloat retinaScale = [NSScreen mainScreen].backingScaleFactor;
+        }
         
         void* Window::CocoaTryGetNSWnd()
         {

@@ -31,7 +31,8 @@ namespace Citrom
 	public:
 		//Material(const std::string& shaderName = "Standard");
 		Material();
-		Material(RenderAPI::Shader& shader);
+		Material(RenderAPI::Shader& shader, const std::string* materialName = nullptr);
+		Material(const Material&) = default;
 		~Material();
 
 		void PushPropertyNoAutoPad(const std::string& name, const MaterialFormat format, const void* propertyData);
@@ -43,13 +44,27 @@ namespace Citrom
 
 		//virtual void RegisterProperties() = 0;
 
+		template<typename T>
+		void Set(const std::string& name, const T value)
+		{
+			//CT_CORE_ASSERT(false, "Unimplemented template type.");
+		}
+
+		template<>
+		void Set(const std::string& name, const float32 value)
+		{
+			SetProperty(name, MaterialFormat::Float32, &value);
+		}
+
 		FORCE_INLINE RenderAPI::Shader* GetShader() { return &m_Shader; };
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
+		FORCE_INLINE std::string GetName() const { return m_Name; }
 	protected:
 		MaterialProperty* GetPropertyByName(const std::string& name);
 	private:
 		RenderAPI::Shader& m_Shader;
 		RenderAPI::UniformBuffer m_UniformBuffer;
+		std::string m_Name;
 
 		//CTL::StdStrHashMap<MaterialProperty> m_Properties; CTL::DArray<MaterialProperty> properties;
 		CTL::DArray<MaterialProperty> m_Properties;
