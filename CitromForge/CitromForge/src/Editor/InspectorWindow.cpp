@@ -122,7 +122,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::EndDisabled();
         }
         ImGui::Spacing();
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) // TODO: maybe right-clicking header opens context that allows removing the component?
         {
             ImToolkit::DrawVector3Control("Position", &transformComponent.transform.position[0], 0.25f);
             
@@ -173,7 +173,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             // Perspective
             ImGui::Separator();
             float32 perspectiveYFOV = Math::RadiansToDegrees(cameraComponent.camera.GetPerspectiveVerticalFOV());
-            if (ImToolkit::DrawFloatControl("Vertical FOV", &perspectiveYFOV, 0.1f))
+            if (ImToolkit::DrawFloatControl("Vertical FOV", &perspectiveYFOV, 0.1f)) // O for now is the best looking right behind, deg looks weird but ok, Deg looks weird too? Deg. looks weirder, "%.1f deg" looking the best
                 cameraComponent.camera.SetPerspectiveVerticalFOV(Math::DegreesToRadians(perspectiveYFOV));
 
             float32 perspectiveNear = cameraComponent.camera.GetPerspectiveNearClip();

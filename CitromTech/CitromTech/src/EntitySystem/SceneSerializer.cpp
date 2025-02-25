@@ -17,7 +17,7 @@ namespace Citrom
 	{
 		doc.SetObject();
 
-		JSON_WRITER_SET_STRING("SceneName", std::string("Untitled"));
+		JSON_WRITER_SET_STRING("SceneName", GetSceneName());
 
 		//doc.SetArray();
 
@@ -37,25 +37,25 @@ namespace Citrom
 
 			rapidjson::Value componentArray(rapidjson::kObjectType);
 
-			if (entity.HasComponent<UUIDComponent>())
+			//if (entity.HasComponent<UUIDComponent>())
 			{
 				rapidjson::Value guidComponentArray(rapidjson::kObjectType);
 				guidComponentArray.AddMember("GUID", (uint64)uuidComponent.id, allocator);
 				componentArray.AddMember("UUIDComponent", guidComponentArray, allocator);
 			}
-			if (entity.HasComponent<NameComponent>())
+			//if (entity.HasComponent<NameComponent>())
 			{
 				rapidjson::Value tagComponentArray(rapidjson::kObjectType);
 				tagComponentArray.AddMember("Name", rapidjson::Value(nameComponent.name.c_str(), allocator), allocator);
 				componentArray.AddMember("NameComponent", tagComponentArray, allocator);
 			}
-			if (entity.HasComponent<ActiveComponent>())
+			//if (entity.HasComponent<ActiveComponent>())
 			{
 				rapidjson::Value enabledComponentArray(rapidjson::kObjectType);
 				enabledComponentArray.AddMember("Active", activeComponent.active, allocator);
 				componentArray.AddMember("ActiveComponent", enabledComponentArray, allocator);
 			}
-			if (entity.HasComponent<HierarchyComponent>())
+			//if (entity.HasComponent<HierarchyComponent>())
 			{
 				rapidjson::Value hierarchyComponentArray(rapidjson::kObjectType);
 				hierarchyComponentArray.AddMember("ParentUUID", hierarchyComponent.parentID, allocator);
@@ -115,6 +115,19 @@ namespace Citrom
 				cameraComponentObject.AddMember("ViewportOffsetY", cameraComponent.camera.viewportOffset.y, allocator);
 
 				componentArray.AddMember("CameraComponent", cameraComponentObject, allocator);
+			}
+
+			if (entity.HasComponent<ModelComponent>())
+			{
+				const auto& modelComponent = entity.GetComponent<ModelComponent>();
+
+				rapidjson::Value modelComponentObj(rapidjson::kObjectType);
+
+				modelComponentObj.AddMember("MaterialName", "Placeholder", allocator);
+
+				modelComponentObj.AddMember("CastShadows", modelComponent.castShadows, allocator);
+
+				componentArray.AddMember("ModelComponent", modelComponentObj, allocator);
 			}
 
 			entityObject.AddMember("Components", componentArray, allocator);

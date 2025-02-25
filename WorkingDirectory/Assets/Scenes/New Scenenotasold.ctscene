@@ -1,11 +1,11 @@
 {
-    "SceneName": "New Scene",
+    "SceneName": "Untitled",
     "Entities": [
         {
             "EntityName": "Main Camera",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 2233086709840018001
+                    "GUID": 2079909738955092295
                 },
                 "NameComponent": {
                     "Name": "Main Camera"
@@ -18,17 +18,17 @@
                 },
                 "TransformComponent": {
                     "PositionX": 0.0,
-                    "PositionY": 0.0,
-                    "PositionZ": -0.5,
-                    "RotationX": 0.0,
-                    "RotationY": 0.0,
-                    "RotationZ": 0.0,
-                    "RotationW": 1.0,
+                    "PositionY": 2.75,
+                    "PositionZ": 5.25,
+                    "RotationX": -6.611792446875597e-9,
+                    "RotationY": 0.9884939789772034,
+                    "RotationZ": -0.15126018226146698,
+                    "RotationW": -4.320844482208486e-8,
                     "ScaleX": 1.0,
                     "ScaleY": 1.0,
                     "ScaleZ": 1.0,
-                    "RotationEulerAnglesHintX": 0.0,
-                    "RotationEulerAnglesHintY": 0.0,
+                    "RotationEulerAnglesHintX": 0.3036859929561615,
+                    "RotationEulerAnglesHintY": 3.1415927410125732,
                     "RotationEulerAnglesHintZ": 0.0
                 },
                 "CameraComponent": {
@@ -54,7 +54,7 @@
             "EntityName": "New Entity",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 7465524827197465045
+                    "GUID": 10753414579844532335
                 },
                 "NameComponent": {
                     "Name": "New Entity"
@@ -86,7 +86,7 @@
             "EntityName": "New Entity",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 74079342322104458
+                    "GUID": 1795479023694647116
                 },
                 "NameComponent": {
                     "Name": "New Entity"
@@ -98,19 +98,19 @@
                     "ParentUUID": 0
                 },
                 "TransformComponent": {
-                    "PositionX": 0.5803155899047852,
-                    "PositionY": 0.284820020198822,
-                    "PositionZ": -0.6934837102890015,
-                    "RotationX": 0.046537674963474274,
-                    "RotationY": 0.21883410215377808,
-                    "RotationZ": 0.052779290825128555,
-                    "RotationW": 0.9732216000556946,
-                    "ScaleX": 1.2503249645233154,
-                    "ScaleY": 6.5003252029418945,
-                    "ScaleZ": 6.5003252029418945,
-                    "RotationEulerAnglesHintX": 0.12566369771957397,
-                    "RotationEulerAnglesHintY": 0.43458685278892517,
-                    "RotationEulerAnglesHintZ": 0.13613560795783997
+                    "PositionX": 0.0,
+                    "PositionY": 0.0,
+                    "PositionZ": 0.0,
+                    "RotationX": 0.0,
+                    "RotationY": 0.0,
+                    "RotationZ": 0.0,
+                    "RotationW": 1.0,
+                    "ScaleX": 1.0,
+                    "ScaleY": 1.0,
+                    "ScaleZ": 1.0,
+                    "RotationEulerAnglesHintX": 0.0,
+                    "RotationEulerAnglesHintY": 0.0,
+                    "RotationEulerAnglesHintZ": 0.0
                 }
             }
         }

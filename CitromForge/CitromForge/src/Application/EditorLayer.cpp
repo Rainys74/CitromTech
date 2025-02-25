@@ -93,7 +93,7 @@ void EditorLayer::OnImGuiRender()
             {
                 std::string filePath("Assets/Scenes/");
                 filePath.append(GetCurrentScene()->GetSceneName());
-                filePath.append(".ctscene"); // .cts, .ctscene, .ctenv
+                filePath.append(".ctscene"); // .cts, .ctscene, .ctenv also .ctbs, .ctbinscene, .ctbscene, .ctscenebin
 
                 SceneSerializer sceneSerializer(GetCurrentScene());
                 sceneSerializer.Serialize(filePath);
