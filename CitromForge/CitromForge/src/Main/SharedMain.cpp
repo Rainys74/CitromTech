@@ -78,7 +78,7 @@ float64 MainFPS()
 	return 1.0 / g_DeltaTime;
 }
 
-void* GetCurrentScene()
+Scene* GetCurrentScene()
 {
 	return g_CurrentScene;
 }

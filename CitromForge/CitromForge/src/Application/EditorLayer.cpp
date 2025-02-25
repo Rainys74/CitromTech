@@ -19,6 +19,9 @@
 
 #include "Platform/PlatformWindow.h"
 
+#include "EntitySystem/SceneSerializer.h"
+#include "NativeFileDialog/NativeFileDialog.h"
+
 #include "imgui.h"
 #include "ImGuizmo.h"
 
@@ -66,6 +69,38 @@ void EditorLayer::OnImGuiRender()
     {
         if (ImGui::BeginMenu("File"))
         {
+            if (ImGui::MenuItem("New Scene", "Ctrl+N"))
+            {
+                GetCurrentScene()->ClearScene(); // TODO: you might want to move to shared main since it requires reconstructing the name of the scene and stuff
+            }
+            if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
+            {
+                NativeFileDialog nfd;
+                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,cts,ctenv" } };
+                std::string result = nfd.OpenFile(filters, CT_ARRAY_LENGTH(filters));
+                if (result != "")
+                {
+                    Scene* scene = GetCurrentScene();
+                    scene->ClearScene(); // To Reopen scene
+
+                    SceneSerializer sceneSerializer(scene);
+                    sceneSerializer.Deserialize(result);
+                }
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Save", "Ctrl+S")); // Save Scene
+            if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+            {
+                std::string filePath("Assets/Scenes/");
+                filePath.append(GetCurrentScene()->GetSceneName());
+                filePath.append(".ctscene"); // .cts, .ctscene, .ctenv
+
+                SceneSerializer sceneSerializer(GetCurrentScene());
+                sceneSerializer.Serialize(filePath);
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Quit")); // Exit
+
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Edit"))

@@ -31,7 +31,7 @@ namespace Citrom::JSON // JSON vs Json
     };
 
     template<typename T>
-    std::string SerializeObject(const T& object, const SerializerOptions& options = SerializerOptions()) // nullptr or modern C++? modern C++ pluses are you can generate an options object on the fly
+    std::string SerializeObject(T& object, const SerializerOptions& options = SerializerOptions()) // nullptr or modern C++? modern C++ pluses are you can generate an options object on the fly
     {
         CT_PROFILE_GLOBAL_FUNCTION();
 

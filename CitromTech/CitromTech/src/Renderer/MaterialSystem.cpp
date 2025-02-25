@@ -1,4 +1,5 @@
 #include "MaterialSystem.h"
+#include "Renderer.h"
 #include "CitromAssert.h"
 
 #include "Profiling/Profiler.h"
@@ -37,6 +38,17 @@ namespace Citrom
         ubd.usage = Usage::Dynamic;
 
         m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
+    }
+    Material::Material(const MaterialData& materialData)
+        : m_Device(Device::Get()), m_Shader(Renderer_GetShaders()[materialData.shaderName])
+    {
+        Material(m_Shader, (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName);
+
+        for (const auto& obj : materialData.materialProperties)
+        {
+            PushProperty(obj.name, obj.propertyFormat, obj.data);
+            SetProperty(obj.name, obj.propertyFormat, obj.data);
+        }
     }
     Material::~Material()
     {

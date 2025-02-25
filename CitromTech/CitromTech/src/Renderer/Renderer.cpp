@@ -248,6 +248,17 @@ namespace Citrom
 				continue;
 
 			const std::string fileName = entry.path().filename().string();
+			const std::string fileNameNoExt = entry.path().filename().stem().string();
+
+			std::ifstream file(entry.path());
+			CT_CORE_ASSERT(file.is_open(), "Failed to open material file for writing!");
+
+			std::string jsonSrc((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+			MaterialData matData = JSON::DeserializeObject<MaterialData>(jsonSrc);
+			matData.materialName = fileNameNoExt;
+
+			// TODO: create materials, also add support for recreating/creating materials on the fly (runtime) for easier editor work.
 		}
 
 		g_EditorRenderer.Initialize();

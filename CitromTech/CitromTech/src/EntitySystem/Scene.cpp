@@ -6,7 +6,8 @@
 
 namespace Citrom
 {
-    Scene::Scene()
+    Scene::Scene(const std::string& name)
+        : m_Name(name)
     {
     }
     Scene::~Scene()
@@ -19,6 +20,7 @@ namespace Citrom
         entity.AddComponent<UUIDComponent>();
         entity.AddComponent<NameComponent>().name = "New Entity";
         entity.AddComponent<ActiveComponent>().active = true;
+        entity.AddComponent<HierarchyComponent>();
         entity.AddComponent<TransformComponent>().transform.scale = Math::Vector3{1.0f, 1.0f, 1.0f};
 
         return entity;

@@ -12,7 +12,12 @@ void ForgeLoop();
 float64 MainDeltaTime();
 float64 MainFPS();
 
-void* GetCurrentScene();
+namespace Citrom
+{
+	class Scene;
+}
+
+Citrom::Scene* GetCurrentScene();
 
 namespace Citrom
 {

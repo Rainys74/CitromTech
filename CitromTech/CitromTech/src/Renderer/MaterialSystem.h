@@ -27,6 +27,80 @@ namespace Citrom
 		void* dataPtr; // Ref or copy data?, right now only points to the DArray
 	};
 
+	struct MaterialData
+	{
+		std::string materialName, shaderName;
+		struct MaterialPropertyObjLite
+		{
+			std::string name;
+			MaterialFormat propertyFormat;
+			uint8 data[64];
+		};
+		CTL::DArray<MaterialPropertyObjLite> materialProperties;
+
+		static MaterialData DeserializeJson(const simdjson::dom::element& doc) // TODO: test this!
+		{
+			MaterialData material;
+
+			//JSON_READER_GET_STRING("MaterialName", material.materialName); // redundant since file name is the material name
+			JSON_READER_GET_STRING("ShaderName", material.shaderName);
+
+			simdjson::dom::array objArray = doc["MaterialProperties"];
+			for (simdjson::dom::element obj : objArray)
+			{
+				MaterialPropertyObjLite matProperty;
+
+				JSON_READER_DOC_GET_STRING(obj, "PropertyName", matProperty.name);
+				matProperty.propertyFormat = (MaterialFormat)(int64)obj["PropertyFormat"];
+
+				uint8 propertyData[64]; // max matrix4x4 size
+				switch (matProperty.propertyFormat)
+				{
+					default:
+						//CT_CORE_ASSERT(false, "Unknown Material Format!");
+						break;
+
+					case MaterialFormat::Float32:
+						*(float32*)propertyData = (float32)(double)obj["Value"];
+						break;
+					case MaterialFormat::Float32x3:
+						*(float32*)propertyData = (float32)(double)obj["Value0"];
+						*((float32*)propertyData + 1) = (float32)(double)obj["Value1"];
+						*((float32*)propertyData + 2) = (float32)(double)obj["Value2"];
+						break;
+					case MaterialFormat::Float32x4:
+						*(float32*)propertyData = (float32)(double)obj["Value0"];
+						*((float32*)propertyData + 1) = (float32)(double)obj["Value1"];
+						*((float32*)propertyData + 2) = (float32)(double)obj["Value2"];
+						*((float32*)propertyData + 3) = (float32)(double)obj["Value3"];
+						break;
+
+					case MaterialFormat::Float32x4x4:
+						for (int j = 0; j < 4; ++j)
+						{
+							for (int i = 0; i < 4; ++i)
+							{
+								*((float32*)propertyData + i * 4 + j) = (float32)(double)obj[std::string("Value" + std::to_string(i) + "_" + std::to_string(j)).c_str()];
+							}
+						}
+						break;
+
+					case MaterialFormat::Int32:
+						*(int32*)propertyData = (int32)(int64)obj["Value"];
+						break;
+					case MaterialFormat::UInt32:
+						*(uint32*)propertyData = (uint32)(uint64)obj["Value"];
+						break;
+				}
+				Memory::Copy(matProperty.data, propertyData, 64); //matProperty.data = propertyData;
+
+				material.materialProperties.PushBack(matProperty);
+			}
+
+			return material;
+		}
+	};
+
 	// TODO: "macrofy" the system to allow to register properties to a member variable for easier access, also implement a texture system.
 	class Material
 	{
@@ -34,6 +108,7 @@ namespace Citrom
 		//Material(const std::string& shaderName = "Standard");
 		Material();
 		Material(RenderAPI::Shader& shader, const std::string* materialName = nullptr);
+		Material(const MaterialData& materialData);
 		Material(const Material&) = default;
 		~Material();
 
