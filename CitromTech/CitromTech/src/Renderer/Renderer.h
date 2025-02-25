@@ -16,6 +16,7 @@
 #include "Math/Transform.h"
 
 #include "CTL/ScopedPointer.h"
+#include "CTL/HashMap.h"
 
 namespace Citrom
 {
@@ -80,6 +81,8 @@ namespace Citrom
 	//CTL::DArray<Material>* Renderer_GetMaterials();
 	//Material* Renderer_GetMaterialAt(uint32 index);
 	//Material* Renderer_GetMaterialByName(const std::string& name);
+
+	CTL::StdStrHashMap<RenderAPI::Shader>* Renderer_GetShaders();
 
 	// TODO: create a modular render path system with
 	// extendable render steps

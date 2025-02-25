@@ -28,8 +28,13 @@ namespace Citrom
 
 	static EditorRenderer g_EditorRenderer;
 
-	//static CTL::DArray<Shader> g_Shaders; // probably switch to a Hash-Map or something
+	static CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> g_Shaders;
 	static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
+
+	CTL::StdStrHashMap<Shader>* Renderer_GetShaders()
+	{
+		return &g_Shaders;
+	}
 
 	void Renderer::Initialize(Platform::Window* window)
 	{
@@ -155,6 +160,26 @@ namespace Citrom
 		//{
 		//	g_Shaders.PushBack(shaderPair.second);
 		//}
+
+		// Shaders
+		for (const auto& entry : std::filesystem::directory_iterator("ShaderCache/"))
+		{
+			const std::string fileName = entry.path().filename().string();
+
+			// Find the first underscore and extract the base name
+			const size_t pos = fileName.find('_');
+			if (pos != std::string::npos)
+			{
+				if (fileName.substr(pos + 1, 2) == "cs")
+					continue;
+				std::string baseName = fileName.substr(0, pos);
+
+				ShaderDesc sd;
+				sd.name = baseName;
+
+				g_Shaders[baseName] = m_Device->CreateShader(&sd);
+			}
+		}
 
 		g_EditorRenderer.Initialize();
 	}
@@ -529,7 +554,7 @@ namespace Citrom
 
 		// Vertex Buffer 1 Layout
         /*static */VertexBufferLayoutDesc vbld1 = {};
-		vbld1.shader = &shader; // TODO: heavily sure this is the reason why my materials don't work..
+		vbld1.shader = &Renderer_GetShaders()->at("Standard"); // TODO: heavily sure this is the reason why my materials don't work..
 
 		vbld1.PushLayout("Position", 0, Format::R32G32B32_FLOAT);
 		vbld1.PushLayout("Normal", 0, Format::R32G32B32_FLOAT);
@@ -565,7 +590,7 @@ namespace Citrom
 			psd.dsState = &dsd;
 			psd.primitiveType = PrimitiveTopology::Triangles;
 
-			psd.shader = &shader;
+			psd.shader = &Renderer_GetShaders()->at("Standard");
 			psd.inputLayout = &vbLayout1;
 
 			pipeline = m_Device->CreatePipelineState(&psd);

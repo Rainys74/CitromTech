@@ -38,6 +38,8 @@ namespace Citrom::Platform
         int m_Width, m_Height;
         EventBus m_EventBus;
 
+        DisplayMode m_DisplayMode = DisplayMode::Windowed;
+
         // Win32
         TCHAR* m_ClassName; // LPCWSTR
         HINSTANCE m_HInstance;

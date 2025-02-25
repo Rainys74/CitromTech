@@ -85,6 +85,7 @@ namespace Citrom::RenderAPI
 		// DirectX11 Special
 		ID3D11Device* DX11GetDevice() { return m_Device; }
 		ID3D11DeviceContext* DX11GetDeviceContext() { return m_DeviceContext; }
+		IDXGISwapChain* DX11GetSwapChain() { return m_SwapChain.Get(); }
 
 		WRL::ComPtr<ID3DBlob> DX11GetVertexShaderBlob(const Shader* shader);
 		//WRL::ComPtr<ID3D11Buffer> DX11GetVertexBuffer(const VertexBuffer* vb);
@@ -145,6 +146,11 @@ namespace Citrom::RenderAPI
 		ID3D11RenderTargetView* m_RenderTarget;
 		WRL::ComPtr<ID3D11DepthStencilView> m_DepthStencilView;
 	};
+
+	#define D3D11 static_cast<Citrom::RenderAPI::DX11Device*>(DEVICE)
+	#define D3D11DEVICE (D3D11->DX11GetDevice())
+	#define D3D11DEVICECONTEXT (D3D11->DX11GetDeviceContext())
+	#define D3D11SWAPCHAIN (D3D11->DX11GetSwapChain())
 
 	class DX11DummyDevice : public DummyDevice
 	{

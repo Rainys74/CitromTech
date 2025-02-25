@@ -11,6 +11,9 @@
 
 #include "Input/KeyboardInput.h"
 
+#include "Renderer/RenderAPI/DirectX11/DX11Device.h" // required for fullscreen
+#include "Renderer/RenderAPI/DirectX11/DX11DebugHandler.h"
+
 #include <windowsx.h>
 
 #ifdef CT_EDITOR_ENABLED
@@ -513,20 +516,39 @@ namespace Citrom::Platform
 
 	void WindowBackendWin32::SetDisplayMode(DisplayMode displayMode, const uint32 refreshRate)
 	{
+#ifdef CT_PLATFORM_WINDOWS
+#define SET_DIRECTX_FULLSCREEN(STATE) if (RenderAPI::GraphicsAPIManager::GetGraphicsAPI() == RenderAPI::GraphicsAPI::DirectX11 && D3D11SWAPCHAIN) {HRESULT hr; DXCallHR(D3D11SWAPCHAIN->SetFullscreenState((STATE), NULL));} \
+								 //else if (RenderAPI::GraphicsAPIManager::GetGraphicsAPI() == RenderAPI::GraphicsAPI::DirectX12 && D3D12SWAPCHAIN) {HRESULT hr; DXCallHR(D3D12SWAPCHAIN->SetFullscreenState((STATE), NULL));}
+#else
+#define SET_DIRECTX_FULLSCREEN(...)
+#endif
+
+		m_DisplayMode = displayMode;
 		switch (displayMode)
 		{
 			default:
 			case DisplayMode::Windowed:
 			{
+				if (D3D11SWAPCHAIN)
+				{
+					HRESULT hr;
+					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(FALSE, NULL));
+				}
+
 				// Restore window style to overlapped window
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
 
-				// Adjust window size and position as desired
 				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, PLATFORM_DEFAULT_WIDTH, PLATFORM_DEFAULT_HEIGHT, SWP_FRAMECHANGED);
 			}
 			break;
 			case DisplayMode::Borderless:
 			{
+				if (D3D11SWAPCHAIN)
+				{
+					HRESULT hr;
+					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(FALSE, NULL));
+				}
+
 				// Retrieve the primary display device name
 				DISPLAY_DEVICE dd = { 0 };
 				dd.cb = sizeof(DISPLAY_DEVICE);
@@ -545,16 +567,120 @@ namespace Citrom::Platform
 
 				SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
 				SetWindowPos(m_HWnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
+
+				SetForegroundWindow(m_HWnd); // Brings the window to the front
+				SetFocus(m_HWnd);
 			}
 			break;
 			case DisplayMode::Fullscreen:
 			{
+				// Retrieve the primary display device name
+				DISPLAY_DEVICE dd = { 0 };
+				dd.cb = sizeof(DISPLAY_DEVICE);
+				EnumDisplayDevices(NULL, 0, &dd, 0);
+
+				// Retrieve current display settings
+				DEVMODE dm = { 0 };
+				dm.dmSize = sizeof(DEVMODE);
+				CT_CORE_VERIFY(EnumDisplaySettings(dd.DeviceName, ENUM_CURRENT_SETTINGS, &dm), "Failed to Enumerate Display Settings.");
+
+				DWORD maxFrequency = 0;
+				if (refreshRate == 0)
+				{
+					// Enumerate supported display modes
+					DEVMODE dmEnum = { 0 };
+					dmEnum.dmSize = sizeof(DEVMODE);
+
+					for (int iModeNum = 0; EnumDisplaySettings(dd.DeviceName, iModeNum, &dmEnum); iModeNum++)
+					{
+						if (dmEnum.dmPelsWidth == dm.dmPelsWidth &&
+							dmEnum.dmPelsHeight == dm.dmPelsHeight)
+						{
+							if (dmEnum.dmDisplayFrequency > maxFrequency)
+							{
+								maxFrequency = dmEnum.dmDisplayFrequency;
+							}
+						}
+					}
+				}
+				else
+				{
+					maxFrequency = refreshRate;
+				}
+
+				// Fullscreen
+				dm.dmPelsWidth = GetSystemMetrics(SM_CXSCREEN);
+				dm.dmPelsHeight = GetSystemMetrics(SM_CYSCREEN);
+				dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
+				dm.dmDisplayFrequency = maxFrequency;
+
+				CT_CORE_VERIFY(ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+				//CT_CORE_VERIFY(ChangeDisplaySettingsEx(dd.DeviceName, &dm, nullptr, CDS_FULLSCREEN, nullptr) == DISP_CHANGE_SUCCESSFUL, "Failed to change display mode.");
+
+				// Remove window borders and set fullscreen size
+				//SetWindowLongPtr(m_HWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+				//SetWindowPos(m_HWnd, HWND_TOP, 0, 0, dm.dmPelsWidth, dm.dmPelsHeight, SWP_FRAMECHANGED);
+
+				if (D3D11SWAPCHAIN)
+				{
+					HRESULT hr;
+					DXCallHR(D3D11SWAPCHAIN->SetFullscreenState(TRUE, NULL));
+				}
 			}
 			break;
 		}
 	}
 	void WindowBackendWin32::SetResolution(const uint32 width, const uint32 height, const uint32 refreshRate, const int xPos, const int yPos)
 	{
+		DEVMODE dm = {};
+		dm.dmSize = sizeof(dm);
+
+		DISPLAY_DEVICE dd = { 0 };
+		dd.cb = sizeof(DISPLAY_DEVICE);
+		EnumDisplayDevices(NULL, 0, &dd, 0);
+
+		DWORD maxFrequency = 0;
+		if (refreshRate == 0)
+		{
+			// Enumerate supported display modes
+			DEVMODE dmEnum = { 0 };
+			dmEnum.dmSize = sizeof(DEVMODE);
+
+			for (int iModeNum = 0; EnumDisplaySettings(dd.DeviceName, iModeNum, &dmEnum); iModeNum++)
+			{
+				if (dmEnum.dmPelsWidth == dm.dmPelsWidth &&
+					dmEnum.dmPelsHeight == dm.dmPelsHeight)
+				{
+					if (dmEnum.dmDisplayFrequency > maxFrequency)
+					{
+						maxFrequency = dmEnum.dmDisplayFrequency;
+					}
+				}
+			}
+		}
+		else
+		{
+			maxFrequency = refreshRate;
+		}
+
+		dm.dmPelsWidth = width;
+		dm.dmPelsHeight = height;
+		//devMode.dmBitsPerPel = 32;
+		dm.dmDisplayFrequency = maxFrequency;
+		dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
+
+		HMONITOR hMonitor = MonitorFromWindow(m_HWnd, MONITOR_DEFAULTTOPRIMARY);
+		if (hMonitor != nullptr)
+		{
+			// Fullscreen mode
+			ChangeDisplaySettings(&dm, CDS_FULLSCREEN);
+			SetWindowPos(m_HWnd, HWND_TOP, xPos, yPos, width, height, SWP_NOZORDER | SWP_FRAMECHANGED);
+		}
+		else
+		{
+			// Windowed mode
+			SetWindowPos(m_HWnd, HWND_TOP, xPos, yPos, width, height, SWP_NOZORDER | SWP_FRAMECHANGED);
+		}
 	}
 	Resolution WindowBackendWin32::GetResolution()
 	{
@@ -568,6 +694,24 @@ namespace Citrom::Platform
 
 		resolution.width = rect.right - rect.left;
 		resolution.height = rect.bottom - rect.top;
+
+		// Refresh Rate
+		HMONITOR hMonitor = MonitorFromWindow(m_HWnd, MONITOR_DEFAULTTOPRIMARY);
+		if (hMonitor != nullptr)
+		{
+			MONITORINFOEX monitorInfo = {};
+			monitorInfo.cbSize = sizeof(monitorInfo);
+			GetMonitorInfo(hMonitor, &monitorInfo);
+
+			DEVMODE devMode = {};
+			devMode.dmSize = sizeof(devMode);
+			EnumDisplaySettings(monitorInfo.szDevice, ENUM_CURRENT_SETTINGS, &devMode);
+			resolution.refreshRate = devMode.dmDisplayFrequency;
+		}
+		else
+		{
+			resolution.refreshRate = 0;
+		}
 
 		return resolution;
 	}

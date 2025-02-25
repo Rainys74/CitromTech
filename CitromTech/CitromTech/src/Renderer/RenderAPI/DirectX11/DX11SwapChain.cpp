@@ -86,6 +86,10 @@ namespace Citrom::RenderAPI
 
 		CreateRenderTarget();
 		Resize(m_Width, m_Height); // Create viewport to not depend on Win32's resize call on UpdateWindow
+
+		//DXCallHR(m_SwapChain->SetFullscreenState(TRUE, NULL));
+		//BOOL state;
+		//DXCallHR(m_SwapChain->GetFullscreenState(&state, NULL));
 	}
 	void DX11Device::SwapBuffers()
 	{
