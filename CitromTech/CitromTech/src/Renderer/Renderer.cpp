@@ -13,6 +13,7 @@
 #include "Math/Vector.h"
 
 #include <filesystem>
+#include <fstream> // Renderer_SaveMaterialsToFiles
 
 #define INCREMENT_DRAW_CALL()
 
@@ -76,6 +77,23 @@ namespace Citrom
 		Material mat(*Renderer_GetShader(shaderName), &materialName);
 		//g_Materials.PushBack(mat);
 		return g_Materials.Count() - 1;
+	}
+
+	void Renderer_SaveMaterialsToFiles()
+	{
+		for (Material& mat : g_Materials)
+		{
+			std::string source = JSON::SerializeObject(mat);
+
+			std::string filePath("Assets/Materials/");
+			filePath.append(mat.GetName());
+			filePath.append(".ctmat");
+
+			std::ofstream outFile(filePath);
+			CT_CORE_ASSERT(outFile.is_open(), "Unable to open material file!");
+			outFile << source;
+			outFile.close();
+		}
 	}
 
 	void Renderer::Initialize(Platform::Window* window)
@@ -221,6 +239,15 @@ namespace Citrom
 
 				g_Shaders[baseName] = m_Device->CreateShader(&sd);
 			}
+		}
+
+		// Materials
+		for (const auto& entry : std::filesystem::directory_iterator("Assets/Materials/"))
+		{
+			if (entry.path().filename().extension() != ".ctmat") // .ctmat, .cmtl, .cmt, .ctmt, .ctmtl
+				continue;
+
+			const std::string fileName = entry.path().filename().string();
 		}
 
 		g_EditorRenderer.Initialize();
@@ -753,6 +780,18 @@ namespace Citrom
 		//matTest.UpdateData();
 
 		matTest.Bind();
+		{
+			std::string source = JSON::SerializeObject(matTest, JSON::SerializerOptions(true));
+
+			std::string filePath("Assets/Materials/");
+			filePath.append(matTest.GetName());
+			filePath.append(".ctmat");
+
+			std::ofstream outFile(filePath);
+			CT_CORE_ASSERT(outFile.is_open(), "Unable to open material file!");
+			outFile << source;
+			outFile.close();
+		}
 		//m_Device->BindShader(&shader);
 		m_Device->RCDrawIndexed(ibo.GetCount());
 

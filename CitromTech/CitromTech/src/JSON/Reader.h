@@ -18,6 +18,7 @@ namespace Citrom::JSON // JSON vs Json
 
 #define JSON_READER_BEGIN()
 #define JSON_READER_GET_STRING(KEY, STRING) std::string_view _intern_StrView_ ## __LINE__; JSON_READER_VERIFY(doc[(KEY)].get(_intern_StrView_ ## __LINE__)); JSON_READER_COPY_STRING_VIEW_TO_STRING(STRING, _intern_StrView_ ## __LINE__);
+#define JSON_READER_DOC_GET_STRING(DOC, KEY, STRING) std::string_view _intern_StrView_ ## __LINE__; JSON_READER_VERIFY((DOC)[(KEY)].get(_intern_StrView_ ## __LINE__)); JSON_READER_COPY_STRING_VIEW_TO_STRING(STRING, _intern_StrView_ ## __LINE__);
 #define JSON_READER_GET_VALUE(KEY, VALUE) doc[(KEY)].get(VALUE);
 #define JSON_READER_GET_INT64(KEY, INT) JSON_READER_GET_VALUE(KEY, INT)
 #define JSON_READER_GET_BOOL(KEY, BOOL) JSON_READER_GET_VALUE(KEY, BOOL)

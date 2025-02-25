@@ -1,6 +1,8 @@
 #pragma once
 
 #include "RenderAPI/GraphicsDevice.h"
+#include "JSON/Writer.h"
+#include "JSON/Reader.h"
 
 #include "CTL/String.h"
 #include "CTL/HashMap.h"
@@ -59,6 +61,146 @@ namespace Citrom
 		FORCE_INLINE RenderAPI::Shader* GetShader() { return &m_Shader; };
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
 		FORCE_INLINE std::string GetName() const { return m_Name; }
+	public:
+		// Serialization
+		void SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) const
+		{
+			doc.SetObject();
+
+			//JSON_WRITER_SET_STRING("MaterialName", GetName()); // redundant since file name is the material name
+			JSON_WRITER_SET_STRING("ShaderName", m_Shader.descriptor.name);
+
+			//doc.SetArray();
+			rapidjson::Value objArray(rapidjson::kArrayType);
+			for (const auto& obj : m_Properties)
+			{
+				rapidjson::Value jsonObject(rapidjson::kObjectType);
+
+				jsonObject.AddMember("PropertyName", rapidjson::Value(obj.name.c_str(), allocator), allocator);
+				jsonObject.AddMember("PropertyFormat", (int64)obj.propertyFormat, allocator);
+				switch (obj.propertyFormat)
+				{
+					default:
+						//CT_CORE_ASSERT(false, "Unknown Material Format!");
+						break;
+
+					case MaterialFormat::Float32:
+						jsonObject.AddMember("Value", *static_cast<float*>(obj.dataPtr), allocator);
+						break;
+					case MaterialFormat::Float32x3:
+						jsonObject.AddMember("Value0", static_cast<float*>(obj.dataPtr)[0], allocator); // Value1?
+						jsonObject.AddMember("Value1", static_cast<float*>(obj.dataPtr)[1], allocator);
+						jsonObject.AddMember("Value2", static_cast<float*>(obj.dataPtr)[2], allocator);
+						break;
+					case MaterialFormat::Float32x4:
+						jsonObject.AddMember("Value0", static_cast<float*>(obj.dataPtr)[0], allocator);
+						jsonObject.AddMember("Value1", static_cast<float*>(obj.dataPtr)[1], allocator);
+						jsonObject.AddMember("Value2", static_cast<float*>(obj.dataPtr)[2], allocator);
+						jsonObject.AddMember("Value3", static_cast<float*>(obj.dataPtr)[3], allocator);
+						break;
+					// Matrix Begin
+					case MaterialFormat::Float32x4x4:
+						jsonObject.AddMember("Value0_0", static_cast<float**>(obj.dataPtr)[0][0], allocator);
+						jsonObject.AddMember("Value1_0", static_cast<float**>(obj.dataPtr)[1][0], allocator);
+						jsonObject.AddMember("Value2_0", static_cast<float**>(obj.dataPtr)[2][0], allocator);
+						jsonObject.AddMember("Value3_0", static_cast<float**>(obj.dataPtr)[3][0], allocator);
+
+						jsonObject.AddMember("Value0_1", static_cast<float**>(obj.dataPtr)[0][1], allocator);
+						jsonObject.AddMember("Value1_1", static_cast<float**>(obj.dataPtr)[1][1], allocator);
+						jsonObject.AddMember("Value2_1", static_cast<float**>(obj.dataPtr)[2][1], allocator);
+						jsonObject.AddMember("Value3_1", static_cast<float**>(obj.dataPtr)[3][1], allocator);
+
+						jsonObject.AddMember("Value0_2", static_cast<float**>(obj.dataPtr)[0][2], allocator);
+						jsonObject.AddMember("Value1_2", static_cast<float**>(obj.dataPtr)[1][2], allocator);
+						jsonObject.AddMember("Value2_2", static_cast<float**>(obj.dataPtr)[2][2], allocator);
+						jsonObject.AddMember("Value3_2", static_cast<float**>(obj.dataPtr)[3][2], allocator);
+
+						jsonObject.AddMember("Value0_3", static_cast<float**>(obj.dataPtr)[0][3], allocator);
+						jsonObject.AddMember("Value1_3", static_cast<float**>(obj.dataPtr)[1][3], allocator);
+						jsonObject.AddMember("Value2_3", static_cast<float**>(obj.dataPtr)[2][3], allocator);
+						jsonObject.AddMember("Value3_3", static_cast<float**>(obj.dataPtr)[3][3], allocator);
+
+						//jsonObject.AddMember("Value0_0", static_cast<float**>(obj.dataPtr)[0][0], allocator);
+						//jsonObject.AddMember("Value0_1", static_cast<float**>(obj.dataPtr)[0][1], allocator);
+						//jsonObject.AddMember("Value0_2", static_cast<float**>(obj.dataPtr)[0][2], allocator);
+						//jsonObject.AddMember("Value0_3", static_cast<float**>(obj.dataPtr)[0][3], allocator);
+						break;
+					// Matrix End
+
+					case MaterialFormat::Int32:
+						jsonObject.AddMember("Value", *static_cast<int32*>(obj.dataPtr), allocator);
+						break;
+					case MaterialFormat::UInt32:
+						jsonObject.AddMember("Value", *static_cast<uint32*>(obj.dataPtr), allocator);
+						break;
+				}
+
+				//doc.PushBack(jsonObject, allocator);
+				objArray.PushBack(jsonObject, allocator);
+			}
+			doc.AddMember("MaterialProperties", objArray, allocator);
+		}
+		//static Material DeserializeJsonOnDemand(simdjson::ondemand::object doc)
+		static Material DeserializeJson(const simdjson::dom::element& doc) // TODO: test this!, also might cause issues due to there being no constructor
+		{
+			Material material;
+
+			JSON_READER_GET_STRING("ShaderName", material.m_Shader.descriptor.name);
+
+			simdjson::dom::array objArray = doc["MaterialProperties"];
+			for (simdjson::dom::element obj : objArray)
+			{
+				MaterialProperty matProperty;
+
+				JSON_READER_DOC_GET_STRING(obj, "PropertyName", matProperty.name);
+				matProperty.propertyFormat = (MaterialFormat)(int64)obj["PropertyFormat"];
+				
+				uint8 propertyData[64]; // max matrix4x4 size
+				switch (matProperty.propertyFormat)
+				{
+					default:
+						//CT_CORE_ASSERT(false, "Unknown Material Format!");
+						break;
+
+					case MaterialFormat::Float32:
+						*(float32*)propertyData = (float32)(double)obj["Value"];
+						break;
+					case MaterialFormat::Float32x3:
+						*(float32*)propertyData = (float32)(double)obj["Value0"];
+						*((float32*)propertyData + 1) = (float32)(double)obj["Value1"];
+						*((float32*)propertyData + 2) = (float32)(double)obj["Value2"];
+						break;
+					case MaterialFormat::Float32x4:
+						*(float32*)propertyData = (float32)(double)obj["Value0"];
+						*((float32*)propertyData + 1) = (float32)(double)obj["Value1"];
+						*((float32*)propertyData + 2) = (float32)(double)obj["Value2"];
+						*((float32*)propertyData + 3) = (float32)(double)obj["Value3"];
+						break;
+
+					case MaterialFormat::Float32x4x4:
+						for (int j = 0; j < 4; ++j)
+						{
+							for (int i = 0; i < 4; ++i)
+							{
+								*((float32*)propertyData + i * 4 + j) = (float32)(double)obj[std::string("Value" + std::to_string(i) + "_" + std::to_string(j)).c_str()];
+							}
+						}
+						break;
+						
+					case MaterialFormat::Int32:
+						*(int32*)propertyData = (int32)(int64)obj["Value"];
+						break;
+					case MaterialFormat::UInt32:
+						*(uint32*)propertyData = (uint32)(uint64)obj["Value"];
+						break;
+				}
+
+				material.PushProperty(matProperty.name, matProperty.propertyFormat, propertyData);
+				material.SetProperty(matProperty.name, matProperty.propertyFormat, propertyData);
+			}
+
+			return material;
+		}
 	protected:
 		MaterialProperty* GetPropertyByName(const std::string& name);
 	private:

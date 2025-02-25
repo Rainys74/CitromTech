@@ -12,7 +12,7 @@ namespace Citrom
     static RenderAPI::Shader g_NullShader;
 
     Material::Material()
-        : m_Device(Device::Get()), m_Shader(g_NullShader)
+        : m_Device(nullptr), m_Shader(g_NullShader)
     {
     }
     Material::Material(Shader& shader, const std::string* materialName)

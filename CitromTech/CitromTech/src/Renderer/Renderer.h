@@ -84,9 +84,13 @@ namespace Citrom
 	uint32 Renderer_GetMaterialIndex(const Material* mat);
 	uint32 Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName); // returns the index of the material
 
+	void Renderer_SaveMaterialsToFiles(); // Should this actually be in the renderer? i don't know..
+
 	CTL::StdStrHashMap<RenderAPI::Shader>& Renderer_GetShaders();
 	void Renderer_RecompileShader(const std::string& shaderName);
 	void Renderer_RecompileAllShaders();
+
+	//void //FinalizeInstance, CompleteInstance, SaveAndCleanup
 
 	inline RenderAPI::Shader* Renderer_GetShader(const std::string& shaderName)
 	{
