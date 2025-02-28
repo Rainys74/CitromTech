@@ -1,7 +1,8 @@
 #ifdef CT_PLATFORM_WINDOWS
 #include "Platform/PlatformWindow.h"
+#include "ArgumentHandler.h"
 
-//#include "Platform/Shared/PlatformWindowBackendGLFW.h"
+#include "Platform/Shared/PlatformWindowBackendGLFW.h"
 #include "Platform/Windows/PlatformWindowBackendWin32.h"
 
 #include "Profiling/Profiler.h"
@@ -11,7 +12,10 @@ namespace Citrom::Platform
     Window::Window()
         : m_Backend(nullptr)
     {
-        m_Backend = new WindowBackendWin32(); // WindowBackendGLFW, WindowBackendWin32
+        //if (ArgumentHandler::HasArgument("-force-glfw"))
+        //    m_Backend = new WindowBackendGLFW();
+        //else
+            m_Backend = new WindowBackendWin32(); // WindowBackendGLFW, WindowBackendWin32
     }
     Window::~Window()
     {

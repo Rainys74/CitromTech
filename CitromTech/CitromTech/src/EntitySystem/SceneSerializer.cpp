@@ -12,6 +12,21 @@
 
 namespace Citrom
 {
+	//template<char Suffix0 = 'X', char Suffix1 = 'Y', char Suffix2 = 'Z'>
+	//static void _SerializeVector3(rapidjson::Value* object, const float32 vec3[3], rapidjson::Document::AllocatorType& allocator) //, const Math::Vector3& vec3)
+	//{
+	//}
+
+#define SERIALIZE_FLOAT3_SUFFIXED(OBJECT, FLOAT3, NAME, ALLOCATOR, SUFFIX0, SUFFIX1, SUFFIX2)	OBJECT.AddMember((NAME SUFFIX0), (FLOAT3)[0], ALLOCATOR); \
+																								OBJECT.AddMember((NAME SUFFIX1), (FLOAT3)[1], ALLOCATOR); \
+																								OBJECT.AddMember((NAME SUFFIX2), (FLOAT3)[2], ALLOCATOR)
+
+#define SERIALIZE_FLOAT4_SUFFIXED(OBJECT, FLOAT4, NAME, ALLOCATOR, SUFFIX0, SUFFIX1, SUFFIX2, SUFFIX3)	SERIALIZE_FLOAT3_SUFFIXED(OBJECT, FLOAT4, NAME, ALLOCATOR, SUFFIX0, SUFFIX1, SUFFIX2); \
+																										OBJECT.AddMember((NAME SUFFIX3), (FLOAT4)[3], ALLOCATOR)
+
+#define SERIALIZE_VECTOR3(OBJECT, FLOAT3, NAME, ALLOCATOR) SERIALIZE_FLOAT3_SUFFIXED(OBJECT, FLOAT3, NAME, ALLOCATOR, "X", "Y", "Z")
+#define SERIALIZE_VECTOR4(OBJECT, FLOAT4, NAME, ALLOCATOR) SERIALIZE_FLOAT4_SUFFIXED(OBJECT, FLOAT4, NAME, ALLOCATOR, "X", "Y", "Z", "W")
+
 	// Serialization
 	void Scene::SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator)
 	{
@@ -66,22 +81,26 @@ namespace Citrom
 			{
 				rapidjson::Value transformComponentArray(rapidjson::kObjectType);
 
-				transformComponentArray.AddMember("PositionX", transformComponent.transform.position.x, allocator);
-				transformComponentArray.AddMember("PositionY", transformComponent.transform.position.y, allocator);
-				transformComponentArray.AddMember("PositionZ", transformComponent.transform.position.z, allocator);
+				//transformComponentArray.AddMember("PositionX", transformComponent.transform.position.x, allocator);
+				//transformComponentArray.AddMember("PositionY", transformComponent.transform.position.y, allocator);
+				//transformComponentArray.AddMember("PositionZ", transformComponent.transform.position.z, allocator);
+				SERIALIZE_VECTOR3(transformComponentArray, transformComponent.transform.position, "Position", allocator);
 
-				transformComponentArray.AddMember("RotationX", transformComponent.transform.rotation.x, allocator);
-				transformComponentArray.AddMember("RotationY", transformComponent.transform.rotation.y, allocator);
-				transformComponentArray.AddMember("RotationZ", transformComponent.transform.rotation.z, allocator);
-				transformComponentArray.AddMember("RotationW", transformComponent.transform.rotation.w, allocator);
+				//transformComponentArray.AddMember("RotationX", transformComponent.transform.rotation.x, allocator);
+				//transformComponentArray.AddMember("RotationY", transformComponent.transform.rotation.y, allocator);
+				//transformComponentArray.AddMember("RotationZ", transformComponent.transform.rotation.z, allocator);
+				//transformComponentArray.AddMember("RotationW", transformComponent.transform.rotation.w, allocator);
+				SERIALIZE_VECTOR4(transformComponentArray, transformComponent.transform.rotation, "Rotation", allocator);
 
-				transformComponentArray.AddMember("ScaleX", transformComponent.transform.scale.x, allocator);
-				transformComponentArray.AddMember("ScaleY", transformComponent.transform.scale.y, allocator);
-				transformComponentArray.AddMember("ScaleZ", transformComponent.transform.scale.z, allocator);
+				//transformComponentArray.AddMember("ScaleX", transformComponent.transform.scale.x, allocator);
+				//transformComponentArray.AddMember("ScaleY", transformComponent.transform.scale.y, allocator);
+				//transformComponentArray.AddMember("ScaleZ", transformComponent.transform.scale.z, allocator);
+				SERIALIZE_VECTOR3(transformComponentArray, transformComponent.transform.scale, "Scale", allocator);
 
-				transformComponentArray.AddMember("RotationEulerAnglesHintX", transformComponent.transform.eulerAnglesHint.x, allocator);
-				transformComponentArray.AddMember("RotationEulerAnglesHintY", transformComponent.transform.eulerAnglesHint.y, allocator);
-				transformComponentArray.AddMember("RotationEulerAnglesHintZ", transformComponent.transform.eulerAnglesHint.z, allocator);
+				//transformComponentArray.AddMember("RotationEulerAnglesHintX", transformComponent.transform.eulerAnglesHint.x, allocator);
+				//transformComponentArray.AddMember("RotationEulerAnglesHintY", transformComponent.transform.eulerAnglesHint.y, allocator);
+				//transformComponentArray.AddMember("RotationEulerAnglesHintZ", transformComponent.transform.eulerAnglesHint.z, allocator);
+				SERIALIZE_VECTOR3(transformComponentArray, transformComponent.transform.eulerAnglesHint, "RotationEulerAnglesHint", allocator);
 
 				componentArray.AddMember("TransformComponent", transformComponentArray, allocator);
 			}

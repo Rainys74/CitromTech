@@ -76,6 +76,7 @@ void operator delete(void* memory, size_t size)
 	sg_AllocationMetrics.totalFreed += size;
 	//CT_TRACE("[delete]: Freeing {} bytes; Current Usage: {}", (unsigned int)size, (unsigned int)sg_AllocationMetrics.GetCurrentUsage());
 
+	//if (memory)
 	free(memory);
 }
 #endif
