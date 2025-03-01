@@ -10,18 +10,29 @@ namespace Citrom
         : m_Name(name)
     {
     }
+    /*Scene::Scene(const Scene& other)
+    {
+        const auto& reg = other.m_SceneRegistry;
+        m_SceneRegistry.assign(reg.data(), reg.data() + reg.size(), reg.destroyed());
+    }*/
     Scene::~Scene()
     {
     }
-    Entity Scene::CreateEntity()
+
+    Entity Scene::CreateEntity(const std::string& entityName)
+    {
+        return CreateEntityWithUUID(UUID(), entityName);
+    }
+
+    Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& entityName)
     {
         Entity entity = Entity(m_SceneRegistry.create(), this);
 
-        entity.AddComponent<UUIDComponent>();
-        entity.AddComponent<NameComponent>().name = "New Entity";
+        entity.AddComponent<UUIDComponent>().id = uuid;
+        entity.AddComponent<NameComponent>().name = entityName;
         entity.AddComponent<ActiveComponent>().active = true;
         entity.AddComponent<HierarchyComponent>();
-        entity.AddComponent<TransformComponent>().transform.scale = Math::Vector3{1.0f, 1.0f, 1.0f};
+        entity.AddComponent<TransformComponent>().transform.scale = Math::Vector3{ 1.0f, 1.0f, 1.0f };
 
         return entity;
     }

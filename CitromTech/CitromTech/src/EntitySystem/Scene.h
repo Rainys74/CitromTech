@@ -6,6 +6,7 @@
 #include "Vendor/EnTT/entt.hpp"
 
 #include "JSON/Writer.h"
+#include "JSON/Reader.h"
 
 namespace Citrom
 {
@@ -14,10 +15,17 @@ namespace Citrom
 	{
 	public:
 		Scene(const std::string& name = "New Scene");
+		//Scene(const Scene&&) = default; // Move semantics
 		~Scene();
 
-		Entity CreateEntity();
+		Entity CreateEntity(const std::string& entityName = "New Entity");
+		Entity CreateEntityWithUUID(UUID uuid, const std::string& entityName = "New Entity");
 		void DestroyEntity(Entity entity);
+
+		FORCE_INLINE void RenameScene(const std::string& name)
+		{
+			m_Name = name;
+		}
 
 		inline void ClearScene()
 		{
@@ -55,6 +63,7 @@ namespace Citrom
 	public:
 		// Serialization
 		void SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator);
+		//static Scene DeserializeJson(const simdjson::dom::element& doc);
 	private:
 		entt::registry m_SceneRegistry;
 		std::string m_Name;

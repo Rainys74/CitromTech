@@ -15,6 +15,15 @@ namespace Citrom
 		Entity(const Entity&) = default;
 		~Entity() = default;
 
+		void SetParent(Entity& parentEntity)
+		{
+			GetComponent<HierarchyComponent>().parentID = parentEntity.GetUUID();
+		}
+		void SetChild(Entity& childEntity)
+		{
+			childEntity.GetComponent<HierarchyComponent>().parentID = this->GetUUID();
+		}
+
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
@@ -47,6 +56,10 @@ namespace Citrom
 		UUID GetUUID()
 		{
 			return GetComponent<UUIDComponent>().id;
+		}
+		void RenameEntity(const std::string& name)
+		{
+			GetComponent<NameComponent>().name = name;
 		}
 
 		inline void SetActive(bool state = true)
