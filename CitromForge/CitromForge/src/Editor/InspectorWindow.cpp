@@ -247,14 +247,13 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 colorPushed = true;
             }
 
-            if (ImGui::InputText("Script Behavior Name", &behaviourName))
+            if (ImToolkit::DrawStringSetSelector("Script Behavior Name", &behaviourName, CTL::HashMapToHashSet(Scripting::NativeScriptDB::GetBehaviorMap())))
             {
                 bool hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
 
                 if (hasBehaviour)
                     nativeScriptComponent.SetBehaviorWithString(behaviourName);
             }
-            //CTL::HashMapToHashSet(Scripting::NativeScriptDB::GetBehaviorMap());
 
             if (colorPushed)
                 ImGui::PopStyleColor();

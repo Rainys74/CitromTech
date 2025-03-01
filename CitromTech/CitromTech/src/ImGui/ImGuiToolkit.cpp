@@ -45,7 +45,7 @@ namespace ImToolkit //ImPresets
         ImGui::PushStyleColor(ImGuiCol_Header, color);
         ImGui::PushStyleColor(ImGuiCol_HeaderHovered, highlightedColor);
         ImGui::PushStyleColor(ImGuiCol_HeaderActive, color);
-        ImGui::Selectable(invisibleDragLabel, false, 0, buttonSize);
+        ImGui::Selectable(invisibleDragLabel, false, 0, buttonSize); // TODO: on Enter press select the input text before, probably ImGui::SetKeyboardFocusHere(-1); or -2
         if (ImGui::IsItemActive())
         {
             float dragDelta = ImGui::GetIO().MouseDelta.x * speed; // Drag affects X value
@@ -314,28 +314,73 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
-    bool DrawStringSetSelector(const char* label, std::string* textOutput, CTL::StdStrHashSet& stringSet)
+    bool DrawStringSetSelector(const char* label, std::string* textOutput, const CTL::StdStrHashSet& stringSet)
     {
         bool modified = false;
 
         ImGui::PushID(label);
 
-        _SetupLabel(label); //, false, 200.0f);
+        _SetupLabel(label, false, 150.0f); //, false, 200.0f);
 
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // there should be 0 spacing between the button and the input
 
         modified |= ImGui::InputText("##TEXTINPUT", textOutput);
 
         ImGui::SameLine();
+
+        std::string modalName = label;
         ImVec2 labelSize = ImGui::CalcTextSize("^");
         ImVec2 size = ImGui::CalcItemSize(ImVec2(0, 0), labelSize.y + ImGui::GetStyle().FramePadding.x * 2.0f, labelSize.y + ImGui::GetStyle().FramePadding.y * 2.0f);
         if (ImGui::Button("^", size))
         {
-            ImGui::OpenPopup("StringSetSelectorModal");
+            ImGui::OpenPopup(modalName.c_str()); //("StringSetSelectorModal");
         }
-        if (ImGui::BeginPopupModal("StringSetSelectorModal", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+
+        static CTL::DArray<std::string> stringElements;
+
+        bool needsUpdate = (stringElements.Count() != stringSet.size());
+        if (!needsUpdate) // extra check to confirm suspicions
         {
-            ImGui::Text("test");
+            for (const auto& elem : stringSet) 
+            {
+                if (std::find(stringElements.begin(), stringElements.end(), elem) == stringElements.end()) 
+                {
+                    needsUpdate = true;
+                    break;
+                }
+            }
+        }
+
+        // Update the elements
+        if (needsUpdate)
+        {
+            stringElements.Clear(false);
+            for (const auto& element : stringSet)
+                stringElements.PushBack(element);
+        }
+
+        if (ImGui::BeginPopupModal(/*"StringSetSelectorModal"*/ modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) // TODO: move after popping style probably
+        {
+            ImGui::Text("Select:");
+            for (const auto& element : stringElements)
+            {
+                if (ImGui::Selectable(element.c_str(), true))
+                {
+                    *textOutput = element;
+                    modified |= true;
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+            ImGui::Separator();
+
+            if (ImGui::Button("OK", ImVec2(120, 0))) 
+            { 
+                ImGui::CloseCurrentPopup(); 
+            }
+            ImGui::SetItemDefaultFocus();
+            ImGui::SameLine();
+            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+                ImGui::CloseCurrentPopup();
             ImGui::EndPopup();
         }
 

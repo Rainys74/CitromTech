@@ -378,7 +378,29 @@ int SharedMain(int argc, char* argv[])
 
 		}
 	};
+	class TestPrinter : public ScriptableEntity
+	{
+	public:
+		void OnCreate()
+		{
+			CT_VERBOSE("TestPrinter::OnCreate()");
+		}
+		void OnDestroy()
+		{
+			CT_VERBOSE("TestPrinter::OnDestroy()");
+		}
+
+		void OnUpdate(float64 deltaTime)
+		{
+			CT_TRACE("*Printer Sounds at an {} interval*", deltaTime);
+		}
+		void OnTick(float64 fixedDeltaTime)
+		{
+
+		}
+	};
 	Scripting::NativeScriptDB::RegisterBehavior<TestCameraController>("TestCameraController");
+	Scripting::NativeScriptDB::RegisterBehavior<TestPrinter>("TestPrinter");
 	camera.AddComponent<NativeScriptComponent>().SetBehaviorWithString("TestCameraController"); //.SetBehavior<TestCameraController>();
 
 	struct TestClass

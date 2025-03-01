@@ -19,7 +19,7 @@ namespace ImToolkit //ImPresets
 
     bool PathPicker(const char* label, std::string* pathOutput, Citrom::NativeFileDialogFilter* filters = nullptr, size_t filterLength = 0); // InputLocation? BrowseField? BrowseInput? FileSelector? LocationInput? PathPicker? InputWithBrowse? BrowseField?
 
-    bool DrawStringSetSelector(const char* label, std::string* textOutput, CTL::StdStrHashSet& stringSet);
+    bool DrawStringSetSelector(const char* label, std::string* textOutput, const CTL::StdStrHashSet& stringSet);
 
     template<typename T, const char* (*TToString)(T)>
     bool ComboEnum(const char* label, T& currentValue, const T* values, int valuesCount, const int valuesBegin = 0)

@@ -88,11 +88,18 @@ void EditorLayer::OnImGuiRender()
                 }
             }
             ImGui::Separator();
-            if (ImGui::MenuItem("Save", "Ctrl+S")); // Save Scene
-            if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+            if (ImGui::MenuItem("Save", "Ctrl+S")) // Save Scene
             {
                 std::string filePath("Assets/Scenes/");
                 filePath.append(GetCurrentScene()->GetSceneName());
+                filePath.append(".ctscene"); // .cts, .ctscene, .ctenv also .ctbs, .ctbinscene, .ctbscene, .ctscenebin
+
+                SceneSerializer(GetCurrentScene()).Serialize(filePath);
+            }
+            if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+            {
+                std::string filePath("Assets/Scenes/");
+                filePath.append(GetCurrentScene()->GetSceneName()); // TODO: open nfd for save as
                 filePath.append(".ctscene"); // .cts, .ctscene, .ctenv also .ctbs, .ctbinscene, .ctbscene, .ctscenebin
 
                 SceneSerializer sceneSerializer(GetCurrentScene());

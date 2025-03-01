@@ -990,7 +990,7 @@ namespace Citrom
 
 		m_GridPipeline = m_Device->CreatePipelineState(&psd); // TODO: why isn't the grid as transparent as it should be? probably because transparent objects need to be rendered last...
 	}
-	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform)
+	void EditorRenderer::Render(Camera* camera, Math::Transform* camTransform) // TODO: maybe separate grid rendering?
 	{
 		CT_PROFILE_STATIC_FUNCTION(Renderer);
 
