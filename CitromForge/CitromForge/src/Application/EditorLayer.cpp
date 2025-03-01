@@ -49,9 +49,9 @@ void EditorLayer::OnDetach()
     //EditorConsole::Destroy();
 }
 
-void EditorLayer::OnUpdate()
+void EditorLayer::OnUpdate(float64 deltaTime)
 {
-    EditorCamera::Get()->Update(MainDeltaTime());
+    EditorCamera::Get()->Update(deltaTime);
 }
 
 void EditorLayer::OnImGuiRender()

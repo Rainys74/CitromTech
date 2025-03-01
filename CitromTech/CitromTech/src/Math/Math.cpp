@@ -102,4 +102,153 @@ namespace Citrom::Math
 		if (value < min) value = min;
 		return value;
 	}
+
+	namespace AccuratePI
+	{
+		float64 Leibzniz(uint32fast terms)
+		{
+			/*double pi = 0.0;
+			for (int i = 0; i < terms; i++) 
+			{
+				if (i % 2 == 0) 
+				{
+					pi += 1.0 / (2 * i + 1);
+				}
+				else 
+				{
+					pi -= 1.0 / (2 * i + 1);
+				}
+			}
+			return pi * 4;*/
+
+			float64 pi = 0.0;
+			for (uint32fast i = 0; i < terms; i++)
+			{
+				if (i % 2 == 0)
+				{
+					pi += WHFSUF(1, 0) / SCast<float64>(2 * i + 1);
+				}
+				else
+				{
+					pi -= WHFSUF(1, 0) / SCast<float64>(2 * i + 1);
+				}
+			}
+			return pi * WHFSUF(4, 0);
+		}
+
+		float64 Machin()
+		{
+			/*float64 pi = 4.0 * (4.0 * atan(1.0 / 5.0) - atan(1.0 / 239.0));
+			return pi;*/
+			return WHFSUF(4, 0) * (WHFSUF(4, 0) * atan(WHFSUF(1, 0) / WHFSUF(5, 0)) - atan(WHFSUF(1, 0) / WHFSUF(239, 0)));
+		}
+
+		// TODO: placeholder
+		static float64 Random()
+		{
+			//static std::random_device rd;
+			//static std::mt19937 gen(rd()); // maybe replace with mt19937_64 for more accurate results?
+			//static std::uniform_real_distribution<float64> dis(0.0, 1.0);
+			//return dis(gen);
+			return 12554.35432189901;
+		}
+
+		float64 MonteCarlo(uint32fast samples)
+		{
+			/*
+			std::random_device rd;
+			std::mt19937 gen(rd());
+			std::uniform_real_distribution<> dis(0.0, 1.0);
+
+			uint32fast insideCircle = 0;
+			for (uint32fast i = 0; i < samples; i++)
+			{
+				float64 x = dis(gen);
+				float64 y = dis(gen);
+				if (x * x + y * y <= 1.0) 
+				{
+					insideCircle++;
+				}
+			}
+			return 4.0 * insideCircle / samples;
+			*/
+
+			uint32fast insideCircle = 0;
+			for (uint32fast i = 0; i < samples; i++)
+			{
+				float64 x = Random();
+				float64 y = Random();
+				if (x * x + y * y <= WHFSUF(1, 0))
+				{
+					insideCircle++;
+				}
+			}
+			return WHFSUF(4, 0) * insideCircle / samples;
+		}
+
+		// TODO: Chudnovsky, AI e.g.
+		/*
+		#include <iostream>
+		#include <cmath>
+		#include <iomanip>
+		#include <gmp.h>
+		#include <mpfr.h>
+
+		void chudnovskyPi(mpfr_t result, int digits) {
+			mpfr_set_default_prec(8 * digits);
+
+			mpfr_t sum, term, k_fact, six_k_fact, C, K, M, X;
+			mpfr_inits2(8 * digits, sum, term, k_fact, six_k_fact, C, K, M, X, (mpfr_ptr) 0);
+
+			mpfr_set_ui(sum, 0, MPFR_RNDN);
+			mpfr_set_ui(k_fact, 1, MPFR_RNDN);
+			mpfr_set_ui(six_k_fact, 1, MPFR_RNDN);
+			mpfr_set_ui(C, 426880, MPFR_RNDN);
+			mpfr_mul_ui(C, C, 10005, MPFR_RNDN);
+			mpfr_sqrt(C, C, MPFR_RNDN);
+			mpfr_set_ui(K, 6, MPFR_RNDN);
+
+			for (int k = 0; k < digits; k++) {
+				if (k > 0) {
+					mpfr_mul_ui(k_fact, k_fact, k, MPFR_RNDN);
+					mpfr_mul_ui(six_k_fact, six_k_fact, 6 * k, MPFR_RNDN);
+				}
+
+				mpfr_set_ui(M, 545140134, MPFR_RNDN);
+				mpfr_mul_ui(M, M, k, MPFR_RNDN);
+				mpfr_add_ui(M, M, 13591409, MPFR_RNDN);
+				if (k % 2 != 0) {
+					mpfr_neg(M, M, MPFR_RNDN);
+				}
+
+				mpfr_ui_pow_ui(X, 640320, 3 * k, MPFR_RNDN);
+				mpfr_neg(X, X, MPFR_RNDN);
+
+				mpfr_mul(term, M, six_k_fact, MPFR_RNDN);
+				mpfr_div(term, term, X, MPFR_RNDN);
+				mpfr_div(term, term, k_fact, MPFR_RNDN);
+				mpfr_add(sum, sum, term, MPFR_RNDN);
+			}
+
+			mpfr_div(sum, C, sum, MPFR_RNDN);
+			mpfr_set(result, sum, MPFR_RNDN);
+
+			mpfr_clears(sum, term, k_fact, six_k_fact, C, K, M, X, (mpfr_ptr) 0);
+		}
+
+		int main() {
+			int digits = 1000;
+			mpfr_t pi;
+			mpfr_init2(pi, 8 * digits);
+			chudnovskyPi(pi, digits);
+
+			std::cout << "Chudnovsky approximation of Pi: ";
+			mpfr_out_str(stdout, 10, digits, pi, MPFR_RNDN);
+			std::cout << std::endl;
+
+			mpfr_clear(pi);
+			return 0;
+		}
+		*/
+	}
 }

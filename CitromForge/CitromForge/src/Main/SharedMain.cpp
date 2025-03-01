@@ -38,6 +38,7 @@
 #include "ThreadPool.h"
 #include "LayerSystem/ImGuiLayer.h"
 #include "LayerSystem/SimpleInputLayer.h"
+#include "LayerSystem/NativeScriptLayer.h"
 
 #include "JSON/Reader.h"
 #include "JSON/Writer.h"
@@ -345,16 +346,16 @@ int SharedMain(int argc, char* argv[])
 	public:
 		void OnCreate()
 		{
-
+			CT_TRACE("TestCameraController::OnCreate()");
 		}
 		void OnDestroy()
 		{
-
+			CT_TRACE("TestCameraController::OnDestroy()");
 		}
 
 		void OnUpdate(float64 deltaTime)
 		{
-			CT_TRACE("Updated DT: {}", deltaTime);
+			//CT_TRACE("Updated DT: {}", deltaTime);
 		}
 		void OnTick(float64 fixedDeltaTime)
 		{
@@ -465,9 +466,11 @@ int SharedMain(int argc, char* argv[])
 	IF_EDITOR(g_ImLayer.OnAttach());
 	IF_EDITOR(g_ImLayer.Initialize(&g_Window));
 
-	// Push Layers
+	// Push Layers // TODO: make a system that loads a project's layer system features from json file
 	IF_EDITOR(g_LayerStack.Push(&g_EditorLayer));
 	SimpleInputLayer inputLayer; g_LayerStack.Push(&inputLayer);
+	NativeScriptLayer nativeScriptLayer; g_LayerStack.Push(&nativeScriptLayer);
+	nativeScriptLayer.StartPlaying(g_CurrentScene);
 
 	::ForgeLoop();
 
@@ -514,7 +517,7 @@ void ForgeLoop()
 		g_Window.PollEvents();
 
 		// Update & Tick (Fixed Update)
-		g_LayerStack.Update();
+		g_LayerStack.Update(g_DeltaTime);
 
 		// while (accumulated time >= fixed time step) probably
 

@@ -13,6 +13,6 @@ namespace Citrom
 		virtual ~SimpleInputLayer() = default;
 
 		void OnAttach() override;
-		void OnUpdate() override;
+		void OnUpdate(float64 deltaTime) override;
 	};
 }

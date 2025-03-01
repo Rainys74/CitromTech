@@ -1,9 +1,15 @@
 #include "NativeScript.h"
+#include "EntitySystem/Scene.h"
 #include "EntitySystem/Components/ScriptComponents.h"
 
 namespace Citrom::Scripting
 {
 	Scene* NativeScript::s_BoundScene = nullptr;
+
+	void NativeScript::ResetScriptComponentInstance()
+	{
+		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
+	}
 
 	void NativeScript::Update(float64 deltaTime)
 	{

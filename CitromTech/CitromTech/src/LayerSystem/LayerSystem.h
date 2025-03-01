@@ -15,9 +15,9 @@ namespace Citrom
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(float64 deltaTime) {}
 
-		virtual void OnTick() {}
+		virtual void OnTick(float64 fixedDeltaTime) {}
 		virtual void OnRender() {}
 
 		virtual void OnImGuiRender() {}
@@ -37,15 +37,15 @@ namespace Citrom
 			m_Layers.PopBack();
 		}
 
-		void Update()
+		void Update(float64 deltaTime)
 		{
 			for (Layer* layer : m_Layers)
-				layer->OnUpdate();
+				layer->OnUpdate(deltaTime);
 		}
-		void Tick()
+		void Tick(float64 fixedDeltaTime)
 		{
 			for (Layer* layer : m_Layers)
-				layer->OnTick();
+				layer->OnTick(fixedDeltaTime);
 		}
 		void Render()
 		{

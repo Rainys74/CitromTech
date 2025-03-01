@@ -9,7 +9,7 @@ namespace Citrom
 		(void)SimpleInputManager::GetInstance();
 	}
 
-	void SimpleInputLayer::OnUpdate()
+	void SimpleInputLayer::OnUpdate(float64 deltaTime)
 	{
 		SimpleInputManager::GetInstance()->Update();
 	}

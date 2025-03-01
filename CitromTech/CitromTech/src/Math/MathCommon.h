@@ -14,6 +14,9 @@ namespace Citrom::Math
 	#define NEG_INFINITY_MACRO(SUFFIX) (-1.0##SUFFIX / 0.0##SUFFIX)
 	#define NAN_MACRO(SUFFIX)		   (POS_INFINITY_MACRO(SUFFIX) * 0.0##SUFFIX)
 
+	#define WHOLEF_SUFFIXED(WHOLENUMBER, SUFFIX) WHOLENUMBER ## .0 ## SUFFIX
+	#define WHFSUF(WHOLENUMLITERAL, SUFFIX) WHOLEF_SUFFIXED(WHOLENUMLITERAL, SUFFIX) // WHFLTSUF, WHLFSUFF, FLTSUFF, WFLTSFX, FL_SFX, WHFSUF, WH_F_SUF, WHF_SUF
+
 	// Special checks for floating point numbers
 	#define IS_NAN(x) ((x) != (x))
 	#define IS_POSITIVELY_INFINITE(x) ((x) == POS_INFINITY_MACRO(f))
@@ -28,6 +31,48 @@ namespace Citrom::Math
 	// Rotation
 	#define RADIANS_TO_DEGREES(RADIANS, SUFFIX) ((RADIANS) * (180.0 ## SUFFIX / PI_MACRO(SUFFIX)))
 	#define DEGREES_TO_RADIANS(DEGREES, SUFFIX) ((DEGREES) * (PI_MACRO(SUFFIX) / 180.0 ## SUFFIX))
+
+	// Radians
+	#define RADIANS_TO_ARCSECONDS(RADIANS, SUFFIX)		((RADIANS) * ((WHFSUF(3600, SUFFIX) * WHFSUF(180, SUFFIX)) / PI_MACRO(SUFFIX)))		// rad * (3600 * 180) / PI
+	#define RADIANS_TO_GRADIANS(RADIANS, SUFFIX)		((RADIANS) * (WHFSUF(200, SUFFIX) / PI_MACRO(SUFFIX)))								// rad * 200/PI
+	#define RADIANS_TO_MILLIRADIANS(RADIANS, SUFFIX)	((RADIANS) * WHFSUF(1000, SUFFIX))													// rad * 1000
+	#define RADIANS_TO_MINUTESOFARC(RADIANS, SUFFIX)	((RADIANS) * ((WHFSUF(60, SUFFIX) * WHFSUF(180, SUFFIX)) / PI_MACRO(SUFFIX)))		// rad * (60 * 180) / PI
+	//#define RADIANS_TO_MINUTESOFARC(RADIANS, SUFFIX)	((RADIANS) * (1))		// rad * (60 * 180) / PI
+
+	// Degrees
+	#define DEGREES_TO_ARCSECONDS(DEGREES, SUFFIX)		((DEGREES) * 3600.0 ## SUFFIX)													// o * 3600
+	#define DEGREES_TO_GRADIANS(DEGREES, SUFFIX)		((DEGREES) * (WHFSUF(200, SUFFIX) / WHFSUF(180, SUFFIX)))						// o * 200/180
+	#define DEGREES_TO_MILLIRADIANS(DEGREES, SUFFIX)	((DEGREES) * ((WHFSUF(1000, SUFFIX) * PI_MACRO(SUFFIX)) / WHFSUF(180, SUFFIX))) // o * 1000PI/180
+	#define DEGREES_TO_MINUTESOFARC(DEGREES, SUFFIX)	((DEGREES) * WHFSUF(60, SUFFIX))												// o * 60
+	//#define DEGREES_TO_MINUTESOFARC(DEGREES, SUFFIX)	((DEGREES) * (1)) // o * 60
+
+	// Arcseconds // Important for space stuff
+	// deg = arcsec / 3600
+	// grad = arcsec / 3240
+	// mrad = arcsec * 1000PI / (180 * 3600)
+	// arcmin = arcsec / 60
+	// rad = arcsec * PI / (180 * 3600)
+
+	// Gradians // Maybe Important for engineering?
+	// deg = grad * 180/200
+	// rad = grad * PI/200
+	// arcsec = grad * 3240
+	// mrad = grad * 1000PI/200
+	// arcmin = grad * 54
+
+	// Milliradians // Important for military stuff
+	// deg = mrad * 180/1000PI
+	// rad = mrad / 1000
+	// arcsec = mrad * (3600 * 180) / 1000PI
+	// grad = mrad * 200/1000PI
+	// arcmin = mrad * (60 * 180) / 1000PI
+
+	// Minutes of Arc // Important for space stuff
+	// deg = arcmin / 60
+	// rad = arcmin * PI / (60 * 180)
+	// arcsec = arcmin * 60
+	// grad = arcmin / 54
+	// mrad = arcmin * 1000PI / (60 * 180)
 
     #include "float.h"
 
@@ -94,4 +139,13 @@ namespace Citrom::Math
 	}
 
 	float32 Clamp(float32 value, float32 min, float32 max);
+
+	// Fun stuff
+	namespace AccuratePI
+	{
+		float64 Leibzniz(uint32fast terms = 1000000); // Simple and Slow
+		float64 Machin();
+		//float64 Chudnovsky(mpfr_t result, int digits); // Faster but more complex
+		float64 MonteCarlo(uint32fast samples = 1000000); // Random
+	}
 }

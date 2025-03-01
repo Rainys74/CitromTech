@@ -10,6 +10,7 @@ namespace Citrom
 	class Entity
 	{
 	public:
+		Entity() = default;
 		Entity(entt::entity entityID, Scene* parentScene)
 			: m_EntityID(entityID), m_Scene(parentScene) {}
 		Entity(const Entity&) = default;
