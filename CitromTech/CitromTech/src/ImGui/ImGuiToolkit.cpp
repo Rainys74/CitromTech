@@ -314,4 +314,37 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
+    bool DrawStringSetSelector(const char* label, std::string* textOutput, CTL::StdStrHashSet& stringSet)
+    {
+        bool modified = false;
+
+        ImGui::PushID(label);
+
+        _SetupLabel(label); //, false, 200.0f);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0)); // there should be 0 spacing between the button and the input
+
+        modified |= ImGui::InputText("##TEXTINPUT", textOutput);
+
+        ImGui::SameLine();
+        ImVec2 labelSize = ImGui::CalcTextSize("^");
+        ImVec2 size = ImGui::CalcItemSize(ImVec2(0, 0), labelSize.y + ImGui::GetStyle().FramePadding.x * 2.0f, labelSize.y + ImGui::GetStyle().FramePadding.y * 2.0f);
+        if (ImGui::Button("^", size))
+        {
+            ImGui::OpenPopup("StringSetSelectorModal");
+        }
+        if (ImGui::BeginPopupModal("StringSetSelectorModal", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("test");
+            ImGui::EndPopup();
+        }
+
+        ImGui::PopStyleVar();
+
+        ImGui::Columns(1);
+
+        ImGui::PopID();
+
+        return modified;
+    }
 }

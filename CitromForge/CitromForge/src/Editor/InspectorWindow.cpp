@@ -6,11 +6,13 @@
 #include "EntitySystem/Entity.h"
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "EntitySystem/Components/RendererComponents.h"
+#include "EntitySystem/Components/ScriptComponents.h"
 #include "ImGui/ImGuiToolkit.h"
 #include "Logger/Logger.h"
 
 #include "SceneHierarchyEvents.h"
 #include "NativeFileDialog/NativeFileDialog.h"
+#include "Scripting/Native/NativeScript.h"
 
 #include "CTL/CStringHandling.h"
 
@@ -229,6 +231,33 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 std::filesystem::path path(materialPath);
                 materialPath = path.filename().stem().string(); // = filename_with_ext.substr(0, filename_with_ext.find('_'));
             }
+        }
+        ImGui::Spacing();
+        if (frontEntity.HasComponent<NativeScriptComponent>() && ImGui::CollapsingHeader("Native Script", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            auto& nativeScriptComponent = frontEntity.GetComponent<NativeScriptComponent>();
+            
+            static std::string behaviourName = "";
+            bool hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
+            bool colorPushed = false;
+
+            if (!hasBehaviour)
+            {
+                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+                colorPushed = true;
+            }
+
+            if (ImGui::InputText("Script Behavior Name", &behaviourName))
+            {
+                bool hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
+
+                if (hasBehaviour)
+                    nativeScriptComponent.SetBehaviorWithString(behaviourName);
+            }
+            //CTL::HashMapToHashSet(Scripting::NativeScriptDB::GetBehaviorMap());
+
+            if (colorPushed)
+                ImGui::PopStyleColor();
         }
         ImGui::Separator();
         ImGui::Spacing();

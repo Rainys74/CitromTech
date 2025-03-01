@@ -37,14 +37,7 @@ namespace Citrom
 			OnTickFunction = [](ScriptableEntity* _instance, float64 fixedDeltaTime) { ((T*)_instance)->OnTick(fixedDeltaTime); };
 		}
 
-		void SetBehaviorWithString(const std::string& string)
-		{
-			// do a for loop through all bound classes and set the behaviour based on that class
-			// e.g. if (typeName == typeid(ScriptClass)).name()) SetBehavior<ScriptClass>(); // <-- don't use typeid since it's unreproducible on certain platforms, instead require the user to pass the name of the class to the system.
-		}
-		std::string GetBehaviorString()
-		{
-			return std::string();
-		}
+		void SetBehaviorWithString(const std::string& string);
+		std::string GetBehaviorString();
 	};
 }

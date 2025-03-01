@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CTL/HashMap.h"
+#include "EntitySystem/Components/ScriptComponents.h"
 
 namespace Citrom
 {
@@ -14,22 +15,35 @@ namespace Citrom::Scripting
 	private:
 		ScriptableEntity* instance;
 	};*/
-	class NativeScriptBehaviors // ClassDataBase, NativeScriptDB?
+
+	class NativeScriptDB // ClassDataBase
 	{
 	public:
-		using BehaviorCallbackPFN = void(*)(void);
+		using BehaviorCallbackPFN = void(*)(NativeScriptComponent* nativeScriptComponent);
 
-		template<typename T>
-		void BindBehavior(const std::string& name) // registers class
+		/*template<typename T>
+		void BindBehavior(const std::string& name) // registers script class
 		{
 			/*m_BehaviourCallbacks[name] = []()
 				{
 					//SetBehaviour<T>();
-				};*/
+				};* /
 
+		}*/
+		template<typename T> // serves no real purpose just for syntactic sugar. Actually it might just do
+		static void RegisterBehavior(const std::string& name)
+		{
+			s_BehaviourCallbacks[name] = [](NativeScriptComponent* nsc)
+			{
+				nsc->SetBehavior<T>();
+			};
 		}
+		
+		FORCE_INLINE static BehaviorCallbackPFN GetBehaviorCallback(const std::string& behaviourName) { return s_BehaviourCallbacks[behaviourName]; }
+		FORCE_INLINE static CTL::StdStrHashMap<BehaviorCallbackPFN>& GetBehaviorMap() { return s_BehaviourCallbacks; }
+		FORCE_INLINE static bool HasBehavior(const std::string& behaviorName) { return s_BehaviourCallbacks.find(behaviorName) != s_BehaviourCallbacks.end(); }
 	private:
-		CTL::StdStrHashMap<BehaviorCallbackPFN> m_BehaviourCallbacks;
+		static CTL::StdStrHashMap<BehaviorCallbackPFN> s_BehaviourCallbacks;
 	};
 	class NativeScript
 	{

@@ -356,13 +356,30 @@ int SharedMain(int argc, char* argv[])
 		void OnUpdate(float64 deltaTime)
 		{
 			//CT_TRACE("Updated DT: {}", deltaTime);
+			auto& cc = GetComponent<CameraComponent>();
+			auto& tc = GetComponent<TransformComponent>();
+
+			if (Input::SimpleInput::GetKey(Input::KeyCode::PageUp)) cc.camera.SetPerspectiveVerticalFOV(cc.camera.GetPerspectiveVerticalFOV() + 0.5f * deltaTime);
+			if (Input::SimpleInput::GetKey(Input::KeyCode::PageDown)) cc.camera.SetPerspectiveVerticalFOV(cc.camera.GetPerspectiveVerticalFOV() - 0.5f * deltaTime);
+
+			constexpr const float32 moveSpeed = 1.0f;
+
+			if (Input::SimpleInput::GetKey(Input::KeyCode::Up))
+				tc.transform.position.y += moveSpeed * deltaTime;
+			if (Input::SimpleInput::GetKey(Input::KeyCode::Down))
+				tc.transform.position.y -= moveSpeed * deltaTime;
+			if (Input::SimpleInput::GetKey(Input::KeyCode::Right))
+				tc.transform.position.x += moveSpeed * deltaTime;
+			if (Input::SimpleInput::GetKey(Input::KeyCode::Left))
+				tc.transform.position.x -= moveSpeed * deltaTime;
 		}
 		void OnTick(float64 fixedDeltaTime)
 		{
 
 		}
 	};
-	camera.AddComponent<NativeScriptComponent>().SetBehavior<TestCameraController>();
+	Scripting::NativeScriptDB::RegisterBehavior<TestCameraController>("TestCameraController");
+	camera.AddComponent<NativeScriptComponent>().SetBehaviorWithString("TestCameraController"); //.SetBehavior<TestCameraController>();
 
 	struct TestClass
 	{

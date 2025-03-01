@@ -4,6 +4,8 @@
 
 namespace Citrom::Scripting
 {
+	CTL::StdStrHashMap<NativeScriptDB::BehaviorCallbackPFN> NativeScriptDB::s_BehaviourCallbacks;
+
 	Scene* NativeScript::s_BoundScene = nullptr;
 
 	void NativeScript::ResetScriptComponentInstance()
