@@ -358,7 +358,7 @@ namespace Citrom
 																									(OUTFLOAT4)[3] = _w;			\
 																								}
 #define DESERIALIZE_VECTOR2(DOC, NAME, OUTFLOAT2) DESERIALIZE_FLOAT2_SUFFIXED(DOC, NAME, OUTFLOAT2, "X", "Y")
-#define DESERIALIZE_VECTOR3(DOC, NAME, OUTFLOAT3) { double x, y, z; (DOC)[NAME "X"].get(x); (DOC)[NAME "Y"].get(y); (DOC)[NAME "Z"].get(z); (OUTFLOAT3)[0] = x; (OUTFLOAT3)[1] = y; (OUTFLOAT3)[2] = z;}
+#define DESERIALIZE_VECTOR3(DOC, NAME, OUTFLOAT3) DESERIALIZE_FLOAT3_SUFFIXED(DOC, NAME, OUTFLOAT3, "X", "Y", "Z")
 #define DESERIALIZE_VECTOR4(DOC, NAME, OUTFLOAT4) DESERIALIZE_FLOAT4_SUFFIXED(DOC, NAME, OUTFLOAT4, "X", "Y", "Z", "W")
 
 #define DESERIALIZE_QUATERNION(DOC, NAME, OUTFLOAT4) DESERIALIZE_VECTOR4(DOC, NAME, OUTFLOAT4)
@@ -367,6 +367,8 @@ namespace Citrom
 
     bool SceneSerializer::Deserialize(const std::string& filePath)
     {
+		CT_PROFILE_MEMBER_FUNCTION();
+
 		bool status = true;
 		
 		std::ifstream inFile(filePath);
@@ -374,12 +376,15 @@ namespace Citrom
 		std::string jsonSrc((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
 
 		// On demand causes a hard-coded limit of 4 GB for parsing
-		//simdjson::ondemand::parser parser;
-		//simdjson::ondemand::document doc = parser.iterate(jsonSrc);
-		
+#define USE_ON_DEMAND 1
+#if USE_ON_DEMAND
+		simdjson::ondemand::parser parser;
+		simdjson::ondemand::document doc = parser.iterate(jsonSrc);
+#else
 		using namespace NonDemand;
 		simdjson::dom::parser parser; // reallocates memory
 		simdjson::dom::element doc = parser.parse(jsonSrc);
+#endif
 
 		std::string sceneName;
 		JSON_READER_DOC_GET_STRING(doc, "SceneName", sceneName);
@@ -407,32 +412,25 @@ namespace Citrom
 
 			if (components["ActiveComponent"].error() == simdjson::SUCCESS) 
 			{
-				ActiveComponent& activeComponent = entity.GetComponent<ActiveComponent>();
-				activeComponent.active = components["ActiveComponent"]["Active"].get<bool>().value();
-				//entity.AddComponent<ActiveComponent>(activeComponent);
+				entity.GetComponent<ActiveComponent>().active = components["ActiveComponent"]["Active"].get_bool().value();
 			}
 
 			if (components["HierarchyComponent"].error() == simdjson::SUCCESS) 
 			{
-				HierarchyComponent& hierarchyComponent = entity.GetComponent<HierarchyComponent>();
-				hierarchyComponent.parentID = components["HierarchyComponent"]["ParentUUID"].get_uint64().value();
-				//entity.AddComponent<HierarchyComponent>(hierarchyComponent);
+				entity.GetComponent<HierarchyComponent>().parentID = components["HierarchyComponent"]["ParentUUID"].get_uint64().value();
 			}
 
 			if (components["TransformComponent"].error() == simdjson::SUCCESS) 
 			{
+				auto&& transformComponentObj = components["TransformComponent"];
+
 				TransformComponent& transformComponent = entity.GetComponent<TransformComponent>();
 
-				//transformComponent.transform.position = DeserializeVector3(components["TransformComponent"]["Position"]);
-				//transformComponent.transform.rotation = DeserializeQuaternion(components["TransformComponent"]["Rotation"]);
-				//transformComponent.transform.scale = DeserializeVector3(components["TransformComponent"]["Scale"]);
-				//transformComponent.transform.eulerAnglesHint = DeserializeVector3(components["TransformComponent"]["RotationEulerAnglesHint"]);
+				DESERIALIZE_VECTOR3(transformComponentObj, "Position", transformComponent.transform.position);
+				DESERIALIZE_QUATERNION(transformComponentObj, "Rotation", transformComponent.transform.rotation);
+				DESERIALIZE_VECTOR3(transformComponentObj, "Scale", transformComponent.transform.scale);
 
-				DESERIALIZE_VECTOR3(components["TransformComponent"], "Position", transformComponent.transform.position);
-				DESERIALIZE_QUATERNION(components["TransformComponent"], "Rotation", transformComponent.transform.rotation);
-				DESERIALIZE_VECTOR3(components["TransformComponent"], "Scale", transformComponent.transform.scale);
-
-				DESERIALIZE_VECTOR3(components["TransformComponent"], "RotationEulerAnglesHint", transformComponent.transform.eulerAnglesHint);
+				DESERIALIZE_VECTOR3(transformComponentObj, "RotationEulerAnglesHint", transformComponent.transform.eulerAnglesHint);
 
 				//entity.AddComponent<TransformComponent>(transformComponent);
 			}
@@ -440,24 +438,26 @@ namespace Citrom
 
 			if (components["CameraComponent"].error() == simdjson::SUCCESS) 
 			{
+				auto&& cameraComponentObj = components["CameraComponent"];
+
 				CameraComponent cameraComponent;
 
-				cameraComponent.camera.SetProjectionType((Camera::ProjectionType)components["CameraComponent"]["ProjectionType"].get<int64_t>().value());
+				cameraComponent.camera.SetProjectionType((Camera::ProjectionType)cameraComponentObj["ProjectionType"].get<int64>().value());
 
-				cameraComponent.camera.SetPerspectiveVerticalFOV(components["CameraComponent"]["PerspectiveFOV"].get<double>().value());
-				cameraComponent.camera.SetPerspectiveNearClip(components["CameraComponent"]["PerspectiveNear"].get<double>().value());
-				cameraComponent.camera.SetPerspectiveFarClip(components["CameraComponent"]["PerspectiveFar"].get<double>().value());
+				cameraComponent.camera.SetPerspectiveVerticalFOV(cameraComponentObj["PerspectiveFOV"].get<double>().value());
+				cameraComponent.camera.SetPerspectiveNearClip(cameraComponentObj["PerspectiveNear"].get<double>().value());
+				cameraComponent.camera.SetPerspectiveFarClip(cameraComponentObj["PerspectiveFar"].get<double>().value());
 
-				cameraComponent.camera.SetOrthographicSize(components["CameraComponent"]["OrthographicSize"].get<double>().value());
-				cameraComponent.camera.SetOrthographicNearClip(components["CameraComponent"]["OrthographicNear"].get<double>().value());
-				cameraComponent.camera.SetOrthographicFarClip(components["CameraComponent"]["OrthographicFar"].get<double>().value());
+				cameraComponent.camera.SetOrthographicSize(cameraComponentObj["OrthographicSize"].get<double>().value());
+				cameraComponent.camera.SetOrthographicNearClip(cameraComponentObj["OrthographicNear"].get<double>().value());
+				cameraComponent.camera.SetOrthographicFarClip(cameraComponentObj["OrthographicFar"].get<double>().value());
 
 				//cameraComponent.camera.clearColor = DeserializeColorF32x4(components["CameraComponent"]["ClearColor"]);
 				//cameraComponent.camera.viewportSize = DeserializeVector2(components["CameraComponent"]["ViewportSize"]);
 				//cameraComponent.camera.viewportOffset = DeserializeVector2(components["CameraComponent"]["ViewportOffset"]);
-				DESERIALIZE_COLORF32X4(components["CameraComponent"], "ClearColor", cameraComponent.camera.clearColor);
-				DESERIALIZE_VECTOR2(components["CameraComponent"], "ViewportSize", cameraComponent.camera.viewportSize);
-				DESERIALIZE_VECTOR2(components["CameraComponent"], "ViewportOffset", cameraComponent.camera.viewportOffset);
+				DESERIALIZE_COLORF32X4(cameraComponentObj, "ClearColor", cameraComponent.camera.clearColor);
+				DESERIALIZE_VECTOR2(cameraComponentObj, "ViewportSize", cameraComponent.camera.viewportSize);
+				DESERIALIZE_VECTOR2(cameraComponentObj, "ViewportOffset", cameraComponent.camera.viewportOffset);
 
 				entity.AddComponent<CameraComponent>(cameraComponent);
 			}

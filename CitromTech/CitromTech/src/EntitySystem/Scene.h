@@ -10,6 +10,10 @@
 
 namespace Citrom
 {
+	namespace Scripting
+	{
+		class NativeScript;
+	}
 	class Entity;
 	class Scene
 	{
@@ -70,5 +74,6 @@ namespace Citrom
 
 		friend class Entity;
 		friend class SceneSerializer;
+		friend class Scripting::NativeScript;
 	};
 }

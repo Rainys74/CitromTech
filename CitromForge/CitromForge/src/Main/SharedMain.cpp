@@ -27,6 +27,7 @@
 #include "EntitySystem/Entity.h"
 #include "EntitySystem/Components/EssentialComponents.h"
 #include "EntitySystem/Components/RendererComponents.h"
+#include "EntitySystem/Components/ScriptComponents.h"
 
 #include "Math/MathCommon.h"
 #include "Math/Vector.h"
@@ -338,6 +339,29 @@ int SharedMain(int argc, char* argv[])
 
 	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
+	
+	class TestCameraController : public ScriptableEntity
+	{
+	public:
+		void OnCreate()
+		{
+
+		}
+		void OnDestroy()
+		{
+
+		}
+
+		void OnUpdate(float64 deltaTime)
+		{
+			CT_TRACE("Updated DT: {}", deltaTime);
+		}
+		void OnTick(float64 fixedDeltaTime)
+		{
+
+		}
+	};
+	camera.AddComponent<NativeScriptComponent>().SetBehavior<TestCameraController>();
 
 	struct TestClass
 	{
