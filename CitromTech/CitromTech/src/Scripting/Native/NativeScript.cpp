@@ -23,10 +23,16 @@ namespace Citrom::Scripting
 			{
 				nativeScriptComponent.InstantiateFunction(nativeScriptComponent.instance);
 				nativeScriptComponent.instance->m_Entity = Entity(entityID, s_BoundScene);
-				nativeScriptComponent.OnCreateFunction(nativeScriptComponent.instance);
+
+				if (nativeScriptComponent.OnCreateFunction)
+					nativeScriptComponent.OnCreateFunction(nativeScriptComponent.instance);
 			}
 
-			nativeScriptComponent.OnUpdateFunction(nativeScriptComponent.instance, deltaTime);
+			if (!nativeScriptComponent.instance->m_Entity.IsActive())
+				return;
+
+			if (nativeScriptComponent.OnUpdateFunction)
+				nativeScriptComponent.OnUpdateFunction(nativeScriptComponent.instance, deltaTime);
 		});
 	}
 }

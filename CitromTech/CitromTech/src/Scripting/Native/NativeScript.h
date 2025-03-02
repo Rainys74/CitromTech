@@ -30,12 +30,13 @@ namespace Citrom::Scripting
 				};* /
 
 		}*/
-		template<typename T> // serves no real purpose just for syntactic sugar. Actually it might just do
+		template<typename T>
 		static void RegisterBehavior(const std::string& name)
 		{
 			s_BehaviourCallbacks[name] = [](NativeScriptComponent* nsc)
 			{
 				nsc->SetBehavior<T>();
+				//nsc->SetBehaviorString(name);
 			};
 		}
 		

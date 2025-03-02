@@ -25,6 +25,8 @@
 #include "imgui.h"
 #include "ImGuizmo.h"
 
+#include "ImGui/ImGuiToolkit.h"
+
 using namespace Citrom;
 using namespace EditorImGui;
 
@@ -186,14 +188,8 @@ void EditorLayer::OnImGuiRender()
 
         ImGui::Separator();
 
-        // TODO: maybe make this centered button function into an ImToolkit template?
         constexpr float buttonWidth = 200.0f;
-
-        const float offsetX = (ImGui::GetContentRegionAvail().x - buttonWidth) * 0.5f;
-        if (offsetX > 0.0f)
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
-
-        if (ImGui::Button("Apply", ImVec2(buttonWidth, 0.0f)))
+        if (ImToolkit::DrawCenteredButton("Apply", buttonWidth))
         {
             GetMainWindow()->GetBackend()->SetResolution(width, height, refreshRate);
             

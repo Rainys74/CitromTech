@@ -138,7 +138,12 @@ namespace Citrom::Math
 		return RADIANS_TO_DEGREES(radians, 0);
 	}
 
-	float32 Clamp(float32 value, float32 min, float32 max);
+	inline float32 Clamp(float32 value, float32 min, float32 max)
+	{
+		if (value > max) value = max;
+		if (value < min) value = min;
+		return value;
+	}
 
 	// Fun stuff
 	namespace AccuratePI

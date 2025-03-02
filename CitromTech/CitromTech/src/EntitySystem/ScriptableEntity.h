@@ -11,6 +11,7 @@ namespace Citrom
 		template<typename T>
 		inline T& GetComponent()
 		{
+			CT_CORE_ASSERT(m_Entity.HasComponent<T>(), "Entity does not have the following component!"); // Scriptable Entities should have flawless error-checking for the sake of the user
 			return m_Entity.GetComponent<T>();
 		}
 	private:

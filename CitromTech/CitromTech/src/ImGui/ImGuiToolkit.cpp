@@ -280,7 +280,7 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
-    bool PathPicker(const char* label, std::string* pathOutput, Citrom::NativeFileDialogFilter* filters, size_t filterLength)
+    bool PathPicker(const char* label, std::string* pathOutput, Citrom::NativeFileDialogFilter* filters, size_t filterLength, bool invalid)
     {
         bool modified = false;
 
@@ -314,11 +314,14 @@ namespace ImToolkit //ImPresets
 
         return modified;
     }
-    bool DrawStringSetSelector(const char* label, std::string* textOutput, const CTL::StdStrHashSet& stringSet)
+    bool DrawStringSetSelector(const char* label, std::string* textOutput, const CTL::StdStrHashSet& stringSet, bool invalid)
     {
         bool modified = false;
 
         ImGui::PushID(label);
+        
+        if (invalid)
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
 
         _SetupLabel(label, false, 150.0f); //, false, 200.0f);
 
@@ -359,7 +362,12 @@ namespace ImToolkit //ImPresets
                 stringElements.PushBack(element);
         }
 
-        if (ImGui::BeginPopupModal(/*"StringSetSelectorModal"*/ modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) // TODO: move after popping style probably
+        ImGui::PopStyleVar();
+
+        if (invalid)
+            ImGui::PopStyleColor();
+
+        if (ImGui::BeginPopupModal(modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) // TODO: move after popping style probably
         {
             ImGui::Text("Select:");
             for (const auto& element : stringElements)
@@ -373,23 +381,35 @@ namespace ImToolkit //ImPresets
             }
             ImGui::Separator();
 
-            if (ImGui::Button("OK", ImVec2(120, 0))) 
-            { 
-                ImGui::CloseCurrentPopup(); 
-            }
-            ImGui::SetItemDefaultFocus();
-            ImGui::SameLine();
-            if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            //if (ImGui::Button("OK", ImVec2(120, 0)))
+            //{
+            //    ImGui::CloseCurrentPopup();
+            //}
+            //ImGui::SetItemDefaultFocus();
+            //ImGui::SameLine();
+            //if (ImGui::Button("Cancel", ImVec2(120, 0)))
+            //    ImGui::CloseCurrentPopup();
+            if (DrawCenteredButton("Cancel", 240))//120))
                 ImGui::CloseCurrentPopup();
             ImGui::EndPopup();
         }
-
-        ImGui::PopStyleVar();
 
         ImGui::Columns(1);
 
         ImGui::PopID();
 
         return modified;
+    }
+    bool DrawCenteredButton(const char* label, const float buttonWidth)
+    {
+        bool pressed = false;
+
+        const float offsetX = (ImGui::GetContentRegionAvail().x - buttonWidth) * 0.5f;
+        if (offsetX > 0.0f)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + offsetX);
+
+        pressed = ImGui::Button(label, ImVec2(buttonWidth, 0.0f));
+
+        return pressed;
     }
 }

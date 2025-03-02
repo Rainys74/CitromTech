@@ -49,19 +49,21 @@ static void TryInitializeHierarchyEventListener()
 }
 
 template<typename T>
-void AddComponentToEntity(Entity& entity, bool closeImGuiPopup = true)
+T& AddComponentToEntity(Entity& entity, bool closeImGuiPopup = true)
 {
     if (entity.HasComponent<T>())
     {
         ImGui::InsertNotification({ ImGuiToastType::Error, 3000, "Citrom Tech does not support multiple duplicate components per entity!"});
         if (closeImGuiPopup)
             ImGui::CloseCurrentPopup();
-        return;
+        return entity.GetComponent<T>();
     }
-    entity.AddComponent<T>();
+    T& component = entity.AddComponent<T>();
 
     if (closeImGuiPopup)
         ImGui::CloseCurrentPopup();
+
+    return component;
 }
 
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
@@ -237,26 +239,16 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
         {
             auto& nativeScriptComponent = frontEntity.GetComponent<NativeScriptComponent>();
             
-            static std::string behaviourName = "";
+            std::string& behaviourName = nativeScriptComponent.behaviorName;
             bool hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
-            bool colorPushed = false;
 
-            if (!hasBehaviour)
+            if (ImToolkit::DrawStringSetSelector("Script Behavior Name", &behaviourName, CTL::HashMapToHashSet(Scripting::NativeScriptDB::GetBehaviorMap()), !hasBehaviour))
             {
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-                colorPushed = true;
-            }
-
-            if (ImToolkit::DrawStringSetSelector("Script Behavior Name", &behaviourName, CTL::HashMapToHashSet(Scripting::NativeScriptDB::GetBehaviorMap())))
-            {
-                bool hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
+                hasBehaviour = Scripting::NativeScriptDB::HasBehavior(behaviourName);
 
                 if (hasBehaviour)
                     nativeScriptComponent.SetBehaviorWithString(behaviourName);
             }
-
-            if (colorPushed)
-                ImGui::PopStyleColor();
         }
         ImGui::Separator();
         ImGui::Spacing();
@@ -295,6 +287,13 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             {
                 if (ImGui::Button("Camera"))
                     AddComponentToEntity<CameraComponent>(frontEntity);
+
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Scripts")) // vs Scripting
+            {
+                if (ImGui::Button("Native Script")) // Do we need tree'd groups?
+                    AddComponentToEntity<NativeScriptComponent>(frontEntity).SetBehavior<NullScriptBehavior>();
 
                 ImGui::TreePop();
             }

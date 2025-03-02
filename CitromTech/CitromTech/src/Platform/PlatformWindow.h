@@ -8,7 +8,7 @@
 */
 namespace Citrom::Platform
 {
-#define PLATFORM_DEFAULT_WIDTH (800)
+#define PLATFORM_DEFAULT_WIDTH (800) // if in editor, use 1280, 720; if in runtime, use 800 x 600
 #define PLATFORM_DEFAULT_HEIGHT (600)
 #define PLATFORM_DEFAULT_NAME ("Citrom Tech")
 

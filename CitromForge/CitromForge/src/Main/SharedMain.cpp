@@ -344,6 +344,8 @@ int SharedMain(int argc, char* argv[])
 	class TestCameraController : public ScriptableEntity
 	{
 	public:
+		static const char* _GetBehaviorName() { return "TestCameraController"; } // TODO: move to a CTCLASS or CT_CLASS macro or something similar to UCLASS and GDCLASS
+
 		void OnCreate()
 		{
 			CT_TRACE("TestCameraController::OnCreate()");
@@ -381,6 +383,8 @@ int SharedMain(int argc, char* argv[])
 	class TestPrinter : public ScriptableEntity
 	{
 	public:
+		static const char* _GetBehaviorName() { return "TestPrinter"; }
+
 		void OnCreate()
 		{
 			CT_VERBOSE("TestPrinter::OnCreate()");
@@ -394,10 +398,9 @@ int SharedMain(int argc, char* argv[])
 		{
 			CT_TRACE("*Printer Sounds at an {} interval*", deltaTime);
 		}
-		void OnTick(float64 fixedDeltaTime)
-		{
 
-		}
+	public:
+		static void BindMethods() {}
 	};
 	Scripting::NativeScriptDB::RegisterBehavior<TestCameraController>("TestCameraController");
 	Scripting::NativeScriptDB::RegisterBehavior<TestPrinter>("TestPrinter");

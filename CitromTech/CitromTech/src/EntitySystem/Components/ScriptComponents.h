@@ -4,18 +4,25 @@
 
 namespace Citrom
 {
+	class NullScriptBehavior : public ScriptableEntity // NullNativeScriptBehaviour?
+	{
+	public:
+		static const char* _GetBehaviorName() { return "NullScriptBehavior"; }
+	};
+
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* instance = nullptr;
+		std::string behaviorName;
 
 		void (*InstantiateFunction)(ScriptableEntity*&) = nullptr;
 		void (*DestroyInstanceFunction)(ScriptableEntity*&) = nullptr;
 
-		void (*OnCreateFunction)(ScriptableEntity*);
-		void (*OnDestroyFunction)(ScriptableEntity*);
+		void (*OnCreateFunction)(ScriptableEntity*) = nullptr;
+		void (*OnDestroyFunction)(ScriptableEntity*) = nullptr;
 
-		void (*OnUpdateFunction)(ScriptableEntity*, float64 deltaTime);
-		void (*OnTickFunction)(ScriptableEntity*, float64 fixedDeltaTime);
+		void (*OnUpdateFunction)(ScriptableEntity*, float64 deltaTime) = nullptr;
+		void (*OnTickFunction)(ScriptableEntity*, float64 fixedDeltaTime) = nullptr;
 
 		template<typename T>
 		void SetBehavior() // SetBehavior vs SetBehaviour
@@ -30,14 +37,24 @@ namespace Citrom
 				/*IF_DEBUG(_instance = nullptr);*/ 
 			};
 
-			OnCreateFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnCreate(); };
-			OnDestroyFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnDestroy(); };
+			if constexpr (requires { T::_GetBehaviorName(); })
+				behaviorName = T::_GetBehaviorName();
+			else
+				static_assert(requires { T::_GetBehaviorName(); }, "Cannot retrieve the behavior name from a native script class!");
 
-			OnUpdateFunction = [](ScriptableEntity* _instance, float64 deltaTime) { ((T*)_instance)->OnUpdate(deltaTime); };
-			OnTickFunction = [](ScriptableEntity* _instance, float64 fixedDeltaTime) { ((T*)_instance)->OnTick(fixedDeltaTime); };
+			if constexpr (requires(T t) { t.OnCreate(); })
+				OnCreateFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnCreate(); };
+			if constexpr (requires(T t) { t.OnDestroy(); })
+				OnDestroyFunction = [](ScriptableEntity* _instance) { ((T*)_instance)->OnDestroy(); };
+
+			if constexpr (requires(T t, float64 deltaTime) { t.OnUpdate(deltaTime); })
+				OnUpdateFunction = [](ScriptableEntity* _instance, float64 deltaTime) { ((T*)_instance)->OnUpdate(deltaTime); };
+			if constexpr (requires(T t, float64 fixedDeltaTime) { t.OnTick(fixedDeltaTime); })
+				OnTickFunction = [](ScriptableEntity* _instance, float64 fixedDeltaTime) { ((T*)_instance)->OnTick(fixedDeltaTime); };
 		}
 
 		void SetBehaviorWithString(const std::string& string);
-		std::string GetBehaviorString();
+		FORCE_INLINE void SetBehaviorString(const std::string& string) { behaviorName = string; }
+		FORCE_INLINE std::string GetBehaviorString() { return behaviorName; } // Done, probably add a set behaviour string that gets set automatically using RegisterClass?
 	};
 }

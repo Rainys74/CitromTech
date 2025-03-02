@@ -12,10 +12,10 @@ namespace Citrom
 
 		NativeScriptDB::GetBehaviorCallback(string)(this);
 	}
-	std::string NativeScriptComponent::GetBehaviorString()
+	/*std::string NativeScriptComponent::GetBehaviorString()
 	{
 		//for (auto& behaviourPair : NativeScriptDB::GetBehaviorMap())
 		//	if (behaviourPair.second == this)
 		return std::string();
-	}
+	}*/
 }
