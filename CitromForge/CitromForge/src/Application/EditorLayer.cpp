@@ -1,5 +1,6 @@
 #include "EditorLayer.h"
 #include "Main/SharedMain.h"
+#include "Application/ApplicationInfo.h"
 
 #include "Profiling/Profiler.h"
 #include "Logger/Logger.h"
@@ -100,15 +101,20 @@ void EditorLayer::OnImGuiRender()
             }
             if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
             {
-                std::string filePath("Assets/Scenes/");
-                filePath.append(GetCurrentScene()->GetSceneName()); // TODO: open nfd for save as
-                filePath.append(".ctscene"); // .cts, .ctscene, .ctenv also .ctbs, .ctbinscene, .ctbscene, .ctscenebin
+                NativeFileDialog nfd;
+                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,cts,ctenv" } };
+                std::string filePath = nfd.SaveFile(filters, CT_ARRAY_LENGTH(filters));
 
-                SceneSerializer sceneSerializer(GetCurrentScene());
-                sceneSerializer.Serialize(filePath);
+                if (filePath != "")
+                {
+                    GetCurrentScene()->RenameScene(std::filesystem::path(filePath).stem().string());
+                    SceneSerializer sceneSerializer(GetCurrentScene());
+                    sceneSerializer.Serialize(filePath);
+                }
             }
             ImGui::Separator();
-            if (ImGui::MenuItem("Quit")); // Exit
+            if (ImGui::MenuItem("Quit")) // Exit
+                g_Application->QuitGracefully();
 
             ImGui::EndMenu();
         }

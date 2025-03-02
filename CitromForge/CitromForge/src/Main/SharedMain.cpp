@@ -716,7 +716,7 @@ void ForgeLoop()
 								//Shift + F11: Open / close editor UI without pausing the game.
 										//F12: Toggle free - camera mode(detached from the player)
 #ifdef CT_EDITOR_ENABLED
-		if (true) // if GApplication->editorUIEnabled
+		if (true) // if GApplication->EditorUIEnabled
 		{
 			CT_PROFILE_SCOPE("ImGui Render");
 			g_ImLayer.Begin();

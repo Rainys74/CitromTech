@@ -1,0 +1,118 @@
+{
+    "SceneName": "renaming test",
+    "Entities": [
+        {
+            "EntityName": "Main Camera",
+            "Components": {
+                "UUIDComponent": {
+                    "GUID": 17808332809609108685
+                },
+                "NameComponent": {
+                    "Name": "Main Camera"
+                },
+                "ActiveComponent": {
+                    "Active": true
+                },
+                "HierarchyComponent": {
+                    "ParentUUID": 0
+                },
+                "TransformComponent": {
+                    "PositionX": -0.6271563768386841,
+                    "PositionY": 0.31972259283065796,
+                    "PositionZ": -0.5,
+                    "RotationX": 0.0,
+                    "RotationY": 0.0,
+                    "RotationZ": 0.0,
+                    "RotationW": 1.0,
+                    "ScaleX": 1.0,
+                    "ScaleY": 1.0,
+                    "ScaleZ": 1.0,
+                    "RotationEulerAnglesHintX": 0.0,
+                    "RotationEulerAnglesHintY": 0.0,
+                    "RotationEulerAnglesHintZ": 0.0
+                },
+                "CameraComponent": {
+                    "ProjectionType": 0,
+                    "PerspectiveFOV": 1.5707963705062866,
+                    "PerspectiveNear": 0.009999999776482582,
+                    "PerspectiveFar": 1000.0,
+                    "OrthographicSize": 10.0,
+                    "OrthographicNear": -1.0,
+                    "OrthographicFar": 1.0,
+                    "ClearColorR": 0.6399964094161987,
+                    "ClearColorG": 0.7359725832939148,
+                    "ClearColorB": 0.8867924213409424,
+                    "ClearColorA": 1.0,
+                    "ViewportSizeX": 1.0,
+                    "ViewportSizeY": 1.0,
+                    "ViewportOffsetX": 0.0,
+                    "ViewportOffsetY": 0.0
+                }
+            }
+        },
+        {
+            "EntityName": "New Entity",
+            "Components": {
+                "UUIDComponent": {
+                    "GUID": 15515345889571558774
+                },
+                "NameComponent": {
+                    "Name": "New Entity"
+                },
+                "ActiveComponent": {
+                    "Active": true
+                },
+                "HierarchyComponent": {
+                    "ParentUUID": 0
+                },
+                "TransformComponent": {
+                    "PositionX": 0.0,
+                    "PositionY": 0.0,
+                    "PositionZ": 0.0,
+                    "RotationX": 0.0,
+                    "RotationY": 0.0,
+                    "RotationZ": 0.0,
+                    "RotationW": 1.0,
+                    "ScaleX": 1.0,
+                    "ScaleY": 1.0,
+                    "ScaleZ": 1.0,
+                    "RotationEulerAnglesHintX": 0.0,
+                    "RotationEulerAnglesHintY": 0.0,
+                    "RotationEulerAnglesHintZ": 0.0
+                }
+            }
+        },
+        {
+            "EntityName": "New Entity",
+            "Components": {
+                "UUIDComponent": {
+                    "GUID": 17217934582547186567
+                },
+                "NameComponent": {
+                    "Name": "New Entity"
+                },
+                "ActiveComponent": {
+                    "Active": true
+                },
+                "HierarchyComponent": {
+                    "ParentUUID": 0
+                },
+                "TransformComponent": {
+                    "PositionX": 0.0,
+                    "PositionY": 0.0,
+                    "PositionZ": 0.0,
+                    "RotationX": 0.0,
+                    "RotationY": 0.0,
+                    "RotationZ": 0.0,
+                    "RotationW": 1.0,
+                    "ScaleX": 1.0,
+                    "ScaleY": 1.0,
+                    "ScaleZ": 1.0,
+                    "RotationEulerAnglesHintX": 0.0,
+                    "RotationEulerAnglesHintY": 0.0,
+                    "RotationEulerAnglesHintZ": 0.0
+                }
+            }
+        }
+    ]
+}

@@ -133,7 +133,7 @@ namespace Citrom::RenderAPI
 		virtual void RCEnd() {}
 		virtual void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) = 0; // RCBegin and RCEnd to provide a high-level interface of command buffers/lists in Metal/Vulkan? also deferred DX11 Contexts?
 		virtual void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) = 0;
-		virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0; // TODO: move to render pass as a value, or keep 
+		//virtual void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) = 0; // TODO: move to render pass as a value, or keep 
 
 		// Debug (Name setting)
 		virtual void SetName(VertexBuffer* resource, const char* name) = 0;

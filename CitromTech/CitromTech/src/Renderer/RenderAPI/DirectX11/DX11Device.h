@@ -55,6 +55,7 @@ namespace Citrom::RenderAPI
 
 		// Textures
 		Texture2D CreateTexture2D(Texture2DDesc* descriptor) override;
+		//Texture2D CreateTexture2DFromFramebuffer(Framebuffer* fb) override;
 		void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) override;
 
 		// Pipeline
@@ -64,7 +65,6 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override;
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override;
-		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override;
 
 		// Debug
 		void SetName(VertexBuffer* resource, const char* name) override;
@@ -125,6 +125,8 @@ namespace Citrom::RenderAPI
 
 		void BindVertexBufferLayout(VertexBufferLayout* vbLayout);
 		void BindShader(Shader* shader);
+
+		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f);
 	//protected:
 	//	static CommandBuffer s_RenderCommandBuffer;
 	private:

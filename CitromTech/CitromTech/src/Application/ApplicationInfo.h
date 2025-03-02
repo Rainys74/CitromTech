@@ -35,6 +35,10 @@ namespace Citrom
     class Application
     {
     public:
+        void QuitGracefully()
+        {
+            //gameWindow->WindowShouldClose();
+        }
     public:
         Platform::Window* gameWindow = nullptr;
         class LayerStack* gameLayerStack = nullptr;

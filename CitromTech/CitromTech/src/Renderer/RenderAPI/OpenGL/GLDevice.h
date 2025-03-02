@@ -63,7 +63,6 @@ namespace Citrom::RenderAPI
 		// Render Commands
 		void RCDrawIndexed(uint32 indexCount, uint32 startIndex = 0, int32 baseVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
 		void RCDraw(uint32 vertexCount, uint32 startVertexLocation = 0, CommandBuffer* cmd = nullptr) override{}
-		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) override{}
 
 		// Debug
 		void SetName(VertexBuffer* resource, const char* name) override {}
@@ -109,6 +108,8 @@ namespace Citrom::RenderAPI
 
 		void BindVertexBufferLayout(VertexBufferLayout* vbLayout) {}
 		void BindShader(Shader* shader) {}
+
+		void RCClearColor(float32 r, float32 g, float32 b, float32 a = 0.0f) {}
 	};
 
 	class GLDummyDevice : public DummyDevice
