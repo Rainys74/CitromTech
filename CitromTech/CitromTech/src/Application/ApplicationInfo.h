@@ -19,17 +19,27 @@ namespace Citrom
     struct RendererInfoSpecification
     {
         RenderAPI::GraphicsAPI apiPriorityList[(size_t)RenderAPI::GraphicsAPI::Count];
-        RenderAPI::VSyncMode defaultVSync;
     };
 
     struct ApplicationInfoSpecification   
     {
         WindowInfoSpecification windowInfo;
         RendererInfoSpecification rendererInfo;
-
-        Platform::Window* mainWindow;
-        //Scene*& currentScene;
+        //Scene*& currentScene; // unrequired
     };
 
     inline ApplicationInfoSpecification MainApplicationSpec;
+
+    class Application
+    {
+    public:
+    public:
+        Platform::Window* gameWindow = nullptr;
+        //ApplicationInfoSpecification mainApplicationSpec;
+
+        float64 fixedTimeStep = 1.0 / 60.0; // TickTimeStep
+    private:
+    };
+
+    extern Application* g_Application;
 }

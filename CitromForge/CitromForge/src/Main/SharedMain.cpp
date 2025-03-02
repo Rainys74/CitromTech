@@ -145,7 +145,7 @@ static ApplicationInfoSpecification GetApplicationSpecification_Editor()
 	spec.rendererInfo.apiPriorityList[2] = RenderAPI::GraphicsAPI::OpenGL;
 	//spec.rendererInfo.defaultVSync = RenderAPI::VSyncMode::On;
 
-	spec.mainWindow = &g_Window;
+	//spec.mainWindow = &g_Window;
 
 	return spec;
 }
@@ -164,19 +164,24 @@ static ApplicationInfoSpecification GetApplicationSpecification_Runtime()
 	spec.rendererInfo.apiPriorityList[2] = RenderAPI::GraphicsAPI::OpenGL;
 	//spec.rendererInfo.defaultVSync = RenderAPI::VSyncMode::On;
 
-	spec.mainWindow = &g_Window;
+	//spec.mainWindow = &g_Window;
 
 	return spec;
 }
 
-static FORCE_INLINE ApplicationInfoSpecification GetApplicationSpecification()
+/*static FORCE_INLINE ApplicationInfoSpecification GetApplicationSpecification()
 {
 #ifdef CT_EDITOR_ENABLED
 	return GetApplicationSpecification_Editor();
 #else
 	return GetApplicationSpecification_Runtime();
 #endif
-}
+}*/
+#ifdef CT_EDITOR_ENABLED
+#define GetApplicationSpecification GetApplicationSpecification_Editor
+#else
+#define GetApplicationSpecification GetApplicationSpecification_Runtime
+#endif
 
 int SharedMain(int argc, char* argv[])
 {
@@ -610,6 +615,17 @@ int SharedMain(int argc, char* argv[])
 
 	using namespace Platform;
 	MainApplicationSpec = GetApplicationSpecification();
+	g_Application = new Application();
+	g_Application->gameWindow = &g_Window;
+	//GEngine
+	//GApp
+	//GApplic
+	//g_Appli
+	//g_App
+	//g_Engine
+	//GApplication->GameWindow = &GWindow;
+	//GApplication->MainApplicationSpec = GetApplicationSpecification();
+	// that moment when you want to change your naming convention mid-project...
 
 	g_Window.Create(MainApplicationSpec.windowInfo.width, MainApplicationSpec.windowInfo.height, MainApplicationSpec.windowInfo.defaultTitle);
 	if (MainApplicationSpec.windowInfo.displayMode != DisplayMode::Windowed)
@@ -645,9 +661,7 @@ void ForgeLoop()
 	float64 currentTime; // New Time
 	float64 previousTime = Platform::Utils::GetTime(); // Old Time
 
-	// Tick
-	float64 fixedTimeStep = 1.0 / 60.0;
-	float64 tickAccumulator = 0.0f;
+	float64 tickAccumulator = 0.0f; // Tick
 
 	while (!g_Window.WindowShouldClose())
 	{
@@ -680,10 +694,10 @@ void ForgeLoop()
 
 		// while (accumulated time >= fixed time step) probably
 		tickAccumulator += g_DeltaTime;
-		while (tickAccumulator >= fixedTimeStep)
+		while (tickAccumulator >= g_Application->fixedTimeStep)
 		{
-			g_LayerStack.Tick(fixedTimeStep);
-			tickAccumulator -= fixedTimeStep;
+			g_LayerStack.Tick(g_Application->fixedTimeStep);
+			tickAccumulator -= g_Application->fixedTimeStep;
 		}
 
 		// Render
@@ -701,6 +715,7 @@ void ForgeLoop()
 								//Shift + F11: Open / close editor UI without pausing the game.
 										//F12: Toggle free - camera mode(detached from the player)
 #ifdef CT_EDITOR_ENABLED
+		if (true) // if GApplication->editorUIEnabled
 		{
 			CT_PROFILE_SCOPE("ImGui Render");
 			g_ImLayer.Begin();

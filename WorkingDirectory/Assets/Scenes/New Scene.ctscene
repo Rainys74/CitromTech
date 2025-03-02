@@ -5,7 +5,7 @@
             "EntityName": "Main Camera",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 5963915015186687571
+                    "GUID": 258970359198348962
                 },
                 "NameComponent": {
                     "Name": "Main Camera"
@@ -54,7 +54,7 @@
             "EntityName": "New Entity",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 13192120707318176204
+                    "GUID": 984275412081310019
                 },
                 "NameComponent": {
                     "Name": "New Entity"
@@ -79,10 +79,6 @@
                     "RotationEulerAnglesHintX": 0.0,
                     "RotationEulerAnglesHintY": 0.0,
                     "RotationEulerAnglesHintZ": 0.0
-                },
-                "ModelComponent": {
-                    "MaterialName": "Placeholder",
-                    "CastShadows": false
                 }
             }
         },
@@ -90,7 +86,7 @@
             "EntityName": "New Entity",
             "Components": {
                 "UUIDComponent": {
-                    "GUID": 13547062184444418025
+                    "GUID": 11602650187815289722
                 },
                 "NameComponent": {
                     "Name": "New Entity"

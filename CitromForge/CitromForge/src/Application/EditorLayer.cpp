@@ -204,6 +204,30 @@ void EditorLayer::OnImGuiRender()
         ImGui::EndPopup();
     }
 
+    //// Menu Bar
+    //ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight())); // Position below the main menu bar
+    //ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, 50)); // Full width, fixed height
+    //
+    //ImGui::Begin("CustomMenuBar", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+    //ImGui::Text("This is a non-resizable window below the menu bar.");
+    //ImGui::End();
+    //
+    //// Dock Space after Menu Bar
+    //ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight() + 50));
+    //ImGui::SetNextWindowSize(ImVec2(ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y - ImGui::GetFrameHeight() - 50));
+    //ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    //ImGui::Begin("MainDockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground);
+    //
+    //// Set up docking
+    //ImGui::DockSpace(ImGui::GetID("MainDockSpace"), ImVec2(0, 0), ImGuiDockNodeFlags_PassthruCentralNode);
+    //
+    //ImGui::End();
+    //ImGui::PopStyleVar();
+
+    //ImGui::Begin("##EditorMenuBar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar);
+    //ImGui::Text("This is a non-resizable window below the menu bar.");
+    //ImGui::End();
+
     if (g_ShowAboutWindow)
     {
         constexpr const char* aboutTextTest =
