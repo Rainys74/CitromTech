@@ -45,6 +45,8 @@
 
 #include "Application/EditorLayer.h"
 
+#include "Vendor/sol2/sol.hpp"
+
 #include <iostream>
 
 using namespace Citrom;
@@ -507,6 +509,23 @@ int SharedMain(int argc, char* argv[])
 	//
 	//	CT_WARN("JSON BUILDER STRING: \n{}", jsonString);
 	//}
+
+	// Sol2
+	{
+		sol::state lua;
+
+		lua.open_libraries(sol::lib::base);
+
+		auto Lua_PrintCpp = [](const std::string& message) {
+			CT_INFO("{}", message);
+			};
+
+		lua.set_function("PrintCpp", Lua_PrintCpp);
+
+		lua.script(R"(
+			PrintCpp('Hello from Lua!')
+		)");
+	}
 
 	using namespace Platform;
 

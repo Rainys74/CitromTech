@@ -32,6 +32,7 @@ IncludeDir["ImGui"] = "../vendor/ImGui/imgui"
 IncludeDir["ImGuizmo"] = "../vendor/ImGuizmo/ImGuizmo"
 IncludeDir["HLSLcc"] = "../vendor/HLSLcc/HLSLcc/include"
 IncludeDir["nativefiledialog_extended"] = "../vendor/nativefiledialog-extended/nativefiledialog-extended/src/include"
+IncludeDir["Lua"] = "../vendor/Lua/lua/src"
 
 -- CMake Dependencies
 IncludeDir["glslcc"] = "../Dependencies/glslcc/src"
@@ -68,6 +69,7 @@ include "vendor/ImGui/Premake-ImGui.lua"
 include "vendor/ImGuizmo/Premake-ImGuizmo.lua"
 include "vendor/HLSLcc/Premake-HLSLcc.lua"
 include "vendor/nativefiledialog-extended/Premake-nativefiledialog-extended.lua"
+include "vendor/Lua/Premake-Lua.lua"
 
 -- Third Party Scripts
 require("tools/premake/scripts/premake-vscode/vscode") --premake-vscode
