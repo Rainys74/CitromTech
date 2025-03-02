@@ -15,8 +15,8 @@ namespace Citrom
 		void StartPlaying(Scene* currentScene);
 		void StopPlaying();
 
-		void OnAttach() override;
-		void OnDetach() override;
+		//void OnAttach() override;
+		//void OnDetach() override;
 
 		void OnUpdate(float64 deltaTime) override;
 		void OnTick(float64 fixedDeltaTime) override;

@@ -136,7 +136,7 @@ static ApplicationInfoSpecification GetApplicationSpecification_Editor()
 
 	spec.windowInfo.width = PLATFORM_DEFAULT_WIDTH;
 	spec.windowInfo.height = PLATFORM_DEFAULT_HEIGHT;
-	spec.windowInfo.defaultTitle = "Citrom Forge" " [Editor]";
+	spec.windowInfo.defaultTitle = std::string("Citrom Forge" " [Editor]") + " [" + GetBuildType() + "]";
 
 	spec.windowInfo.displayMode = Platform::DisplayMode::Windowed;
 
@@ -617,6 +617,7 @@ int SharedMain(int argc, char* argv[])
 	MainApplicationSpec = GetApplicationSpecification();
 	g_Application = new Application();
 	g_Application->gameWindow = &g_Window;
+	g_Application->gameLayerStack = &g_LayerStack;
 	//GEngine
 	//GApp
 	//GApplic
@@ -627,9 +628,9 @@ int SharedMain(int argc, char* argv[])
 	//GApplication->MainApplicationSpec = GetApplicationSpecification();
 	// that moment when you want to change your naming convention mid-project...
 
-	g_Window.Create(MainApplicationSpec.windowInfo.width, MainApplicationSpec.windowInfo.height, MainApplicationSpec.windowInfo.defaultTitle);
+	g_Window.Create(MainApplicationSpec.windowInfo.width, MainApplicationSpec.windowInfo.height, MainApplicationSpec.windowInfo.defaultTitle.c_str());
 	if (MainApplicationSpec.windowInfo.displayMode != DisplayMode::Windowed)
-		g_Window.GetBackend()->SetDisplayMode(MainApplicationSpec.windowInfo.displayMode);
+		g_Window.GetBackend()->SetDisplayMode(MainApplicationSpec.windowInfo.displayMode); // TODO: maybe also add SetResolution after this
 
 	// TODO: temporary, should be in render thread.
 	Renderer::Initialize(&g_Window);

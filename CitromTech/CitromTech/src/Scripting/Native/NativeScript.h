@@ -33,7 +33,7 @@ namespace Citrom::Scripting
 		template<typename T>
 		static void RegisterBehavior(const std::string& name)
 		{
-			s_BehaviourCallbacks[name] = [](NativeScriptComponent* nsc)
+			s_BehaviourCallbacks[name] = [](NativeScriptComponent* nsc) // name == "" ? T::_GetBehaviorName() : name
 			{
 				nsc->SetBehavior<T>();
 				//nsc->SetBehaviorString(name);
@@ -85,7 +85,15 @@ namespace Citrom::Scripting
 	public:
 		static void SetSceneInstance(Scene* scene) { s_BoundScene = scene; }
 
-		static void ResetScriptComponentInstance();
+		enum class ScriptComponentCallbackType
+		{
+			OnEnable,
+			OnDisable
+		};
+		static void ScriptCallback(ScriptComponentCallbackType callbackType);
+
+		static void InstantiateScriptComponentInstance();
+		static void DestroyScriptComponentInstance();
 		static void Update(float64 deltaTime);
 		static void Tick(float64 fixedDeltaTime);
 	private:

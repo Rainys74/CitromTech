@@ -5,10 +5,12 @@
 
 namespace Citrom
 {
+#define DEFAULT_TICK_TIMESTEP (1.0 / 60.0)
+
     struct WindowInfoSpecification
     {
         int32 width, height;
-        const char* defaultTitle;
+        std::string defaultTitle;
 
         Platform::DisplayMode displayMode;
     };
@@ -35,9 +37,10 @@ namespace Citrom
     public:
     public:
         Platform::Window* gameWindow = nullptr;
+        class LayerStack* gameLayerStack = nullptr;
         //ApplicationInfoSpecification mainApplicationSpec;
 
-        float64 fixedTimeStep = 1.0 / 60.0; // TickTimeStep
+        float64 fixedTimeStep = DEFAULT_TICK_TIMESTEP; // TickTimeStep
     private:
     };
 

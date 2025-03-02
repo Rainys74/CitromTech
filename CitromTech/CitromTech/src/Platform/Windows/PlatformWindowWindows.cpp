@@ -26,6 +26,12 @@ namespace Citrom::Platform
     {
         CT_PROFILE_MEMBER_FUNCTION();
 
+        if (ArgumentHandler::HasArgument("-force-glfw"))
+        {
+            delete m_Backend;
+            m_Backend = new WindowBackendGLFW();
+        }
+
         m_Backend->Create(width, height, title);
     }
     bool Window::WindowShouldClose() const

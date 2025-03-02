@@ -5,21 +5,22 @@ namespace Citrom
 	void NativeScriptLayer::StartPlaying(Scene* currentScene)
 	{
 		Scripting::NativeScript::SetSceneInstance(currentScene);
-		Scripting::NativeScript::ResetScriptComponentInstance();
+		Scripting::NativeScript::InstantiateScriptComponentInstance();
 	}
 
 	void NativeScriptLayer::StopPlaying()
 	{
+		Scripting::NativeScript::DestroyScriptComponentInstance();
 		Scripting::NativeScript::SetSceneInstance(nullptr);
 	}
 
-	void NativeScriptLayer::OnAttach()
+	/*void NativeScriptLayer::OnAttach()
 	{
 	}
 
 	void NativeScriptLayer::OnDetach()
 	{
-	}
+	}*/
 
 	void NativeScriptLayer::OnUpdate(float64 deltaTime)
 	{

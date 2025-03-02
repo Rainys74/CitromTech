@@ -8,12 +8,7 @@ namespace Citrom::Scripting
 
 	Scene* NativeScript::s_BoundScene = nullptr;
 
-	void NativeScript::ResetScriptComponentInstance()
-	{
-		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
-	}
-
-	void NativeScript::Update(float64 deltaTime)
+	void NativeScript::InstantiateScriptComponentInstance()
 	{
 		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
 
@@ -27,7 +22,45 @@ namespace Citrom::Scripting
 				if (nativeScriptComponent.OnCreateFunction)
 					nativeScriptComponent.OnCreateFunction(nativeScriptComponent.instance);
 			}
+		});
+	}
+	void NativeScript::DestroyScriptComponentInstance()
+	{
+		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
 
+		s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent)
+		{
+			if (nativeScriptComponent.instance)
+			{
+				if (nativeScriptComponent.OnDestroyFunction)
+					nativeScriptComponent.OnDestroyFunction(nativeScriptComponent.instance);
+
+				nativeScriptComponent.DestroyInstanceFunction(nativeScriptComponent.instance);
+				nativeScriptComponent.instance = nullptr;
+			}
+		});
+	}
+
+	void NativeScript::ScriptCallback(NativeScript::ScriptComponentCallbackType callbackType)
+	{
+		/*s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent)
+		{
+			switch (callbackType) // slower this way but easier to write and maintain
+			{
+			case ScriptComponentCallbackType::OnEnable:
+				if (nativeScriptComponent.OnEnableFunction)
+					nativeScriptComponent.OnEnableFunction(nativeScriptComponent.instance);
+				break;
+			}
+		});*/
+	}
+
+	void NativeScript::Update(float64 deltaTime)
+	{
+		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
+
+		s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent)
+		{
 			if (!nativeScriptComponent.instance->m_Entity.IsActive())
 				return;
 
