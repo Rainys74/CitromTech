@@ -46,6 +46,7 @@
 #include "Application/EditorLayer.h"
 
 #include "Vendor/sol2/sol.hpp"
+#include "angelscript.h"
 
 #include <iostream>
 
@@ -129,6 +130,11 @@ Math::Transform* GetCameraTransform()
 Platform::Window* GetMainWindow()
 {
 	return &g_Window;
+}
+
+static void AS_Print(std::string& msg)
+{
+	CT_INFO("{}", msg);
 }
 
 int SharedMain(int argc, char* argv[])
@@ -525,6 +531,40 @@ int SharedMain(int argc, char* argv[])
 		lua.script(R"(
 			PrintCpp('Hello from Lua!')
 		)");
+	}
+	// Angel Script // TODO: doesn't work
+	{
+		asIScriptEngine* engine = asCreateScriptEngine();
+		CT_ASSERT(engine != nullptr, "Failed to create AS Engine!");
+
+		// Register the print function so it can be used by the script
+		//auto lambda = [](std::string& msg) { CT_INFO("{}", msg); }; // requires free functions!
+		engine->RegisterGlobalFunction("void print(string &in)", asFUNCTION(AS_Print), asCALL_CDECL);
+
+		// Create the script
+		const char* script = R"(
+			void main()
+			{
+			    print("Hello from AngelScript!");
+			}
+		)";
+
+		// Compile the script
+		asIScriptModule* mod = engine->GetModule("MyModule", asGM_ALWAYS_CREATE);
+		mod->AddScriptSection("script", script);
+		mod->Build();
+
+		// Execute the script
+		asIScriptContext* ctx = engine->CreateContext();
+		ctx->Prepare(mod->GetFunctionByDecl("void main()"));
+		ctx->Execute();
+
+		// Clean up
+		ctx->Release();
+		engine->ShutDownAndRelease();
+	}
+	// TODO: add squirrel too (it's very similar to Lua in the implementation)
+	{
 	}
 
 	using namespace Platform;

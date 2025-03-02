@@ -26,6 +26,7 @@ project "CitromTech"   -- Engine Library
             "%{IncludeDir.HLSLcc}",
             "%{IncludeDir.nativefiledialog_extended}",
             "%{IncludeDir.Lua}",
+            "%{IncludeDir.AngelScript}",
             
             "%{IncludeDir.glslcc}",
         }
@@ -42,7 +43,8 @@ project "CitromTech"   -- Engine Library
             "ImGuizmo",
             "HLSLcc",
             "nativefiledialog-extended",
-            "Lua"
+            "Lua",
+            "AngelScript"
 
             --"Dependencies/GLEW 2.1.0/lib/Release/x64/glew32s.lib",
             --"opengl32.lib"

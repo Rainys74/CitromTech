@@ -28,7 +28,8 @@ project "CitromForge" -- EXE
             "%{IncludeDir.ImGui}",
             "%{IncludeDir.ImGuizmo}",
             "%{IncludeDir.nativefiledialog_extended}",
-            "%{IncludeDir.Lua}"
+            "%{IncludeDir.Lua}",
+            "%{IncludeDir.AngelScript}"
         }
 
         defines
@@ -52,7 +53,8 @@ project "CitromForge" -- EXE
             "ImGuizmo",
             "HLSLcc",
             "nativefiledialog-extended",
-            "Lua"
+            "Lua",
+            "AngelScript"
         }
         DefineCitromLibraryTypeMacros()
 
