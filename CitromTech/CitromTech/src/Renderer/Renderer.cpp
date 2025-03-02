@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "ArgumentHandler.h"
+#include "Application/ApplicationInfo.h"
 
 #include "Renderer/RenderAPI/Buffer.h"
 #include "Vendor/stb/stb_image_write.h"
@@ -103,7 +104,9 @@ namespace Citrom
 		//GraphicsAPIManager::PrioritizeGraphicsAPI(GraphicsAPI::DirectX11);
         //GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::Metal);
 
-		// TODO: load some files to prioritize api's or something
+		// TODO: load some files to prioritize api's or something, or well just keep it this way.
+		for (size_t i = 0; i < CT_ARRAY_LENGTH(MainApplicationSpec.rendererInfo.apiPriorityList); i++)
+			GraphicsAPIManager::PrioritizeGraphicsAPI(MainApplicationSpec.rendererInfo.apiPriorityList[i], i);
 
 		if (ArgumentHandler::HasArgument("-force-d3d11"))
 			GraphicsAPIManager::ForceGraphicsAPI(GraphicsAPI::DirectX11);

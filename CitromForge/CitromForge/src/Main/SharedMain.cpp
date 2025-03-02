@@ -44,6 +44,7 @@
 #include "JSON/Writer.h"
 
 #include "Application/EditorLayer.h"
+#include "Application/ApplicationInfo.h"
 
 #include "Vendor/sol2/sol.hpp"
 #include "angelscript.h"
@@ -51,14 +52,6 @@
 #include <iostream>
 
 using namespace Citrom;
-
-struct ApplicationInfoSpecification
-{
-    int32 width, height;
-    const char* defaultTitle;
-    
-    Platform::DisplayMode displayMode;
-};
 
 // Global variables
 Platform::Window g_Window;
@@ -135,6 +128,54 @@ Platform::Window* GetMainWindow()
 static void AS_Print(std::string& msg)
 {
 	CT_INFO("{}", msg);
+}
+
+static ApplicationInfoSpecification GetApplicationSpecification_Editor()
+{
+	ApplicationInfoSpecification spec;
+
+	spec.windowInfo.width = PLATFORM_DEFAULT_WIDTH;
+	spec.windowInfo.height = PLATFORM_DEFAULT_HEIGHT;
+	spec.windowInfo.defaultTitle = "Citrom Forge" " [Editor]";
+
+	spec.windowInfo.displayMode = Platform::DisplayMode::Windowed;
+
+	spec.rendererInfo.apiPriorityList[0] = RenderAPI::GraphicsAPI::DirectX11;
+	spec.rendererInfo.apiPriorityList[1] = RenderAPI::GraphicsAPI::Metal;
+	spec.rendererInfo.apiPriorityList[2] = RenderAPI::GraphicsAPI::OpenGL;
+	//spec.rendererInfo.defaultVSync = RenderAPI::VSyncMode::On;
+
+	spec.mainWindow = &g_Window;
+
+	return spec;
+}
+static ApplicationInfoSpecification GetApplicationSpecification_Runtime()
+{
+	ApplicationInfoSpecification spec;
+
+	spec.windowInfo.width = PLATFORM_DEFAULT_WIDTH;
+	spec.windowInfo.height = PLATFORM_DEFAULT_HEIGHT;
+	spec.windowInfo.defaultTitle = STRINGIFY_TOKEN(CT_APP_NAME); // TODO: this doesn't work as expected
+
+	spec.windowInfo.displayMode = Platform::DisplayMode::Borderless;
+
+	spec.rendererInfo.apiPriorityList[0] = RenderAPI::GraphicsAPI::DirectX11;
+	spec.rendererInfo.apiPriorityList[1] = RenderAPI::GraphicsAPI::Metal;
+	spec.rendererInfo.apiPriorityList[2] = RenderAPI::GraphicsAPI::OpenGL;
+	//spec.rendererInfo.defaultVSync = RenderAPI::VSyncMode::On;
+
+	spec.mainWindow = &g_Window;
+
+	return spec;
+}
+
+static FORCE_INLINE ApplicationInfoSpecification GetApplicationSpecification()
+{
+#ifdef CT_EDITOR_ENABLED
+	return GetApplicationSpecification_Editor();
+#else
+	return GetApplicationSpecification_Runtime();
+#endif
 }
 
 int SharedMain(int argc, char* argv[])
@@ -568,9 +609,11 @@ int SharedMain(int argc, char* argv[])
 	}
 
 	using namespace Platform;
+	MainApplicationSpec = GetApplicationSpecification();
 
-	g_Window.Create(PLATFORM_DEFAULT_WIDTH, PLATFORM_DEFAULT_HEIGHT, CTL::String(/*STRINGIFY_TOKEN(CT_APP_NAME)*/ "test")); // TODO: probably create an ApplicationInfo Specification for all these things
-	//g_Window.GetBackend()->SetDisplayMode(DisplayMode::Windowed);
+	g_Window.Create(MainApplicationSpec.windowInfo.width, MainApplicationSpec.windowInfo.height, MainApplicationSpec.windowInfo.defaultTitle);
+	if (MainApplicationSpec.windowInfo.displayMode != DisplayMode::Windowed)
+		g_Window.GetBackend()->SetDisplayMode(MainApplicationSpec.windowInfo.displayMode);
 
 	// TODO: temporary, should be in render thread.
 	Renderer::Initialize(&g_Window);
