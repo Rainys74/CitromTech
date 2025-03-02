@@ -249,6 +249,11 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 if (hasBehaviour)
                     nativeScriptComponent.SetBehaviorWithString(behaviourName);
             }
+            ImGui::Separator();
+            if (ImGui::TreeNode("Properties"))
+            {
+                ImGui::TreePop();
+            }
         }
         ImGui::Separator();
         ImGui::Spacing();

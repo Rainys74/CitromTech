@@ -30,5 +30,8 @@ namespace Citrom
 
 	void NativeScriptLayer::OnTick(float64 fixedDeltaTime)
 	{
+		CT_PROFILE_MEMBER_FUNCTION();
+
+		Scripting::NativeScript::Tick(fixedDeltaTime);
 	}
 }

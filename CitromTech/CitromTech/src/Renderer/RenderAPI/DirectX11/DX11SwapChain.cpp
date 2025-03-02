@@ -58,6 +58,7 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::MakeSwapChain(SwapChainDesc* descriptor)
 	{
+		m_SwapChainWindow = descriptor->windowPtr;
 		m_DPIScale = descriptor->windowPtr->GetBackingScaleFactor();
 		m_Width = descriptor->windowPtr->GetBackend()->GetWidth() * m_DPIScale;
 		m_Height = descriptor->windowPtr->GetBackend()->GetHeight() * m_DPIScale;
@@ -127,9 +128,21 @@ namespace Citrom::RenderAPI
 
 	void DX11Device::Resize(uint32 width, uint32 height)
 	{
+		//MessageBeep(MB_ICONERROR);
+		//MessageBeep(MB_OK); // this sounds better for simple popups
+		/*
+		* MacOS:
+		@autoreleasepool {
+		    NSSound *sound = [NSSound soundNamed:@"Funk"];
+		    [sound play];
+		}
+		* Linux:
+		system("aplay /usr/share/sounds/freedesktop/stereo/dialog-error.oga"); // though be careful since the path might be different, look for other ways.
+		*/
 		width = (width <= 0) ? 1 : width;
 		height = (height <= 0) ? 1 : height;
 
+		m_DPIScale = m_SwapChainWindow->GetBackingScaleFactor();
 		m_Width = width * m_DPIScale;
 		m_Height = height * m_DPIScale;
 

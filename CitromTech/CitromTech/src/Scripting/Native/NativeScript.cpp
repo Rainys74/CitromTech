@@ -35,4 +35,17 @@ namespace Citrom::Scripting
 				nativeScriptComponent.OnUpdateFunction(nativeScriptComponent.instance, deltaTime);
 		});
 	}
+	void NativeScript::Tick(float64 fixedDeltaTime)
+	{
+		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
+
+		s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent)
+		{
+			if (!nativeScriptComponent.instance->m_Entity.IsActive())
+				return;
+
+			if (nativeScriptComponent.OnTickFunction)
+				nativeScriptComponent.OnTickFunction(nativeScriptComponent.instance, fixedDeltaTime);
+		});
+	}
 }

@@ -344,7 +344,9 @@ int SharedMain(int argc, char* argv[])
 	class TestCameraController : public ScriptableEntity
 	{
 	public:
+		//CTCLASS(TestCameraController); // CT_CLASS(TestCameraController);
 		static const char* _GetBehaviorName() { return "TestCameraController"; } // TODO: move to a CTCLASS or CT_CLASS macro or something similar to UCLASS and GDCLASS
+		friend class NativeScriptComponent; // optional if you want your function callbacks to be private and still callable
 
 		void OnCreate()
 		{
@@ -377,7 +379,7 @@ int SharedMain(int argc, char* argv[])
 		}
 		void OnTick(float64 fixedDeltaTime)
 		{
-
+			//CT_TRACE("TICK! {}", fixedDeltaTime);
 		}
 	};
 	class TestPrinter : public ScriptableEntity
@@ -405,6 +407,15 @@ int SharedMain(int argc, char* argv[])
 	Scripting::NativeScriptDB::RegisterBehavior<TestCameraController>("TestCameraController");
 	Scripting::NativeScriptDB::RegisterBehavior<TestPrinter>("TestPrinter");
 	camera.AddComponent<NativeScriptComponent>().SetBehaviorWithString("TestCameraController"); //.SetBehavior<TestCameraController>();
+
+	// TODO: implement something like this
+	/*
+	engine.RegisterFunction("Add", Add); // also engine should probably be general ScriptDB, since we want to be able to bind these functions to scripting languages too
+	engine.RegisterFunction("Concatenate", Concatenate);
+
+	int addResult = engine.CallFunction<int>("Add", 3, 5);
+	std::string concatResult = engine.CallFunction<std::string>("Concatenate", std::string("Hello, "), std::string("world!"));
+	*/
 
 	struct TestClass
 	{
@@ -499,7 +510,7 @@ int SharedMain(int argc, char* argv[])
 
 	using namespace Platform;
 
-	g_Window.Create(1280, 720, CTL::String(/*STRINGIFY_TOKEN(CT_APP_NAME)*/ "test")); // TODO: probably create an ApplicationInfo Specification for all these things
+	g_Window.Create(PLATFORM_DEFAULT_WIDTH, PLATFORM_DEFAULT_HEIGHT, CTL::String(/*STRINGIFY_TOKEN(CT_APP_NAME)*/ "test")); // TODO: probably create an ApplicationInfo Specification for all these things
 	//g_Window.GetBackend()->SetDisplayMode(DisplayMode::Windowed);
 
 	// TODO: temporary, should be in render thread.
@@ -532,6 +543,10 @@ void ForgeLoop()
 	float64 currentTime; // New Time
 	float64 previousTime = Platform::Utils::GetTime(); // Old Time
 
+	// Tick
+	float64 fixedTimeStep = 1.0 / 60.0;
+	float64 tickAccumulator = 0.0f;
+
 	while (!g_Window.WindowShouldClose())
 	{
 		// TODO: Timing. Choose one. (Though constructing multiple doubles every frame might be idiotic)
@@ -562,6 +577,12 @@ void ForgeLoop()
 		g_LayerStack.Update(g_DeltaTime);
 
 		// while (accumulated time >= fixed time step) probably
+		tickAccumulator += g_DeltaTime;
+		while (tickAccumulator >= fixedTimeStep)
+		{
+			g_LayerStack.Tick(fixedTimeStep);
+			tickAccumulator -= fixedTimeStep;
+		}
 
 		// Render
 		Camera* currentCamera = GetCamera();
