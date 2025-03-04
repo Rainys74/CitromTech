@@ -23,6 +23,68 @@ namespace Citrom::ShaderCompiler::DX11
 		ID3DBlob* shaderBlob = nullptr;
 	};
 
+	static std::wstring ReadShaderFromFile(const std::filesystem::directory_entry& entry)
+	{
+		std::wifstream fileStream(entry.path());
+		CT_CORE_ASSERT(fileStream, "Failed to open shader file ({}) for reading!", entry.path().string());
+
+		std::wstringstream buffer;
+		buffer << L"#define SHADER_LANG_HLSL" << L'\n'; // CT_LANG_HLSL, SHADER_LANGUAGE_HLSL, INITIAL_SHADER_LANG_HLSL
+		buffer << fileStream.rdbuf();
+
+		return buffer.str();
+	}
+
+	/*class ShaderIncludeHandler : public ID3DInclude
+	{
+	public:
+		ShaderIncludeHandler(const std::wstring& shaderDirectory)
+			: m_ShaderDirectory(shaderDirectory) {}
+
+		STDMETHOD(Open)(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override 
+		{
+			std::wstring includePath;
+			if (pParentData) 
+			{
+				std::wstring parentPath = *reinterpret_cast<const std::wstring*>(pParentData);
+				includePath = std::filesystem::path(parentPath).parent_path() / std::wstring(pFileName, pFileName + strlen(pFileName));
+			}
+			else 
+			{
+				includePath = m_ShaderDirectory + std::wstring(pFileName, pFileName + strlen(pFileName));
+			}
+
+			std::ifstream fileStream(includePath, std::ios::binary);
+			if (!fileStream) 
+				return E_FAIL;
+
+			fileStream.seekg(0, std::ios::end);
+			size_t fileSize = fileStream.tellg();
+			fileStream.seekg(0, std::ios::beg);
+
+			BYTE* fileData = new BYTE[fileSize];
+			fileStream.read(reinterpret_cast<char*>(fileData), fileSize);
+
+			*ppData = fileData;
+			*pBytes = static_cast<UINT>(fileSize);
+
+			// Store the parent path for resolving nested includes
+			*reinterpret_cast<const std::wstring**>(&pParentData) = new std::wstring(includePath);
+
+			return S_OK;
+		}
+
+		STDMETHOD(Close)(LPCVOID pData) override 
+		{
+			delete[] pData;
+			delete reinterpret_cast<const std::wstring*>(pData);
+			return S_OK;
+		}
+
+	private:
+		std::wstring m_ShaderDirectory;
+	};*/
+
 	static CTL::DArray<ShaderObj> CompileShadersToBlobs(const std::string shaderPaths[], const uint32 pathCount)
 	{
 		CT_PROFILE_GLOBAL_FUNCTION();

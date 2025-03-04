@@ -57,6 +57,24 @@ namespace Citrom::Math
 
 		Matrix4x4 operator*(const Matrix4x4& mat4B) const { Matrix4x4 result = *this; result.Multiply(mat4B); return result; }
 
+		Vector3 operator*(const Vector3& vec)
+		{
+			const Matrix4x4& mat = *this;
+
+			// Homogeneous coordinates for the vector (w = 1)
+#ifdef COLUMN_MAJOR
+			float x = vec.x * mat[0][0] + vec.y * mat[1][0] + vec.z * mat[2][0] + mat[3][0];
+			float y = vec.x * mat[0][1] + vec.y * mat[1][1] + vec.z * mat[2][1] + mat[3][1];
+			float z = vec.x * mat[0][2] + vec.y * mat[1][2] + vec.z * mat[2][2] + mat[3][2];
+#else
+			float x = vec.x * mat[0][0] + vec.y * mat[0][1] + vec.z * mat[0][2] + mat[0][3];
+			float y = vec.x * mat[1][0] + vec.y * mat[1][1] + vec.z * mat[1][2] + mat[1][3];
+			float z = vec.x * mat[2][0] + vec.y * mat[2][1] + vec.z * mat[2][2] + mat[2][3];
+#endif
+
+			return Vector3(x, y, z);
+		}
+
 		// Operator overloading
 		//FORCE_INLINE Vector4& operator[](size_t index) { return &m_Data[index].Data(); }
 		//FORCE_INLINE const Vector4& operator[](size_t index) const { return &m_Data[index].Data(); }

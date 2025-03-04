@@ -275,6 +275,26 @@ void EditorLayer::OnImGuiRender()
     RendererWindow::ImGuiDraw();
     ProfilerWindow::ImGuiDraw();
 
-    ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+    static ImGuizmo::OPERATION gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+    if (!ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && !ImGui::IsMouseDown(ImGuiMouseButton_Right))
+    {
+        if (ImGui::IsKeyPressed(ImGuiKey_Q, false))
+            gizmoOperation = (ImGuizmo::OPERATION)0;
+        if (ImGui::IsKeyPressed(ImGuiKey_W, false))
+            gizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+        if (ImGui::IsKeyPressed(ImGuiKey_E, false))
+            gizmoOperation = ImGuizmo::OPERATION::ROTATE;
+        if (ImGui::IsKeyPressed(ImGuiKey_R, false))
+            gizmoOperation = ImGuizmo::OPERATION::SCALE;
+        // This
+        if (ImGui::IsKeyPressed(ImGuiKey_T, false))
+            gizmoOperation = ImGuizmo::OPERATION::UNIVERSAL;
+        // Or
+        //if (ImGui::IsKeyPressed(ImGuiKey_T, false))
+        //    gizmoOperation = ImGuizmo::OPERATION::BOUNDS;
+        //if (ImGui::IsKeyPressed(ImGuiKey_Y, false))
+        //    gizmoOperation = ImGuizmo::OPERATION::UNIVERSAL;
+    }
+
     EditorGizmos::ImGuiDraw(gizmoOperation); // TODO: Gizmos should NOT be drawn on top of everything.
 }

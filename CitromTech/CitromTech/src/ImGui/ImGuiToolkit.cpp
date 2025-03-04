@@ -337,6 +337,13 @@ namespace ImToolkit //ImPresets
         if (ImGui::Button("^", size))
         {
             ImGui::OpenPopup(modalName.c_str()); //("StringSetSelectorModal");
+
+            //ImVec2 windowSize = ImGui::GetIO().DisplaySize;
+            //ImVec2 modalSize = ImVec2(300, 200); //ImGui::GetWindowSize();
+            //ImVec2 center = ImVec2((windowSize.x - modalSize.x) / 2, (windowSize.y - modalSize.y) / 2);
+            //ImGui::SetNextWindowPos(center, ImGuiCond_Appearing);
+            //ImGui::SetNextWindowSize(modalSize);
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         }
 
         static CTL::DArray<std::string> stringElements;
@@ -366,13 +373,6 @@ namespace ImToolkit //ImPresets
 
         if (invalid)
             ImGui::PopStyleColor();
-
-        /* // Maybe move to the button press function??
-        ImVec2 windowSize = ImGui::GetIO().DisplaySize;
-        ImVec2 modalSize = ImGui::GetWindowSize();
-        ImVec2 center = ImVec2((windowSize.x - modalSize.x) / 2, (windowSize.y - modalSize.y) / 2);
-        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing);
-        */
 
         if (ImGui::BeginPopupModal(modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {

@@ -605,9 +605,16 @@ namespace Citrom
 		//view = rotationView * translationView; // The most correct right now.
 		//view = Math::Matrix4x4::Inverse(cameraTransform->GetTransformMatrix());
 		view = cameraTransform->GetCameraViewFromTransform();
+		/*Math::Matrix4x4 model = Math::Matrix4x4::FromQuaternion(Math::Quaternion::Euler(0.0f, Math::DegreesToRadians(45.0f), 0.0f)) * Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(1.0f, 2.0f, 3.0f)); */
 		Math::Matrix4x4 model = Math::Matrix4x4::Translate(Math::Matrix4x4::Identity(), Math::Vector3(0.0f, 0.0f, 0.0f));
 		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!
+
+		Math::Vector3 lightDirectionWorldSpace = Math::Vector3(0.0f, -1.0f, 0.0f);
+		Math::Vector3 lightDirectionLocalSpace = (Math::Matrix4x4::Inverse(model) * lightDirectionWorldSpace).Normalized();
+		CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
+		CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
+
 		cbt.transform.Transpose();
 
 		/*

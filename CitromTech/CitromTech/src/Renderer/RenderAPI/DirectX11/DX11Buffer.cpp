@@ -164,6 +164,7 @@ namespace Citrom::RenderAPI
 		if (cbd.Usage == D3D11_USAGE_DYNAMIC)
 			cbd.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
 		cbd.MiscFlags = 0x00000000;
+		//CT_CORE_ASSERT(descriptor->dataBytes <= (D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * (4 * sizeof(float))), "The Constant buffer allocated is too large!");
 		cbd.ByteWidth = static_cast<UINT>(descriptor->dataBytes + (16 - (descriptor->dataBytes % 16))); //cbd.ByteWidth = static_cast<UINT>((descriptor->dataBytes + 15) & ~15)
 		cbd.StructureByteStride = 0;
 

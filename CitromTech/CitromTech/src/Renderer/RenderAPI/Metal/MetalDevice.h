@@ -9,6 +9,8 @@
 
 namespace Citrom::RenderAPI
 {
+#define MAX_VERTEX_SHADER_UNIFORM_BUFFERS (15) // based on D3D11_COMMONSHADER_CONSTANT_BUFFER_HW_SLOT_COUNT
+
 	class MetalDevice : public Device
 	{
 	public:
