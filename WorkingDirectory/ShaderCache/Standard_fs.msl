@@ -10,9 +10,18 @@ using namespace metal;
 	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
 #endif
 constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
+struct CBuffer1_Type
+{
+    float4x4 transform;
+    float3 directionalLightDir;
+    float3 cameraLocalPos;
+};
+
 struct Mtl_FragmentIn
 {
     float2 TexCoord0 [[ user(TexCoord0) ]] ;
+    float3 Normal0 [[ user(Normal0) ]] ;
+    float3 LocalPosition0 [[ user(LocalPosition0) ]] ;
 };
 
 struct Mtl_FragmentOut
@@ -21,13 +30,78 @@ struct Mtl_FragmentOut
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
+    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
     sampler samplerTex [[ sampler (0) ]],
     texture2d<float, access::sample > tex [[ texture(0) ]] ,
     Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
+    //--- Start Early Main ---
+    float4 u_xlat0;
+    int4 u_xlati0;
+    bool u_xlatb0;
+    float4 u_xlat1;
+    float u_xlat2;
+    bool u_xlatb3;
+    float u_xlat6;
+    //--- End Early Main ---
+    //DP3
+    u_xlat0.x = dot(CBuffer1.directionalLightDir.xyzx.xyz, input.Normal0.xyz);
+    //ADD
+    u_xlat0.x = u_xlat0.x + u_xlat0.x;
+    //MAD
+    u_xlat0.xyz = fma(input.Normal0.xyz, (-u_xlat0.xxx), CBuffer1.directionalLightDir.xyzx.xyz);
+    //DP3
+    u_xlat6 = dot(u_xlat0.xyz, u_xlat0.xyz);
+    //RSQ
+    u_xlat6 = rsqrt(u_xlat6);
+    //MUL
+    u_xlat0.xyz = float3(u_xlat6) * u_xlat0.xyz;
+    //ADD
+    u_xlat1.xyz = (-input.LocalPosition0.xyz) + CBuffer1.cameraLocalPos.xyzx.xyz;
+    //DP3
+    u_xlat6 = dot(u_xlat1.xyz, u_xlat1.xyz);
+    //RSQ
+    u_xlat6 = rsqrt(u_xlat6);
+    //MUL
+    u_xlat1.xyz = float3(u_xlat6) * u_xlat1.xyz;
+    //DP3
+    u_xlat0.x = dot(u_xlat1.xyz, u_xlat0.xyz);
+    //LOG
+    u_xlat2 = log2(abs(u_xlat0.x));
+    //LT
+    u_xlatb0 = 0.0<u_xlat0.x;
+    //MUL
+    u_xlat2 = u_xlat2 * 255.0;
+    //EXP
+    u_xlat2 = exp2(u_xlat2);
+    //MUL
+    u_xlat1 = float4(u_xlat2) * float4(1.0, 0.0, 0.0, 1.0);
+    //AND
+    u_xlati0 = int4((uint4(bool4(u_xlatb0)) * 0xffffffffu) & as_type<uint4>(u_xlat1));
+    //DP3
+    u_xlat1.x = dot(input.Normal0.xyz, input.Normal0.xyz);
+    //RSQ
+    u_xlat1.x = rsqrt(u_xlat1.x);
+    //MUL
+    u_xlat1.xyz = u_xlat1.xxx * input.Normal0.xyz;
+    //DP3
+    u_xlat1.x = dot(u_xlat1.xyz, (-CBuffer1.directionalLightDir.xyzx.xyz));
+    //LT
+    u_xlatb3 = 0.0<u_xlat1.x;
+    //AND
+    u_xlat1.x = u_xlatb3 ? u_xlat1.x : float(0.0);
+    //AND
+    u_xlat0 = select(float4(0.0, 0.0, 0.0, 0.0), as_type<float4>(u_xlati0), bool4(bool4(u_xlatb3)));
+    //ADD
+    u_xlat0 = u_xlat1.xxxx + u_xlat0;
+    //ADD
+    u_xlat0 = u_xlat0 + float4(0.419999987, 0.477999985, 0.626999974, 1.0);
+    u_xlat0 = clamp(u_xlat0, 0.0f, 1.0f);
     //SAMPLE
-    output.SV_Target0 = tex.sample(samplerTex, input.TexCoord0.xy);
+    u_xlat1 = tex.sample(samplerTex, input.TexCoord0.xy);
+    //MUL
+    output.SV_Target0 = u_xlat0 * u_xlat1;
     //RET
     return output;
 }

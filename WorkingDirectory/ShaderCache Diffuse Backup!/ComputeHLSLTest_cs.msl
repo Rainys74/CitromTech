@@ -1,0 +1,34 @@
+#include <metal_stdlib>
+#include <metal_texture>
+using namespace metal;
+
+#if !(__HAVE_FMA__)
+#define fma(a,b,c) ((a) * (b) + (c))
+#endif
+
+struct OutputBuffer_Type
+{
+    uint value[1];
+};
+
+kernel void computeMain(
+    device OutputBuffer_Type *OutputBuffer [[ buffer(0) ]],
+    uint3 mtl_ThreadID [[ thread_position_in_grid ]])
+{
+    //--- Start Early Main ---
+    int u_xlati0;
+    int u_xlati1;
+    //--- End Early Main ---
+    //ISHL
+    u_xlati0 = int(mtl_ThreadID.y) << 0x4;
+    //IADD
+    u_xlati0 = u_xlati0 + int(mtl_ThreadID.x);
+    //LD_STRUCTURED
+    u_xlati1 = int(OutputBuffer[u_xlati0].value[(0x0 >> 2) + 0]);
+    //IADD
+    u_xlati1 = u_xlati1 + 0x1;
+    //STORE_STRUCTURED
+    OutputBuffer[u_xlati0].value[(0x0 >> 2)] = uint(u_xlati1);
+    //RET
+    return;
+}

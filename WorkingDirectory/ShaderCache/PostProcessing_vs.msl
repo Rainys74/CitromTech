@@ -1,0 +1,43 @@
+#include <metal_stdlib>
+#include <metal_texture>
+using namespace metal;
+
+#if !(__HAVE_FMA__)
+#define fma(a,b,c) ((a) * (b) + (c))
+#endif
+
+constant float4 ImmCB_0[3] =
+{
+	float4(-1.0, 1.0, 0.0, 0.0),
+	float4(3.0, 1.0, 2.0, 0.0),
+	float4(-1.0, -3.0, 0.0, 2.0)
+};
+struct Mtl_VertexOut
+{
+    float2 TexCoord0 [[ user(TexCoord0) ]];
+    float4 mtl_Position [[ position ]];
+};
+
+vertex Mtl_VertexOut xlatMtlMain(
+    uint mtl_VertexID [[ vertex_id ]],
+    uint mtl_BaseVertex [[ base_vertex ]])
+{
+#if !UNITY_SUPPORT_INDIRECT_BUFFERS
+    mtl_BaseVertex = 0;
+#endif
+    mtl_VertexID = mtl_VertexID - mtl_BaseVertex;
+    Mtl_VertexOut output;
+    //--- Start Early Main ---
+    uint u_xlatu0;
+    //--- End Early Main ---
+    //MOV
+    u_xlatu0 = mtl_VertexID;
+    //MOV
+    output.TexCoord0.xy = ImmCB_0[int(u_xlatu0)].zw;
+    //MOV
+    output.mtl_Position.xy = ImmCB_0[int(u_xlatu0)].xy;
+    //MOV
+    output.mtl_Position.zw = float2(0.0, 1.0);
+    //RET
+    return output;
+}

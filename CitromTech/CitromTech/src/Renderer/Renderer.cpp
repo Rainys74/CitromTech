@@ -208,7 +208,7 @@ namespace Citrom
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		//CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> uniqueShaderNames;
 		//for (const auto& entry : std::filesystem::directory_iterator("ShaderCache/"))
@@ -280,6 +280,7 @@ namespace Citrom
 	void Renderer::BeginFrame(Scene* scene, Camera* camera, Math::Transform* cameraTransform)
 	{
 		s_CurrentCamera = CameraData(camera, cameraTransform);
+		s_CurrentScene = scene;
 		// TODO: set up lighting data
 
 		/*if (s_CurrentScene && s_CurrentCamera.camera)
@@ -592,6 +593,9 @@ namespace Citrom
 		struct alignas(16) ConstantBufferTest
 		{
 			Math::Matrix4x4 transform;
+			Math::Vector3 directionalLightDir;
+			uint8 padding1[sizeof(float)];
+			Math::Vector3 cameraLocalPos;
 		};
 		ConstantBufferTest cbt = {};
 		Math::Matrix4x4 projection;
@@ -610,12 +614,35 @@ namespace Citrom
 		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!
 
+		//if (s_CurrentScene)
+		//{
+		//	auto view = s_CurrentScene->GetAllEntitiesWith<LightComponent>();
+		//	for (auto light : view)
+		//	{
+		//
+		//	}
+		//}
 		Math::Vector3 lightDirectionWorldSpace = Math::Vector3(0.0f, -1.0f, 0.0f);
 		Math::Vector3 lightDirectionLocalSpace = (Math::Matrix4x4::Inverse(model) * lightDirectionWorldSpace).Normalized();
-		CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
-		CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
+		//CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
+		//CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
+
+		/*
+		// Step 1: Extract Camera Position in World Space
+		Math::Matrix4x4 invViewMatrix = Math::Matrix4x4::Inverse(view);
+		Math::Vector3 cameraPositionWorldSpace = Math::Vector3(invViewMatrix[3][0], invViewMatrix[3][1], invViewMatrix[3][2]);
+
+		// Step 2: Transform Camera Position to Local Space
+		Math::Matrix4x4 invModelMatrix = Math::Matrix4x4::Inverse(model);
+		Math::Vector3 cameraPositionLocalSpace = invModelMatrix * cameraPositionWorldSpace;
+		*/
+		Math::Vector3 cameraPositionLocalSpace = Math::Matrix4x4::Inverse(model) * cameraTransform->position;
+		//CT_CORE_VERBOSE("CAMERA POS WORLD SPACE: {}", cameraTransform->position.ToString());
+		//CT_CORE_VERBOSE("CAMERA POS LOCAL SPACE: {}", cameraPositionLocalSpace.ToString());
 
 		cbt.transform.Transpose();
+		cbt.directionalLightDir = lightDirectionLocalSpace;
+		cbt.cameraLocalPos = cameraPositionLocalSpace;
 
 		/*
 		CT_ERROR("PROJECTION!");
@@ -647,6 +674,7 @@ namespace Citrom
 
 		UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
         m_Device->RCBindUniformBuffer(&ub, ShaderType::Vertex, 0); //TODO: Temp Metal
+        m_Device->RCBindUniformBuffer(&ub, ShaderType::Fragment, 0); //TODO: Temp Metal // for lighting!
 
 		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
 		m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));

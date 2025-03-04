@@ -1,12 +1,12 @@
 // Full-Screen Triangle
-const float2 positions[3] =
+static const float2 positions[3] =
 {
     float2(-1.0, 1.0),  // Top-left
     float2(3.0, 1.0),   // Top-right beyond screen (to complete the tri)
     float2(-1.0, -3.0)  // Bottom-left beyond screen
 };
 
-const float2 uvs[3] =
+static const float2 uvs[3] =
 {
     float2(0.0, 0.0),
     float2(2.0, 0.0),
@@ -14,7 +14,7 @@ const float2 uvs[3] =
 };
 // also do i need this?
 /*
-const float2 uvs[3] = 
+static const float2 uvs[3] = 
 {
     float2(0.0, 1.0),  // Top-left
     float2(2.0, 1.0),  // Top-right

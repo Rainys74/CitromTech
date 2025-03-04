@@ -9,6 +9,8 @@ using namespace metal;
 struct CBuffer1_Type
 {
     float4x4 transform;
+    float3 directionalLightDir;
+    float3 cameraLocalPos;
 };
 
 struct Mtl_VertexIn
@@ -23,6 +25,7 @@ struct Mtl_VertexOut
     float2 TexCoord0 [[ user(TexCoord0) ]];
     float4 mtl_Position [[ position ]];
     float3 Normal0 [[ user(Normal0) ]];
+    float3 LocalPosition0 [[ user(LocalPosition0) ]];
 };
 
 vertex Mtl_VertexOut xlatMtlMain(
@@ -49,6 +52,8 @@ vertex Mtl_VertexOut xlatMtlMain(
     output.mtl_Position.w = dot(u_xlat0, CBuffer1.transform[3]);
     //MOV
     output.Normal0.xyz = input.Normal0.xyz;
+    //MOV
+    output.LocalPosition0.xyz = input.Position0.xyz;
     //RET
     return output;
 }
