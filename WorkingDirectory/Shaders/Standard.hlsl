@@ -30,9 +30,22 @@ struct VSOut
     float3 localPos : LocalPosition;
 };
 
+struct BaseLight
+{
+    float3 color;
+    float intensity;
+};
+
+struct DirectionalLight
+{
+    BaseLight base;
+    float3 direction;
+};
+
 cbuffer CBuffer1
 {
     matrix transform;
+    
     float3 directionalLightDir;
     float3 cameraLocalPos;
 };
@@ -56,16 +69,28 @@ VSOut vsmain(VSInput input)
 Texture2D tex;
 SamplerState samplerTex;
 
+float4 CalcLightInternal_Standard(BaseLight baseLight, float3 lightDirection, float3 normal)
+{
+    return float4(0, 0, 0, 0);
+}
+
+float4 CalcDirectionalLight_Standard(int index, float3 normal)
+{
+    return float4(0, 0, 0, 0);
+}
+
+//cbuffer Lighting : register(b1) // Lighting Data
+
 float4 psmain(VSOut input) : SV_Target
 {
-    // Diffuse Lighting
+    // Diffuse Lighting (Lambertian Diffuse)
     const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
     const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
     const float3 materialDiffuseColor = float3(1.0, 1.0, 1.0);
     
-    const float diffuseIntensity = 1.0;
+    const float diffuseIntensity = 1.0; // TODO: you're probably gonna want to switch to albedo
     
-    const float diffuseFactor = dot(normalize(input.normal), -directionalLightDir);
+    const float diffuseFactor = dot(normalize(input.normal), -directionalLightDir); // should i max with 0.0f?
     
     float4 diffuseColor = float4(0, 0, 0, 0);
     
@@ -75,7 +100,7 @@ float4 psmain(VSOut input) : SV_Target
     }
     // ------------------------
     
-    // Specular Lighting (Phong)
+    // Specular Lighting (Blinn-Phong)
     const float3 materialSpecularColor = float3(1.0, 0.0, 0.0);
     // TODO: texture for specular exponent
     
@@ -83,9 +108,11 @@ float4 psmain(VSOut input) : SV_Target
     if (diffuseFactor > 0)
     {
         float3 pixelToCamera = normalize(cameraLocalPos - input.localPos);
-        float3 lightReflect = normalize(reflect(directionalLightDir, input.normal));
+        float3 lightReflect = normalize(reflect(directionalLightDir, input.normal)); // reflectionDirection // do i need to reverse lightdir?
         
-        float specularFactor = dot(pixelToCamera, lightReflect);
+        float3 halfwayVec = normalize(pixelToCamera + -directionalLightDir); // blinn-phong // (viewDirection + lightDirection)
+        
+        float specularFactor = dot(input.normal, halfwayVec); // blinn-phong, Phong: dot(pixelToCamera, lightReflect);
         if (specularFactor > 0)
         {
             //float specularExponent = tex.Sample(samplerTex, input.tex).r * 255.0;

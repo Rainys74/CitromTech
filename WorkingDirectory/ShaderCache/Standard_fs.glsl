@@ -35,28 +35,22 @@ bool u_xlatb3;
 float u_xlat6;
 void main()
 {
-    //DP3
-    u_xlat0.x = dot(CBuffer1PS.directionalLightDir.xyz, vs_Normal0.xyz);
     //ADD
-    u_xlat0.x = u_xlat0.x + u_xlat0.x;
+    u_xlat0.xyz = (-vs_LocalPosition0.xyz) + CBuffer1PS.cameraLocalPos.xyz;
+    //DP3
+    u_xlat6 = dot(u_xlat0.xyz, u_xlat0.xyz);
+    //RSQ
+    u_xlat6 = inversesqrt(u_xlat6);
     //MAD
-    u_xlat0.xyz = vs_Normal0.xyz * (-u_xlat0.xxx) + CBuffer1PS.directionalLightDir.xyz;
+    u_xlat0.xyz = u_xlat0.xyz * vec3(u_xlat6) + (-CBuffer1PS.directionalLightDir.xyz);
     //DP3
     u_xlat6 = dot(u_xlat0.xyz, u_xlat0.xyz);
     //RSQ
     u_xlat6 = inversesqrt(u_xlat6);
     //MUL
     u_xlat0.xyz = vec3(u_xlat6) * u_xlat0.xyz;
-    //ADD
-    u_xlat1.xyz = (-vs_LocalPosition0.xyz) + CBuffer1PS.cameraLocalPos.xyz;
     //DP3
-    u_xlat6 = dot(u_xlat1.xyz, u_xlat1.xyz);
-    //RSQ
-    u_xlat6 = inversesqrt(u_xlat6);
-    //MUL
-    u_xlat1.xyz = vec3(u_xlat6) * u_xlat1.xyz;
-    //DP3
-    u_xlat0.x = dot(u_xlat1.xyz, u_xlat0.xyz);
+    u_xlat0.x = dot(vs_Normal0.xyz, u_xlat0.xyz);
     //LOG
     u_xlat2 = log2(abs(u_xlat0.x));
     //LT

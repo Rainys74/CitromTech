@@ -97,8 +97,19 @@ namespace Citrom
 		}
 	}
 
+#define MAX_DIRECTIONAL_LIGHTS (2)
+#define MAX_POINT_LIGHTS (100)
+
 	struct RendererData
 	{
+		struct DirectionalLight
+		{
+			Math::Vector3 lightDirection = Math::Vector3(0.0f, -1.0f, 0.0f);
+			//DirectionalLightComponent lightComponent;
+		};
+		DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+		//PointLightComponent pointLights[MAX_POINT_LIGHTS];
+
 		bool test;
 		struct CameraDataTemp // TODO: is this superior to the current setup?
 		{
@@ -622,7 +633,7 @@ namespace Citrom
 		//
 		//	}
 		//}
-		Math::Vector3 lightDirectionWorldSpace = Math::Vector3(0.0f, -1.0f, 0.0f);
+		Math::Vector3 lightDirectionWorldSpace = Math::Vector3(0.0f, -1.0f, 0.0f); // probably use -transform.forward for getting the light direction
 		Math::Vector3 lightDirectionLocalSpace = (Math::Matrix4x4::Inverse(model) * lightDirectionWorldSpace).Normalized();
 		//CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
 		//CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
