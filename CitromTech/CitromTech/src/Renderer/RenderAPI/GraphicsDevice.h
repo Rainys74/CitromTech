@@ -117,6 +117,7 @@ namespace Citrom::RenderAPI
 		// Textures
 		virtual Texture2D CreateTexture2D(Texture2DDesc* descriptor) = 0;
 		virtual void RCBindTexture2D(Texture2D* tex2D, uint32 startSlot = 0, CommandBuffer* cmd = nullptr) = 0;
+		// create a SetPixel(x, y, color) and GetPixel(x, y) functions
 
 		// Pipeline
 		virtual PipelineState CreatePipelineState(PipelineStateDesc* descriptor) = 0;

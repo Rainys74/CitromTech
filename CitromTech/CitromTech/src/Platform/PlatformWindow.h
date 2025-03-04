@@ -82,6 +82,7 @@ namespace Citrom::Platform
 		void Create(const int width = PLATFORM_DEFAULT_WIDTH, const int height = PLATFORM_DEFAULT_HEIGHT, const CTL::String& title = PLATFORM_DEFAULT_NAME);
 		bool WindowShouldClose() const;
 		//void WindowShouldClose(int exitCode);
+		//void WindowShouldClose(bool closeWindow);
 		void PollEvents();
 
 		float GetBackingScaleFactor();

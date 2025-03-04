@@ -45,6 +45,9 @@ namespace Citrom
         //ApplicationInfoSpecification mainApplicationSpec;
 
         float64 fixedTimeStep = DEFAULT_TICK_TIMESTEP; // TickTimeStep
+
+        // Editor
+        bool enableEditorUI = true; // editorUIEnabled vs enableEditorUI
     private:
     };
 

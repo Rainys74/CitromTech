@@ -16,11 +16,11 @@ namespace Citrom
 		Entity(const Entity&) = default;
 		~Entity() = default;
 
-		void SetParent(Entity& parentEntity)
+		inline void SetParent(Entity& parentEntity)
 		{
-			GetComponent<HierarchyComponent>().parentID = parentEntity.GetUUID();
+			GetComponent<HierarchyComponent>().parentID = parentEntity.GetUUID(); // TODO: if i decide to make a HierarchyComponent optional, i should change these to use EnsureComponent instead of GetComponent
 		}
-		void SetChild(Entity& childEntity)
+		inline void SetChild(Entity& childEntity)
 		{
 			childEntity.GetComponent<HierarchyComponent>().parentID = this->GetUUID();
 		}
@@ -32,9 +32,18 @@ namespace Citrom
 		}
 
 		template<typename T>
-		T& GetComponent()
+		inline T& GetComponent()
 		{
 			return m_Scene->m_SceneRegistry.get<T>(m_EntityID);
+		}
+
+		template<typename T>
+		FORCE_INLINE T& EnsureComponent() // GetOrAddComponent
+		{
+			if (HasComponent<T>())
+				return GetComponent<T>();
+			else
+				return AddComponent<T>();
 		}
 
 		template<typename T>
@@ -54,11 +63,11 @@ namespace Citrom
 
 		FORCE_INLINE Scene* GetScene() { return m_Scene; }
 
-		UUID GetUUID()
+		FORCE_INLINE UUID GetUUID()
 		{
 			return GetComponent<UUIDComponent>().id;
 		}
-		void RenameEntity(const std::string& name)
+		inline void RenameEntity(const std::string& name)
 		{
 			GetComponent<NameComponent>().name = name;
 		}

@@ -628,6 +628,9 @@ int SharedMain(int argc, char* argv[])
 	//GApplication->MainApplicationSpec = GetApplicationSpecification();
 	// that moment when you want to change your naming convention mid-project...
 
+	//g_Application->MainApplicationSpec >>
+	//g_Application->mainApplicationSpec
+
 	g_Window.Create(MainApplicationSpec.windowInfo.width, MainApplicationSpec.windowInfo.height, MainApplicationSpec.windowInfo.defaultTitle.c_str());
 	if (MainApplicationSpec.windowInfo.displayMode != DisplayMode::Windowed)
 		g_Window.GetBackend()->SetDisplayMode(MainApplicationSpec.windowInfo.displayMode); // TODO: maybe also add SetResolution after this

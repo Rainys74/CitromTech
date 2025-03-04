@@ -130,6 +130,14 @@ namespace Citrom
         static void ImGuiInit();
 		static void ImGuiNewFrame();
 		static void ImGuiRenderDrawData(void* imDrawData);
+
+		// Statistics
+		//struct Stats
+		//{
+		//	uint32 drawCalls = 0;
+		//};
+		//static void ResetStats();
+		//static Stats GetStats();
 	private:
 		// RenderMesh
 		static void RenderMesh(const Mesh& mesh);

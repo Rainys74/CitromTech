@@ -367,7 +367,14 @@ namespace ImToolkit //ImPresets
         if (invalid)
             ImGui::PopStyleColor();
 
-        if (ImGui::BeginPopupModal(modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize)) // TODO: move after popping style probably
+        /* // Maybe move to the button press function??
+        ImVec2 windowSize = ImGui::GetIO().DisplaySize;
+        ImVec2 modalSize = ImGui::GetWindowSize();
+        ImVec2 center = ImVec2((windowSize.x - modalSize.x) / 2, (windowSize.y - modalSize.y) / 2);
+        ImGui::SetNextWindowPos(center, ImGuiCond_Appearing);
+        */
+
+        if (ImGui::BeginPopupModal(modalName.c_str(), NULL, ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::Text("Select:");
             for (const auto& element : stringElements)

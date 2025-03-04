@@ -42,7 +42,7 @@ namespace Citrom
 	{
 		ShaderDesc sd;
 		sd.name = shaderName;
-		//g_Shaders[shaderName].internal.reset();
+		g_Shaders[shaderName].internal.reset();
 		g_Shaders[shaderName] = DEVICE->CreateShader(&sd);
 	}
 	void Renderer_RecompileAllShaders()
@@ -96,6 +96,16 @@ namespace Citrom
 			outFile.close();
 		}
 	}
+
+	struct RendererData
+	{
+		bool test;
+		struct CameraDataTemp // TODO: is this superior to the current setup?
+		{
+			bool test;
+		} cameraData;
+	};
+	static RendererData g_RendererData;
 
 	void Renderer::Initialize(Platform::Window* window)
 	{
@@ -270,6 +280,7 @@ namespace Citrom
 	void Renderer::BeginFrame(Scene* scene, Camera* camera, Math::Transform* cameraTransform)
 	{
 		s_CurrentCamera = CameraData(camera, cameraTransform);
+		// TODO: set up lighting data
 
 		/*if (s_CurrentScene && s_CurrentCamera.camera)
 		{

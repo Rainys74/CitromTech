@@ -79,7 +79,7 @@ void EditorLayer::OnImGuiRender()
             if (ImGui::MenuItem("Open Scene", "Ctrl+O"))
             {
                 NativeFileDialog nfd;
-                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,cts,ctenv" } };
+                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,ctbinscene" } }; // ctjscene also sounds amazing, as in CT J(son)
                 std::string result = nfd.OpenFile(filters, CT_ARRAY_LENGTH(filters));
                 if (result != "")
                 {
@@ -102,7 +102,7 @@ void EditorLayer::OnImGuiRender()
             if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
             {
                 NativeFileDialog nfd;
-                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,cts,ctenv" } };
+                NativeFileDialogFilter filters[] = { { "Citrom Tech Scene", "ctscene,ctbinscene" } };
                 std::string filePath = nfd.SaveFile(filters, CT_ARRAY_LENGTH(filters));
 
                 if (filePath != "")

@@ -36,6 +36,10 @@ namespace Citrom::RenderAPI
 
 		HRESULT hr;
 
+		// TODO: maybe switch to using Texture2D and access the internal data if you must instead of creating these weird textures,
+		// reason being easier to scale and implement helper texture functions if all of these are connected, also easier to implement stuff
+		// like rendering a framebuffer to a textured quad etc.
+
 		// Create Render Targets
 		auto& attachments = descriptor->attachments->attachments;
 		for (uint32 i = 0; i < attachments.Count(); i++)
