@@ -1,0 +1,4 @@
+
+#define IF_THIS_IS_DEFINED_WORKS
+
+#define VECTOR3 float3

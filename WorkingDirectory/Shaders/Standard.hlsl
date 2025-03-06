@@ -36,6 +36,11 @@ struct BaseLight
     float intensity;
 };
 
+struct SkyLight
+{
+    BaseLight base;
+};
+
 struct DirectionalLight
 {
     BaseLight base;
@@ -46,10 +51,14 @@ cbuffer CBuffer1
 {
     matrix transform;
     
-    float3 directionalLightDir;
     float3 cameraLocalPos;
 };
-cbuffer Material : register(b1)
+cbuffer Lighting : register(b1) // Lighting Data
+{
+    SkyLight skyLight;
+    DirectionalLight directionalLights[2];
+};
+cbuffer Material : register(b2)
 {
     float u_Test;
     float4 u_ColorData;
@@ -100,14 +109,14 @@ float4 CalcDirectionalLight_Standard(int index, float3 normal)
     return specularColor;
 }*/
 
-//cbuffer Lighting : register(b1) // Lighting Data
-
 float4 psmain(VSOut input) : SV_Target
 {
     // Diffuse Lighting (Lambertian Diffuse)
-    const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
+    //const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
     const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
     const float3 materialDiffuseColor = float3(1.0, 1.0, 1.0);
+    
+    const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary
     
     const float diffuseIntensity = 1.0; // TODO: you're probably gonna want to switch to albedo
     
@@ -147,5 +156,5 @@ float4 psmain(VSOut input) : SV_Target
     ///return float4(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
     //return tex.Sample(samplerTex, input.tex);
     ///return u_ColorData;
-    return tex.Sample(samplerTex, input.tex) * clamp(ambientColor + diffuseColor + specularColor, 0, 1); //(ambientColor + diffuseColor); // for diffuse only
+    return tex.Sample(samplerTex, input.tex) * clamp(float4(skyLight.base.color, 1.0f) + diffuseColor + specularColor, 0, 1); //(ambientColor + diffuseColor); // for diffuse only
 }

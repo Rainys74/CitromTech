@@ -234,6 +234,16 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 materialPath = path.filename().stem().string(); // = filename_with_ext.substr(0, filename_with_ext.find('_'));
             }
         }
+        // Lights
+        ImGui::Spacing();
+        if (frontEntity.HasComponent<DirectionalLightComponent>() && ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            auto& dirLightComponent = frontEntity.GetComponent<DirectionalLightComponent>();
+
+            ImGui::ColorEdit3("Color", &dirLightComponent.color[0]);
+            ImToolkit::DrawFloatControl("Intensity", &dirLightComponent.intensity, 0.2f);
+        }
+        // ------
         ImGui::Spacing();
         if (frontEntity.HasComponent<NativeScriptComponent>() && ImGui::CollapsingHeader("Native Script", ImGuiTreeNodeFlags_DefaultOpen))
         {
@@ -292,6 +302,10 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             {
                 if (ImGui::Button("Camera"))
                     AddComponentToEntity<CameraComponent>(frontEntity);
+
+                // TODO: maybe put inside a lights tree?
+                if (ImGui::Button("Directional Light"))
+                    AddComponentToEntity<DirectionalLightComponent>(frontEntity);
 
                 ImGui::TreePop();
             }

@@ -115,6 +115,7 @@ namespace Citrom
 		};
 		//SkyLight skyLight;
 		DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+		uint32 directionalLightCount = 0;
 		//PointLightComponent pointLights[MAX_POINT_LIGHTS];
 
 		bool test;
@@ -124,6 +125,12 @@ namespace Citrom
 		} cameraData;
 	};
 	static RendererData g_RendererData;
+
+	static void ResetRendererData()
+	{
+		//Memory::Zero(&g_RendererData, sizeof(g_RendererData));
+		g_RendererData = RendererData();
+	}
 
 	void Renderer::Initialize(Platform::Window* window)
 	{
@@ -226,7 +233,7 @@ namespace Citrom
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		//CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> uniqueShaderNames;
 		//for (const auto& entry : std::filesystem::directory_iterator("ShaderCache/"))
@@ -611,8 +618,8 @@ namespace Citrom
 		struct alignas(16) ConstantBufferTest
 		{
 			Math::Matrix4x4 transform;
-			Math::Vector3 directionalLightDir;
-			uint8 padding1[sizeof(float)];
+			//Math::Vector3 directionalLightDir;
+			//uint8 padding1[sizeof(float)];
 			Math::Vector3 cameraLocalPos;
 		};
 		ConstantBufferTest cbt = {};
@@ -632,15 +639,28 @@ namespace Citrom
 		cbt.transform = projection * view * model;
 		//cbt.transform = model * view * projection; // INCORRECT!
 
-		//if (s_CurrentScene)
-		//{
-		//	auto view = s_CurrentScene->GetAllEntitiesWith<LightComponent>();
-		//	for (auto light : view)
-		//	{
-		//
-		//	}
-		//}
-		Math::Vector3 lightDirectionWorldSpace = Math::Vector3(0.0f, -1.0f, 0.0f); // probably use -transform.forward for getting the light direction
+		ResetRendererData();
+		if (s_CurrentScene)
+		{
+			auto view = s_CurrentScene->GetAllEntitiesWith<DirectionalLightComponent>();
+			for (auto dirLight : view)
+			{
+				auto& dirLightComponent = Entity(dirLight, s_CurrentScene).GetComponent<DirectionalLightComponent>();
+				auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
+
+				g_RendererData.directionalLights[0].lightDirection = -transformComponent.transform.Forward();
+				g_RendererData.directionalLights[0].lightComponent = dirLightComponent;
+
+				g_RendererData.directionalLightCount++;
+			}
+			/*for (size_t i = 0; i < view.size(); i++)
+			{
+				//auto& dirLight = view.get(view[i]);
+				//auto& dirLight = view.get<DirectionalLightComponent>(view.storage<3>());
+				//auto& dirLight = view.get<i>();
+			}*/
+		}
+		Math::Vector3 lightDirectionWorldSpace = g_RendererData.directionalLights[0].lightDirection; //Math::Vector3(0.0f, -1.0f, 0.0f); // probably use -transform.forward for getting the light direction
 		Math::Vector3 lightDirectionLocalSpace = (Math::Matrix4x4::Inverse(model) * lightDirectionWorldSpace).Normalized();
 		//CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
 		//CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
@@ -659,8 +679,47 @@ namespace Citrom
 		//CT_CORE_VERBOSE("CAMERA POS LOCAL SPACE: {}", cameraPositionLocalSpace.ToString());
 
 		cbt.transform.Transpose();
-		cbt.directionalLightDir = lightDirectionLocalSpace;
+		//cbt.directionalLightDir = lightDirectionLocalSpace;
 		cbt.cameraLocalPos = cameraPositionLocalSpace;
+
+		struct alignas(16) CBLighting
+		{
+			// sky light
+			Math::ColorF32x3 skyColor;
+			float skyIntensity;
+
+			// directional light 1
+			Math::ColorF32x3 color;
+			float intensity;
+			Math::Vector3 direction;
+
+			float padding1;
+
+			// directional light 2
+			Math::ColorF32x3 color2;
+			float intensity2;
+			Math::Vector3 direction2;
+		} cbl;
+
+		cbl.skyColor = g_RendererData.skyLight.ambientColor;
+		cbl.skyIntensity = g_RendererData.skyLight.ambientIntensity;
+
+		cbl.color = g_RendererData.directionalLights[0].lightComponent.color;
+		cbl.intensity = g_RendererData.directionalLights[0].lightComponent.intensity;
+		cbl.direction = g_RendererData.directionalLights[0].lightDirection;
+
+		//{
+			UniformBufferDesc ubld = {};
+			ubld.data = &cbl;
+			ubld.dataBytes = sizeof(cbl);
+			ubld.usage = Usage::Dynamic;
+
+			UniformBuffer ubl = m_Device->CreateUniformBuffer(&ubld);
+			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Vertex, 1); //TODO: Temp Metal
+			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Fragment, 1); //TODO: Temp Metal // for lighting!
+
+			m_Device->SetUniformBufferData(&ubl, ubld.data, ubld.dataBytes);
+		//}
 
 		/*
 		CT_ERROR("PROJECTION!");
@@ -1064,7 +1123,7 @@ namespace Citrom
 		Device_PushDebugGroup("Editor Grid Render");
 
 		m_Device->RCBindUniformBuffer(&m_GridVertUB, ShaderType::Vertex, 0);
-		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 0); // HAS to be 1 for DX 11, but for some reason dumb glslcc sets the frag buffer to slot 0...
+		m_Device->RCBindUniformBuffer(&m_GridFragUB, ShaderType::Fragment, 0);
 
 		m_GridVertUBData.VP = camera->GetProjection() * camTransform->GetCameraViewFromTransform();
 		m_GridVertUBData.CameraWorldPos = m_GridFragUBData.CameraWorldPos = camTransform->position;

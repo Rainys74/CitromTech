@@ -19,7 +19,6 @@ precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
 layout(location = 0) uniform 	mat4x4 transform;
-uniform 	vec3 directionalLightDir;
 uniform 	vec3 cameraLocalPos;
 layout(location = 0) in  vec3 in_Position0;
 layout(location = 1) in  vec3 in_Normal0;

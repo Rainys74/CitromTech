@@ -9,7 +9,6 @@ using namespace metal;
 struct CBuffer1_Type
 {
     float4x4 transform;
-    float3 directionalLightDir;
     float3 cameraLocalPos;
 };
 

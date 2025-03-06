@@ -91,6 +91,9 @@ void EditorGizmos::ImGuiDraw(uint16 showGizmos)
             etc.transform.eulerAnglesHint = eulerAngles;
             //etc.transform.rotation = Math::Quaternion::Euler(eulerAngles);
             etc.transform.scale = scale; // TODO: scale keeps increasing, might be due to the square root not being that accurate?
+
+            //if (showGizmos == ImGuizmo::OPERATION::ROTATE || true)
+            //    etc.transform.rotation = Math::Quaternion::Euler(eulerAngles);
         }
     }
 
