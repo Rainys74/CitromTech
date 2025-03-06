@@ -46,13 +46,20 @@ namespace Citrom::Math
 				* Matrix4x4::Translate(Matrix4x4::Identity(), -position);
 		}
 
-		FORCE_INLINE void Rotate(float32 xRot, float32 yRot, float32 zRot) // Degrees
+		FORCE_INLINE void SetRotation(float32 xRot, float32 yRot, float32 zRot) // Degrees
 		{
-			// TODO: either store the xDeg, yDeg, zDeg etc. or just call RotateInRadians.
-			rotation = Quaternion::Euler(DegreesToRadians(xRot), DegreesToRadians(yRot), DegreesToRadians(zRot));
-			eulerAnglesHint = Vector3(DegreesToRadians(xRot), DegreesToRadians(yRot), DegreesToRadians(zRot));
+#if 0
+			const auto xRad = DegreesToRadians(xRot);
+			const auto yRad = DegreesToRadians(yRot);
+			const auto zRad = DegreesToRadians(zRot);
+
+			rotation = Quaternion::Euler(xRad, yRad, zRad);
+			eulerAnglesHint = Vector3(xRad, yRad, zRad);
+#else
+			SetRotationInRadians(DegreesToRadians(xRot), DegreesToRadians(yRot), DegreesToRadians(zRot));
+#endif
 		}
-		FORCE_INLINE void RotateInRadians(float32 xRad, float32 yRad, float32 zRad)
+		FORCE_INLINE void SetRotationInRadians(float32 xRad, float32 yRad, float32 zRad)
 		{
 			rotation = Quaternion::Euler(xRad, yRad, zRad);
 			eulerAnglesHint = Vector3(xRad, yRad, zRad);
