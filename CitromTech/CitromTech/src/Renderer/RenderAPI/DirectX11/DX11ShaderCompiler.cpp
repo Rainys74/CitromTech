@@ -44,7 +44,7 @@ namespace Citrom::ShaderCompiler::DX11
 		CT_CORE_ASSERT(fileStream, "Failed to open shader file ({}) for reading!", entry.path().string());
 
 		std::stringstream buffer;
-		//buffer << "#define SHADER_LANG_HLSL" << '\n'; // CT_LANG_HLSL, SHADER_LANGUAGE_HLSL, INITIAL_SHADER_LANG_HLSL
+		buffer << "#define INITIAL_SHADER_LANG_HLSL" << '\n'; // CT_LANG_HLSL, SHADER_LANGUAGE_HLSL, INITIAL_SHADER_LANG_HLSL, SHADER_LANG_HLSL
 		buffer << fileStream.rdbuf();
 
 		return buffer.str();

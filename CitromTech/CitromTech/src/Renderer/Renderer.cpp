@@ -648,7 +648,7 @@ namespace Citrom
 				auto& dirLightComponent = Entity(dirLight, s_CurrentScene).GetComponent<DirectionalLightComponent>();
 				auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
 
-				g_RendererData.directionalLights[0].lightDirection = -transformComponent.transform.Forward();
+				g_RendererData.directionalLights[0].lightDirection = transformComponent.transform.Forward();
 				g_RendererData.directionalLights[0].lightComponent = dirLightComponent;
 
 				g_RendererData.directionalLightCount++;

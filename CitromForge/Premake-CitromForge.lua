@@ -66,6 +66,9 @@ project "CitromForge" -- EXE
             ("{COPY} %{cfg.buildtarget.abspath} ../../WorkingDirectory"),
             -- TODO: On debug or release/optimization builds copy over Debug or Release CMake generated dlls to the working dir
             ("{COPY} ../../Dependencies/glslcc_dll/Debug/glslcc.dll ../../WorkingDirectory"), --%{cfg.buildtarget.abspath}
+
+            ("{MKDIR} ../../WorkingDirectory/Shaders/ShaderInterop"),
+            ("{COPYDIR} ../../CitromTech/CitromTech/src/Renderer/ShaderInterop ../../WorkingDirectory/Shaders/ShaderInterop")
         }
 
     filter { "system:linux or macosx or bsd" }

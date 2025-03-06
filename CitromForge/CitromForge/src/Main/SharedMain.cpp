@@ -394,6 +394,10 @@ int SharedMain(int argc, char* argv[])
 
 	CameraComponent& mainCameraComponent = camera.AddComponent<CameraComponent>();
 	mainCameraComponent.camera.SetPerspective(Math::DegreesToRadians(90.0f), 0.01f, 1000.0f);
+
+	Entity sun = g_CurrentScene->CreateEntity("Sun Test");
+	sun.AddComponent<DirectionalLightComponent>();
+	sun.GetComponent<TransformComponent>().transform.Rotate(50.0f, -30.0f, 0.0f);
 	
 	class TestCameraController : public ScriptableEntity
 	{
