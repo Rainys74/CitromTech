@@ -210,13 +210,17 @@ namespace Citrom::ShaderCompiler::DX11
 
 						COMPILE_SHADER_HELPER(entry, nullptr, &include, "main", "cs_5_0", NULL, NULL, &computeShaderObject.shaderBlob, &errorBlob);
 					}
-					else
+					else if (entry.path().stem().string().find("_h") == std::string::npos /* && entry.path().extension() != ".hhlsl"*/) // this extension already is not computed in this block of code // x_hlsl.h
 					{
 						vertexShaderObject.name = pixelShaderObject.name = entry.path().stem().string();
 						CT_CORE_TRACE("Found Combined (Vertex/Pixel) HLSL Shader {}", vertexShaderObject.name);
 
 						COMPILE_SHADER_HELPER(entry, nullptr, &include, "vsmain", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob);
 						COMPILE_SHADER_HELPER(entry, nullptr, &include, "psmain", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob);
+					}
+					else
+					{
+						CT_CORE_ASSERT(false, "Compiling DX11 shaders has resulted in undefined behaviour!");
 					}
 
 					if (vertexShaderObject.shaderBlob)
