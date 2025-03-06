@@ -23,7 +23,8 @@ namespace Citrom::ShaderCompiler::DX11
 		ID3DBlob* shaderBlob = nullptr;
 	};
 
-	static std::wstring ReadShaderFromFile(const std::filesystem::directory_entry& entry)
+#if 0
+	static std::wstring ReadShaderFromFileW(const std::filesystem::directory_entry& entry)
 	{
 		std::wifstream fileStream(entry.path());
 		CT_CORE_ASSERT(fileStream, "Failed to open shader file ({}) for reading!", entry.path().string());
@@ -34,6 +35,23 @@ namespace Citrom::ShaderCompiler::DX11
 
 		return buffer.str();
 	}
+#define ReadShaderFromFile_Type std::wstring
+#define ReadShaderFromFile ReadShaderFromFileW
+#else
+	static std::string ReadShaderFromFileA(const std::filesystem::directory_entry& entry)
+	{
+		std::ifstream fileStream(entry.path());
+		CT_CORE_ASSERT(fileStream, "Failed to open shader file ({}) for reading!", entry.path().string());
+
+		std::stringstream buffer;
+		//buffer << "#define SHADER_LANG_HLSL" << '\n'; // CT_LANG_HLSL, SHADER_LANGUAGE_HLSL, INITIAL_SHADER_LANG_HLSL
+		buffer << fileStream.rdbuf();
+
+		return buffer.str();
+	}
+#define ReadShaderFromFile_Type std::string
+#define ReadShaderFromFile ReadShaderFromFileA
+#endif
 
 	/*class ShaderIncludeHandler : public ID3DInclude
 	{
@@ -84,6 +102,59 @@ namespace Citrom::ShaderCompiler::DX11
 	private:
 		std::wstring m_ShaderDirectory;
 	};*/
+	class ShaderIncludeHandler : public ID3DInclude
+	{
+		HRESULT Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override
+		{
+			std::string filePath;
+			switch (IncludeType)
+			{
+				case D3D_INCLUDE_LOCAL: // e.g. #include "test.h"
+					filePath = std::string("Shaders/" + std::string(pFileName));
+					break;
+				case D3D_INCLUDE_SYSTEM: // e.g. #include <test.h>
+					filePath = std::string("Shaders/" + std::string(pFileName)); // TODO: add the total/absolute path to the shader directory
+					break;
+
+				default:
+					return E_FAIL;
+					break;
+			}
+
+			std::ifstream fileStream(filePath);
+			if (!fileStream || !fileStream.is_open())
+				return E_FAIL;
+
+			std::stringstream buffer;
+			buffer << fileStream.rdbuf();
+
+			*pBytes = static_cast<UINT>(buffer.str().size()/* + 1 */);
+
+			uint8* data = (uint8*)Memory::Allocate(*pBytes);
+			if (!data)
+				return E_OUTOFMEMORY;
+			Memory::Copy(data, buffer.str().c_str(), buffer.str().length()/* + 1*/);
+
+			*ppData = data;
+
+			return S_OK;
+		}
+
+		HRESULT Close(LPCVOID pData) override
+		{
+			Memory::Free(const_cast<void*>(pData));
+			return S_OK;
+		}
+	};
+
+#if 0
+#define COMPILE_SHADER_HELPER(ENTRY, DEFINES, INCLUDE, ENTRYPOINT, TARGET, FLAGS1, FLAGS2, CODE, ERRORMSGS) DXCallErrorBlobHR(D3DCompileFromFile((ENTRY).path().wstring().c_str(), DEFINES, INCLUDE, ENTRYPOINT, TARGET, FLAGS1, FLAGS2, CODE, ERRORMSGS))
+#else
+#define COMPILE_SHADER_HELPER(ENTRY, DEFINES, INCLUDE, ENTRYPOINT, TARGET, FLAGS1, FLAGS2, CODE, ERRORMSGS) {												\
+	ReadShaderFromFile_Type _intern_shaderSource = ReadShaderFromFile(ENTRY);																							\
+	DXCallErrorBlobHR(D3DCompile(_intern_shaderSource.data(), _intern_shaderSource.size(), (ENTRY).path().stem().string().c_str(), DEFINES, INCLUDE, ENTRYPOINT, TARGET, FLAGS1, FLAGS2, CODE, ERRORMSGS))			\
+	}
+#endif
 
 	static CTL::DArray<ShaderObj> CompileShadersToBlobs(const std::string shaderPaths[], const uint32 pathCount)
 	{
@@ -114,34 +185,38 @@ namespace Citrom::ShaderCompiler::DX11
 
 					ID3DBlob* errorBlob = nullptr;
 
+					ShaderIncludeHandler include;
 					if (entry.path().stem().string().find("_vs") != std::string::npos)
 					{
 						vertexShaderObject.name = entry.path().stem().string();
 						CT_CORE_TRACE("Found Separated HLSL Vertex Shader {}", vertexShaderObject.name);
+						
+						COMPILE_SHADER_HELPER(entry, nullptr, &include, "main", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob);
 
-						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "main", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob));
+						//std::wstring shaderSource = ReadShaderFromFileW(entry);
+						//D3DCompile(shaderSource.data(), shaderSource.size(), entry.path().stem().string().c_str(), nullptr, nullptr, "main", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob);
 					}
 					else if (entry.path().stem().string().find("_fs") != std::string::npos)
 					{
 						pixelShaderObject.name = entry.path().stem().string();
 						CT_CORE_TRACE("Found Separated HLSL Pixel Shader {}", pixelShaderObject.name);
 
-						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "main", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob));
+						COMPILE_SHADER_HELPER(entry, nullptr, &include, "main", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob);
 					}
 					else if (entry.path().stem().string().find("_cs") != std::string::npos)
 					{
 						computeShaderObject.name = entry.path().stem().string();
 						CT_CORE_TRACE("Found HLSL Compute Shader {}", computeShaderObject.name);
 
-						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "main", "cs_5_0", NULL, NULL, &computeShaderObject.shaderBlob, &errorBlob));
+						COMPILE_SHADER_HELPER(entry, nullptr, &include, "main", "cs_5_0", NULL, NULL, &computeShaderObject.shaderBlob, &errorBlob);
 					}
 					else
 					{
 						vertexShaderObject.name = pixelShaderObject.name = entry.path().stem().string();
 						CT_CORE_TRACE("Found Combined (Vertex/Pixel) HLSL Shader {}", vertexShaderObject.name);
 
-						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "vsmain", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob));
-						DXCallErrorBlobHR(D3DCompileFromFile(entry.path().wstring().c_str(), nullptr, nullptr, "psmain", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob));
+						COMPILE_SHADER_HELPER(entry, nullptr, &include, "vsmain", "vs_5_0", NULL, NULL, &vertexShaderObject.shaderBlob, &errorBlob);
+						COMPILE_SHADER_HELPER(entry, nullptr, &include, "psmain", "ps_5_0", NULL, NULL, &pixelShaderObject.shaderBlob, &errorBlob);
 					}
 
 					if (vertexShaderObject.shaderBlob)

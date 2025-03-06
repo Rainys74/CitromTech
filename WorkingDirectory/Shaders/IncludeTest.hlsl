@@ -2,11 +2,11 @@
 
 #ifdef IF_THIS_IS_DEFINED_WORKS
 
-float4 vsmain(float3 pos : Position)
+float4 vsmain(float3 pos : Position) : SV_Position
 {
     return float4(pos, 1.0);
 }
-float4 psmain()
+float4 psmain() : SV_Target
 {
     VECTOR3 thisisavec3test = VECTOR3(0.5, 1.0, 0.74);
     //return float4(1.0, 1.0, 1.0, 1.0);
