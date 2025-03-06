@@ -38,6 +38,14 @@ project "AngelScript"   -- Engine Library
             staticruntime "On"
             systemversion "15.0"
     
+            files
+            {
+                "angelscript/source/**.S"
+            }
+            removefiles
+            {
+                "angelscript/source/**gcc**.S" -- TODO: make sure this works on anything else than xcode
+            }
 
         filter "configurations:Debug"
             runtime "Debug"

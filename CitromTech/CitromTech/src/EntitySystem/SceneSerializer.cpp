@@ -196,14 +196,14 @@ namespace Citrom
 	}
 
 	// Deserialization
-	namespace OnDemand
+	/*namespace OnDemand
 	{
 		template<typename T>
 		static Math::Vector3 DeserializeVector3(const T& constantElement) // const simdjson::dom::element& for non-demand // simdjson::simdjson_result<simdjson::fallback::ondemand::value>
 		{
 			auto& element = const_cast<T&>(constantElement);
 			return Math::Vector3{
-				element["X"].get<double>().value(),
+				element["X"].get<double>().value(), // element["X"].template get<double>().value(),
 				element["Y"].get<double>().value(),
 				element["Z"].get<double>().value()
 			};
@@ -291,7 +291,7 @@ namespace Citrom
 		static Math::Vector2 DeserializeVector2(const simdjson::dom::element& element) 
 		{
 			
-		}*/
+		}* /
 		static Math::Vector3 DeserializeVector3(const simdjson::dom::element& element)
 		{
 			return Math::Vector3{
@@ -328,7 +328,7 @@ namespace Citrom
 				(float32)element["Y"].get_double()
 			};
 		}
-	}
+	}*/
 #define DESERIALIZE_FLOAT2_SUFFIXED(DOC, NAME, OUTFLOAT2, SUFFIX0, SUFFIX1)			 {	double _x, _y;					\
 																						(DOC)[NAME SUFFIX0].get(_x);	\
 																						(DOC)[NAME SUFFIX1].get(_y);	\

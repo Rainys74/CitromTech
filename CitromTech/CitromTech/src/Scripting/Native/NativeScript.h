@@ -53,7 +53,7 @@ namespace Citrom::Scripting
 		template<typename Ret, typename... Args>
 		using FunctionCallbackPFN = Ret(*)(Args...);
 
-		template<typename Ret, typename... Args>
+		/*template<typename Ret, typename... Args>
 		static Ret CallFunction(const std::string& functionName, Args... args)
 		{
 			auto it = s_FunctionCallbacks.find(functionName);
@@ -73,7 +73,7 @@ namespace Citrom::Scripting
 			{
 				NativeScriptDB::CallFunction<Ret, Args...>(functionName, args);
 			};
-		}
+		}*/
 	private:
 		static CTL::StdStrHashMap<BehaviorCallbackPFN> s_BehaviourCallbacks;
 
