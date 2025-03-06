@@ -102,11 +102,18 @@ namespace Citrom
 
 	struct RendererData
 	{
+		struct SkyLight
+		{
+			//Math::ColorF32x4 ambientColor = Math::ColorF32x4(0.42f, 0.478f, 0.627f, 1.0f);
+			Math::ColorF32x3 ambientColor = Math::ColorF32x3(0.42f, 0.478f, 0.627f); // switched to use 3 instead of 4 to save 12 bytes
+			float32 ambientIntensity = 1.0f;
+		} skyLight;
 		struct DirectionalLight
 		{
+			DirectionalLightComponent lightComponent; // reordered for memory layout
 			Math::Vector3 lightDirection = Math::Vector3(0.0f, -1.0f, 0.0f);
-			//DirectionalLightComponent lightComponent;
 		};
+		//SkyLight skyLight;
 		DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 		//PointLightComponent pointLights[MAX_POINT_LIGHTS];
 

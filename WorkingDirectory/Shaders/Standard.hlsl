@@ -79,6 +79,27 @@ float4 CalcDirectionalLight_Standard(int index, float3 normal)
     return float4(0, 0, 0, 0);
 }
 
+/*float4 BlinnPhong_SpecularLighting(float3 localVertPos, float3 normal) // TODO: Phong and PhongShared/SharedPhong
+{
+    float4 specularColor = float4(0, 0, 0, 0);
+    
+    float3 pixelToCamera = normalize(cameraLocalPos - localVertPos);
+    float3 lightReflect = normalize(reflect(directionalLightDir, normal)); // reflectionDirection // do i need to reverse lightdir?
+        
+    float3 halfwayVec = normalize(pixelToCamera + -directionalLightDir); // blinn-phong // (viewDirection + lightDirection)
+        
+    float specularFactor = dot(normal, halfwayVec); // blinn-phong, Phong: dot(pixelToCamera, lightReflect);
+    if (specularFactor > 0)
+    {
+            //float specularExponent = tex.Sample(samplerTex, input.tex).r * 255.0;
+        float specularExponent = 1.0 * 255.0; // 1.0 can stands for smoothness (like unity's pre-pbr model and stuff) however look into replacing with roughness to fit into pbr easier
+        specularFactor = pow(abs(specularFactor), specularExponent);
+        specularColor = float4(lightDiffuseColor, 1.0f) * float4(materialSpecularColor, 1.0f) * specularFactor;
+    }
+    
+    return specularColor;
+}*/
+
 //cbuffer Lighting : register(b1) // Lighting Data
 
 float4 psmain(VSOut input) : SV_Target

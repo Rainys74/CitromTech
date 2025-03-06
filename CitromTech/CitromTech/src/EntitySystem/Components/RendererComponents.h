@@ -34,20 +34,20 @@ namespace Citrom
 		// omit values from gui based on light type
 	};*/
 
-	/*struct ILightComponentBase
+	struct LightComponentBase
 	{
 		Math::ColorF32x3 color = Math::ColorF32x3(1.0f, 1.0f, 1.0f);
 		float32 intensity = 1.0f;
 	};
 
-	using DirectionalLightComponent = ILightComponentBase;
-	struct PointLightComponent : ILightComponentBase
+	using DirectionalLightComponent = LightComponentBase;
+	struct PointLightComponent : LightComponentBase
 	{
 		float32 range = 10.0f;
 	};
-	struct SpotLightComponent : ILightComponentBase
+	struct SpotLightComponent : LightComponentBase
 	{
 		float32 range = 10.0f;
 		float32 spotAngle = 30.0f; // TODO: 30 degrees, however might need to use radians for this
-	};*/
+	};
 }
