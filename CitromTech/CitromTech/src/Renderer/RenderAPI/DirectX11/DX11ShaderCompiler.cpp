@@ -106,14 +106,49 @@ namespace Citrom::ShaderCompiler::DX11
 	{
 		HRESULT Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes) override
 		{
+			if (m_IncludeLocations.Count() <= 0) // TODO: maybe move to constructor?
+			{
+				m_IncludeLocations.PushBack("Shaders");
+				m_IncludeLocations.PushBack("Shaders/ShaderInterop");
+			}
+
 			std::string filePath;
 			switch (IncludeType)
 			{
 				case D3D_INCLUDE_LOCAL: // e.g. #include "test.h"
-					filePath = std::string("Shaders/" + std::string(pFileName));
-					break;
+				{
+					bool found = false;
+
+					for (const auto& includeLocation : m_IncludeLocations)
+					{
+						filePath = includeLocation + '/' + pFileName;
+						if (FileExists(filePath))
+						{
+							found |= true;
+							break;
+						}
+					}
+
+					if (!found && pParentData)
+					{
+						std::string parentFilePath(static_cast<const char*>(pParentData));
+						std::string parentDirectory = GetDirectoryPath(parentFilePath);
+						filePath = parentDirectory + '/' + pFileName;
+
+						if (FileExists(filePath))
+						{
+							m_IncludeLocations.PushBack(parentDirectory);
+							found |= true;
+						}
+					}
+
+					if (!found)
+						return E_FAIL;
+				}
+				break;
+
 				case D3D_INCLUDE_SYSTEM: // e.g. #include <test.h>
-					filePath = std::string("Shaders/" + std::string(pFileName)); // TODO: add the total/absolute path to the shader directory
+					filePath = std::string("Shaders/" + std::string(pFileName));
 					break;
 
 				default:
@@ -145,6 +180,19 @@ namespace Citrom::ShaderCompiler::DX11
 			Memory::Free(const_cast<void*>(pData));
 			return S_OK;
 		}
+	private:
+		bool FileExists(const std::string& filePath)
+		{
+			std::ifstream file(filePath);
+			return file.good();
+		}
+		std::string GetDirectoryPath(const std::string& filePath)
+		{
+			size_t pos = filePath.find_last_of("/" "\\");
+			return (std::string::npos == pos) ? "" : filePath.substr(0, pos);
+		}
+	private:
+		CTL::DArray<std::string> m_IncludeLocations;
 	};
 
 #if 0
