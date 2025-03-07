@@ -12,7 +12,7 @@ namespace Citrom::Scripting
 	{
 		CT_CORE_ASSERT(s_BoundScene, "No Scene has been currently bound to the Native Scripting engine!");
 
-		s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent)
+		s_BoundScene->m_SceneRegistry.view<NativeScriptComponent>().each([=](auto entityID, auto& nativeScriptComponent) // TODO: recreate the instances whenever you add a new behaviour to avoid the null entity error
 		{
 			if (!nativeScriptComponent.instance)
 			{

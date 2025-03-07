@@ -50,29 +50,44 @@ namespace Citrom::Platform
         EventBus::GetDispatcher<EventGroup>()->Dispatch(keyEvent);
     }
     template<typename EventType>
-    static void RegisterKeyEventExtended(const int key)
+    static void RegisterKeyEventExtended(const int glfwKey)
     {
         EventType keyEvent;
-        keyEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+        keyEvent.keyCode = Input::GLFWKeyToInputSystem(glfwKey);
 
         EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
 
-        if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)
+        switch (glfwKey)
         {
-            keyEvent.keyCode = Input::KeyCode::Shift;
-            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+            case GLFW_KEY_LEFT_SHIFT:
+            case GLFW_KEY_RIGHT_SHIFT:
+                keyEvent.keyCode = Input::KeyCode::Shift;
+                EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+                break;
+
+            case GLFW_KEY_LEFT_CONTROL:
+            case GLFW_KEY_RIGHT_CONTROL:
+                keyEvent.keyCode = Input::KeyCode::Ctrl;
+                EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+                break;
+
+            case GLFW_KEY_LEFT_ALT:
+            case GLFW_KEY_RIGHT_ALT:
+                keyEvent.keyCode = Input::KeyCode::Alt;
+                EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+                break;
+
+            // Uncomment if you want to handle Super keys (Windows/Command key)
+            // case GLFW_KEY_LEFT_SUPER:
+            // case GLFW_KEY_RIGHT_SUPER:
+            //     keyEvent.keyCode = Input::KeyCode::Start; // Input::KeyCode::Super
+            //     EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+            //     break;
+
+            default:
+                // No additional action needed for non-modifier keys
+                break;
         }
-        else if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL)
-        {
-            keyEvent.keyCode = Input::KeyCode::Ctrl;
-            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
-        }
-        else if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT)
-        {
-            keyEvent.keyCode = Input::KeyCode::Alt;
-            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
-        }
-        //if (key == GLFW_KEY_LEFT_SUPER || key == GLFW_KEY_RIGHT_SUPER);
     }
 
     static void WindowCallbackProcedure(GLFWwindow* glfwWindow)
@@ -175,16 +190,6 @@ namespace Citrom::Platform
             {
                 case GLFW_PRESS:
                 {
-                    //KeyDownEvent keyDownEvent;
-                    //keyDownEvent.keyCode = Input::GLFWKeyToInputSystem(key);
-                    //
-                    //EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
-
-                    //if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT);
-                    //if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL);
-                    //if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT);
-                    ////if (key == GLFW_KEY_LEFT_SUPER || key == GLFW_KEY_RIGHT_SUPER);
-
                     RegisterKeyEventExtended<KeyDownEvent>(key);
                 }
                 break;

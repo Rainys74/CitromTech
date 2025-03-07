@@ -2,4 +2,4 @@
 
 -useMaster-bait
 
--threadCount=%Cores -force-glfw
+-threadCount=%Cores
