@@ -15,8 +15,8 @@ namespace Citrom::Platform
 
 		void Initialize(const StartRoutinePFN startRoutine, void* args); // Start
 
-		void Join(); // waits for the thread to catch up
-		void Wait(uint64 ms); // waits for a specific time amount
+		void Join(); // waits for the thread to catch up (Wait)
+		void Wait(uint64 ms); // waits for a specific time amount (WaitTimeout)
 
 		void Detach();
 		void TryCancel();

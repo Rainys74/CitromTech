@@ -45,12 +45,64 @@ namespace Citrom::Platform
 	//}
 
 	template<typename EventType, typename EventGroup = KeyEvents>
-	static void RegisterKeyEvent(Input::KeyCode keyCode)
+	static void RegisterKeyEvent(const Input::KeyCode keyCode)
 	{
 		EventType keyEvent;
 		keyEvent.keyCode = keyCode;
 
 		EventBus::GetDispatcher<EventGroup>()->Dispatch(keyEvent);
+	}
+
+	template<typename EventType>
+	static void RegisterKeyEventExtended(const WPARAM wParam)
+	{
+		static const CTL::HashMap<WPARAM, std::pair<int, int>> modifierKeys =
+		{
+				{ VK_SHIFT,   {VK_LSHIFT,	VK_RSHIFT}		},
+				{ VK_MENU,    {VK_LMENU,	VK_RMENU}		},
+				{ VK_CONTROL, {VK_LCONTROL, VK_RCONTROL}	}
+		};
+
+		/*for (const auto& modifierKeyPair : modifierKeys)
+		{
+			//if (wParam == VK_MENU)
+			if (GetKeyState(modifierKeyPair.second.first) & 0x8000) // Left Key
+			{
+				RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.second.first));
+			}
+			else if (GetKeyState(modifierKeyPair.second.second) & 0x8000) // Check if right key is pressed
+			{
+				RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.second.second));
+			}
+		}
+		RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(wParam));*/
+
+		bool isModifier = false;
+		for (const auto& modifierKeyPair : modifierKeys)
+		{
+			if (wParam == modifierKeyPair.first)
+			{
+				//if ((lParam & 0x01000000) != 0) // Left Key (bit 24 of lParam)
+				if (GetKeyState(modifierKeyPair.second.first) & 0x8000) // Left Key
+				{
+					RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.second.first));
+					RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.first));
+					isModifier = true;
+				}
+				//else if ((lParam & 0x02000000) != 0) // Right Key (bit 25 of lParam)
+				else if (GetKeyState(modifierKeyPair.second.second) & 0x8000) // Right Key
+				{
+					RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.second.second));
+					RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(modifierKeyPair.first));
+					isModifier = true;
+				}
+			}
+		}
+
+		if (!isModifier)
+		{
+			RegisterKeyEvent<EventType>(Input::WinKeyToInputSystem(wParam));
+		}
 	}
 
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -318,14 +370,17 @@ namespace Citrom::Platform
 			{
 				//toggle_fullscreen();
 			}
+
+			//if (wParam == VK_MENU);
+				//return 0; // Do not let the system handle the Alt key
 		}
 		break;
 		case WM_KEYDOWN:
 		{
 			// check for key repeats
-			if ((lParam & KF_REPEAT) == 0)
+			if ((HIWORD(lParam) & KF_REPEAT) != KF_REPEAT) // 0x40000000 = 0b0100000000000000 = 16384
 			{
-				static const CTL::HashMap<WPARAM, std::pair<int, int>> modifierKeys = 
+				/*static const CTL::HashMap<WPARAM, std::pair<int, int>> modifierKeys =
 				{
 						{ VK_SHIFT,   {VK_LSHIFT,	VK_RSHIFT}		},
 						{ VK_MENU,    {VK_LMENU,	VK_RMENU}		},
@@ -350,17 +405,52 @@ namespace Citrom::Platform
 				if ((HIWORD(lParam) & KF_REPEAT) != KF_REPEAT) // 0x40000000 = 0b0100000000000000 = 16384
 				{
 					RegisterKeyEvent<KeyDownEvent>(Input::WinKeyToInputSystem(wParam));
-				}
+				}*/
+				RegisterKeyEventExtended<KeyDownEvent>(wParam);
 			}
 			else
 			{
-				RegisterKeyEvent<KeyRepeatEvent>(Input::WinKeyToInputSystem(wParam));
+				RegisterKeyEventExtended<KeyRepeatEvent>(wParam);
 			}
 		}
 		break;
 		case WM_KEYUP:
 		{
-			RegisterKeyEvent<KeyUpEvent>(Input::WinKeyToInputSystem(wParam));
+			RegisterKeyEventExtended<KeyUpEvent>(wParam);
+
+			/*static const CTL::HashMap<WPARAM, std::pair<Input::KeyCode, Input::KeyCode>> keyResetCounterparts =
+			{
+				{ VK_SHIFT,   {Input::KeyCode::LShift,	Input::KeyCode::RShift}		},
+				{ VK_MENU,    {Input::KeyCode::LAlt,	Input::KeyCode::RAlt}		},
+				{ VK_CONTROL, {Input::KeyCode::LCtrl,	Input::KeyCode::RCtrl}		}
+			};
+
+			for (const auto& keyResetPair : keyResetCounterparts)
+			{
+				if (keyResetPair.first == wParam)
+				{
+					RegisterKeyEvent<KeyUpEvent>(keyResetPair.second.first);
+					RegisterKeyEvent<KeyUpEvent>(keyResetPair.second.second);
+				}
+			}*/
+			bool leftKey = false; // true is right
+			switch (wParam)
+			{
+				case VK_SHIFT:
+				{
+					leftKey = ((lParam & (0xFF << 16)) >> 16) == MapVirtualKey(VK_LSHIFT, MAPVK_VK_TO_VSC); // if (scancode) equals (left shift) then (key is left shift) else (key is right shift)
+					RegisterKeyEvent<KeyUpEvent>(leftKey ? Input::KeyCode::LShift : Input::KeyCode::RShift);
+				}
+				break;
+				case VK_CONTROL:
+					leftKey = ((HIWORD(lParam) & KF_EXTENDED) == KF_EXTENDED) ? false : true;
+					RegisterKeyEvent<KeyUpEvent>(leftKey ? Input::KeyCode::LCtrl : Input::KeyCode::RCtrl);
+					break;
+				case VK_MENU:
+					leftKey = ((HIWORD(lParam) & KF_EXTENDED) == KF_EXTENDED) ? false : true;
+					RegisterKeyEvent<KeyUpEvent>(leftKey ? Input::KeyCode::LAlt : Input::KeyCode::RAlt);
+					break;
+			}
 
 			CT_CORE_VERBOSE("KeyUp WPARAM: {}", wParam);
 			CT_CORE_VERBOSE("KeyUp LPARAM: {}", lParam);
