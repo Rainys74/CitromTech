@@ -41,6 +41,40 @@
 
 namespace Citrom::Platform
 {
+    template<typename EventType, typename EventGroup = KeyEvents>
+    static void RegisterKeyEvent(const Input::KeyCode key)
+    {
+        /*static*/ EventType keyEvent;
+        keyEvent.keyCode = key;
+
+        EventBus::GetDispatcher<EventGroup>()->Dispatch(keyEvent);
+    }
+    template<typename EventType>
+    static void RegisterKeyEventExtended(const int key)
+    {
+        EventType keyEvent;
+        keyEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+
+        EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+
+        if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT)
+        {
+            keyEvent.keyCode = Input::KeyCode::Shift;
+            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+        }
+        else if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL)
+        {
+            keyEvent.keyCode = Input::KeyCode::Ctrl;
+            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+        }
+        else if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT)
+        {
+            keyEvent.keyCode = Input::KeyCode::Alt;
+            EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyEvent);
+        }
+        //if (key == GLFW_KEY_LEFT_SUPER || key == GLFW_KEY_RIGHT_SUPER);
+    }
+
     static void WindowCallbackProcedure(GLFWwindow* glfwWindow)
     {
         // WM_CLOSE
@@ -141,26 +175,27 @@ namespace Citrom::Platform
             {
                 case GLFW_PRESS:
                 {
-                    KeyDownEvent keyDownEvent;
-                    keyDownEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+                    //KeyDownEvent keyDownEvent;
+                    //keyDownEvent.keyCode = Input::GLFWKeyToInputSystem(key);
+                    //
+                    //EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
 
-                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
+                    //if (key == GLFW_KEY_LEFT_SHIFT || key == GLFW_KEY_RIGHT_SHIFT);
+                    //if (key == GLFW_KEY_LEFT_CONTROL || key == GLFW_KEY_RIGHT_CONTROL);
+                    //if (key == GLFW_KEY_LEFT_ALT || key == GLFW_KEY_RIGHT_ALT);
+                    ////if (key == GLFW_KEY_LEFT_SUPER || key == GLFW_KEY_RIGHT_SUPER);
+
+                    RegisterKeyEventExtended<KeyDownEvent>(key);
                 }
                 break;
                 case GLFW_RELEASE:
                 {
-                    KeyUpEvent keyUpEvent;
-                    keyUpEvent.keyCode = Input::GLFWKeyToInputSystem(key);
-
-                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyUpEvent);
+                    RegisterKeyEventExtended<KeyUpEvent>(key);
                 }
                 break;
                 case GLFW_REPEAT:
                 {
-                    KeyRepeatEvent keyRepeatEvent;
-                    keyRepeatEvent.keyCode = Input::GLFWKeyToInputSystem(key);
-
-                    EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyRepeatEvent);
+                    RegisterKeyEventExtended<KeyRepeatEvent>(key);
                 }
                 break;
             }
