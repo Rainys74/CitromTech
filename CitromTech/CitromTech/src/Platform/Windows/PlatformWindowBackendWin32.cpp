@@ -30,6 +30,29 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace Citrom::Platform
 {
+	//enum class RegisterKeyEventType
+	//{
+	//	Up,
+	//	Down,
+	//	Repeat
+	//};
+	//static void RegisterKeyEvent(RegisterKeyEventType type, WPARAM wParam)
+	//{
+	//	KeyDownEvent keyDownEvent;
+	//	keyDownEvent.keyCode = Input::WinKeyToInputSystem(wParam);
+	//
+	//	EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
+	//}
+
+	template<typename EventType, typename EventGroup = KeyEvents>
+	static void RegisterKeyEvent(Input::KeyCode keyCode)
+	{
+		EventType keyEvent;
+		keyEvent.keyCode = keyCode;
+
+		EventBus::GetDispatcher<EventGroup>()->Dispatch(keyEvent);
+	}
+
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		#ifdef CT_EDITOR_ENABLED
@@ -300,85 +323,44 @@ namespace Citrom::Platform
 		case WM_KEYDOWN:
 		{
 			// check for key repeats
-			if ((lParam & 0x40000000) == 0)
+			if ((lParam & KF_REPEAT) == 0)
 			{
-				// check for left and right keys (dirty code)
-				// Shift
-				if (wParam == VK_SHIFT)
+				static const CTL::HashMap<WPARAM, std::pair<int, int>> modifierKeys = 
 				{
-					if (GetKeyState(VK_LSHIFT) & 0x8000) // Check if the left shift key is pressed
-					{
-						//input_system_register_key_press(CT_KEY_SHIFT);
-						//input_system_register_key_press(CT_KEY_LSHIFT);
-					}
-					else if (GetKeyState(VK_RSHIFT) & 0x8000) // Check if the right shift key is pressed
-					{
-						//input_system_register_key_press(CT_KEY_SHIFT);
-						//input_system_register_key_press(CT_KEY_RSHIFT);
-					}
-					break;
-				}
+						{ VK_SHIFT,   {VK_LSHIFT,	VK_RSHIFT}		},
+						{ VK_MENU,    {VK_LMENU,	VK_RMENU}		},
+						{ VK_CONTROL, {VK_LCONTROL, VK_RCONTROL}	}
+				};
 
-				// Alt
-				if (wParam == VK_MENU)
+				for (const auto& modifierKeyPair : modifierKeys)
 				{
-					if (GetKeyState(VK_LMENU) & 0x8000) // Check if the left menu key is pressed
+					//if (wParam == VK_MENU)
+					if (GetKeyState(modifierKeyPair.second.first) & 0x8000) // Left Key
 					{
-						//input_system_register_key_press(CT_KEY_ALT);
-						//input_system_register_key_press(CT_KEY_LALT);
+						RegisterKeyEvent<KeyDownEvent>(Input::WinKeyToInputSystem(modifierKeyPair.second.first));
 					}
-					else if (GetKeyState(VK_RMENU) & 0x8000) // Check if the right menu key is pressed
+					else if (GetKeyState(modifierKeyPair.second.second) & 0x8000) // Check if right key is pressed
 					{
-						//input_system_register_key_press(CT_KEY_ALT);
-						//input_system_register_key_press(CT_KEY_RALT);
+						RegisterKeyEvent<KeyDownEvent>(Input::WinKeyToInputSystem(modifierKeyPair.second.second));
 					}
-					break;
-				}
-
-				// Control
-				if (wParam == VK_CONTROL)
-				{
-					if (GetKeyState(VK_LCONTROL) & 0x8000) // Check if the left control key is pressed
-					{
-						//input_system_register_key_press(CT_KEY_CTRL);
-						//input_system_register_key_press(CT_KEY_LCTRL);
-					}
-					else if (GetKeyState(VK_RCONTROL) & 0x8000) // Check if the right control key is pressed
-					{
-						//input_system_register_key_press(CT_KEY_CTRL);
-						//input_system_register_key_press(CT_KEY_RCTRL);
-					}
-					break;
 				}
 
 				//input_system_register_key_press(win_key_to_input_system(wParam));
 
-				if ((HIWORD(lParam) & KF_REPEAT) != KF_REPEAT) // 0x4000 = 0b0100000000000000 = 16384
+				if ((HIWORD(lParam) & KF_REPEAT) != KF_REPEAT) // 0x40000000 = 0b0100000000000000 = 16384
 				{
-					//KeyDownEvent keyDownEvent(wParam);
-					//EventBus::GetInstance()->Dispatch<KeyEvents>(keyDownEvent);
-
-					// TODO: TEMPORARY IMPROVE DIS!
-					KeyDownEvent keyDownEvent;
-					keyDownEvent.keyCode = Input::WinKeyToInputSystem(wParam);
-
-					EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyDownEvent);
+					RegisterKeyEvent<KeyDownEvent>(Input::WinKeyToInputSystem(wParam));
 				}
 			}
 			else
 			{
-				//input_system_register_key_repeat(win_key_to_input_system(wParam));
+				RegisterKeyEvent<KeyRepeatEvent>(Input::WinKeyToInputSystem(wParam));
 			}
 		}
 		break;
 		case WM_KEYUP:
 		{
-			//input_system_register_key_release(win_key_to_input_system(wParam));
-
-			KeyUpEvent keyUpEvent;
-			keyUpEvent.keyCode = Input::WinKeyToInputSystem(wParam);
-
-			EventBus::GetDispatcher<KeyEvents>()->Dispatch(keyUpEvent);
+			RegisterKeyEvent<KeyUpEvent>(Input::WinKeyToInputSystem(wParam));
 
 			CT_CORE_VERBOSE("KeyUp WPARAM: {}", wParam);
 			CT_CORE_VERBOSE("KeyUp LPARAM: {}", lParam);

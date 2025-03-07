@@ -698,6 +698,11 @@ void ForgeLoop()
 
 		g_Window.PollEvents();
 
+#ifdef CT_EDITOR_ENABLED
+		if (Input::SimpleInput::GetKey(Input::KeyCode::Shift) && Input::SimpleInput::GetKeyDown(Input::KeyCode::F11))
+			g_Application->enableEditorUI = !g_Application->enableEditorUI;
+#endif
+
 		// Update & Tick (Fixed Update)
 		g_LayerStack.Update(g_DeltaTime);
 
@@ -724,7 +729,7 @@ void ForgeLoop()
 								//Shift + F11: Open / close editor UI without pausing the game.
 										//F12: Toggle free - camera mode(detached from the player)
 #ifdef CT_EDITOR_ENABLED
-		if (true) // if GApplication->EditorUIEnabled
+		if (g_Application->enableEditorUI) // if GApplication->EditorUIEnabled
 		{
 			CT_PROFILE_SCOPE("ImGui Render");
 			g_ImLayer.Begin();
