@@ -17,13 +17,13 @@
 #define CTSI_NAMESPACE ShaderInterop
 
 #ifdef CTSI_LANGUAGE_CPP
-#define CTSI_NAMESPACE_BEGIN(x) namespace x { // no need for double namespaces as in Renderer::ShaderInterop
-#define CTSI_NAMESPACE_END() }
+#define CTSI_NAMESPACE_BEGIN namespace Citrom { namespace CTSI_NAMESPACE {
+#define CTSI_NAMESPACE_END } }
 
 //#define CTSI_NAMESPACE(x) namespace x
 #else
-//#define CTSI_NAMESPACE_BEGIN(x)
-//#define CTSI_NAMESPACE_END()
+#define CTSI_NAMESPACE_BEGIN
+#define CTSI_NAMESPACE_END
 #endif
 
 //CTSI_NAMESPACE_BEGIN(CTSI_NAMESPACE)
@@ -55,6 +55,9 @@ using matrix = Citrom::Math::Matrix4x4;
 #include "Math/Matrix4x4.h"
 #define CTSI_TYPE_MATRIX Citrom::Math::Matrix4x4
 
+#include "Core.h"
+#define CTSI_TYPE_UINT uint32
+
 #elif defined(CTSI_LANGUAGE_HLSL)
 #define CTSI_TYPE_FLOAT2 float2
 #define CTSI_TYPE_FLOAT3 float3
@@ -64,6 +67,10 @@ using matrix = Citrom::Math::Matrix4x4;
 #define CTSI_TYPE_COLOR4 CTSI_TYPE_FLOAT4
 
 #define CTSI_TYPE_MATRIX matrix
+
+#define CTSI_TYPE_UINT uint
+
+#define alignas(x)
 #endif
 
 #ifdef CTSI_LANGUAGE_CPP

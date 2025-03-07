@@ -36,13 +36,13 @@ void main()
     //MOV
     u_xlat0.w = 1.0;
     //DP4
-    gl_Position.x = dot(u_xlat0, CBuffer1VS.transform[0]);
+    gl_Position.x = dot(u_xlat0, MatricesVS.transform[0]);
     //DP4
-    gl_Position.y = dot(u_xlat0, CBuffer1VS.transform[1]);
+    gl_Position.y = dot(u_xlat0, MatricesVS.transform[1]);
     //DP4
-    gl_Position.z = dot(u_xlat0, CBuffer1VS.transform[2]);
+    gl_Position.z = dot(u_xlat0, MatricesVS.transform[2]);
     //DP4
-    gl_Position.w = dot(u_xlat0, CBuffer1VS.transform[3]);
+    gl_Position.w = dot(u_xlat0, MatricesVS.transform[3]);
     //MOV
     vs_Normal0.xyz = in_Normal0.xyz;
     //MOV

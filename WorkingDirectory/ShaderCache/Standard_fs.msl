@@ -10,7 +10,7 @@ using namespace metal;
 	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
 #endif
 constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
-struct CBuffer1_Type
+struct Matrices_Type
 {
     float4x4 transform;
     float3 cameraLocalPos;
@@ -52,7 +52,7 @@ struct Mtl_FragmentOut
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
-    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
+    constant Matrices_Type& Matrices [[ buffer(0) ]],
     constant Lighting_Type& Lighting [[ buffer(1) ]],
     sampler samplerTex [[ sampler (0) ]],
     texture2d<float, access::sample > tex [[ texture(0) ]] ,
@@ -70,7 +70,7 @@ fragment Mtl_FragmentOut xlatMtlMain(
     float u_xlat9;
     //--- End Early Main ---
     //ADD
-    u_xlat0.xyz = (-input.LocalPosition0.xyz) + CBuffer1.cameraLocalPos.xyzx.xyz;
+    u_xlat0.xyz = (-input.LocalPosition0.xyz) + Matrices.cameraLocalPos.xyzx.xyz;
     //DP3
     u_xlat9 = dot(u_xlat0.xyz, u_xlat0.xyz);
     //RSQ

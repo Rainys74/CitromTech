@@ -49,7 +49,7 @@ float u_xlat9;
 void main()
 {
     //ADD
-    u_xlat0.xyz = (-vs_LocalPosition0.xyz) + CBuffer1PS.cameraLocalPos.xyz;
+    u_xlat0.xyz = (-vs_LocalPosition0.xyz) + MatricesPS.cameraLocalPos.xyz;
     //DP3
     u_xlat9 = dot(u_xlat0.xyz, u_xlat0.xyz);
     //RSQ

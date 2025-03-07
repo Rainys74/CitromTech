@@ -47,12 +47,8 @@ struct DirectionalLight
     float3 direction;
 };
 
-cbuffer CBuffer1
-{
-    matrix transform;
-    
-    float3 cameraLocalPos;
-};
+#include <ShaderInterop/Matrices_ShaderInterop.h>
+
 cbuffer Lighting : register(b1) // Lighting Data
 {
     SkyLight skyLight;

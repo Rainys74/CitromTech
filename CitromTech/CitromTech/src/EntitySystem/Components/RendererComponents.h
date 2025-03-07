@@ -40,6 +40,7 @@ namespace Citrom
 		float32 intensity = 1.0f;
 	};
 
+	struct SkyLightComponent : LightComponentBase {};
 	using DirectionalLightComponent = LightComponentBase;
 	struct PointLightComponent : LightComponentBase
 	{

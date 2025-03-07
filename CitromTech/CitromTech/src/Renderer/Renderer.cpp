@@ -11,6 +11,9 @@
 #include "EntitySystem/Components/RendererComponents.h"
 #include "EntitySystem/Entity.h"
 
+#include "ShaderInterop/Matrices_ShaderInterop.h"
+#include "ShaderInterop/Lighting_ShaderInterop.h"
+
 #include "Math/Vector.h"
 
 #include <filesystem>
@@ -96,9 +99,6 @@ namespace Citrom
 			outFile.close();
 		}
 	}
-
-#define MAX_DIRECTIONAL_LIGHTS (2)
-#define MAX_POINT_LIGHTS (100)
 
 	struct RendererData
 	{
@@ -615,14 +615,15 @@ namespace Citrom
 		//m_Device->BindShader(&shader); // in pipeline
 
 		// Shader Constant Buffer
-		struct alignas(16) ConstantBufferTest
+		/*struct alignas(16) ConstantBufferTest
 		{
 			Math::Matrix4x4 transform;
 			//Math::Vector3 directionalLightDir;
 			//uint8 padding1[sizeof(float)];
 			Math::Vector3 cameraLocalPos;
 		};
-		ConstantBufferTest cbt = {};
+		ConstantBufferTest cbt = {};*/
+		ShaderInterop::Matrices cbt = {};
 		Math::Matrix4x4 projection;
 		//projection.Orthographic(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
 		//projection.Orthographic(-2.67f, 2.67f, -1.5f, 1.5f, -1.0f, 1.0f);
@@ -642,16 +643,30 @@ namespace Citrom
 		ResetRendererData();
 		if (s_CurrentScene)
 		{
-			auto view = s_CurrentScene->GetAllEntitiesWith<DirectionalLightComponent>();
-			for (auto dirLight : view)
+			// Directional Light
 			{
-				auto& dirLightComponent = Entity(dirLight, s_CurrentScene).GetComponent<DirectionalLightComponent>();
-				auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
+				auto view = s_CurrentScene->GetAllEntitiesWith<DirectionalLightComponent>();
+				for (auto dirLight : view)
+				{
+					auto& dirLightComponent = Entity(dirLight, s_CurrentScene).GetComponent<DirectionalLightComponent>();
+					auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
 
-				g_RendererData.directionalLights[0].lightDirection = transformComponent.transform.Forward();
-				g_RendererData.directionalLights[0].lightComponent = dirLightComponent;
+					g_RendererData.directionalLights[0].lightDirection = transformComponent.transform.Forward();
+					g_RendererData.directionalLights[0].lightComponent = dirLightComponent;
 
-				g_RendererData.directionalLightCount++;
+					g_RendererData.directionalLightCount++;
+				}
+			}
+			// Sky Light
+			{
+				auto view = s_CurrentScene->GetAllEntitiesWith<SkyLightComponent>();
+				for (auto skyLight : view)
+				{
+					auto& skyLightComponent = Entity(skyLight, s_CurrentScene).GetComponent<SkyLightComponent>();
+
+					g_RendererData.skyLight.ambientColor = skyLightComponent.color;
+					g_RendererData.skyLight.ambientIntensity = skyLightComponent.intensity;
+				}
 			}
 			/*for (size_t i = 0; i < view.size(); i++)
 			{
@@ -750,8 +765,8 @@ namespace Citrom
 		ubd.usage = Usage::Dynamic;
 
 		UniformBuffer ub = m_Device->CreateUniformBuffer(&ubd);
-        m_Device->RCBindUniformBuffer(&ub, ShaderType::Vertex, 0); //TODO: Temp Metal
-        m_Device->RCBindUniformBuffer(&ub, ShaderType::Fragment, 0); //TODO: Temp Metal // for lighting!
+        m_Device->RCBindUniformBuffer(&ub, ShaderType::Vertex, CTSI_CBSLOT_MATRICES); //TODO: Temp Metal
+        m_Device->RCBindUniformBuffer(&ub, ShaderType::Fragment, CTSI_CBSLOT_MATRICES); //TODO: Temp Metal // for lighting!
 
 		//cbt.transform = { {1, 3, 5, 7}, {2, 4, 6, 8}, {9, 11, 13, 15}, {10, 12, 14, 16} };
 		m_Device->SetUniformBufferData(&ub, &cbt, sizeof(cbt));

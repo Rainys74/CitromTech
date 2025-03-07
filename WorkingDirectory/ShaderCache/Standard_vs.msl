@@ -6,7 +6,7 @@ using namespace metal;
 #define fma(a,b,c) ((a) * (b) + (c))
 #endif
 
-struct CBuffer1_Type
+struct Matrices_Type
 {
     float4x4 transform;
     float3 cameraLocalPos;
@@ -28,7 +28,7 @@ struct Mtl_VertexOut
 };
 
 vertex Mtl_VertexOut xlatMtlMain(
-    constant CBuffer1_Type& CBuffer1 [[ buffer(0) ]],
+    constant Matrices_Type& Matrices [[ buffer(0) ]],
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
@@ -42,13 +42,13 @@ vertex Mtl_VertexOut xlatMtlMain(
     //MOV
     u_xlat0.w = 1.0;
     //DP4
-    output.mtl_Position.x = dot(u_xlat0, CBuffer1.transform[0]);
+    output.mtl_Position.x = dot(u_xlat0, Matrices.transform[0]);
     //DP4
-    output.mtl_Position.y = dot(u_xlat0, CBuffer1.transform[1]);
+    output.mtl_Position.y = dot(u_xlat0, Matrices.transform[1]);
     //DP4
-    output.mtl_Position.z = dot(u_xlat0, CBuffer1.transform[2]);
+    output.mtl_Position.z = dot(u_xlat0, Matrices.transform[2]);
     //DP4
-    output.mtl_Position.w = dot(u_xlat0, CBuffer1.transform[3]);
+    output.mtl_Position.w = dot(u_xlat0, Matrices.transform[3]);
     //MOV
     output.Normal0.xyz = input.Normal0.xyz;
     //MOV

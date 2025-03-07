@@ -397,6 +397,7 @@ int SharedMain(int argc, char* argv[])
 
 	Entity sun = g_CurrentScene->CreateEntity("Sun Test");
 	sun.AddComponent<DirectionalLightComponent>();
+	sun.AddComponent<SkyLightComponent>().color = Math::ColorF32x3(0.42f, 0.478f, 0.627f);
 	sun.GetComponent<TransformComponent>().transform.SetRotation(50.0f, -30.0f, 0.0f);
 	
 	class TestCameraController : public ScriptableEntity

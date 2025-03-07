@@ -235,14 +235,29 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             }
         }
         // Lights
+#define INSPECTOR_LIGHT_COMPONENT_SCOPE(TYPE, NAME) if (frontEntity.HasComponent<TYPE>() && ImGui::CollapsingHeader(NAME, ImGuiTreeNodeFlags_DefaultOpen))
+//#define INSPECTOR_BEGIN_LIGHT_COMPONENT(TYPE, NAME) if (frontEntity.HasComponent<TYPE>() && ImGui::CollapsingHeader(NAME, ImGuiTreeNodeFlags_DefaultOpen)) {
+//#define INSPECTOR_END_LIGHT_COMPONENT() }
+
+#define INSPECTOR_LIGHT_COMPONENT_BASE_CONTROLS(LIGHTCOMPONENT) ImGui::ColorEdit3("Color", &(LIGHTCOMPONENT).color[0]); ImToolkit::DrawFloatControl("Intensity", &(LIGHTCOMPONENT).intensity, 0.2f)
+
         ImGui::Spacing();
-        if (frontEntity.HasComponent<DirectionalLightComponent>() && ImGui::CollapsingHeader("Directional Light", ImGuiTreeNodeFlags_DefaultOpen))
+        ImGui::PushID("Directional Light"); INSPECTOR_LIGHT_COMPONENT_SCOPE(DirectionalLightComponent, "Directional Light")
         {
             auto& dirLightComponent = frontEntity.GetComponent<DirectionalLightComponent>();
 
-            ImGui::ColorEdit3("Color", &dirLightComponent.color[0]);
-            ImToolkit::DrawFloatControl("Intensity", &dirLightComponent.intensity, 0.2f);
+            INSPECTOR_LIGHT_COMPONENT_BASE_CONTROLS(dirLightComponent);
         }
+        ImGui::PopID();
+
+        ImGui::Spacing();
+        INSPECTOR_LIGHT_COMPONENT_SCOPE(SkyLightComponent, "Sky Light")
+        {
+            auto& skyLightComponent = frontEntity.GetComponent<SkyLightComponent>();
+
+            INSPECTOR_LIGHT_COMPONENT_BASE_CONTROLS(skyLightComponent);
+        }
+
         // ------
         ImGui::Spacing();
         if (frontEntity.HasComponent<NativeScriptComponent>() && ImGui::CollapsingHeader("Native Script", ImGuiTreeNodeFlags_DefaultOpen))

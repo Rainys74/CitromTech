@@ -10,25 +10,17 @@ using namespace metal;
 	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
 #endif
 constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
-struct Material_Type
-{
-    float u_Test;
-    float4 u_ColorData;
-};
-
 struct Mtl_FragmentOut
 {
     float4 SV_Target0 [[ color(xlt_remap_o[0]) ]];
 };
 
 fragment Mtl_FragmentOut xlatMtlMain(
-    constant Material_Type& Material [[ buffer(0) ]])
+)
 {
     Mtl_FragmentOut output;
-    //ADD
-    output.SV_Target0.x = Material.u_Test + 0.5;
     //MOV
-    output.SV_Target0.yzw = float3(1.0, 0.74000001, 1.0);
+    output.SV_Target0 = float4(0.5, 1.0, 0.74000001, 1.0);
     //RET
     return output;
 }
