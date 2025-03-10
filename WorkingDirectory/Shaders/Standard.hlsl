@@ -53,16 +53,6 @@ VSOut vsmain(VSInput input)
 Texture2D tex;
 SamplerState samplerTex;
 
-float4 CalcLightInternal_Standard(BaseLight baseLight, float3 lightDirection, float3 normal)
-{
-    return float4(0, 0, 0, 0);
-}
-
-float4 CalcDirectionalLight_Standard(int index, float3 normal)
-{
-    return float4(0, 0, 0, 0);
-}
-
 /*float4 BlinnPhong_SpecularLighting(float3 localVertPos, float3 normal) // TODO: Phong and PhongShared/SharedPhong
 {
     float4 specularColor = float4(0, 0, 0, 0);
