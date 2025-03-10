@@ -22,21 +22,23 @@ struct base_Type
     float intensity;
 };
 
+struct directionalLights_Type
+{
+    base_Type base;
+    float3 direction;
+    float padding1;
+};
+
 struct skyLight_Type
 {
     base_Type base;
 };
 
-struct directionalLights_Type
-{
-    base_Type base;
-    float3 direction;
-};
-
 struct Lighting_Type
 {
-    skyLight_Type skyLight;
     directionalLights_Type directionalLights[2];
+    uint directionalLightCount;
+    skyLight_Type skyLight;
 };
 
 struct Mtl_FragmentIn
@@ -61,12 +63,12 @@ fragment Mtl_FragmentOut xlatMtlMain(
     Mtl_FragmentOut output;
     //--- Start Early Main ---
     float4 u_xlat0;
-    int3 u_xlati0;
+    int4 u_xlati0;
     bool u_xlatb0;
     float4 u_xlat1;
-    bool u_xlatb1;
     float4 u_xlat2;
-    float3 u_xlat3;
+    float u_xlat3;
+    bool u_xlatb4;
     float u_xlat9;
     //--- End Early Main ---
     //ADD
@@ -86,39 +88,55 @@ fragment Mtl_FragmentOut xlatMtlMain(
     //DP3
     u_xlat0.x = dot(input.Normal0.xyz, u_xlat0.xyz);
     //LOG
-    u_xlat3.x = log2(abs(u_xlat0.x));
+    u_xlat3 = log2(abs(u_xlat0.x));
     //LT
     u_xlatb0 = 0.0<u_xlat0.x;
     //MUL
-    u_xlat3.x = u_xlat3.x * 255.0;
+    u_xlat3 = u_xlat3 * 255.0;
     //EXP
-    u_xlat3.x = exp2(u_xlat3.x);
-    //MUL
-    u_xlat3.xyz = u_xlat3.xxx * float3(1.0, 0.0, 0.0);
-    //AND
-    u_xlati0.xyz = int3((uint3(bool3(u_xlatb0)) * 0xffffffffu) & as_type<uint3>(u_xlat3.xyz));
-    //DP3
-    u_xlat9 = dot(input.Normal0.xyz, input.Normal0.xyz);
-    //RSQ
-    u_xlat9 = rsqrt(u_xlat9);
-    //MUL
-    u_xlat1.xyz = float3(u_xlat9) * input.Normal0.xyz;
-    //DP3
-    u_xlat9 = dot(u_xlat1.xyz, (-Lighting.directionalLights[0].direction.xyzx.xyz));
-    //LT
-    u_xlatb1 = 0.0<u_xlat9;
-    //AND
-    u_xlat9 = u_xlatb1 ? u_xlat9 : float(0.0);
-    //AND
-    u_xlat1.xyz = select(float3(0.0, 0.0, 0.0), as_type<float3>(u_xlati0.xyz), bool3(bool3(u_xlatb1)));
-    //ADD
-    u_xlat2.w = u_xlat9 + u_xlat1.x;
-    //ADD
-    u_xlat2.xyz = float3(u_xlat9) + Lighting.skyLight.base.color.xyzx.xyz;
+    u_xlat3 = exp2(u_xlat3);
     //MOV
-    u_xlat1.w = 1.0;
+    u_xlat1.x = Lighting.directionalLights[0].base.color.xyzx.x;
+    //MOV
+    u_xlat1.y = float(0.0);
+    //MOV
+    u_xlat1.z = float(0.0);
+    //MOV
+    u_xlat1.w = float(1.0);
+    //MUL
+    u_xlat1.xw = float2(u_xlat3) * u_xlat1.xw;
+    //AND
+    u_xlati0 = int4((uint4(bool4(u_xlatb0)) * 0xffffffffu) & as_type<uint4>(u_xlat1));
+    //DP3
+    u_xlat1.x = dot(input.Normal0.xyz, input.Normal0.xyz);
+    //RSQ
+    u_xlat1.x = rsqrt(u_xlat1.x);
+    //MUL
+    u_xlat1.xyz = u_xlat1.xxx * input.Normal0.xyz;
+    //DP3
+    u_xlat1.x = dot(u_xlat1.xyz, (-Lighting.directionalLights[0].direction.xyzx.xyz));
+    //LT
+    u_xlatb4 = 0.0<u_xlat1.x;
+    //AND
+    u_xlat0 = select(float4(0.0, 0.0, 0.0, 0.0), as_type<float4>(u_xlati0), bool4(bool4(u_xlatb4)));
+    //MOV
+    u_xlat2.xyz = Lighting.directionalLights[0].base.color.xyzx.xyz;
+    //MOV
+    u_xlat2.w = 1.0;
+    //MUL
+    u_xlat2 = u_xlat2 * float4(Lighting.directionalLights[0].base.intensity);
+    //MUL
+    u_xlat2 = u_xlat1.xxxx * u_xlat2;
+    //AND
+    u_xlat1 = select(float4(0.0, 0.0, 0.0, 0.0), u_xlat2, bool4(bool4(u_xlatb4)));
     //ADD
-    u_xlat0 = u_xlat1 + u_xlat2;
+    u_xlat2.w = u_xlat0.w + u_xlat1.w;
+    //ADD
+    u_xlat2.xyz = u_xlat1.xyz + Lighting.skyLight.base.color.xyzx.xyz;
+    //MOV
+    u_xlat0.w = 1.0;
+    //ADD
+    u_xlat0 = u_xlat0 + u_xlat2;
     u_xlat0 = clamp(u_xlat0, 0.0f, 1.0f);
     //SAMPLE
     u_xlat1 = tex.sample(samplerTex, input.TexCoord0.xy);

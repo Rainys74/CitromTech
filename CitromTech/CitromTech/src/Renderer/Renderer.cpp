@@ -102,21 +102,7 @@ namespace Citrom
 
 	struct RendererData
 	{
-		struct SkyLight
-		{
-			//Math::ColorF32x4 ambientColor = Math::ColorF32x4(0.42f, 0.478f, 0.627f, 1.0f);
-			Math::ColorF32x3 ambientColor = Math::ColorF32x3(0.42f, 0.478f, 0.627f); // switched to use 3 instead of 4 to save 12 bytes
-			float32 ambientIntensity = 1.0f;
-		} skyLight;
-		struct DirectionalLight
-		{
-			DirectionalLightComponent lightComponent; // reordered for memory layout
-			Math::Vector3 lightDirection = Math::Vector3(0.0f, -1.0f, 0.0f);
-		};
-		//SkyLight skyLight;
-		DirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
-		uint32 directionalLightCount = 0;
-		//PointLightComponent pointLights[MAX_POINT_LIGHTS];
+		ShaderInterop::Lighting lighting;
 
 		bool test;
 		struct CameraDataTemp // TODO: is this superior to the current setup?
@@ -651,10 +637,11 @@ namespace Citrom
 					auto& dirLightComponent = Entity(dirLight, s_CurrentScene).GetComponent<DirectionalLightComponent>();
 					auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
 
-					g_RendererData.directionalLights[0].lightDirection = transformComponent.transform.Forward();
-					g_RendererData.directionalLights[0].lightComponent = dirLightComponent;
+					g_RendererData.lighting.directionalLights[0].direction = transformComponent.transform.Forward();
+					g_RendererData.lighting.directionalLights[0].base.color = dirLightComponent.color;
+					g_RendererData.lighting.directionalLights[0].base.intensity = dirLightComponent.intensity;
 
-					g_RendererData.directionalLightCount++;
+					g_RendererData.lighting.directionalLightCount++;
 				}
 			}
 			// Sky Light
@@ -664,8 +651,8 @@ namespace Citrom
 				{
 					auto& skyLightComponent = Entity(skyLight, s_CurrentScene).GetComponent<SkyLightComponent>();
 
-					g_RendererData.skyLight.ambientColor = skyLightComponent.color;
-					g_RendererData.skyLight.ambientIntensity = skyLightComponent.intensity;
+					g_RendererData.lighting.skyLight.base.color = skyLightComponent.color;
+					g_RendererData.lighting.skyLight.base.intensity = skyLightComponent.intensity;
 				}
 			}
 			/*for (size_t i = 0; i < view.size(); i++)
@@ -675,7 +662,7 @@ namespace Citrom
 				//auto& dirLight = view.get<i>();
 			}*/
 		}
-		Math::Vector3 lightDirectionWorldSpace = g_RendererData.directionalLights[0].lightDirection; //Math::Vector3(0.0f, -1.0f, 0.0f); // probably use -transform.forward for getting the light direction
+		Math::Vector3 lightDirectionWorldSpace = g_RendererData.lighting.directionalLights[0].direction; //Math::Vector3(0.0f, -1.0f, 0.0f); // probably use -transform.forward for getting the light direction
 		Math::Vector3 lightDirectionLocalSpace = (Math::Matrix4x4::Inverse(model) * lightDirectionWorldSpace).Normalized();
 		//CT_CORE_VERBOSE("WORLD SPACE: {}", lightDirectionWorldSpace.ToString());
 		//CT_CORE_VERBOSE("LOCAL SPACE: {}", lightDirectionLocalSpace.ToString());
@@ -697,44 +684,18 @@ namespace Citrom
 		//cbt.directionalLightDir = lightDirectionLocalSpace;
 		cbt.cameraLocalPos = cameraPositionLocalSpace;
 
-		struct alignas(16) CBLighting
 		{
-			// sky light
-			Math::ColorF32x3 skyColor;
-			float skyIntensity;
-
-			// directional light 1
-			Math::ColorF32x3 color;
-			float intensity;
-			Math::Vector3 direction;
-
-			float padding1;
-
-			// directional light 2
-			Math::ColorF32x3 color2;
-			float intensity2;
-			Math::Vector3 direction2;
-		} cbl;
-
-		cbl.skyColor = g_RendererData.skyLight.ambientColor;
-		cbl.skyIntensity = g_RendererData.skyLight.ambientIntensity;
-
-		cbl.color = g_RendererData.directionalLights[0].lightComponent.color;
-		cbl.intensity = g_RendererData.directionalLights[0].lightComponent.intensity;
-		cbl.direction = g_RendererData.directionalLights[0].lightDirection;
-
-		//{
 			UniformBufferDesc ubld = {};
-			ubld.data = &cbl;
-			ubld.dataBytes = sizeof(cbl);
+			ubld.data = &g_RendererData.lighting;
+			ubld.dataBytes = sizeof(g_RendererData.lighting);
 			ubld.usage = Usage::Dynamic;
 
 			UniformBuffer ubl = m_Device->CreateUniformBuffer(&ubld);
-			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Vertex, 1); //TODO: Temp Metal
-			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Fragment, 1); //TODO: Temp Metal // for lighting!
+			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Vertex, CTSI_CBSLOT_LIGHTING); //TODO: Temp Metal
+			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Fragment, CTSI_CBSLOT_LIGHTING); //TODO: Temp Metal // for lighting!
 
 			m_Device->SetUniformBufferData(&ubl, ubld.data, ubld.dataBytes);
-		//}
+		}
 
 		/*
 		CT_ERROR("PROJECTION!");

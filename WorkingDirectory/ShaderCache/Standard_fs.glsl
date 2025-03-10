@@ -24,27 +24,29 @@ struct base_Type {
 	vec3 color;
 	float intensity;
 };
-struct skyLight_Type {
-	base_Type base;
-};
 struct directionalLights_Type {
 	base_Type base;
 	vec3 direction;
+	float padding1;
 };
-layout(location = 1) uniform 	skyLight_Type skyLight;
-uniform 	directionalLights_Type directionalLights[2];
+struct skyLight_Type {
+	base_Type base;
+};
+layout(location = 1) uniform 	directionalLights_Type directionalLights[2];
+uniform 	uint directionalLightCount;
+uniform 	skyLight_Type skyLight;
 UNITY_LOCATION(0) uniform  sampler2D tex;
 layout(location = 0) in  vec2 vs_TexCoord0;
 layout(location = 1) in  vec3 vs_Normal0;
 layout(location = 2) in  vec3 vs_LocalPosition0;
 layout(location = 0) out vec4 SV_Target0;
 vec4 u_xlat0;
-ivec3 u_xlati0;
+ivec4 u_xlati0;
 bool u_xlatb0;
 vec4 u_xlat1;
-bool u_xlatb1;
 vec4 u_xlat2;
-vec3 u_xlat3;
+float u_xlat3;
+bool u_xlatb4;
 float u_xlat9;
 void main()
 {
@@ -65,39 +67,55 @@ void main()
     //DP3
     u_xlat0.x = dot(vs_Normal0.xyz, u_xlat0.xyz);
     //LOG
-    u_xlat3.x = log2(abs(u_xlat0.x));
+    u_xlat3 = log2(abs(u_xlat0.x));
     //LT
     u_xlatb0 = 0.0<u_xlat0.x;
     //MUL
-    u_xlat3.x = u_xlat3.x * 255.0;
+    u_xlat3 = u_xlat3 * 255.0;
     //EXP
-    u_xlat3.x = exp2(u_xlat3.x);
-    //MUL
-    u_xlat3.xyz = u_xlat3.xxx * vec3(1.0, 0.0, 0.0);
-    //AND
-    u_xlati0.xyz = ivec3((uvec3(bvec3(u_xlatb0)) * 0xFFFFFFFFu) & floatBitsToUint(u_xlat3.xyz));
-    //DP3
-    u_xlat9 = dot(vs_Normal0.xyz, vs_Normal0.xyz);
-    //RSQ
-    u_xlat9 = inversesqrt(u_xlat9);
-    //MUL
-    u_xlat1.xyz = vec3(u_xlat9) * vs_Normal0.xyz;
-    //DP3
-    u_xlat9 = dot(u_xlat1.xyz, (-LightingPS.directionalLights[0].direction.xyz));
-    //LT
-    u_xlatb1 = 0.0<u_xlat9;
-    //AND
-    u_xlat9 = u_xlatb1 ? u_xlat9 : float(0.0);
-    //AND
-    u_xlat1.xyz = bool(u_xlatb1) ? intBitsToFloat(u_xlati0.xyz) : vec3(0.0, 0.0, 0.0);
-    //ADD
-    u_xlat2.w = u_xlat9 + u_xlat1.x;
-    //ADD
-    u_xlat2.xyz = vec3(u_xlat9) + LightingPS.skyLight.base.color.xyz;
+    u_xlat3 = exp2(u_xlat3);
     //MOV
-    u_xlat1.w = 1.0;
+    u_xlat1.x = LightingPS.directionalLights[0].base.color.x;
+    //MOV
+    u_xlat1.y = float(0.0);
+    //MOV
+    u_xlat1.z = float(0.0);
+    //MOV
+    u_xlat1.w = float(1.0);
+    //MUL
+    u_xlat1.xw = vec2(u_xlat3) * u_xlat1.xw;
+    //AND
+    u_xlati0 = ivec4((uvec4(bvec4(u_xlatb0)) * 0xFFFFFFFFu) & floatBitsToUint(u_xlat1));
+    //DP3
+    u_xlat1.x = dot(vs_Normal0.xyz, vs_Normal0.xyz);
+    //RSQ
+    u_xlat1.x = inversesqrt(u_xlat1.x);
+    //MUL
+    u_xlat1.xyz = u_xlat1.xxx * vs_Normal0.xyz;
+    //DP3
+    u_xlat1.x = dot(u_xlat1.xyz, (-LightingPS.directionalLights[0].direction.xyz));
+    //LT
+    u_xlatb4 = 0.0<u_xlat1.x;
+    //AND
+    u_xlat0 = bool(u_xlatb4) ? intBitsToFloat(u_xlati0) : vec4(0.0, 0.0, 0.0, 0.0);
+    //MOV
+    u_xlat2.xyz = LightingPS.directionalLights[0].base.color.xyz;
+    //MOV
+    u_xlat2.w = 1.0;
+    //MUL
+    u_xlat2 = u_xlat2 * vec4(LightingPS.vec4(directionalLights[0].base.intensity, directionalLights[0].base.intensity, directionalLights[0].base.intensity, directionalLights[0].base.intensity));
+    //MUL
+    u_xlat2 = u_xlat1.xxxx * u_xlat2;
+    //AND
+    u_xlat1 = bool(u_xlatb4) ? u_xlat2 : vec4(0.0, 0.0, 0.0, 0.0);
     //ADD
-    u_xlat0 = u_xlat1 + u_xlat2;
+    u_xlat2.w = u_xlat0.w + u_xlat1.w;
+    //ADD
+    u_xlat2.xyz = u_xlat1.xyz + LightingPS.skyLight.base.color.xyz;
+    //MOV
+    u_xlat0.w = 1.0;
+    //ADD
+    u_xlat0 = u_xlat0 + u_xlat2;
     u_xlat0 = clamp(u_xlat0, 0.0, 1.0);
     //SAMPLE
     u_xlat1 = texture(tex, vs_TexCoord0.xy);

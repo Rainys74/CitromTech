@@ -24,6 +24,7 @@ struct alignas(16) DirectionalLight
     BaseLight base;
     CTSI_TYPE_FLOAT3 direction;
     // TODO: you can add 1 byte of stuff here to not waste on alignment
+    float padding1;
 };
 
 CTSI_CONSTANT_BUFFER(Lighting, CTSI_CBSLOT_LIGHTING)

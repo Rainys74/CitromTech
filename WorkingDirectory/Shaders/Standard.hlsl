@@ -30,30 +30,9 @@ struct VSOut
     float3 localPos : LocalPosition;
 };
 
-struct BaseLight
-{
-    float3 color;
-    float intensity;
-};
-
-struct SkyLight
-{
-    BaseLight base;
-};
-
-struct DirectionalLight
-{
-    BaseLight base;
-    float3 direction;
-};
-
 #include <ShaderInterop/Matrices_ShaderInterop.h>
+#include <ShaderInterop/Lighting_ShaderInterop.h>
 
-cbuffer Lighting : register(b1) // Lighting Data
-{
-    SkyLight skyLight;
-    DirectionalLight directionalLights[2];
-};
 cbuffer Material : register(b2)
 {
     float u_Test;
@@ -109,12 +88,13 @@ float4 psmain(VSOut input) : SV_Target
 {
     // Diffuse Lighting (Lambertian Diffuse)
     //const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
-    const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
+    //const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
+    const float3 lightDiffuseColor = directionalLights[0].base.color;
     const float3 materialDiffuseColor = float3(1.0, 1.0, 1.0);
     
     const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary
     
-    const float diffuseIntensity = 1.0; // TODO: you're probably gonna want to switch to albedo
+    const float diffuseIntensity = directionalLights[0].base.intensity; //1.0; // TODO: you're probably gonna want to switch to albedo
     
     const float diffuseFactor = dot(normalize(input.normal), -directionalLightDir); // should i max with 0.0f?
     
