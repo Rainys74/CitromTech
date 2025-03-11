@@ -33,7 +33,7 @@ namespace Citrom
         else
             m_Name = m_Shader.descriptor.name;
 
-        uint8 pad[16] = {};
+        uint8 pad[16 /* * 20 */] = {};
         UniformBufferDesc ubd = {};
         ubd.data = &pad;
         ubd.dataBytes = sizeof(pad);
@@ -95,16 +95,34 @@ namespace Citrom
 
         uint32 currentOffset = m_BufferData.Count(); // Calculate current offset in the buffer
 
+        /*
+        // Determine remaining space in the current 16-byte slot
+        size_t currentSlotUsed = currentOffset % 16;
+        size_t remainingSpace = (currentSlotUsed > 0) ? (16 - currentSlotUsed) : 16;
+
+        // If the current property doesn't fit in the remaining space, we need padding
+        size_t padding = 0;
+        if (GetMaterialFormatSize(format) > remainingSpace)
+        {
+            padding = 16 - currentSlotUsed; // Compute padding needed to align to 16 bytes
+        }
+        */
+
         // Compute padding needed to align to 16 bytes
         size_t padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT;
+
+        // Compute current aligned offset (AFTER padding is applied)
+        //uint32 alignedOffset = m_BufferData.Count() + padding;
 
         for (size_t i = 0; i < padding; i++)
             m_BufferData.PushBack(0x00);
 
+        const uint32 alignedOffset = m_BufferData.Count();
+
         for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
             m_BufferData.PushBack(dataBytes[i]);
 
-        m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[m_BufferData.Count() - GetMaterialFormatSize(format)] });
+        m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[alignedOffset] });
     }
 
     void Material::SetProperty(const std::string& name, const MaterialFormat format, const void* newData)

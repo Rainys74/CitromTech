@@ -13,6 +13,7 @@
 
 #include "ShaderInterop/Matrices_ShaderInterop.h"
 #include "ShaderInterop/Lighting_ShaderInterop.h"
+#include "ShaderInterop/StandardMaterial_ShaderInterop.h"
 
 #include "Math/Vector.h"
 
@@ -709,6 +710,17 @@ namespace Citrom
 			m_Device->SetUniformBufferData(&ubl, ubld.data, ubld.dataBytes);
 		}
 
+		static ShaderInterop::StandardMaterial standardMat;
+		standardMat.mat_Albedo = CTSI_TYPE_COLOR3(1.0f, 1.0f, 1.0f);
+		standardMat.mat_Metallic = 0.0f;
+		standardMat.mat_Roughness = 0.2f;
+
+		//Material* material = Renderer_GetMaterial("Standard");
+		Material* material = Renderer_CreateMaterial("Standard", "Standard");
+		ShaderInterop::SetupStandardMaterial(standardMat, *material);
+
+		material->Bind();
+
 		/*
 		CT_ERROR("PROJECTION!");
 		CT_WARN("\n{}", projection.ToString());
@@ -879,8 +891,9 @@ namespace Citrom
 		//	int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
 		//}
 
+		std::string matName = std::string("TestMaterial");
 		///Material matTest;
-		Material matTest(shader);
+		Material matTest(shader, &matName);
 		float32 testData = 0.5f;
 		matTest.PushProperty("u_Test", MaterialFormat::Float32, &testData);
 		//matTest.UpdateData("u_Test", MaterialFormat::Float32, &testData);
@@ -904,7 +917,7 @@ namespace Citrom
 		//matTest.GetBufferData()->u_Color = Math::ColorF32x4(1.0f, 0.2f, 0.5f);
 		//matTest.UpdateData();
 
-		matTest.Bind();
+		//matTest.Bind(); // unbinded test
 		{
 			std::string source = JSON::SerializeObject(matTest, JSON::SerializerOptions(true));
 

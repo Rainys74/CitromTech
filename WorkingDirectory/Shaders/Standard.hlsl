@@ -32,12 +32,7 @@ struct VSOut
 
 #include <ShaderInterop/Matrices_ShaderInterop.h>
 #include <ShaderInterop/Lighting_ShaderInterop.h>
-
-cbuffer Material : register(b2)
-{
-    float u_Test;
-    float4 u_ColorData;
-};
+#include <ShaderInterop/StandardMaterial_ShaderInterop.h>
 
 VSOut vsmain(VSInput input)
 {
@@ -76,11 +71,13 @@ SamplerState samplerTex;
 
 float4 psmain(VSOut input) : SV_Target
 {
+    static const float3 F0_Dielectric = float3(0.04f, 0.04f, 0.04f); // Dielectric reflectance (fixed 0.04 for non-metals)
+    
     // Diffuse Lighting (Lambertian Diffuse)
     //const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
     //const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
     const float3 lightDiffuseColor = directionalLights[0].base.color;
-    const float3 materialDiffuseColor = float3(1.0, 1.0, 1.0);
+    const float3 materialDiffuseColor = mat_Albedo * (1.0 - mat_Metallic); // Diffuse exists only for non-metallic surfaces
     
     const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary
     
@@ -97,7 +94,8 @@ float4 psmain(VSOut input) : SV_Target
     // ------------------------
     
     // Specular Lighting (Blinn-Phong)
-    const float3 materialSpecularColor = float3(1.0, 0.0, 0.0);
+    //const float3 materialSpecularColor = float3(1.0, 0.0, 0.0);
+    const float3 materialSpecularColor = lerp(F0_Dielectric, mat_Albedo, mat_Metallic); // If metallic, specular is baseColor, else it's 0.04
     // TODO: texture for specular exponent
     
     float4 specularColor = float4(0, 0, 0, 0);

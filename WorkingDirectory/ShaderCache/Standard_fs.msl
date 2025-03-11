@@ -41,6 +41,13 @@ struct Lighting_Type
     skyLight_Type skyLight;
 };
 
+struct StandardMaterial_Type
+{
+    float3 mat_Albedo;
+    float mat_Metallic;
+    float mat_Roughness;
+};
+
 struct Mtl_FragmentIn
 {
     float2 TexCoord0 [[ user(TexCoord0) ]] ;
@@ -56,6 +63,7 @@ struct Mtl_FragmentOut
 fragment Mtl_FragmentOut xlatMtlMain(
     constant Matrices_Type& Matrices [[ buffer(0) ]],
     constant Lighting_Type& Lighting [[ buffer(1) ]],
+    constant StandardMaterial_Type& StandardMaterial [[ buffer(2) ]],
     sampler samplerTex [[ sampler (0) ]],
     texture2d<float, access::sample > tex [[ texture(0) ]] ,
     Mtl_FragmentIn input [[ stage_in ]])
@@ -67,44 +75,46 @@ fragment Mtl_FragmentOut xlatMtlMain(
     bool u_xlatb0;
     float4 u_xlat1;
     float4 u_xlat2;
-    float u_xlat3;
-    bool u_xlatb4;
+    float4 u_xlat3;
+    float u_xlat4;
+    bool u_xlatb5;
     float u_xlat9;
+    float u_xlat12;
     //--- End Early Main ---
     //ADD
     u_xlat0.xyz = (-input.LocalPosition0.xyz) + Matrices.cameraLocalPos.xyzx.xyz;
     //DP3
-    u_xlat9 = dot(u_xlat0.xyz, u_xlat0.xyz);
+    u_xlat12 = dot(u_xlat0.xyz, u_xlat0.xyz);
     //RSQ
-    u_xlat9 = rsqrt(u_xlat9);
+    u_xlat12 = rsqrt(u_xlat12);
     //MAD
-    u_xlat0.xyz = fma(u_xlat0.xyz, float3(u_xlat9), (-Lighting.directionalLights[0].direction.xyzx.xyz));
+    u_xlat0.xyz = fma(u_xlat0.xyz, float3(u_xlat12), (-Lighting.directionalLights[0].direction.xyzx.xyz));
     //DP3
-    u_xlat9 = dot(u_xlat0.xyz, u_xlat0.xyz);
+    u_xlat12 = dot(u_xlat0.xyz, u_xlat0.xyz);
     //RSQ
-    u_xlat9 = rsqrt(u_xlat9);
+    u_xlat12 = rsqrt(u_xlat12);
     //MUL
-    u_xlat0.xyz = float3(u_xlat9) * u_xlat0.xyz;
+    u_xlat0.xyz = float3(u_xlat12) * u_xlat0.xyz;
     //DP3
     u_xlat0.x = dot(input.Normal0.xyz, u_xlat0.xyz);
     //LOG
-    u_xlat3 = log2(abs(u_xlat0.x));
+    u_xlat4 = log2(abs(u_xlat0.x));
     //LT
     u_xlatb0 = 0.0<u_xlat0.x;
     //MUL
-    u_xlat3 = u_xlat3 * 255.0;
+    u_xlat4 = u_xlat4 * 255.0;
     //EXP
-    u_xlat3 = exp2(u_xlat3);
-    //MOV
-    u_xlat1.x = Lighting.directionalLights[0].base.color.xyzx.x;
-    //MOV
-    u_xlat1.y = float(0.0);
-    //MOV
-    u_xlat1.z = float(0.0);
-    //MOV
-    u_xlat1.w = float(1.0);
+    u_xlat4 = exp2(u_xlat4);
+    //ADD
+    u_xlat1.xyz = StandardMaterial.mat_Albedo.xyzx.xyz + float3(-0.0399999991, -0.0399999991, -0.0399999991);
+    //MAD
+    u_xlat1.xyz = fma(float3(StandardMaterial.mat_Metallic), u_xlat1.xyz, float3(0.0399999991, 0.0399999991, 0.0399999991));
     //MUL
-    u_xlat1.xw = float2(u_xlat3) * u_xlat1.xw;
+    u_xlat1.xyz = u_xlat1.xyz * Lighting.directionalLights[0].base.color.xyzx.xyz;
+    //MOV
+    u_xlat1.w = 1.0;
+    //MUL
+    u_xlat1 = float4(u_xlat4) * u_xlat1;
     //AND
     u_xlati0 = int4((uint4(bool4(u_xlatb0)) * 0xffffffffu) & as_type<uint4>(u_xlat1));
     //DP3
@@ -116,19 +126,25 @@ fragment Mtl_FragmentOut xlatMtlMain(
     //DP3
     u_xlat1.x = dot(u_xlat1.xyz, (-Lighting.directionalLights[0].direction.xyzx.xyz));
     //LT
-    u_xlatb4 = 0.0<u_xlat1.x;
+    u_xlatb5 = 0.0<u_xlat1.x;
     //AND
-    u_xlat0 = select(float4(0.0, 0.0, 0.0, 0.0), as_type<float4>(u_xlati0), bool4(bool4(u_xlatb4)));
+    u_xlat0 = select(float4(0.0, 0.0, 0.0, 0.0), as_type<float4>(u_xlati0), bool4(bool4(u_xlatb5)));
+    //ADD
+    u_xlat9 = (-StandardMaterial.mat_Metallic) + 1.0;
+    //MUL
+    u_xlat2.xyz = float3(u_xlat9) * StandardMaterial.mat_Albedo.xyzx.xyz;
+    //MUL
+    u_xlat3.xyz = float3(Lighting.directionalLights[0].base.intensity) * Lighting.directionalLights[0].base.color.xyzx.xyz;
     //MOV
-    u_xlat2.xyz = Lighting.directionalLights[0].base.color.xyzx.xyz;
+    u_xlat3.w = Lighting.directionalLights[0].base.intensity;
     //MOV
     u_xlat2.w = 1.0;
     //MUL
-    u_xlat2 = u_xlat2 * float4(Lighting.directionalLights[0].base.intensity);
+    u_xlat2 = u_xlat2 * u_xlat3;
     //MUL
     u_xlat2 = u_xlat1.xxxx * u_xlat2;
     //AND
-    u_xlat1 = select(float4(0.0, 0.0, 0.0, 0.0), u_xlat2, bool4(bool4(u_xlatb4)));
+    u_xlat1 = select(float4(0.0, 0.0, 0.0, 0.0), u_xlat2, bool4(bool4(u_xlatb5)));
     //ADD
     u_xlat2.w = u_xlat0.w + u_xlat1.w;
     //ADD
