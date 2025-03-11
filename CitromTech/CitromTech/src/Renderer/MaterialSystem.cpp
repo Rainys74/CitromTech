@@ -44,7 +44,7 @@ namespace Citrom
     Material::Material(const MaterialData& materialData)
         : m_Device(Device::Get()), m_Shader(Renderer_GetShaders()[materialData.shaderName])
     {
-        Material(m_Shader, (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName);
+        this->Material::Material(m_Shader, (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName);
 
         for (const auto& obj : materialData.materialProperties)
         {
@@ -119,8 +119,8 @@ namespace Citrom
 
         Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
 
-        Bind();
-        //m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size()); // Causes errors!!
+        //Bind();
+        m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size()); // Causes errors!!
     }
 
     void Material::Render()
@@ -177,5 +177,20 @@ namespace Citrom
             default: return 0; break;
         }
         return 0;
+    }
+    constexpr const char* MaterialFormatToString(MaterialFormat format)
+    {
+#define FORMATSTRING_CASE(x) case (x): return (#x); break;
+        switch (format)
+        {
+            FORMATSTRING_CASE(MaterialFormat::Float32);
+            FORMATSTRING_CASE(MaterialFormat::Float32x3);
+            FORMATSTRING_CASE(MaterialFormat::Float32x4);
+            FORMATSTRING_CASE(MaterialFormat::Float32x4x4);
+            FORMATSTRING_CASE(MaterialFormat::Int32);
+            FORMATSTRING_CASE(MaterialFormat::UInt32);
+
+            default: return "Unknown"; break;
+        }
     }
 }

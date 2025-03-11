@@ -18,7 +18,9 @@ precise vec4 u_xlat_precise_vec4;
 precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
-layout(location = 0) uniform 	mat4x4 _19_u_MVP;
+UNITY_BINDING(0) uniform matrices {
+	mat4x4 _19_u_MVP;
+};
 layout(location = 0) in  vec4 in_POSITION0;
 layout(location = 1) in  vec2 in_NORMAL0;
 layout(location = 0) out vec2 vs_TEXCOORD1;
@@ -28,13 +30,13 @@ void main()
     //MOV
     vs_TEXCOORD1.xy = in_NORMAL0.xy;
     //MUL
-    u_xlat0 = in_POSITION0.yyyy * matricesVS._19_u_MVP[1];
+    u_xlat0 = in_POSITION0.yyyy * _19_u_MVP[1];
     //MAD
-    u_xlat0 = in_POSITION0.xxxx * matricesVS._19_u_MVP[0] + u_xlat0;
+    u_xlat0 = in_POSITION0.xxxx * _19_u_MVP[0] + u_xlat0;
     //MAD
-    u_xlat0 = in_POSITION0.zzzz * matricesVS._19_u_MVP[2] + u_xlat0;
+    u_xlat0 = in_POSITION0.zzzz * _19_u_MVP[2] + u_xlat0;
     //MAD
-    gl_Position = in_POSITION0.wwww * matricesVS._19_u_MVP[3] + u_xlat0;
+    gl_Position = in_POSITION0.wwww * _19_u_MVP[3] + u_xlat0;
     //RET
     return;
 }

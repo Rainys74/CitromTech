@@ -34,7 +34,7 @@ namespace Citrom
 	static EditorRenderer g_EditorRenderer;
 
 	static CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> g_Shaders;
-	static CTL::DArray<Material> g_Materials; // reference by id, no need for mat instances since materials here are just shader wrappers with uniforms built-in
+	static CTL::StdStrHashMap<Material*> g_Materials; // no need for mat instances since materials here are just shader wrappers with uniforms built-in
 
 	CTL::StdStrHashMap<Shader>& Renderer_GetShaders()
 	{
@@ -53,46 +53,57 @@ namespace Citrom
 		for (const auto& shaderPair : g_Shaders)
 			Renderer_RecompileShader(shaderPair.first);
 	}
+	static std::string Renderer_GetShaderName(const RenderAPI::Shader& shader)
+	{
+		for (const auto& shaderPair : g_Shaders)
+		{
+			//if (shaderPair.second == shader)
+			//	return shaderPair.first;
+			//if (shaderPair.second.descriptor.name == shader.descriptor.name)
+		}
+		return "Unknown";
+	}
 
-	Material* Renderer_GetMaterialAt(uint32 index)
+	CTL::StdStrHashMap<Material*>& Renderer_GetMaterials()
 	{
-		return &g_Materials[index];
+		return g_Materials;
 	}
-	Material* Renderer_GetMaterialByName(const std::string& name)
+
+	Material* Renderer_GetMaterial(const std::string& name)
 	{
-		for (Material& mat : g_Materials)
+		return g_Materials[name];
+	}
+	Material* Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName)
+	{
+		if (g_Materials.count(materialName) > 0)
 		{
-			if (mat.GetName() == name)
-				return &mat;
+			delete g_Materials[materialName];
 		}
-		return nullptr;
+
+		return g_Materials[materialName] = new Material(*Renderer_GetShader(shaderName), &materialName);
 	}
-	uint32 Renderer_GetMaterialIndex(const Material* mat)
+	Material* Renderer_CreateMaterialFromData(const MaterialData& matData)
 	{
-		for (uint32 i = 0; i < g_Materials.Count(); i++)
+		if (g_Materials.count(matData.materialName) > 0)
 		{
-			if (mat == &g_Materials[i])
-				return i;
+			delete g_Materials[matData.materialName];
 		}
-		return -1;
-	}
-	uint32 Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName)
-	{
-		Material mat(*Renderer_GetShader(shaderName), &materialName);
-		//g_Materials.PushBack(mat);
-		return g_Materials.Count() - 1;
+
+		return g_Materials[matData.materialName] = new Material(matData);
 	}
 
 	void Renderer_SaveMaterialsToFiles()
 	{
-		for (Material& mat : g_Materials)
+		for (const auto& matPair : g_Materials)
 		{
+			const Material& mat = *matPair.second;
+
 			std::string source = JSON::SerializeObject(mat);
 
 			std::string filePath("Assets/Materials/");
 			filePath.append(mat.GetName());
 			filePath.append(".ctmat");
-
+			
 			std::ofstream outFile(filePath);
 			CT_CORE_ASSERT(outFile.is_open(), "Unable to open material file!");
 			outFile << source;
@@ -282,7 +293,8 @@ namespace Citrom
 			MaterialData matData = JSON::DeserializeObject<MaterialData>(jsonSrc);
 			matData.materialName = fileNameNoExt;
 
-			// TODO: create materials, also add support for recreating/creating materials on the fly (runtime) for easier editor work.
+			// TODO: also add support for recreating/creating materials on the fly (runtime) for easier editor work.
+			Renderer_CreateMaterialFromData(matData);
 		}
 
 		g_EditorRenderer.Initialize();

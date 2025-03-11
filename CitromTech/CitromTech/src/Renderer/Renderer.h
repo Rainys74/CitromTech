@@ -78,17 +78,17 @@ namespace Citrom
 	};
 
 	// Global Value access
-	//CTL::DArray<Material>* Renderer_GetMaterials();
-	Material* Renderer_GetMaterialAt(uint32 index);
-	Material* Renderer_GetMaterialByName(const std::string& name);
-	uint32 Renderer_GetMaterialIndex(const Material* mat);
-	uint32 Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName); // returns the index of the material
+	CTL::StdStrHashMap<Material*>& Renderer_GetMaterials();
+	Material* Renderer_GetMaterial(const std::string& name);
+	Material* Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName); // returns the pointer to the material
+	Material* Renderer_CreateMaterialFromData(const MaterialData& matData);
 
 	void Renderer_SaveMaterialsToFiles(); // Should this actually be in the renderer? i don't know..
 
 	CTL::StdStrHashMap<RenderAPI::Shader>& Renderer_GetShaders();
 	void Renderer_RecompileShader(const std::string& shaderName);
 	void Renderer_RecompileAllShaders();
+	//std::string Renderer_GetShaderName(const RenderAPI::Shader& shader); // should not be called for other purposes than debugging
 
 	//void //FinalizeInstance, CompleteInstance, SaveAndCleanup
 

@@ -273,9 +273,9 @@ namespace Citrom
                         //        //std::cout << "Fragment function index: " << outputIndex << std::endl;
                         //    }
                         //} metalReflectionCallback;
-
+						
 						// GLSL
-						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_GL_LAST, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &glResult);
+						TranslateHLSLFromFile(entry.path().string().c_str(), HLSLCC_FLAG_UNIFORM_BUFFER_OBJECT, LANG_GL_LAST, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &glResult);
 
 						// Metal
 						TranslateHLSLFromFile(entry.path().string().c_str(), 0x00000000, LANG_METAL, &glExtensions, nullptr, samplerPrecision, reflectionCallback, &metalResult);

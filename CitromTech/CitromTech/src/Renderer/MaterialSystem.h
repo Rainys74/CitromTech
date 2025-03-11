@@ -19,6 +19,7 @@ namespace Citrom
 		UInt32
 	};
 	constexpr size_t GetMaterialFormatSize(MaterialFormat format);
+	constexpr const char* MaterialFormatToString(MaterialFormat format);
 
 	struct MaterialProperty
 	{
@@ -136,6 +137,7 @@ namespace Citrom
 		FORCE_INLINE RenderAPI::Shader* GetShader() { return &m_Shader; };
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
 		FORCE_INLINE std::string GetName() const { return m_Name; }
+		FORCE_INLINE auto& GetProperties() { return m_Properties; }
 	public:
 		// Serialization
 		void SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) const

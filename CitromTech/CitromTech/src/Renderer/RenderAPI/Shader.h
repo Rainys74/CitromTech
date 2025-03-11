@@ -24,6 +24,11 @@ namespace Citrom::RenderAPI
 		{
 			return (descriptor.name == name);
 		}
+
+		FORCE_INLINE std::string GetName() const
+		{
+			return descriptor.name;
+		}
 	};
 	using ComputeShader = Shader;
 	using ComputeShaderDesc = ShaderDesc;

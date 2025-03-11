@@ -18,8 +18,10 @@ precise vec4 u_xlat_precise_vec4;
 precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
-layout(location = 0) uniform 	mat4x4 transform;
-uniform 	vec3 cameraLocalPos;
+UNITY_BINDING(0) uniform Matrices {
+	mat4x4 transform;
+	vec3 cameraLocalPos;
+};
 layout(location = 0) in  vec3 in_Position0;
 layout(location = 1) in  vec3 in_Normal0;
 layout(location = 2) in  vec2 in_TexCoord0;
@@ -36,13 +38,13 @@ void main()
     //MOV
     u_xlat0.w = 1.0;
     //DP4
-    gl_Position.x = dot(u_xlat0, MatricesVS.transform[0]);
+    gl_Position.x = dot(u_xlat0, transform[0]);
     //DP4
-    gl_Position.y = dot(u_xlat0, MatricesVS.transform[1]);
+    gl_Position.y = dot(u_xlat0, transform[1]);
     //DP4
-    gl_Position.z = dot(u_xlat0, MatricesVS.transform[2]);
+    gl_Position.z = dot(u_xlat0, transform[2]);
     //DP4
-    gl_Position.w = dot(u_xlat0, MatricesVS.transform[3]);
+    gl_Position.w = dot(u_xlat0, transform[3]);
     //MOV
     vs_Normal0.xyz = in_Normal0.xyz;
     //MOV

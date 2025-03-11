@@ -20,9 +20,11 @@ precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
 float ImmCB_0_0_0[6];
 vec3 ImmCB_0_0_1[6];
-layout(location = 0) uniform 	mat4x4 _47_VP;
-uniform 	float _47_GridSize;
-uniform 	vec3 _47_CameraWorldPos;
+UNITY_BINDING(0) uniform UBO {
+	mat4x4 _47_VP;
+	float _47_GridSize;
+	vec3 _47_CameraWorldPos;
+};
 layout(location = 0) out vec3 vs_TEXCOORD1;
 vec4 u_xlat0;
 int u_xlati0;
@@ -50,17 +52,17 @@ void main()
     //MOV
     u_xlat0.xy = ImmCB_0_0_1[floatBitsToInt(u_xlat0.x)].xz;
     //MAD
-    u_xlat0.xy = u_xlat0.xy * vec2(UBOVS._47_GridSize) + UBOVS._47_CameraWorldPos.xz;
+    u_xlat0.xy = u_xlat0.xy * vec2(_47_GridSize) + _47_CameraWorldPos.xz;
     //MOV
     vs_TEXCOORD1.xz = u_xlat0.xy;
     //MOV
     vs_TEXCOORD1.y = 0.0;
     //MUL
-    u_xlat1 = u_xlat0.yyyy * UBOVS._47_VP[2];
+    u_xlat1 = u_xlat0.yyyy * _47_VP[2];
     //MAD
-    u_xlat0 = u_xlat0.xxxx * UBOVS._47_VP[0] + u_xlat1;
+    u_xlat0 = u_xlat0.xxxx * _47_VP[0] + u_xlat1;
     //ADD
-    gl_Position = u_xlat0 + UBOVS._47_VP[3];
+    gl_Position = u_xlat0 + _47_VP[3];
     //RET
     return;
 }

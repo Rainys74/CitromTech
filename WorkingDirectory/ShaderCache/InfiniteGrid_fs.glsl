@@ -18,12 +18,14 @@ precise vec4 u_xlat_precise_vec4;
 precise ivec4 u_xlat_precise_ivec4;
 precise bvec4 u_xlat_precise_bvec4;
 precise uvec4 u_xlat_precise_uvec4;
-layout(location = 0) uniform 	vec3 _92_CameraWorldPos;
-uniform 	float _92_GridSize;
-uniform 	float _92_GridMinPixelsBetweenCells;
-uniform 	float _92_GridCellSize;
-uniform 	vec4 _92_GridColorThin;
-uniform 	vec4 _92_GridColorThick;
+UNITY_BINDING(0) uniform UBO {
+	vec3 _92_CameraWorldPos;
+	float _92_GridSize;
+	float _92_GridMinPixelsBetweenCells;
+	float _92_GridCellSize;
+	vec4 _92_GridColorThin;
+	vec4 _92_GridColorThick;
+};
 layout(location = 0) in  vec3 vs_TEXCOORD1;
 layout(location = 0) out vec4 SV_Target0;
 vec4 u_xlat0;
@@ -53,9 +55,9 @@ void main()
     //SQRT
     u_xlat0.x = sqrt(u_xlat0.x);
     //MUL
-    u_xlat0.x = u_xlat0.x * UBOPS._92_GridMinPixelsBetweenCells;
+    u_xlat0.x = u_xlat0.x * _92_GridMinPixelsBetweenCells;
     //DIV
-    u_xlat0.x = u_xlat0.x / UBOPS._92_GridCellSize;
+    u_xlat0.x = u_xlat0.x / _92_GridCellSize;
     //LOG
     u_xlat0.x = log2(u_xlat0.x);
     //MAD
@@ -71,7 +73,7 @@ void main()
     //EXP
     u_xlat5.x = exp2(u_xlat5.x);
     //MUL
-    u_xlat5.x = u_xlat5.x * UBOPS._92_GridCellSize;
+    u_xlat5.x = u_xlat5.x * _92_GridCellSize;
     //DIV
     u_xlat10.xy = vs_TEXCOORD1.xz / u_xlat5.xx;
     //ROUND_NI
@@ -94,7 +96,7 @@ void main()
     //MUL
     u_xlat5.x = u_xlat10.x * u_xlat5.x;
     //MUL
-    u_xlat3.w = u_xlat5.x * UBOPS._92_GridColorThin.w;
+    u_xlat3.w = u_xlat5.x * _92_GridColorThin.w;
     //DIV
     u_xlat4 = vs_TEXCOORD1.xzxz / u_xlat2.yyww;
     //ROUND_NI
@@ -111,31 +113,31 @@ void main()
     //MAX
     u_xlat5.xy = max(u_xlat1.wy, u_xlat1.zx);
     //ADD
-    u_xlat1 = UBOPS._92_GridColorThin + (-UBOPS._92_GridColorThick);
+    u_xlat1 = _92_GridColorThin + (-_92_GridColorThick);
     //MAD
-    u_xlat1 = u_xlat0.xxxx * u_xlat1 + UBOPS._92_GridColorThick;
+    u_xlat1 = u_xlat0.xxxx * u_xlat1 + _92_GridColorThick;
     //MUL
     u_xlat1.w = u_xlat5.y * u_xlat1.w;
     //LT
     u_xlatb0.xz = lessThan(vec4(0.0, 0.0, 0.0, 0.0), u_xlat5.xxyx).xz;
     //MUL
-    u_xlat2.w = u_xlat5.x * UBOPS._92_GridColorThick.w;
+    u_xlat2.w = u_xlat5.x * _92_GridColorThick.w;
     //MOV
-    u_xlat3.xyz = UBOPS._92_GridColorThin.xyz;
+    u_xlat3.xyz = _92_GridColorThin.xyz;
     //MOVC
     u_xlat1 = (u_xlatb0.z) ? u_xlat1 : u_xlat3;
     //MOV
-    u_xlat2.xyz = UBOPS._92_GridColorThick.xyz;
+    u_xlat2.xyz = _92_GridColorThick.xyz;
     //MOVC
     u_xlat0 = (u_xlatb0.x) ? u_xlat2 : u_xlat1;
     //ADD
-    u_xlat1.xy = vs_TEXCOORD1.xz + (-UBOPS._92_CameraWorldPos.xz);
+    u_xlat1.xy = vs_TEXCOORD1.xz + (-_92_CameraWorldPos.xz);
     //DP2
     u_xlat1.x = dot(u_xlat1.xy, u_xlat1.xy);
     //SQRT
     u_xlat1.x = sqrt(u_xlat1.x);
     //DIV
-    u_xlat1.x = u_xlat1.x / UBOPS._92_GridSize;
+    u_xlat1.x = u_xlat1.x / _92_GridSize;
     u_xlat1.x = clamp(u_xlat1.x, 0.0, 1.0);
     //ADD
     u_xlat1.x = (-u_xlat1.x) + 1.0;
