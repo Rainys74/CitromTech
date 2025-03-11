@@ -108,8 +108,21 @@ namespace Citrom
         }
         */
 
-        // Compute padding needed to align to 16 bytes
-        size_t padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT;
+        size_t padding = 0;
+        size_t leftOverPad = currentOffset % GPU_BYTE_ALIGNMENT; // e.g. 15 = 1, 16 = 0, 17 = 1
+        //if (leftOverPad < GetMaterialFormatSize(format)) // e.g. 12 !< 4, 4 < 12 = wtf?!
+        //    padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT; // Compute padding needed to align to 16 bytes
+        //if (leftOverPad + GetMaterialFormatSize(format) > GPU_BYTE_ALIGNMENT) {
+        //    // If the current property doesn't fit in the remaining space in the current slot,
+        //    // we need to pad to the next 16-byte boundary.
+        //    padding = GPU_BYTE_ALIGNMENT - leftOverPad;
+        //}
+        //if (leftOverPad + GetMaterialFormatSize(format) > GPU_BYTE_ALIGNMENT) // bullshit, doesn't work, e.g., say the leftover pad is 1 byte (hypothetically), and then the formatSize is 12 (float3), float3 is not going to fit in 1 byte, however 13 is less than 16, so yeah, bullshit.
+        //    padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT; // Compute padding needed to align to 16 bytes
+        //if (GetMaterialFormatSize(format) > leftOverPad)
+        //    padding = (GPU_BYTE_ALIGNMENT - (currentOffset % GPU_BYTE_ALIGNMENT)) % GPU_BYTE_ALIGNMENT; // Compute padding needed to align to 16 bytes
+        if (leftOverPad + GetMaterialFormatSize(format) > GPU_BYTE_ALIGNMENT)
+            padding = GPU_BYTE_ALIGNMENT - leftOverPad; // Calculate the padding required to align the data to the next 16-byte boundary
 
         // Compute current aligned offset (AFTER padding is applied)
         //uint32 alignedOffset = m_BufferData.Count() + padding;
@@ -179,7 +192,7 @@ namespace Citrom
         return nullptr;
     }
 
-    inline constexpr size_t GetMaterialFormatSize(MaterialFormat format)
+    /*inline*/ constexpr size_t GetMaterialFormatSize(MaterialFormat format)
     {
 #define FORMATSIZE_CASE(x, y, z) case (x): return sizeof(y) * (z); break
 

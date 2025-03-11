@@ -110,7 +110,7 @@ float4 psmain(VSOut input) : SV_Target
         if (specularFactor > 0)
         {
             //float specularExponent = tex.Sample(samplerTex, input.tex).r * 255.0;
-            float specularExponent = 1.0 * 255.0; // 1.0 can stands for smoothness (like unity's pre-pbr model and stuff) however look into replacing with roughness to fit into pbr easier
+            float specularExponent = (1.0 - mat_Roughness) * 255.0; // 1.0 can stands for smoothness (like unity's pre-pbr model and stuff) however look into replacing with roughness to fit into pbr easier
             specularFactor = pow(abs(specularFactor), specularExponent);
             specularColor = float4(lightDiffuseColor, 1.0f) * float4(materialSpecularColor, 1.0f) * specularFactor;
         }

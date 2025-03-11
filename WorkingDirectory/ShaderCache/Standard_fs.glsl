@@ -57,6 +57,7 @@ vec4 u_xlat2;
 vec4 u_xlat3;
 float u_xlat4;
 bool u_xlatb5;
+float u_xlat8;
 float u_xlat9;
 float u_xlat12;
 void main()
@@ -81,8 +82,12 @@ void main()
     u_xlat4 = log2(abs(u_xlat0.x));
     //LT
     u_xlatb0 = 0.0<u_xlat0.x;
+    //ADD
+    u_xlat8 = (-mat_Roughness) + 1.0;
     //MUL
-    u_xlat4 = u_xlat4 * 255.0;
+    u_xlat8 = u_xlat8 * 255.0;
+    //MUL
+    u_xlat4 = u_xlat4 * u_xlat8;
     //EXP
     u_xlat4 = exp2(u_xlat4);
     //ADD

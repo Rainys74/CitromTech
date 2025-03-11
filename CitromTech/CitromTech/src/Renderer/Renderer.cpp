@@ -712,7 +712,7 @@ namespace Citrom
 
 		static ShaderInterop::StandardMaterial standardMat;
 		standardMat.mat_Albedo = CTSI_TYPE_COLOR3(1.0f, 1.0f, 1.0f);
-		standardMat.mat_Metallic = 0.0f;
+		standardMat.mat_Metallic = 1.0f;
 		standardMat.mat_Roughness = 0.2f;
 
 		//Material* material = Renderer_GetMaterial("Standard");
