@@ -37,4 +37,21 @@ CTSI_CONSTANT_BUFFER(Lighting, CTSI_CBSLOT_LIGHTING)
 
 CTSI_NAMESPACE_END
 
+#ifdef CTSI_LANGUAGE_HLSL
+// TODO: do i need to move this to another hlsl file?
+
+
+
+
+float4 CalcLightInternal_Standard(BaseLight baseLight, float3 lightDirection, float3 normal)
+{
+    return float4(0, 0, 0, 0);
+}
+
+float4 CalcDirectionalLight_Standard(int index, float3 normal)
+{
+    return float4(0, 0, 0, 0);
+}
+#endif
+
 #endif // CT_SHADERINTEROP_LIGHTING_H

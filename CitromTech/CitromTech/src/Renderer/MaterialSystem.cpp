@@ -2,6 +2,8 @@
 #include "Renderer.h"
 #include "CitromAssert.h"
 
+#include "ShaderInterop/Common_ShaderInterop.h" // CTSI_CBSLOT_MATERIAL
+
 #include "Profiling/Profiler.h"
 
 namespace Citrom
@@ -145,7 +147,7 @@ namespace Citrom
     void Material::Bind()
     {
         //m_Device->BindShader(&m_Shader);
-        m_Device->RCBindUniformBuffer(&m_UniformBuffer, ShaderType::Fragment, 2); //hard coded
+        m_Device->RCBindUniformBuffer(&m_UniformBuffer, ShaderType::Fragment, CTSI_CBSLOT_MATERIAL);
     }
 
     MaterialProperty* Material::GetPropertyByName(const std::string& name)
