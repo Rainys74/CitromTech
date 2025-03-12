@@ -77,4 +77,19 @@ namespace Citrom::Platform
 	private:
 		Mutex& m_Mutex;
 	};
+
+	// TODO: test
+	class Condition
+	{
+	public:
+		Condition();
+		~Condition();
+
+		void Wait(Mutex& mutex);
+		void NotifyOne();
+		void NotifyAll();
+
+	private:
+		void* m_Internal = nullptr;
+	};
 }

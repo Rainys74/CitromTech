@@ -125,5 +125,36 @@ namespace Citrom::Platform
 		int32 result = ReleaseMutex(m_Internal);
 		CT_CORE_ASSERT(result != 0, "Failed to unlock mutex!"); // 0 == Error
 	}
+
+	// Condition Variable
+	Condition::Condition()
+		: m_Internal(nullptr)
+	{
+		m_Internal = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+		CT_CORE_ASSERT(m_Internal, "Failed to create condition variable!");
+	}
+
+	Condition::~Condition()
+	{
+		CloseHandle(m_Internal);
+	}
+
+	void Condition::Wait(Mutex& mutex)
+	{
+		mutex.Unlock();  // Unlock before waiting
+		DWORD result = WaitForSingleObject(m_Internal, INFINITE);
+		CT_CORE_ASSERT(result == WAIT_OBJECT_0, "Failed to wait on condition variable!");
+		mutex.Lock();  // Re-acquire the lock after wake-up
+	}
+
+	void Condition::NotifyOne()
+	{
+		CT_CORE_VERIFY(SetEvent(m_Internal), "Failed to notify one thread!");
+	}
+
+	void Condition::NotifyAll()
+	{
+		CT_CORE_VERIFY(PulseEvent(m_Internal), "Failed to notify all threads!");
+	}
 }
 #endif

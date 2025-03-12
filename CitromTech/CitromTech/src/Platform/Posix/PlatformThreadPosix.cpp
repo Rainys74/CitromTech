@@ -94,5 +94,33 @@ namespace Citrom::Platform
 	{
 		PTHREAD_VERIFY(pthread_mutex_unlock((pthread_mutex_t*)&m_Internal));
 	}
+
+	// Condition Variable TODO:
+	/*
+	ConditionVariable::ConditionVariable()
+	{
+		PTHREAD_VERIFY(pthread_cond_init(&m_Internal, nullptr));
+	}
+
+	ConditionVariable::~ConditionVariable()
+	{
+		PTHREAD_VERIFY(pthread_cond_destroy(&m_Internal));
+	}
+
+	void ConditionVariable::Wait(Mutex& mutex)
+	{
+		PTHREAD_VERIFY(pthread_cond_wait(&m_Internal, (pthread_mutex_t*)&mutex.m_Internal));
+	}
+
+	void ConditionVariable::NotifyOne()
+	{
+		PTHREAD_VERIFY(pthread_cond_signal(&m_Internal));
+	}
+
+	void ConditionVariable::NotifyAll()
+	{
+		PTHREAD_VERIFY(pthread_cond_broadcast(&m_Internal));
+	}
+	*/
 }
 #endif
