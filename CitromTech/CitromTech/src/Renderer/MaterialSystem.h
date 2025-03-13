@@ -25,7 +25,7 @@ namespace Citrom
 	{
 		std::string name;
 		MaterialFormat propertyFormat;
-		void* dataPtr; // Ref or copy data?, right now only points to the DArray
+		size_t bufferOffset;
 	};
 
 	struct MaterialData
@@ -138,6 +138,9 @@ namespace Citrom
 		FORCE_INLINE RenderAPI::UniformBuffer* GetUniformBuffer() { return &m_UniformBuffer; };
 		FORCE_INLINE std::string GetName() const { return m_Name; }
 		FORCE_INLINE auto& GetProperties() { return m_Properties; }
+
+		FORCE_INLINE void* GetDataPtr(const size_t bufferOffset) { return (void*)&m_BufferData[bufferOffset]; }
+		FORCE_INLINE void* GetDataPtr(const size_t bufferOffset) const { return (void*)&m_BufferData[bufferOffset]; }
 	public:
 		// Serialization
 		void SerializeJson(rapidjson::Document& doc, rapidjson::Document::AllocatorType& allocator) const
@@ -155,6 +158,8 @@ namespace Citrom
 
 				jsonObject.AddMember("PropertyName", rapidjson::Value(obj.name.c_str(), allocator), allocator);
 				jsonObject.AddMember("PropertyFormat", (int64)obj.propertyFormat, allocator);
+
+				void* dataPtr = GetDataPtr(obj.bufferOffset);
 				switch (obj.propertyFormat)
 				{
 					default:
@@ -162,53 +167,53 @@ namespace Citrom
 						break;
 
 					case MaterialFormat::Float32:
-						jsonObject.AddMember("Value", *static_cast<float*>(obj.dataPtr), allocator);
+						jsonObject.AddMember("Value", *static_cast<float*>(dataPtr), allocator);
 						break;
 					case MaterialFormat::Float32x3:
-						jsonObject.AddMember("Value0", static_cast<float*>(obj.dataPtr)[0], allocator); // Value1?
-						jsonObject.AddMember("Value1", static_cast<float*>(obj.dataPtr)[1], allocator);
-						jsonObject.AddMember("Value2", static_cast<float*>(obj.dataPtr)[2], allocator);
+						jsonObject.AddMember("Value0", static_cast<float*>(dataPtr)[0], allocator); // Value1?
+						jsonObject.AddMember("Value1", static_cast<float*>(dataPtr)[1], allocator);
+						jsonObject.AddMember("Value2", static_cast<float*>(dataPtr)[2], allocator);
 						break;
 					case MaterialFormat::Float32x4:
-						jsonObject.AddMember("Value0", static_cast<float*>(obj.dataPtr)[0], allocator);
-						jsonObject.AddMember("Value1", static_cast<float*>(obj.dataPtr)[1], allocator);
-						jsonObject.AddMember("Value2", static_cast<float*>(obj.dataPtr)[2], allocator);
-						jsonObject.AddMember("Value3", static_cast<float*>(obj.dataPtr)[3], allocator);
+						jsonObject.AddMember("Value0", static_cast<float*>(dataPtr)[0], allocator);
+						jsonObject.AddMember("Value1", static_cast<float*>(dataPtr)[1], allocator);
+						jsonObject.AddMember("Value2", static_cast<float*>(dataPtr)[2], allocator);
+						jsonObject.AddMember("Value3", static_cast<float*>(dataPtr)[3], allocator);
 						break;
 					// Matrix Begin
 					case MaterialFormat::Float32x4x4:
-						jsonObject.AddMember("Value0_0", static_cast<float**>(obj.dataPtr)[0][0], allocator);
-						jsonObject.AddMember("Value1_0", static_cast<float**>(obj.dataPtr)[1][0], allocator);
-						jsonObject.AddMember("Value2_0", static_cast<float**>(obj.dataPtr)[2][0], allocator);
-						jsonObject.AddMember("Value3_0", static_cast<float**>(obj.dataPtr)[3][0], allocator);
+						jsonObject.AddMember("Value0_0", static_cast<float**>(dataPtr)[0][0], allocator);
+						jsonObject.AddMember("Value1_0", static_cast<float**>(dataPtr)[1][0], allocator);
+						jsonObject.AddMember("Value2_0", static_cast<float**>(dataPtr)[2][0], allocator);
+						jsonObject.AddMember("Value3_0", static_cast<float**>(dataPtr)[3][0], allocator);
 
-						jsonObject.AddMember("Value0_1", static_cast<float**>(obj.dataPtr)[0][1], allocator);
-						jsonObject.AddMember("Value1_1", static_cast<float**>(obj.dataPtr)[1][1], allocator);
-						jsonObject.AddMember("Value2_1", static_cast<float**>(obj.dataPtr)[2][1], allocator);
-						jsonObject.AddMember("Value3_1", static_cast<float**>(obj.dataPtr)[3][1], allocator);
+						jsonObject.AddMember("Value0_1", static_cast<float**>(dataPtr)[0][1], allocator);
+						jsonObject.AddMember("Value1_1", static_cast<float**>(dataPtr)[1][1], allocator);
+						jsonObject.AddMember("Value2_1", static_cast<float**>(dataPtr)[2][1], allocator);
+						jsonObject.AddMember("Value3_1", static_cast<float**>(dataPtr)[3][1], allocator);
 
-						jsonObject.AddMember("Value0_2", static_cast<float**>(obj.dataPtr)[0][2], allocator);
-						jsonObject.AddMember("Value1_2", static_cast<float**>(obj.dataPtr)[1][2], allocator);
-						jsonObject.AddMember("Value2_2", static_cast<float**>(obj.dataPtr)[2][2], allocator);
-						jsonObject.AddMember("Value3_2", static_cast<float**>(obj.dataPtr)[3][2], allocator);
+						jsonObject.AddMember("Value0_2", static_cast<float**>(dataPtr)[0][2], allocator);
+						jsonObject.AddMember("Value1_2", static_cast<float**>(dataPtr)[1][2], allocator);
+						jsonObject.AddMember("Value2_2", static_cast<float**>(dataPtr)[2][2], allocator);
+						jsonObject.AddMember("Value3_2", static_cast<float**>(dataPtr)[3][2], allocator);
 
-						jsonObject.AddMember("Value0_3", static_cast<float**>(obj.dataPtr)[0][3], allocator);
-						jsonObject.AddMember("Value1_3", static_cast<float**>(obj.dataPtr)[1][3], allocator);
-						jsonObject.AddMember("Value2_3", static_cast<float**>(obj.dataPtr)[2][3], allocator);
-						jsonObject.AddMember("Value3_3", static_cast<float**>(obj.dataPtr)[3][3], allocator);
+						jsonObject.AddMember("Value0_3", static_cast<float**>(dataPtr)[0][3], allocator);
+						jsonObject.AddMember("Value1_3", static_cast<float**>(dataPtr)[1][3], allocator);
+						jsonObject.AddMember("Value2_3", static_cast<float**>(dataPtr)[2][3], allocator);
+						jsonObject.AddMember("Value3_3", static_cast<float**>(dataPtr)[3][3], allocator);
 
-						//jsonObject.AddMember("Value0_0", static_cast<float**>(obj.dataPtr)[0][0], allocator);
-						//jsonObject.AddMember("Value0_1", static_cast<float**>(obj.dataPtr)[0][1], allocator);
-						//jsonObject.AddMember("Value0_2", static_cast<float**>(obj.dataPtr)[0][2], allocator);
-						//jsonObject.AddMember("Value0_3", static_cast<float**>(obj.dataPtr)[0][3], allocator);
+						//jsonObject.AddMember("Value0_0", static_cast<float**>(dataPtr)[0][0], allocator);
+						//jsonObject.AddMember("Value0_1", static_cast<float**>(dataPtr)[0][1], allocator);
+						//jsonObject.AddMember("Value0_2", static_cast<float**>(dataPtr)[0][2], allocator);
+						//jsonObject.AddMember("Value0_3", static_cast<float**>(dataPtr)[0][3], allocator);
 						break;
 					// Matrix End
 
 					case MaterialFormat::Int32:
-						jsonObject.AddMember("Value", *static_cast<int32*>(obj.dataPtr), allocator);
+						jsonObject.AddMember("Value", *static_cast<int32*>(dataPtr), allocator);
 						break;
 					case MaterialFormat::UInt32:
-						jsonObject.AddMember("Value", *static_cast<uint32*>(obj.dataPtr), allocator);
+						jsonObject.AddMember("Value", *static_cast<uint32*>(dataPtr), allocator);
 						break;
 				}
 

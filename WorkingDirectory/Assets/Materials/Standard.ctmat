@@ -13,6 +13,40 @@
             "Value1": 0.20000000298023224,
             "Value2": 0.5,
             "Value3": 1.0
+        },
+        {
+            "PropertyName": "mat_Albedo",
+            "PropertyFormat": 1,
+            "Value0": 1.0,
+            "Value1": 1.0,
+            "Value2": 1.0
+        },
+        {
+            "PropertyName": "mat_Metallic",
+            "PropertyFormat": 0,
+            "Value": 1.0
+        },
+        {
+            "PropertyName": "mat_Roughness",
+            "PropertyFormat": 0,
+            "Value": 0.20000000298023224
+        },
+        {
+            "PropertyName": "mat_Albedo",
+            "PropertyFormat": 1,
+            "Value0": 0.0,
+            "Value1": 0.0,
+            "Value2": 0.0
+        },
+        {
+            "PropertyName": "mat_Metallic",
+            "PropertyFormat": 0,
+            "Value": 0.0
+        },
+        {
+            "PropertyName": "mat_Roughness",
+            "PropertyFormat": 0,
+            "Value": 0.0
         }
     ]
 }

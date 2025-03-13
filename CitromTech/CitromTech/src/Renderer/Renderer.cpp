@@ -99,7 +99,7 @@ namespace Citrom
 		{
 			const Material& mat = *matPair.second;
 
-			std::string source = JSON::SerializeObject(mat);
+			std::string source = JSON::SerializeObject(mat, JSON::SerializerOptions(true));
 
 			std::string filePath("Assets/Materials/");
 			filePath.append(mat.GetName());
@@ -297,6 +297,8 @@ namespace Citrom
 			// TODO: also add support for recreating/creating materials on the fly (runtime) for easier editor work.
 			Renderer_CreateMaterialFromData(matData);
 		}
+
+		ShaderInterop::SetupStandardMaterial(ShaderInterop::StandardMaterial(), Renderer_GetMaterial("Standard"));
 
 		g_EditorRenderer.Initialize();
 	}
@@ -715,9 +717,9 @@ namespace Citrom
 		standardMat.mat_Metallic = 1.0f;
 		standardMat.mat_Roughness = 0.2f;
 
-		//Material* material = Renderer_GetMaterial("Standard");
-		Material* material = Renderer_CreateMaterial("Standard", "Standard");
-		ShaderInterop::SetupStandardMaterial(standardMat, *material);
+		//Material* material = Renderer_CreateMaterial("Standard", "Standard");
+		Material* material = Renderer_GetMaterial("Standard");
+		ShaderInterop::SetStandardMaterialData(standardMat, material);
 
 		material->Bind();
 
@@ -891,7 +893,7 @@ namespace Citrom
 		//	int result = stbi_write_png("test_imagefb.png", 800, 600, 4, pixels.Data(), 800 * 4);
 		//}
 
-		std::string matName = std::string("TestMaterial");
+		const std::string matName = std::string("TestMaterial");
 		///Material matTest;
 		Material matTest(shader, &matName);
 		float32 testData = 0.5f;

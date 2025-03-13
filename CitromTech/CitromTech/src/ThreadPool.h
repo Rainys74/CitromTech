@@ -53,11 +53,13 @@ namespace Citrom
 		FORCE_INLINE Platform::Mutex& GetMutex() { return m_Mutex; }
 		FORCE_INLINE CTL::DArray<ThreadPoolJob>* GetJobQueue() { return &m_QueueJobs; }
 		FORCE_INLINE Platform::Atomic<uint64>& GetAtomicFinishedLabel() { return m_FinishedLabel; }
+		FORCE_INLINE Platform::Condition& GetCondition() { return m_Condition; }
 	private:
 		uint32 m_MaxThreads;
 
 		CTL::DArray<Platform::Thread> m_WorkerThreads;
 		Platform::Mutex m_Mutex;
+		Platform::Condition m_Condition;
 
 		CTL::DArray<ThreadPoolJob> m_QueueJobs;
 

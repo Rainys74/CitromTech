@@ -247,23 +247,23 @@ int SharedMain(int argc, char* argv[])
 	CT_INFO("Initializing Thread Pool with {} threads. Thread count is ({})", threadCount - 1, threadCount);
 
 	// TODO: eventually change the -1
-	//ThreadPool::Initialize(threadCount - 1);
+	ThreadPool::Initialize(threadCount - 1);
 
-	//static uint32 total = 0;
-	//
-	//CTL::DArray<uint32> testIter(5);
-	//for (uint32 i = 0; i < 5; i++)
-	//	testIter.PushBack(34);
-	//ThreadPool::Get()->ForEach<uint32>(testIter.begin(), testIter.end(), [](uint32* iPtr)
-	//	{
-	//		uint32 i = *(uint32*)iPtr;
-	//
-	//		CT_ERROR("TP: {}. {}", i, 2);
-	//	});
-	//
-	//CT_WARN("IS TP BUSY?: {}", ThreadPool::Get()->IsBusy());
-	//
-	//CT_ERROR("TP TOTAL: {}", total);
+	static uint32 total = 0;
+	
+	CTL::DArray<uint32> testIter(5);
+	for (uint32 i = 0; i < 5; i++)
+		testIter.PushBack(34);
+	ThreadPool::Get()->ForEach<uint32>(testIter.begin(), testIter.end(), [](uint32* iPtr)
+		{
+			uint32 i = *(uint32*)iPtr;
+	
+			CT_ERROR("TP: {}. {}", i, 2);
+		});
+	
+	CT_WARN("IS TP BUSY?: {}", ThreadPool::Get()->IsBusy());
+	
+	CT_ERROR("TP TOTAL: {}", total);
 
 #if 0
 	TestOutMain(argc, argv);
@@ -655,6 +655,8 @@ int SharedMain(int argc, char* argv[])
 	nativeScriptLayer.StartPlaying(g_CurrentScene);
 
 	::ForgeLoop();
+
+	Renderer_SaveMaterialsToFiles(); // TODO: this is probably temporary unless i figure out a better way to handle this
 
 	IF_EDITOR(g_ImLayer.OnDetach());
 

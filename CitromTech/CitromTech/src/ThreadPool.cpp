@@ -19,8 +19,10 @@ namespace Citrom
 			{
 				//threadPool->GetMutex().Unlock();
 
-				// TODO: probably look into replacing with Thread's sleep function
+				// probably look into replacing with Thread's sleep function
 				Platform::Utils::Sleep(1); // Sleep for 1 up to 10 ms to reduce CPU usage
+
+				//threadPool->GetCondition().Wait(threadPool->GetMutex());
 			}
 
 			//thread_mutex_lock(callbackData->mutex);
@@ -48,6 +50,7 @@ namespace Citrom
 			}
 			else
 			{
+				//threadPool->GetCondition().Wait(threadPool->GetMutex());
 				threadPool->GetMutex().Unlock();
 			}
 		}
@@ -65,6 +68,8 @@ namespace Citrom
 
 	ThreadPool::~ThreadPool()
 	{
+		m_Condition.NotifyAll();
+
 		for (Thread& worker : m_WorkerThreads) 
 		{
 			// TODO: figure this out lol
@@ -87,5 +92,7 @@ namespace Citrom
 		m_Mutex.Lock();
 		m_QueueJobs.PushBack(poolJob);
 		m_Mutex.Unlock();
+
+		m_Condition.NotifyOne();
 	}
 }

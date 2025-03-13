@@ -65,7 +65,7 @@ namespace Citrom
         for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
             m_BufferData.PushBack(dataBytes[i]);
 
-        m_Properties.PushBack(MaterialProperty{name, format, (void*)&m_BufferData[(m_BufferData.Count() - GetMaterialFormatSize(format))]});
+        m_Properties.PushBack(MaterialProperty{name, format, m_BufferData.Count() - GetMaterialFormatSize(format)});
     }
 //#define /*MATERIAL_*/GPU_BYTE_ALLIGNMENT (16)
 #define /*MATERIAL_*/GPU_BYTE_ALIGNMENT (16)
@@ -135,7 +135,7 @@ namespace Citrom
         for (size_t i = 0; i < GetMaterialFormatSize(format); i++)
             m_BufferData.PushBack(dataBytes[i]);
 
-        m_Properties.PushBack(MaterialProperty{ name, format, (void*)&m_BufferData[alignedOffset] });
+        m_Properties.PushBack(MaterialProperty{ name, format, alignedOffset});
     }
 
     void Material::SetProperty(const std::string& name, const MaterialFormat format, const void* newData)
@@ -148,7 +148,7 @@ namespace Citrom
         //Memory::Reallocate(property->data, GetMaterialFormatSize(format));
         //Memory::Copy(property->data, newData, GetMaterialFormatSize(format));
 
-        Memory::Copy(property->dataPtr, newData, GetMaterialFormatSize(property->propertyFormat));
+        Memory::Copy(GetDataPtr(property->bufferOffset), newData, GetMaterialFormatSize(property->propertyFormat));
 
         //Bind();
         m_Device->SetUniformBufferData(&m_UniformBuffer, m_BufferData.Data(), m_BufferData.Size()); // Causes errors!!
