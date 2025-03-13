@@ -34,6 +34,11 @@ namespace Citrom::Platform
     {
         return m_Value.exchange(desired, AtomicMemoryOrderToSTD(order));
     }
+    template<typename T>
+    bool Atomic<T>::CompareExchangeStrong(T& expected, T desired, AtomicMemoryOrder order)
+    {
+        return m_Value.compare_exchange_strong(expected, desired, AtomicMemoryOrderToSTD(order));
+    }
 
     template<typename T>
     T Atomic<T>::FetchAdd(T arg, AtomicMemoryOrder order)
@@ -44,5 +49,27 @@ namespace Citrom::Platform
     T Atomic<T>::FetchSubtract(T arg, AtomicMemoryOrder order)
     {
         return m_Value.fetch_sub(arg, AtomicMemoryOrderToSTD(order));
+    }
+
+    template<typename T>
+    inline T Atomic<T>::PreIncrement()
+    {
+        return ++m_Value;
+    }
+    template<typename T>
+    inline T Atomic<T>::PostIncrement()
+    {
+        return m_Value++;
+    }
+
+    template<typename T>
+    inline T Atomic<T>::PreDecrement()
+    {
+        return --m_Value;
+    }
+    template<typename T>
+    inline T Atomic<T>::PostDecrement()
+    {
+        return m_Value--;
     }
 }
