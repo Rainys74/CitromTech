@@ -209,7 +209,7 @@ namespace Citrom
         }
         return 0;
     }
-    constexpr const char* MaterialFormatToString(MaterialFormat format)
+    const char* MaterialFormatToString(MaterialFormat format)
     {
 #define FORMATSTRING_CASE(x) case (x): return (#x); break;
         switch (format)

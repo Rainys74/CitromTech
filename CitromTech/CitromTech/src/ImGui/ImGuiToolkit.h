@@ -1,6 +1,7 @@
 #pragma once
 
 #include "imgui.h"
+#include "imgui_internal.h"
 #include "NativeFileDialog/NativeFileDialog.h"
 #include "CTL/HashMap.h"
 #include "CTL/HashSet.h"
@@ -22,6 +23,10 @@ namespace ImToolkit //ImPresets
     bool DrawStringSetSelector(const char* label, std::string* textOutput, const CTL::StdStrHashSet& stringSet, bool invalid = false);
 
     bool DrawCenteredButton(const char* label, const float buttonWidth = 200.0f);
+    FORCE_INLINE bool DrawCenteredButtonAutoWidth(const char* label)
+    {
+        return ImToolkit::DrawCenteredButton(label, ImGui::CalcItemSize(ImVec2(0, 0), ImGui::CalcTextSize(label).x + ImGui::GetStyle().FramePadding.x * 2.0f, 0).x);
+    }
 
     template<typename T, const char* (*TToString)(T)>
     bool ComboEnum(const char* label, T& currentValue, const T* values, int valuesCount, const int valuesBegin = 0)

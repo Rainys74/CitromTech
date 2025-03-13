@@ -19,7 +19,7 @@ namespace Citrom
 		UInt32
 	};
 	constexpr size_t GetMaterialFormatSize(MaterialFormat format);
-	constexpr const char* MaterialFormatToString(MaterialFormat format);
+	const char* MaterialFormatToString(MaterialFormat format);
 
 	struct MaterialProperty
 	{

@@ -54,7 +54,7 @@ namespace Citrom
 		}
 
 		template<typename T>
-		void DestroyComponent()
+		void RemoveComponent()
 		{
 			m_Scene->m_SceneRegistry.remove<T>(m_EntityID);
 		}

@@ -4,6 +4,7 @@
 #include "EntitySystem/Scene.h"
 #include "EntitySystem/Entity.h"
 #include "EntitySystem/Components/EssentialComponents.h"
+#include "EntitySystem/Components/RendererComponents.h"
 #include "Logger/Logger.h"
 
 #include "SceneHierarchyEvents.h"
@@ -64,13 +65,19 @@ static void DrawRightClickPopupContext(Scene* currentScene)
         }
         if (ImGui::BeginMenu("Create Light"))
         {
-            if (ImGui::MenuItem("Point Light"))
+            if (ImGui::MenuItem("Sky Light"))
             {
-                // Add logic to create a point light entity
+                CreateEmptyEntity(currentScene).AddComponent<SkyLightComponent>();
             }
             if (ImGui::MenuItem("Directional Light"))
             {
-                // Add logic to create a directional light entity
+                CreateEmptyEntity(currentScene).AddComponent<DirectionalLightComponent>();
+            }
+            if (ImGui::MenuItem("Point Light"))
+            {
+            }
+            if (ImGui::MenuItem("Spot Light"))
+            {
             }
 
             ImGui::EndMenu();

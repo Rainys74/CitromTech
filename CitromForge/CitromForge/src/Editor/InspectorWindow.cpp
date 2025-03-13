@@ -66,6 +66,64 @@ T& AddComponentToEntity(Entity& entity, bool closeImGuiPopup = true)
     return component;
 }
 
+template<typename T, bool bAllowDeletion = true>
+static bool HandleComponentHeaderRightClickContext(Entity& frontEntity, const char* contextNameID)
+{
+    bool result = true;
+
+    /*if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup(contextNameID);
+    }*/
+
+    //ImVec2 headerMin = ImGui::GetCursorScreenPos();
+    //ImVec2 headerMax = { headerMin.x + ImGui::GetContentRegionAvail().x, headerMin.y + ImGui::GetFrameHeight() };
+    //ImGui::SetItemAllowOverlap();
+    ImVec2 headerMin = ImGui::GetItemRectMin();
+    ImVec2 headerMax = ImGui::GetItemRectMax();
+
+    /*if (ImGui::IsMouseHoveringRect(headerMin, headerMax))
+        CT_WARN("HOVERING");*/
+    if (ImGui::IsMouseHoveringRect(headerMin, headerMax) && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup(contextNameID);
+    }
+
+    //if (ImGui::BeginPopupContextItem(contextNameID))
+    if (ImGui::BeginPopup(contextNameID))
+    {
+        if constexpr (bAllowDeletion)
+        {
+            if (ImToolkit::DrawCenteredButton("Remove Component"))
+            {
+                frontEntity.RemoveComponent<T>();
+                result = false;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::Separator();
+        }
+
+        ImGui::EndPopup();
+    }
+
+    return result;
+}
+
+template<typename T, bool bCheckForExistence = true>
+static bool HandleComponentHeader(Entity& frontEntity, const char* componentName)
+{
+    bool exists = true;
+    if constexpr (bCheckForExistence)
+        exists = frontEntity.HasComponent<T>();
+    /*else
+        exists = true;*/
+
+    bool open = exists ? ImGui::CollapsingHeader(componentName, ImGuiTreeNodeFlags_DefaultOpen) : false;
+    if (!HandleComponentHeaderRightClickContext<T, bCheckForExistence>(frontEntity, std::string(std::string(componentName) + "Component_HeaderContextMenu").c_str()))
+        return false;
+    return (exists && open);
+}
+
 static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 {
     if (selectedEntity == entt::null)
@@ -126,7 +184,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::EndDisabled();
         }
         ImGui::Spacing();
-        if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) // TODO: maybe right-clicking header opens context that allows removing the component?
+        if (HandleComponentHeader<TransformComponent, false>(frontEntity, "Transform"))
         {
             ImToolkit::DrawVector3Control("Position", &transformComponent.transform.position[0], 0.25f);
             
@@ -156,7 +214,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             ImGui::DragFloat4("Row 4", mat4.Data()[3].Data());
         }
         ImGui::Spacing();
-        if (frontEntity.HasComponent<CameraComponent>() && ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+        if (HandleComponentHeader<CameraComponent>(frontEntity, "Camera"))
         {
             //ProjectionType m_ProjectionType = ProjectionType::Orthographic;
             //
@@ -219,7 +277,7 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             //cameraComponent.camera.SetOrthographicFarClip(orthoFar);
         }
         ImGui::Spacing();
-        if (frontEntity.HasComponent<ModelComponent>() && ImGui::CollapsingHeader("Model", ImGuiTreeNodeFlags_DefaultOpen))
+        if (HandleComponentHeader<ModelComponent>(frontEntity, "Model"))
         {
             auto& modelComponent = frontEntity.GetComponent<ModelComponent>();
 
@@ -235,14 +293,14 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
             }
         }
         // Lights
-#define INSPECTOR_LIGHT_COMPONENT_SCOPE(TYPE, NAME) if (frontEntity.HasComponent<TYPE>() && ImGui::CollapsingHeader(NAME, ImGuiTreeNodeFlags_DefaultOpen))
+#define INSPECTOR_LIGHT_COMPONENT_SCOPE(TYPE, NAME) ImGui::PushID(NAME); if (HandleComponentHeader<TYPE>(frontEntity, NAME))
 //#define INSPECTOR_BEGIN_LIGHT_COMPONENT(TYPE, NAME) if (frontEntity.HasComponent<TYPE>() && ImGui::CollapsingHeader(NAME, ImGuiTreeNodeFlags_DefaultOpen)) {
 //#define INSPECTOR_END_LIGHT_COMPONENT() }
 
 #define INSPECTOR_LIGHT_COMPONENT_BASE_CONTROLS(LIGHTCOMPONENT) ImGui::ColorEdit3("Color", &(LIGHTCOMPONENT).color[0]); ImToolkit::DrawFloatControl("Intensity", &(LIGHTCOMPONENT).intensity, 0.2f)
 
         ImGui::Spacing();
-        ImGui::PushID("Directional Light"); INSPECTOR_LIGHT_COMPONENT_SCOPE(DirectionalLightComponent, "Directional Light")
+        INSPECTOR_LIGHT_COMPONENT_SCOPE(DirectionalLightComponent, "Directional Light")
         {
             auto& dirLightComponent = frontEntity.GetComponent<DirectionalLightComponent>();
 
@@ -257,10 +315,11 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
 
             INSPECTOR_LIGHT_COMPONENT_BASE_CONTROLS(skyLightComponent);
         }
+        ImGui::PopID();
 
         // ------
         ImGui::Spacing();
-        if (frontEntity.HasComponent<NativeScriptComponent>() && ImGui::CollapsingHeader("Native Script", ImGuiTreeNodeFlags_DefaultOpen))
+        if (HandleComponentHeader<NativeScriptComponent>(frontEntity, "Native Script"))
         {
             auto& nativeScriptComponent = frontEntity.GetComponent<NativeScriptComponent>();
             
@@ -306,29 +365,28 @@ static void DrawComponentsUUID(entt::entity selectedEntity, Scene* scene)
                 CT_CORE_WARN("NFD RESULT!: {}", nfd.OpenFile(filters, CT_ARRAY_LENGTH(filters)));
             }
 
-            if (ImGui::TreeNode("Mesh"))
+            if (ImGui::TreeNodeEx("Mesh", ImGuiTreeNodeFlags_Selected)) // ImGuiTreeNodeFlags_NoTreePushOnOpen asserts inside here
             {
-                if (ImGui::Button("Model## Renderer"))
+                if (ImGui::MenuItem("Model## Renderer"))
                     AddComponentToEntity<ModelComponent>(frontEntity);
 
                 ImGui::TreePop();
             }
-            if (ImGui::TreeNode("Rendering"))
+            if (ImGui::TreeNodeEx("Rendering", ImGuiTreeNodeFlags_Selected))
             {
-                if (ImGui::Button("Camera"))
+                if (ImGui::MenuItem("Camera"))
                     AddComponentToEntity<CameraComponent>(frontEntity);
 
                 // TODO: maybe put inside a lights tree?
-                if (ImGui::Button("Directional Light"))
+                if (ImGui::MenuItem("Directional Light"))
                     AddComponentToEntity<DirectionalLightComponent>(frontEntity);
 
                 ImGui::TreePop();
             }
-            if (ImGui::TreeNode("Scripts")) // vs Scripting
+            if (ImGui::TreeNodeEx("Scripts", ImGuiTreeNodeFlags_Selected)) // vs Scripting
             {
-                if (ImGui::Button("Native Script")) // Do we need tree'd groups?
+                if (ImGui::MenuItem("Native Script")) // Do we need tree'd groups?
                     AddComponentToEntity<NativeScriptComponent>(frontEntity).SetBehavior<NullScriptBehavior>();
-
                 ImGui::TreePop();
             }
 

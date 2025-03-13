@@ -65,7 +65,7 @@ void RendererWindow::ImGuiDraw(bool* showWindow)
                     {
                         if (ImGui::TreeNode(obj.name.c_str()))
                         {
-                            ImGui::Text("Property Format: %i", (int)obj.propertyFormat);
+                            ImGui::Text("Property Format: %s", MaterialFormatToString(obj.propertyFormat));
 
                             void* dataPtr = mat.GetDataPtr(obj.bufferOffset);
                             switch (obj.propertyFormat)
