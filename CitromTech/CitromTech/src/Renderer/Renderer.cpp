@@ -83,6 +83,16 @@ namespace Citrom
 
 		return g_Materials[materialName] = new Material(*Renderer_GetShader(shaderName), &materialName);
 	}
+	Material* Renderer_GetOrCreateMaterial(const std::string& materialName, const std::string& shaderName)
+	{
+		// If the material exists, return it
+		if (g_Materials.count(materialName) > 0)
+		{
+			return g_Materials[materialName];
+		}
+
+		return Renderer_CreateMaterial(materialName, shaderName);
+	}
 	Material* Renderer_CreateMaterialFromData(const MaterialData& matData)
 	{
 		if (g_Materials.count(matData.materialName) > 0)
@@ -91,6 +101,13 @@ namespace Citrom
 		}
 
 		return g_Materials[matData.materialName] = new Material(matData);
+	}
+
+	bool Renderer_HasMaterial(const std::string& materialName)
+	{
+		if (g_Materials.count(materialName) > 0)
+			return true;
+		return false;
 	}
 
 	void Renderer_SaveMaterialsToFiles()
@@ -298,7 +315,10 @@ namespace Citrom
 			Renderer_CreateMaterialFromData(matData);
 		}
 
-		ShaderInterop::SetupStandardMaterial(ShaderInterop::StandardMaterial(), Renderer_GetMaterial("Standard"));
+		//ShaderInterop::SetupStandardMaterial(ShaderInterop::StandardMaterial(), Renderer_GetOrCreateMaterial("Standard", "Standard"));
+		const std::string standardMatName = "Standard";
+		if (!Renderer_HasMaterial(standardMatName)) // we are making an assumption that if the renderer has the standard material, it means it was loaded correctly.
+			ShaderInterop::SetupStandardMaterial(ShaderInterop::StandardMaterial(), Renderer_GetOrCreateMaterial("Standard", "Standard"));
 
 		g_EditorRenderer.Initialize();
 	}

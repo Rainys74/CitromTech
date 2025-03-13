@@ -38,16 +38,16 @@ namespace CTL
                 hash = (hash * 31) + *c; // Simple hash algorithm
             }
             return hash;
+            //return XXH64(str, strlen(str), 0); // works, though i should check the performacnce of all these, i should also check out MurmurHash3 and CityHash
 
-            /*uint32 h;
-            h ^= 2166136261UL;
-            const uint8_t* data = (const uint8_t*)str;
-            for (int i = 0; data[i] != '\0'; i++)
+            // FNV-1a
+            /*uint32 hash = 2166136261UL;
+            while (*str) 
             {
-                h ^= data[i];
-                h *= 16777619;
+                hash ^= static_cast<unsigned char>(*str++);
+                hash *= 16777619;
             }
-            return h;*/
+            return hash;*/
         }
     };
 

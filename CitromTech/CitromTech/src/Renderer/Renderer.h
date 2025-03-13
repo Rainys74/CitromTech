@@ -81,7 +81,10 @@ namespace Citrom
 	CTL::StdStrHashMap<Material*>& Renderer_GetMaterials();
 	Material* Renderer_GetMaterial(const std::string& name);
 	Material* Renderer_CreateMaterial(const std::string& materialName, const std::string& shaderName); // returns the pointer to the material
+	Material* Renderer_GetOrCreateMaterial(const std::string& materialName, const std::string& shaderName);
 	Material* Renderer_CreateMaterialFromData(const MaterialData& matData);
+
+	bool Renderer_HasMaterial(const std::string& materialName);
 
 	void Renderer_SaveMaterialsToFiles(); // Should this actually be in the renderer? i don't know..
 

@@ -13,7 +13,7 @@ namespace Citrom::Profiler
 	public:
 		using CallbackFN = void (*)(const char* name, const float64 time);
 
-		using CStringHashMap = CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual>;
+		using CStringHashMap = CTL::CStrHashMap<float64>; //CTL::HashMap<const char*, float64, CTL::CStringHash, CTL::CStringHashEqual>;
 		using ResultOrderArray = CTL::DArray<const char*>;
 
 		static void Submit(const char* key, const float64 time);
