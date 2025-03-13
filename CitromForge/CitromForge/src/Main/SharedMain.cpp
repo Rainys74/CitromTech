@@ -261,6 +261,8 @@ int SharedMain(int argc, char* argv[])
 	//		CT_ERROR("TP: {}. {}", i, 2);
 	//	});
 	//
+	//CT_WARN("IS TP BUSY?: {}", ThreadPool::Get()->IsBusy());
+	//
 	//CT_ERROR("TP TOTAL: {}", total);
 
 #if 0

@@ -17,4 +17,32 @@ namespace Citrom::Platform
         }
         return std::memory_order_seq_cst; // Default case
     }
+
+    template<typename T>
+    void Atomic<T>::Store(T desired, AtomicMemoryOrder order)
+    {
+        m_Value.store(desired, AtomicMemoryOrderToSTD(order));
+    }
+    template<typename T>
+    T Atomic<T>::Load(AtomicMemoryOrder order)
+    {
+        return m_Value.load(AtomicMemoryOrderToSTD(order));
+    }
+
+    template<typename T>
+    T Atomic<T>::Exchange(T desired, AtomicMemoryOrder order)
+    {
+        return m_Value.exchange(desired, AtomicMemoryOrderToSTD(order));
+    }
+
+    template<typename T>
+    T Atomic<T>::FetchAdd(T arg, AtomicMemoryOrder order)
+    {
+        return m_Value.fetch_add(arg, AtomicMemoryOrderToSTD(order));
+    }
+    template<typename T>
+    T Atomic<T>::FetchSubtract(T arg, AtomicMemoryOrder order)
+    {
+        return m_Value.fetch_sub(arg, AtomicMemoryOrderToSTD(order));
+    }
 }

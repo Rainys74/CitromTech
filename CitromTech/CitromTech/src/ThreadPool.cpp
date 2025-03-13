@@ -43,6 +43,8 @@ namespace Citrom
 				threadPool->GetMutex().Unlock();
 
 				currentJob.job(currentJob.args);
+
+				threadPool->GetAtomicFinishedLabel().FetchAdd(1);
 			}
 			else
 			{
@@ -54,6 +56,7 @@ namespace Citrom
 	ThreadPool::ThreadPool(uint32 maxThreads)
 		: m_MaxThreads(maxThreads)
 	{
+		m_FinishedLabel.Store(0);
 		for (uint32 i = 0; i < maxThreads; i++)
 		{
 			m_WorkerThreads.PushBack(*new Thread(reinterpret_cast<Thread::StartRoutinePFN>(ThreadPoolWork), this));
@@ -73,6 +76,8 @@ namespace Citrom
 	void ThreadPool::Submit(void* job, void* args)
 	{
 		CT_PROFILE_MEMBER_FUNCTION();
+
+		m_CurrentLabel++;
 
 		ThreadPoolJob poolJob;
 		poolJob.job = reinterpret_cast<Thread::StartRoutinePFN>(job);

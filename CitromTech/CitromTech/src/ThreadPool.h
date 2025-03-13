@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Platform/PlatformThread.h"
+#include "Platform/PlatformAtomic.h"
 #include "CitromAssert.h"
 #include "CTL/DArray.h"
 
@@ -42,10 +43,16 @@ namespace Citrom
 			}
 		}
 
+		inline bool IsBusy()
+		{
+			return static_cast<bool>(m_FinishedLabel.Load() < m_CurrentLabel);
+		}
+
 		FORCE_INLINE uint32 GetJobCount() { return m_QueueJobs.Count(); }
 
 		FORCE_INLINE Platform::Mutex& GetMutex() { return m_Mutex; }
 		FORCE_INLINE CTL::DArray<ThreadPoolJob>* GetJobQueue() { return &m_QueueJobs; }
+		FORCE_INLINE Platform::Atomic<uint64>& GetAtomicFinishedLabel() { return m_FinishedLabel; }
 	private:
 		uint32 m_MaxThreads;
 
@@ -53,6 +60,9 @@ namespace Citrom
 		Platform::Mutex m_Mutex;
 
 		CTL::DArray<ThreadPoolJob> m_QueueJobs;
+
+		uint64 m_CurrentLabel = 0;
+		Platform::Atomic<uint64> m_FinishedLabel;
 
 		// dyn thread worker array
 		// mutex

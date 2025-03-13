@@ -23,12 +23,19 @@ namespace Citrom::Platform
 	class Atomic
 	{
 	public:
+		constexpr Atomic() {}
+
 		// Delete copy constructor and assignment (like std::atomic)
 		Atomic(const Atomic&) = delete;
 		Atomic& operator=(const Atomic&) = delete;
 
-		//void Store(T desired, int order = 0);
-		//T Load(int order = 0);
+		void Store(T desired, AtomicMemoryOrder order = AtomicMemoryOrder::SeqCst);
+		T Load(AtomicMemoryOrder order = AtomicMemoryOrder::SeqCst);
+
+		T Exchange(T desired, AtomicMemoryOrder order = AtomicMemoryOrder::SeqCst);
+
+		T FetchAdd(T arg, AtomicMemoryOrder order = AtomicMemoryOrder::SeqCst);
+		T FetchSubtract(T arg, AtomicMemoryOrder order = AtomicMemoryOrder::SeqCst);
 
 	private:
 #ifdef UNDEFINED_MACRO_WINDOWS_TEST
