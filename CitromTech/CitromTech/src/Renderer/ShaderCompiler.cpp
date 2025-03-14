@@ -49,7 +49,12 @@ namespace Citrom
 				"--vert=",
 				"--frag=",
 				"--output=",
-				"--lang="
+				"--lang=",
+
+				// TODO: test these 2 out
+				"--defines=INITIAL_SHADER_LANG_GLSL",
+				"--include-dirs=Shaders;Shaders/ShaderInterop"//,
+				//"--optimize" // Does this even have an effect on non-binary files?
 			};
 			for (uint32 i = 0; i < pathCount; i++)
 			{
