@@ -138,7 +138,6 @@ void main()
     u_xlat0.w = 1.0;
     //ADD
     u_xlat0 = u_xlat0 + u_xlat2;
-    u_xlat0 = clamp(u_xlat0, 0.0, 1.0);
     //SAMPLE
     u_xlat1 = texture(tex, vs_TexCoord0.xy);
     //MUL

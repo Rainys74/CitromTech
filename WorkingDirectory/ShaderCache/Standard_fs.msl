@@ -158,7 +158,6 @@ fragment Mtl_FragmentOut xlatMtlMain(
     u_xlat0.w = 1.0;
     //ADD
     u_xlat0 = u_xlat0 + u_xlat2;
-    u_xlat0 = clamp(u_xlat0, 0.0f, 1.0f);
     //SAMPLE
     u_xlat1 = tex.sample(samplerTex, input.TexCoord0.xy);
     //MUL
