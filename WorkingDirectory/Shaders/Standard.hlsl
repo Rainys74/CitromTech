@@ -69,6 +69,45 @@ SamplerState samplerTex;
     return specularColor;
 }*/
 
+const float Lighting_GetDiffuseFactor(const float3 normal, const float3 lightDir)
+{
+    return dot(normalize(normal), -lightDir); // should i max with 0.0f?
+}
+const float3 Lighting_GetViewDirection(const float3 vertexLocalPos) // Pixel To Camera
+{
+    return normalize(cameraLocalPos - vertexLocalPos);
+}
+
+float4 Lambertian_DiffuseLighting(float3 normal, float3 lightDir, float3 lightColor, float lightIntensity, float3 albedo, float metallic)
+{
+    const float diffuseFactor = dot(normalize(normal), -lightDir); // should i max with 0.0f?
+    
+    float4 diffuseColor = float4(0, 0, 0, 0);
+    
+    const float3 materialDiffuseColor = albedo * (1.0 - metallic); // Diffuse exists only for non-metallic surfaces
+    
+    if (diffuseFactor > 0)
+    {
+        diffuseColor = float4(lightColor, 1.0f) * lightIntensity * float4(materialDiffuseColor, 1.0f) * diffuseFactor;
+    }
+    
+    return diffuseColor;
+}
+float4 Burley_DiffuseLighting(float3 normal, float3 lightDir, float3 viewDir, float3 lightColor, float lightIntensity, float3 albedo, float metallic, float roughness) // TODO: test
+{
+    // Calculate NoL (clamp to avoid negative values)
+    float NoL = max(dot(normal, -lightDir), 0.0);
+
+    // Burley Diffuse Model
+    float fd90 = 0.5 + 2.0 * NoL * NoL * roughness; // Fresnel term for grazing angles
+    float lightScatter = 1.0 + (fd90 - 1.0) * pow(1.0 - NoL, 5.0); // Burley function
+
+    // Apply metallic workflow (Metals don't have diffuse)
+    float3 diffuseColor = albedo * (1.0 - metallic) * lightColor * lightIntensity * NoL * lightScatter;
+
+    return float4(diffuseColor, 1.0);
+}
+
 float4 psmain(VSOut input) : SV_Target
 {
     static const float3 F0_Dielectric = float3(0.04f, 0.04f, 0.04f); // Dielectric reflectance (fixed 0.04 for non-metals)
@@ -77,20 +116,11 @@ float4 psmain(VSOut input) : SV_Target
     //const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
     //const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
     const float3 lightDiffuseColor = directionalLights[0].base.color;
-    const float3 materialDiffuseColor = mat_Albedo * (1.0 - mat_Metallic); // Diffuse exists only for non-metallic surfaces
-    
-    const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary
-    
+    const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary   
     const float diffuseIntensity = directionalLights[0].base.intensity; //1.0; // TODO: you're probably gonna want to switch to albedo
     
-    const float diffuseFactor = dot(normalize(input.normal), -directionalLightDir); // should i max with 0.0f?
-    
-    float4 diffuseColor = float4(0, 0, 0, 0);
-    
-    if (diffuseFactor > 0)
-    {
-        diffuseColor = float4(lightDiffuseColor, 1.0f) * diffuseIntensity * float4(materialDiffuseColor, 1.0f) * diffuseFactor;
-    }
+    float4 diffuseColor = Lambertian_DiffuseLighting(input.normal, directionalLightDir, lightDiffuseColor, diffuseIntensity, mat_Albedo, mat_Metallic);
+    //float4 diffuseColor = Burley_DiffuseLighting(input.normal, directionalLightDir, Lighting_GetViewDirection(input.localPos), lightDiffuseColor, diffuseIntensity, mat_Albedo, mat_Metallic, mat_Roughness);
     // ------------------------
     
     // Specular Lighting (Blinn-Phong)
@@ -99,7 +129,7 @@ float4 psmain(VSOut input) : SV_Target
     // TODO: texture for specular exponent
     
     float4 specularColor = float4(0, 0, 0, 0);
-    if (diffuseFactor > 0)
+    if (Lighting_GetDiffuseFactor(input.normal, directionalLightDir) > 0)
     {
         float3 pixelToCamera = normalize(cameraLocalPos - input.localPos);
         float3 lightReflect = normalize(reflect(directionalLightDir, input.normal)); // reflectionDirection // do i need to reverse lightdir?
