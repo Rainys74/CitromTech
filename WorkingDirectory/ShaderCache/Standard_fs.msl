@@ -69,7 +69,6 @@ fragment Mtl_FragmentOut xlatMtlMain(
     Mtl_FragmentIn input [[ stage_in ]])
 {
     Mtl_FragmentOut output;
-    //--- Start Early Main ---
     float4 u_xlat0;
     int4 u_xlati0;
     bool u_xlatb0;
@@ -81,87 +80,45 @@ fragment Mtl_FragmentOut xlatMtlMain(
     float u_xlat8;
     float u_xlat9;
     float u_xlat12;
-    //--- End Early Main ---
-    //ADD
     u_xlat0.xyz = (-input.LocalPosition0.xyz) + Matrices.cameraLocalPos.xyzx.xyz;
-    //DP3
     u_xlat12 = dot(u_xlat0.xyz, u_xlat0.xyz);
-    //RSQ
     u_xlat12 = rsqrt(u_xlat12);
-    //MAD
     u_xlat0.xyz = fma(u_xlat0.xyz, float3(u_xlat12), (-Lighting.directionalLights[0].direction.xyzx.xyz));
-    //DP3
     u_xlat12 = dot(u_xlat0.xyz, u_xlat0.xyz);
-    //RSQ
     u_xlat12 = rsqrt(u_xlat12);
-    //MUL
     u_xlat0.xyz = float3(u_xlat12) * u_xlat0.xyz;
-    //DP3
     u_xlat0.x = dot(input.Normal0.xyz, u_xlat0.xyz);
-    //LOG
     u_xlat4 = log2(abs(u_xlat0.x));
-    //LT
     u_xlatb0 = 0.0<u_xlat0.x;
-    //ADD
     u_xlat8 = (-StandardMaterial.mat_Roughness) + 1.0;
-    //MUL
     u_xlat8 = u_xlat8 * 255.0;
-    //MUL
     u_xlat4 = u_xlat4 * u_xlat8;
-    //EXP
     u_xlat4 = exp2(u_xlat4);
-    //ADD
     u_xlat1.xyz = StandardMaterial.mat_Albedo.xyzx.xyz + float3(-0.0399999991, -0.0399999991, -0.0399999991);
-    //MAD
     u_xlat1.xyz = fma(float3(StandardMaterial.mat_Metallic), u_xlat1.xyz, float3(0.0399999991, 0.0399999991, 0.0399999991));
-    //MUL
     u_xlat1.xyz = u_xlat1.xyz * Lighting.directionalLights[0].base.color.xyzx.xyz;
-    //MOV
     u_xlat1.w = 1.0;
-    //MUL
     u_xlat1 = float4(u_xlat4) * u_xlat1;
-    //AND
     u_xlati0 = int4((uint4(bool4(u_xlatb0)) * 0xffffffffu) & as_type<uint4>(u_xlat1));
-    //DP3
     u_xlat1.x = dot(input.Normal0.xyz, input.Normal0.xyz);
-    //RSQ
     u_xlat1.x = rsqrt(u_xlat1.x);
-    //MUL
     u_xlat1.xyz = u_xlat1.xxx * input.Normal0.xyz;
-    //DP3
     u_xlat1.x = dot(u_xlat1.xyz, (-Lighting.directionalLights[0].direction.xyzx.xyz));
-    //LT
     u_xlatb5 = 0.0<u_xlat1.x;
-    //AND
     u_xlat0 = select(float4(0.0, 0.0, 0.0, 0.0), as_type<float4>(u_xlati0), bool4(bool4(u_xlatb5)));
-    //ADD
     u_xlat9 = (-StandardMaterial.mat_Metallic) + 1.0;
-    //MUL
     u_xlat2.xyz = float3(u_xlat9) * StandardMaterial.mat_Albedo.xyzx.xyz;
-    //MUL
     u_xlat3.xyz = float3(Lighting.directionalLights[0].base.intensity) * Lighting.directionalLights[0].base.color.xyzx.xyz;
-    //MOV
     u_xlat3.w = Lighting.directionalLights[0].base.intensity;
-    //MOV
     u_xlat2.w = 1.0;
-    //MUL
     u_xlat2 = u_xlat2 * u_xlat3;
-    //MUL
     u_xlat2 = u_xlat1.xxxx * u_xlat2;
-    //AND
     u_xlat1 = select(float4(0.0, 0.0, 0.0, 0.0), u_xlat2, bool4(bool4(u_xlatb5)));
-    //ADD
     u_xlat2.w = u_xlat0.w + u_xlat1.w;
-    //ADD
     u_xlat2.xyz = u_xlat1.xyz + Lighting.skyLight.base.color.xyzx.xyz;
-    //MOV
     u_xlat0.w = 1.0;
-    //ADD
     u_xlat0 = u_xlat0 + u_xlat2;
-    //SAMPLE
     u_xlat1 = tex.sample(samplerTex, input.TexCoord0.xy);
-    //MUL
     output.SV_Target0 = u_xlat0 * u_xlat1;
-    //RET
     return output;
 }

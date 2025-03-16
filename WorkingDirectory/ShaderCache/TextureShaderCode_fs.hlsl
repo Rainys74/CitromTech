@@ -1,5 +1,5 @@
-Texture2D<float4> u_Texture : register(t0);
-SamplerState _u_Texture_sampler : register(s0);
+Texture2D<float4> sampler_u_Texture_sampler : register(t0);
+SamplerState _sampler_u_Texture_sampler_sampler : register(s0);
 
 static float2 v_TexCoord;
 static float4 color;
@@ -16,7 +16,7 @@ struct SPIRV_Cross_Output
 
 void frag_main()
 {
-    float4 texColor = u_Texture.Sample(_u_Texture_sampler, v_TexCoord);
+    float4 texColor = sampler_u_Texture_sampler.Sample(_sampler_u_Texture_sampler_sampler, v_TexCoord);
     color = texColor;
 }
 

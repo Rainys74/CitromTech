@@ -30,16 +30,10 @@ int u_xlati1;
 layout(local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 void main()
 {
-    //ISHL
     u_xlati0 = int(gl_GlobalInvocationID.y) << 4;
-    //IADD
     u_xlati0 = u_xlati0 + int(gl_GlobalInvocationID.x);
-    //LD_STRUCTURED
     u_xlati1 = int(OutputBuffer_buf[u_xlati0].value[(0 >> 2) + 0]);
-    //IADD
     u_xlati1 = u_xlati1 + 1;
-    //STORE_STRUCTURED
     OutputBuffer_buf[u_xlati0].value[(0 >> 2)] = uint(u_xlati1);
-    //RET
     return;
 }

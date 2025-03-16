@@ -44,6 +44,8 @@ namespace Citrom::Platform
 		void Unlock();
 	private:
 		void* m_Internal = nullptr;
+        
+        friend class ConditionVariable;
 	};
 
 	class ScopedMutex
@@ -79,11 +81,11 @@ namespace Citrom::Platform
 	};
 
 	// TODO: test
-	class Condition
+	class ConditionVariable
 	{
 	public:
-		Condition();
-		~Condition();
+        ConditionVariable();
+		~ConditionVariable();
 
 		void Wait(Mutex& mutex);
 		void NotifyOne();

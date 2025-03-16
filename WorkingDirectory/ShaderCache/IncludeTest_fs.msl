@@ -19,8 +19,6 @@ fragment Mtl_FragmentOut xlatMtlMain(
 )
 {
     Mtl_FragmentOut output;
-    //MOV
     output.SV_Target0 = float4(0.5, 1.0, 0.74000001, 1.0);
-    //RET
     return output;
 }

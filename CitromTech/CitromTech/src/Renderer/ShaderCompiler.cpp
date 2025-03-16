@@ -13,6 +13,8 @@
 
 #ifdef CT_PLATFORM_WINDOWS
 #include "RenderAPI/DirectX11/DX11ShaderCompiler.h"
+#elif defined(CT_PLATFORM_UNIX)
+#include "UnixShaderCompiler.h"
 #endif
 
 namespace Citrom
@@ -354,13 +356,18 @@ namespace Citrom
 		{
 			CT_PROFILE_GLOBAL_FUNCTION();
 
-			switch (RenderAPI::GraphicsAPIManager::GetGraphicsAPI())
+			/*switch (RenderAPI::GraphicsAPIManager::GetGraphicsAPI())
 			{
 				case RenderAPI::GraphicsAPI::DirectX11:
 					IF_WINDOWS(ShaderCompiler::DX11::CompileShaders(shaderPaths, pathCount, outPath));
 					break;
 				default: CT_CORE_ASSERT(false, "Current Graphics API is invalid!"); break;
-			}
+			}*/
+            IF_WINDOWS(ShaderCompiler::DX11::CompileShaders(shaderPaths, pathCount, outPath));
+            // bool result = ShaderCompiler::Unix::CompileShaders(); // use wine probably
+            #ifdef CT_PLATFORM_UNIX
+            ShaderCompiler::Unix::CompileShaders(shaderPaths, pathCount, outPath);
+            #endif
 
 			TranspileHLSLcc(shaderPaths, pathCount, outPath);
 		}

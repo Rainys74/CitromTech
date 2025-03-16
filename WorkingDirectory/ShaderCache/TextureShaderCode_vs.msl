@@ -28,19 +28,11 @@ vertex Mtl_VertexOut xlatMtlMain(
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
-    //--- Start Early Main ---
     float4 u_xlat0;
-    //--- End Early Main ---
-    //MOV
     output.TEXCOORD1.xy = input.NORMAL0.xy;
-    //MUL
     u_xlat0 = input.POSITION0.yyyy * matrices._19_u_MVP[1];
-    //MAD
     u_xlat0 = fma(input.POSITION0.xxxx, matrices._19_u_MVP[0], u_xlat0);
-    //MAD
     u_xlat0 = fma(input.POSITION0.zzzz, matrices._19_u_MVP[2], u_xlat0);
-    //MAD
     output.mtl_Position = fma(input.POSITION0.wwww, matrices._19_u_MVP[3], u_xlat0);
-    //RET
     return output;
 }

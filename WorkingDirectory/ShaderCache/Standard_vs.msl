@@ -32,27 +32,15 @@ vertex Mtl_VertexOut xlatMtlMain(
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
-    //--- Start Early Main ---
     float4 u_xlat0;
-    //--- End Early Main ---
-    //MOV
     output.TexCoord0.xy = input.TexCoord0.xy;
-    //MOV
     u_xlat0.xyz = input.Position0.xyz;
-    //MOV
     u_xlat0.w = 1.0;
-    //DP4
     output.mtl_Position.x = dot(u_xlat0, Matrices.transform[0]);
-    //DP4
     output.mtl_Position.y = dot(u_xlat0, Matrices.transform[1]);
-    //DP4
     output.mtl_Position.z = dot(u_xlat0, Matrices.transform[2]);
-    //DP4
     output.mtl_Position.w = dot(u_xlat0, Matrices.transform[3]);
-    //MOV
     output.Normal0.xyz = input.Normal0.xyz;
-    //MOV
     output.LocalPosition0.xyz = input.Position0.xyz;
-    //RET
     return output;
 }

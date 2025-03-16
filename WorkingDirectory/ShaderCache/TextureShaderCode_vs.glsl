@@ -27,16 +27,10 @@ layout(location = 0) out vec2 vs_TEXCOORD1;
 vec4 u_xlat0;
 void main()
 {
-    //MOV
     vs_TEXCOORD1.xy = in_NORMAL0.xy;
-    //MUL
     u_xlat0 = in_POSITION0.yyyy * _19_u_MVP[1];
-    //MAD
     u_xlat0 = in_POSITION0.xxxx * _19_u_MVP[0] + u_xlat0;
-    //MAD
     u_xlat0 = in_POSITION0.zzzz * _19_u_MVP[2] + u_xlat0;
-    //MAD
     gl_Position = in_POSITION0.wwww * _19_u_MVP[3] + u_xlat0;
-    //RET
     return;
 }

@@ -20,10 +20,7 @@ vertex Mtl_VertexOut xlatMtlMain(
     Mtl_VertexIn input [[ stage_in ]])
 {
     Mtl_VertexOut output;
-    //MOV
     output.mtl_Position.xyz = input.Position0.xyz;
-    //MOV
     output.mtl_Position.w = 1.0;
-    //RET
     return output;
 }

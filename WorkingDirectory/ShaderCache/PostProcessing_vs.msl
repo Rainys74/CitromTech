@@ -27,17 +27,10 @@ vertex Mtl_VertexOut xlatMtlMain(
 #endif
     mtl_VertexID = mtl_VertexID - mtl_BaseVertex;
     Mtl_VertexOut output;
-    //--- Start Early Main ---
     uint u_xlatu0;
-    //--- End Early Main ---
-    //MOV
     u_xlatu0 = mtl_VertexID;
-    //MOV
     output.TexCoord0.xy = ImmCB_0[int(u_xlatu0)].zw;
-    //MOV
     output.mtl_Position.xy = ImmCB_0[int(u_xlatu0)].xy;
-    //MOV
     output.mtl_Position.zw = float2(0.0, 1.0);
-    //RET
     return output;
 }

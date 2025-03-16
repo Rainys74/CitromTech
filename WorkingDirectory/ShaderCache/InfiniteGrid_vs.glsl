@@ -31,7 +31,6 @@ int u_xlati0;
 vec4 u_xlat1;
 void main()
 {
-    //--- Start Early Main ---
 	ImmCB_0_0_0[0] = 0.0;
 	ImmCB_0_0_0[1] = 2.80259693e-45;
 	ImmCB_0_0_0[2] = 1.40129846e-45;
@@ -44,25 +43,14 @@ void main()
 	ImmCB_0_0_1[3] = vec3(-1.0, 0.0, 1.0);
 	ImmCB_0_0_1[4] = vec3(0.0, 0.0, 0.0);
 	ImmCB_0_0_1[5] = vec3(0.0, 0.0, 0.0);
-    //--- End Early Main ---
-    //MOV
     u_xlati0 = gl_VertexID;
-    //MOV
     u_xlat0.x = ImmCB_0_0_0[u_xlati0];
-    //MOV
     u_xlat0.xy = ImmCB_0_0_1[floatBitsToInt(u_xlat0.x)].xz;
-    //MAD
     u_xlat0.xy = u_xlat0.xy * vec2(_47_GridSize) + _47_CameraWorldPos.xz;
-    //MOV
     vs_TEXCOORD1.xz = u_xlat0.xy;
-    //MOV
     vs_TEXCOORD1.y = 0.0;
-    //MUL
     u_xlat1 = u_xlat0.yyyy * _47_VP[2];
-    //MAD
     u_xlat0 = u_xlat0.xxxx * _47_VP[0] + u_xlat1;
-    //ADD
     gl_Position = u_xlat0 + _47_VP[3];
-    //RET
     return;
 }

@@ -26,11 +26,11 @@ layout (location = 0) out vec4 color;
 
 layout (location = 1) in vec2 v_TexCoord;
 
-layout (binding = 0) uniform sampler2D u_Texture;
+layout (binding = 0) uniform sampler2D sampler_u_Texture_sampler;
 
 void main()
 {
-	vec4 texColor = texture(u_Texture, v_TexCoord);
+	vec4 texColor = texture(sampler_u_Texture_sampler, v_TexCoord);
 	color = texColor;
 };
 //@end

@@ -197,6 +197,9 @@ namespace Citrom::RenderAPI
         id<MTLBuffer>* m_CurrentIndexBuffer = nullptr; // TODO: would a copy be more useful and more similar to other apis? as in the GPU copies your data?
         id<MTLBuffer>* m_CurrentVertexBuffer = nullptr; // required to know whether a VB is bound for UB's
         
+        //bool m_VertexShaderBuffersBusy[MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+        uint8fast m_HighestVertexShaderBufferIdx = 0;
+        
         //id<MTLCommandBuffer> m_ImCommandBuffer;
         id<MTLRenderCommandEncoder> m_ImCommandEncoder;
         

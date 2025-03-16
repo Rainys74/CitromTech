@@ -7,8 +7,6 @@ precise uvec4 u_xlat_precise_uvec4;
 layout(location = 0) out vec4 SV_Target0;
 void main()
 {
-    //MOV
     SV_Target0 = vec4(1.0, 1.0, 0.0, 1.0);
-    //RET
     return;
 }

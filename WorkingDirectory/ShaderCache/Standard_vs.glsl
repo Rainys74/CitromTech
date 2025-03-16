@@ -31,24 +31,14 @@ layout(location = 2) out vec3 vs_LocalPosition0;
 vec4 u_xlat0;
 void main()
 {
-    //MOV
     vs_TexCoord0.xy = in_TexCoord0.xy;
-    //MOV
     u_xlat0.xyz = in_Position0.xyz;
-    //MOV
     u_xlat0.w = 1.0;
-    //DP4
     gl_Position.x = dot(u_xlat0, transform[0]);
-    //DP4
     gl_Position.y = dot(u_xlat0, transform[1]);
-    //DP4
     gl_Position.z = dot(u_xlat0, transform[2]);
-    //DP4
     gl_Position.w = dot(u_xlat0, transform[3]);
-    //MOV
     vs_Normal0.xyz = in_Normal0.xyz;
-    //MOV
     vs_LocalPosition0.xyz = in_Position0.xyz;
-    //RET
     return;
 }

@@ -42,10 +42,11 @@ namespace Citrom
         m_UniformBuffer = m_Device->CreateUniformBuffer(&ubd);
     }
     Material::Material(const MaterialData& materialData)
-        : m_Device(Device::Get()), m_Shader(Renderer_GetShaders()[materialData.shaderName])
+        //: m_Device(Device::Get()), m_Shader(Renderer_GetShaders()[materialData.shaderName])
+        : Material(Renderer_GetShaders()[materialData.shaderName], (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName)
     {
-        this->Material::Material(m_Shader, (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName);
-
+        //this->Material::Material(m_Shader, (materialData.materialName == "") ? &materialData.shaderName : &materialData.materialName); // MSVC specific
+        
         for (const auto& obj : materialData.materialProperties)
         {
             PushProperty(obj.name, obj.propertyFormat, obj.data);

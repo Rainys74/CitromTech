@@ -208,6 +208,9 @@ namespace Citrom::RenderAPI
         GET_BUFFER_INTERNAL(CommandBufferMTL, cmd, internalCmd);
         GET_BUFFER_INTERNAL(UniformBufferMTL, ub, internalData);
         
+        if (shaderStage == ShaderType::Vertex)
+            m_HighestVertexShaderBufferIdx = (startSlot > m_HighestVertexShaderBufferIdx) ? startSlot : m_HighestVertexShaderBufferIdx;
+        
         switch (shaderStage)
         {
             default:
