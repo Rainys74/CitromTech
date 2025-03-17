@@ -248,7 +248,7 @@ namespace Citrom
 		// TODO: 2 might need to be changed to 3, as well as shaders might need
 		// to be transpiled after compilation if i plan on implementing HLSLcc
 		ShaderCompiler::PrepareShaders(shaderPaths, 2, "ShaderCache/");
-		ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
+		//ShaderCompiler::CompileShaders(shaderPaths, 3, "ShaderCache/");
 
 		//CTL::HashMap<std::string, Shader, CTL::StdStringHash, CTL::StdStringHashEqual> uniqueShaderNames;
 		//for (const auto& entry : std::filesystem::directory_iterator("ShaderCache/"))
@@ -726,7 +726,7 @@ namespace Citrom
 			ubld.usage = Usage::Dynamic;
 
 			UniformBuffer ubl = m_Device->CreateUniformBuffer(&ubld);
-			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Vertex, CTSI_CBSLOT_LIGHTING); //TODO: Temp Metal
+			//m_Device->RCBindUniformBuffer(&ubl, ShaderType::Vertex, CTSI_CBSLOT_LIGHTING); //TODO: Temp Metal
 			m_Device->RCBindUniformBuffer(&ubl, ShaderType::Fragment, CTSI_CBSLOT_LIGHTING); //TODO: Temp Metal // for lighting!
 
 			m_Device->SetUniformBufferData(&ubl, ubld.data, ubld.dataBytes);

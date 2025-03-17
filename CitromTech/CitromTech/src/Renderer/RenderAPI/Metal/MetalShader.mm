@@ -60,6 +60,33 @@ namespace Citrom::RenderAPI
             return nil;
         }
 
+        template<bool bOverwriteFile = false>
+        static void HandleVertexShaderBuffers(std::string& outSource, const std::string& shaderFilePath = std::string())
+        {
+            // Step 1: Find if 'stage_in' exists
+            const size_t stageInPos = outSource.find("stage_in");
+            if (stageInPos != std::string::npos)
+            {
+                // Step 2: Locate all buffer declarations
+                CTL::DArray<uint8fast> bufferSlots;
+                
+                size_t pos = 0;
+                while ((pos = outSource.find("buffer(", pos)) != std::string::npos)
+                {
+                    // Find the buffer index
+                    size_t startPos = pos + 7; // skip "buffer("
+                    size_t endPos = outSource.find(")", startPos);
+                    uint8fast bufferIndex = (uint8fast)std::stoul(outSource.substr(startPos, endPos - startPos));
+                    bufferSlots.PushBack(bufferIndex);
+                    pos = endPos;
+                }
+                
+                // Step 3: Determine highest buffer index used
+                uint8fast highestBufferIndex = *std::max_element(bufferSlots.begin(), bufferSlots.end());
+                NSLog(@"");
+            }
+        }
+
         Shader MetalDevice::CreateShader(ShaderDesc* descriptor)
         {
             CREATE_BUFFER_INTERNAL(Shader, ShaderMTL, shader, internalData);
@@ -71,6 +98,7 @@ namespace Citrom::RenderAPI
                 std::stringstream reader;
                 reader << file.rdbuf();
                 rawVertexSourceCode = reader.str();
+                //HandleVertexShaderBuffers(rawVertexSourceCode, GetShaderFileName(descriptor->name, ShaderType::Vertex));
             }
             std::string rawFragmentSourceCode;
             {

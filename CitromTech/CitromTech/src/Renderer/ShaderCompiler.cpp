@@ -366,7 +366,8 @@ namespace Citrom
             IF_WINDOWS(ShaderCompiler::DX11::CompileShaders(shaderPaths, pathCount, outPath));
             // bool result = ShaderCompiler::Unix::CompileShaders(); // use wine probably
             #ifdef CT_PLATFORM_UNIX
-            ShaderCompiler::Unix::CompileShaders(shaderPaths, pathCount, outPath);
+            if (!ShaderCompiler::Unix::CompileShaders(shaderPaths, pathCount, outPath))
+                CT_CORE_WARN("Could not compile HLSL5 shaders to byte-code, if you need dynamic recompilation, please make sure Microsoft's FXC Compiler works correctly through Wine.");
             #endif
 
 			TranspileHLSLcc(shaderPaths, pathCount, outPath);

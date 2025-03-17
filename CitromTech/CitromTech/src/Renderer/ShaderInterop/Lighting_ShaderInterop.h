@@ -10,7 +10,7 @@ CTSI_NAMESPACE_BEGIN
 
 struct alignas(16) BaseLight
 {
-    CTSI_TYPE_COLOR3 color;
+    CTSI_TYPE_COLOR3 color; // TODO: switch to float4's for Metal and most likely GLSL too since they align float3's to float4's (unless packed_float3 for msl)
     float intensity;
 };
 

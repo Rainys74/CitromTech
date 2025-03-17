@@ -2,7 +2,7 @@
 
 namespace Citrom::RenderAPI
 {
-#define SLOT_VERTEX_BUFFER 1 // TODO: later on enforce some sort of standard, or well, add a check if there is an UBO bound or something.
+#define SLOT_VERTEX_BUFFER 1 //(MAX_VERTEX_SHADER_UNIFORM_BUFFERS + 1)
 #define SLOT_VUNIFORM_BUFFER 0
 #define SLOT_FUNIFORM_BUFFER 0
 
@@ -226,7 +226,7 @@ namespace Citrom::RenderAPI
     {
         GET_BUFFER_INTERNAL(UniformBufferMTL, ub, internalData);
 
-        memcpy(internalData->buffer.contents, data, (size)); // TODO: does this require the aligned size?
+        memcpy(internalData->buffer.contents, data, (size)); // TODO: does this require the aligned size? I doubt it.
         [internalData->buffer didModifyRange:NSMakeRange(0, (size))];
     }
 

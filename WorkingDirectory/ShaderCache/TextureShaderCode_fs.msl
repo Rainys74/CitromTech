@@ -1,31 +1,23 @@
 #include <metal_stdlib>
-#include <metal_texture>
+#include <simd/simd.h>
+
 using namespace metal;
 
-#if !(__HAVE_FMA__)
-#define fma(a,b,c) ((a) * (b) + (c))
-#endif
-
-#ifndef XLT_REMAP_O
-	#define XLT_REMAP_O {0, 1, 2, 3, 4, 5, 6, 7}
-#endif
-constexpr constant uint xlt_remap_o[] = XLT_REMAP_O;
-struct Mtl_FragmentIn
+struct main0_out
 {
-    float2 TEXCOORD1 [[ user(TEXCOORD1) ]] ;
+    float4 color [[color(0)]];
 };
 
-struct Mtl_FragmentOut
+struct main0_in
 {
-    float4 SV_Target0 [[ color(xlt_remap_o[0]) ]];
+    float2 v_TexCoord [[user(locn1)]];
 };
 
-fragment Mtl_FragmentOut xlatMtlMain(
-    sampler sampler_u_Texture_sampler [[ sampler (0) ]],
-    texture2d<float, access::sample > u_Texture [[ texture(0) ]] ,
-    Mtl_FragmentIn input [[ stage_in ]])
+fragment main0_out main0(main0_in in [[stage_in]], texture2d<float> sampler_u_Texture_sampler [[texture(0)]], sampler sampler_u_Texture_samplerSmplr [[sampler(0)]])
 {
-    Mtl_FragmentOut output;
-    output.SV_Target0 = u_Texture.sample(_u_Texture_sampler, input.TEXCOORD1.xy);
-    return output;
+    main0_out out = {};
+    float4 texColor = sampler_u_Texture_sampler.sample(sampler_u_Texture_samplerSmplr, in.v_TexCoord);
+    out.color = texColor;
+    return out;
 }
+

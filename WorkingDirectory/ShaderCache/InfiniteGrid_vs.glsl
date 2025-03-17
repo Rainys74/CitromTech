@@ -1,56 +1,25 @@
-#version 440
+#version 330
 
-#define HLSLCC_ENABLE_UNIFORM_BUFFERS 1
-#if HLSLCC_ENABLE_UNIFORM_BUFFERS
-#define UNITY_UNIFORM
-#else
-#define UNITY_UNIFORM uniform
-#endif
-#define UNITY_SUPPORTS_UNIFORM_LOCATION 1
-#if UNITY_SUPPORTS_UNIFORM_LOCATION
-#define UNITY_LOCATION(x) layout(location = x)
-#define UNITY_BINDING(x) layout(binding = x, std140)
-#else
-#define UNITY_LOCATION(x)
-#define UNITY_BINDING(x) layout(std140)
-#endif
-precise vec4 u_xlat_precise_vec4;
-precise ivec4 u_xlat_precise_ivec4;
-precise bvec4 u_xlat_precise_bvec4;
-precise uvec4 u_xlat_precise_uvec4;
-float ImmCB_0_0_0[6];
-vec3 ImmCB_0_0_1[6];
-UNITY_BINDING(0) uniform UBO {
-	mat4x4 _47_VP;
-	float _47_GridSize;
-	vec3 _47_CameraWorldPos;
-};
-layout(location = 0) out vec3 vs_TEXCOORD1;
-vec4 u_xlat0;
-int u_xlati0;
-vec4 u_xlat1;
+const int _16[6] = int[](0, 2, 1, 2, 0, 3);
+const vec3 _37[4] = vec3[](vec3(-1.0, 0.0, -1.0), vec3(1.0, 0.0, -1.0), vec3(1.0, 0.0, 1.0), vec3(-1.0, 0.0, 1.0));
+
+layout(std140) uniform UBO
+{
+    mat4 VP;
+    float GridSize;
+    vec3 CameraWorldPos;
+} _47;
+
+out vec3 WorldPos;
+
 void main()
 {
-	ImmCB_0_0_0[0] = 0.0;
-	ImmCB_0_0_0[1] = 2.80259693e-45;
-	ImmCB_0_0_0[2] = 1.40129846e-45;
-	ImmCB_0_0_0[3] = 2.80259693e-45;
-	ImmCB_0_0_0[4] = 0.0;
-	ImmCB_0_0_0[5] = 4.20389539e-45;
-	ImmCB_0_0_1[0] = vec3(-1.0, 0.0, -1.0);
-	ImmCB_0_0_1[1] = vec3(1.0, 0.0, -1.0);
-	ImmCB_0_0_1[2] = vec3(1.0, 0.0, 1.0);
-	ImmCB_0_0_1[3] = vec3(-1.0, 0.0, 1.0);
-	ImmCB_0_0_1[4] = vec3(0.0, 0.0, 0.0);
-	ImmCB_0_0_1[5] = vec3(0.0, 0.0, 0.0);
-    u_xlati0 = gl_VertexID;
-    u_xlat0.x = ImmCB_0_0_0[u_xlati0];
-    u_xlat0.xy = ImmCB_0_0_1[floatBitsToInt(u_xlat0.x)].xz;
-    u_xlat0.xy = u_xlat0.xy * vec2(_47_GridSize) + _47_CameraWorldPos.xz;
-    vs_TEXCOORD1.xz = u_xlat0.xy;
-    vs_TEXCOORD1.y = 0.0;
-    u_xlat1 = u_xlat0.yyyy * _47_VP[2];
-    u_xlat0 = u_xlat0.xxxx * _47_VP[0] + u_xlat1;
-    gl_Position = u_xlat0 + _47_VP[3];
-    return;
+    int Index = _16[gl_VertexID];
+    vec3 vPos3 = _37[Index] * _47.GridSize;
+    vPos3.x += _47.CameraWorldPos.x;
+    vPos3.z += _47.CameraWorldPos.z;
+    vec4 vPos4 = vec4(vPos3, 1.0);
+    gl_Position = _47.VP * vPos4;
+    WorldPos = vPos3;
 }
+
