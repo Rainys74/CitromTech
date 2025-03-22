@@ -10,8 +10,7 @@ CTSI_NAMESPACE_BEGIN
 
 struct alignas(16) BaseLight
 {
-    CTSI_TYPE_COLOR3 color;
-    float intensity;
+    CTSI_TYPE_COLOR4 color; // alpha (w) channel is used for intensity!
 };
 
 struct alignas(16) SkyLight
@@ -23,8 +22,6 @@ struct alignas(16) DirectionalLight
 {
     BaseLight base;
     CTSI_TYPE_FLOAT3 direction;
-    // TODO: you can add 1 byte of stuff here to not waste on alignment
-    float padding1;
 };
 
 CTSI_CONSTANT_BUFFER(Lighting, CTSI_CBSLOT_LIGHTING)

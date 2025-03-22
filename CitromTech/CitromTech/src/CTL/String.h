@@ -115,7 +115,7 @@ template <>
 struct std::formatter<CTL::ScopedCStr<false>> : std::formatter<std::string>
 {
 	template <typename FormatContext>
-	auto format(const CTL::ScopedCStr<false>& p, FormatContext& ctx)
+	auto format(const CTL::ScopedCStr<false>& p, FormatContext& ctx) const
 	{
 		return std::format_to(ctx.out(), "{}", (const char*)p);
 	}

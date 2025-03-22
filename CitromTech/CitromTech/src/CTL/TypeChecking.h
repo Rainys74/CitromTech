@@ -27,4 +27,17 @@ namespace CTL
             return value;
         }
     };
+
+    // conditional_t replacement
+    template<bool Condition, typename TrueType, typename FalseType>
+    struct Conditional
+    {
+        using type = TrueType;
+    };
+
+    template<typename TrueType, typename FalseType>
+    struct Conditional<false, TrueType, FalseType>
+    {
+        using type = FalseType;
+    };
 }

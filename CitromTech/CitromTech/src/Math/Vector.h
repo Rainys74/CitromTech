@@ -229,7 +229,22 @@ namespace Citrom::Math
         FORCE_INLINE VT& operator[](size_t index) { return data[index]; }
         FORCE_INLINE const VT& operator[](size_t index) const { return data[index]; }
     public:
-        CTL::Array<VT, C> data;
+        struct Empty {};
+        union
+        {
+            CTL::Array<VT, C> data;
+            struct
+            {
+                std::conditional_t<(C >= 1), VT, Empty> x;
+                std::conditional_t<(C >= 2), VT, Empty> y;
+                std::conditional_t<(C >= 3), VT, Empty> z;
+                std::conditional_t<(C >= 4), VT, Empty> w;
+                //std::enable_if_t<(C >= 1), VT> x;
+                //std::enable_if_t<(C >= 2), VT> y;
+                //std::enable_if_t<(C >= 3), VT> z;
+                //std::enable_if_t<(C >= 4), VT> w;
+            };
+        };
     };
 
     // Change this if you want Vectors to support
@@ -243,9 +258,9 @@ namespace Citrom::Math
     class Vector4 : public Vector<4>
     {
     public:
-        VectorVT& x = data[0];
-        VectorVT& y = data[1];
-        VectorVT& z = data[2];
-        VectorVT& w = data[3];
+        //VectorVT& x = data[0];
+        //VectorVT& y = data[1];
+        //VectorVT& z = data[2];
+        //VectorVT& w = data[3];
     };
 }
