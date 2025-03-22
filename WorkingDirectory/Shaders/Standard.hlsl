@@ -163,9 +163,9 @@ float4 psmain(VSOut input) : SV_Target
     // Diffuse Lighting (Lambertian Diffuse)
     //const float4 ambientColor = float4(0.42, 0.478, 0.627, 1.0);
     //const float3 lightDiffuseColor = float3(1.0, 1.0, 1.0);
-    const float3 lightDiffuseColor = directionalLights[0].base.color;
+    const float3 lightDiffuseColor = float3(directionalLights[0].base.color);
     const float3 directionalLightDir = directionalLights[0].direction; // TODO: temporary   
-    const float diffuseIntensity = directionalLights[0].base.intensity; //1.0; // TODO: you're probably gonna want to switch to albedo
+    const float diffuseIntensity = directionalLights[0].base.color.a; //1.0; // TODO: you're probably gonna want to switch to albedo
     
     const float4 diffuseColor = Lambertian_DiffuseLighting(input.normal, directionalLightDir, lightDiffuseColor, diffuseIntensity, mat_Albedo, mat_Metallic);
     //float4 diffuseColor = Burley_DiffuseLighting(input.normal, directionalLightDir, Lighting_GetViewDirection(input.localPos), lightDiffuseColor, diffuseIntensity, mat_Albedo, mat_Metallic, mat_Roughness);

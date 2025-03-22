@@ -110,7 +110,7 @@ namespace CTL
         // TODO: implement
     }
 
-    char* String::CStr() const
+    ScopedCStr<false> String::CStr() const
     {
         // TODO: this memory never gets freed
         char* cStr = new char[m_Length + 1];
@@ -119,10 +119,10 @@ namespace CTL
             CTL_MEMORY_COPY(cStr, m_Data, m_Length);
             cStr[m_Length] = '\0';
 
-            return cStr;
+            return ScopedCStr<false>(cStr);
         }
 
-        return nullptr;
+        return ScopedCStr();
 
         //char* cStr = memory_allocate((strv->length + 1) * sizeof(char), MEMORY_USAGE_TYPE_CONTAINER_STRINGV);
         //if (cStr)

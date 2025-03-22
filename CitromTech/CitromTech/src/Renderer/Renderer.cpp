@@ -673,8 +673,7 @@ namespace Citrom
 					auto& transformComponent = Entity(dirLight, s_CurrentScene).GetComponent<TransformComponent>();
 
 					g_RendererData.lighting.directionalLights[0].direction = transformComponent.transform.Forward();
-					g_RendererData.lighting.directionalLights[0].base.color = dirLightComponent.color;
-					g_RendererData.lighting.directionalLights[0].base.intensity = dirLightComponent.intensity;
+					g_RendererData.lighting.directionalLights[0].base.color = Math::ColorF32x4(dirLightComponent.color, dirLightComponent.intensity);
 
 					g_RendererData.lighting.directionalLightCount++;
 				}
@@ -686,8 +685,7 @@ namespace Citrom
 				{
 					auto& skyLightComponent = Entity(skyLight, s_CurrentScene).GetComponent<SkyLightComponent>();
 
-					g_RendererData.lighting.skyLight.base.color = skyLightComponent.color;
-					g_RendererData.lighting.skyLight.base.intensity = skyLightComponent.intensity;
+					g_RendererData.lighting.skyLight.base.color = Math::ColorF32x4(skyLightComponent.color, skyLightComponent.intensity);
 				}
 			}
 			/*for (size_t i = 0; i < view.size(); i++)

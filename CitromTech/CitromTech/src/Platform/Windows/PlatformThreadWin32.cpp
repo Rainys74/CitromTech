@@ -127,19 +127,19 @@ namespace Citrom::Platform
 	}
 
 	// Condition Variable
-	Condition::Condition()
+	ConditionVariable::ConditionVariable()
 		: m_Internal(nullptr)
 	{
 		m_Internal = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 		CT_CORE_ASSERT(m_Internal, "Failed to create condition variable!");
 	}
 
-	Condition::~Condition()
+	ConditionVariable::~ConditionVariable()
 	{
 		CloseHandle(m_Internal);
 	}
 
-	void Condition::Wait(Mutex& mutex)
+	void ConditionVariable::Wait(Mutex& mutex)
 	{
 		mutex.Unlock();  // Unlock before waiting
 		DWORD result = WaitForSingleObject(m_Internal, INFINITE);
@@ -147,12 +147,12 @@ namespace Citrom::Platform
 		mutex.Lock();  // Re-acquire the lock after wake-up
 	}
 
-	void Condition::NotifyOne()
+	void ConditionVariable::NotifyOne()
 	{
 		CT_CORE_VERIFY(SetEvent(m_Internal), "Failed to notify one thread!");
 	}
 
-	void Condition::NotifyAll()
+	void ConditionVariable::NotifyAll()
 	{
 		CT_CORE_VERIFY(PulseEvent(m_Internal), "Failed to notify all threads!");
 	}

@@ -21,6 +21,36 @@ namespace CTL
 // CTL - (C)itrom Tech Standard (T)emplate (L)ibrary
 namespace CTL
 {
+	template<bool bAllocateNewString = false>
+	class ScopedCStr
+	{
+	public:
+		ScopedCStr()
+			: m_String(nullptr) {}
+		ScopedCStr(const char* string)
+		{
+			if constexpr (bAllocateNewString)
+			{
+				const auto strLength = strlen(string) + 1;
+				m_String = new char[strLength];
+				memcpy(m_String, string, strLength);
+			}
+			else
+			{
+				m_String = const_cast<char*>(string);
+			}
+		}
+		~ScopedCStr()
+		{
+			delete m_String;
+		}
+
+		operator const char* () const { return m_String; }
+		operator char* () { return m_String; }
+	private:
+		char* m_String;
+	};
+
 	// TODO: Perhaps implement a template system that allows to implement
 	// different types of encoding for strings easily, without duplicating code: 
 	// ANSI, UTF-8, UTF-16, UTF-32, Wide etc.
@@ -35,7 +65,7 @@ namespace CTL
 		void PushBack(const char character);
 		void Join(const String& secondString);
 
-		char* CStr() const; // ANSI/UTF-8
+		ScopedCStr<false> CStr() const; // ANSI/UTF-8
 		wchar_t* WStr(); // Compiler dependent, most likely UTF-16 on Windows, UTF-32 on Linux.
 
 		//char16_t* UTF16Str(); // UTF-16
@@ -78,3 +108,15 @@ namespace CTL
 
 	using CStrGuard = TCStrGuard<const String&, >*/
 }
+
+#include <format>
+
+template <>
+struct std::formatter<CTL::ScopedCStr<false>> : std::formatter<std::string>
+{
+	template <typename FormatContext>
+	auto format(const CTL::ScopedCStr<false>& p, FormatContext& ctx)
+	{
+		return std::format_to(ctx.out(), "{}", (const char*)p);
+	}
+};

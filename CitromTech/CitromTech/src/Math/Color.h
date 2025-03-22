@@ -112,6 +112,9 @@ namespace Citrom::Math
         ColorF32x4()
             : r(0.0f), g(0.0f), b(0.0f), a(0.0f) {}
 
+        ColorF32x4(ColorF32x3 color3, float32 alpha = 1.0f)
+            : r(color3.r), g(color3.g), b(color3.b), a(alpha) {}
+
         // Math equations
         ColorF32x4 operator+(const ColorF32x4& colB) const { return ColorF32x4{ this->r + colB.r, this->g + colB.g, this->b + colB.b, this->a + colB.a }; } // Add
         ColorF32x4 operator-(const ColorF32x4& colB) const { return ColorF32x4{ this->r - colB.r, this->g - colB.g, this->b - colB.b, this->a - colB.a }; } // Subtract

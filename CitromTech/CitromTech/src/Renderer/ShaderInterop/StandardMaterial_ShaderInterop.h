@@ -7,7 +7,7 @@ CTSI_NAMESPACE_BEGIN
 
 CTSI_CONSTANT_BUFFER(StandardMaterial, CTSI_CBSLOT_MATERIAL)
 {
-	CTSI_TYPE_COLOR3 mat_Albedo;
+	CTSI_TYPE_COLOR4 mat_Albedo;
 	float mat_Metallic; // metalness: 0 - dielectrics, 1 - metals
 	float mat_Roughness; // Smoothness = 1 - roughness
 };
@@ -33,7 +33,7 @@ inline void TStandardMaterialSetup(const StandardMaterial& matData, Material* ou
 {
 //#define _PUSH_AND_SET_PROPERTY(MATERIAL, NAME, FORMAT, DATA) if constexpr(bPushProperty) { (MATERIAL).PushProperty(NAME, FORMAT, DATA); } if constexpr(bSetProperty) { (MATERIAL).SetProperty(NAME, FORMAT, DATA) }
 
-	_PushAndSetProperty<bPushProperty, bSetProperty>(*outMat, "mat_Albedo", MaterialFormat::Float32x3, &matData.mat_Albedo);
+	_PushAndSetProperty<bPushProperty, bSetProperty>(*outMat, "mat_Albedo", MaterialFormat::Float32x4, &matData.mat_Albedo);
 	_PushAndSetProperty<bPushProperty, bSetProperty>(*outMat, "mat_Metallic", MaterialFormat::Float32, &matData.mat_Metallic);
 	_PushAndSetProperty<bPushProperty, bSetProperty>(*outMat, "mat_Roughness", MaterialFormat::Float32, &matData.mat_Roughness);
 }
